@@ -1,38 +1,43 @@
 <template>
     <div id="twCard">
-        <a class="container text-decoration-none" :href="tweet.cardObject.url" target="_blank">
-            <div class="card mb-3">
-                <template v-if="tweet.card === 'summary'">
+        <div class="card mb-3">
+            <a class="container text-decoration-none" :href="object.url" target="_blank">
+                <template v-if="object.type === 'summary' || object.type === 'audio' || object.type === 'app' || object.type === 'moment'">
                     <div class="row no-gutters">
                         <div class="col-4">
-                            <el-image v-if="tweet.cardObject.media === '1'" class="card-img" :src="`//`+tweet.mediaObject.cardMedia[0].cover" alt="cardImage" lazy ></el-image>
+                            <el-image v-if="object.media === '1' && mediaState" class="card-img" :src="basePath+`/api/v2/media/tweets/`+media[0].cover" alt="cardImage" lazy></el-image>
                         </div>
                         <div class="col-8">
                             <div class="card-body">
-                                <p class="card-title" style="color: black">{{ tweet.cardObject.title }}</p>
-                                <template v-if="tweet.cardObject.description !== ''"><small class="text-muted">{{ tweet.cardObject.description }}</small><br></template>
-                                <small class="text-muted" v-if="tweet.cardObject.vanity_url !== ''"><i class="el-icon-link"></i>{{ tweet.cardObject.vanity_url }}</small>
+                                <p class="card-title" style="color: black">{{ object.title }}</p>
+                                <template v-if="object.description !== ''"><small class="text-muted">{{ object.description }}</small><br></template>
+                                <small class="text-muted" v-if="object.vanity_url !== ''"><i class="el-icon-link"></i>{{ object.vanity_url }}</small>
                             </div>
                         </div>
                     </div>
                 </template>
                 <template v-else>
-                    <el-image v-if="tweet.cardObject.media === '1'" class="card-img-top" :src="`//`+tweet.mediaObject.cardMedia[0].cover" alt="cardImage" lazy></el-image>
+                    <el-image v-if="object.media === '1' && mediaState" class="card-img-top" :src="basePath+`/api/v2/media/tweets/`+media[0].cover" alt="cardImage" lazy></el-image>
                     <div class="card-body position-static">
-                        <p class="card-title" style="color: black">{{ tweet.cardObject.title }}</p>
-                        <template v-if="tweet.cardObject.description !== ''"><small class="text-muted">{{ tweet.cardObject.description }}</small><br></template>
-                        <small class="text-muted" v-if="tweet.cardObject.vanity_url !== ''"><i class="el-icon-link"></i>{{ tweet.cardObject.vanity_url }}</small>
+                        <p class="card-title" style="color: black">{{ object.title }}</p>
+                        <template v-if="object.description !== ''"><small class="text-muted">{{ object.description }}</small><br></template>
+                        <small class="text-muted" v-if="object.vanity_url !== ''"><i class="el-icon-link"></i>{{ object.vanity_url }}</small>
                     </div>
                 </template>
-
-            </div>
-        </a>
+            </a>
+        </div>
     </div>
 </template>
 
 <script>
     export default {
-        name: "twCard"
+        name: "twCard",
+        props: {
+            object: Object,
+            media: Array,
+            mediaState: Boolean,
+            basePath: String
+        },
     }
 </script>
 
