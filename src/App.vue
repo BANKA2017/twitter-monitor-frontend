@@ -386,7 +386,6 @@
 </template>
 
 <script>
-  import Vue from 'vue'
   import VueRouter from 'vue-router'
   import searchTips from './components/searchTips.vue'
   //import htmlText from './components/htmlText.vue'
@@ -394,7 +393,6 @@
   import twPolls from './components/twPolls.vue'
   import axios from 'axios'
   import twCard from "./components/twCard";
-  Vue.use(VueRouter);
   export default {
     name: 'App',
     data() {

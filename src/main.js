@@ -30,7 +30,6 @@ import 'element-ui/lib/theme-chalk/index.css';
 import '@femessage/element-ui/lib/theme-chalk/skeleton.css';
 import Skeleton from '@femessage/element-ui/lib/skeleton.js';
 import VeLine from 'v-charts/lib/line.common'
-import VueRouter from 'vue-router'
 
 //gtag
 import VueGtag from "vue-gtag";
@@ -65,7 +64,6 @@ Vue.prototype.$prompt = MessageBox.prompt;
 Vue.prototype.$notify = Notification;
 Vue.prototype.$message = Message;
 Vue.component(VeLine.name, VeLine);
-Vue.use(VueRouter);
 //Vue.use(ElementUI);
 
 Vue.config.productionTip = false;
