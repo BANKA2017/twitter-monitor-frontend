@@ -7,7 +7,7 @@ module.exports = {
         //assetsSubDirectory: 'static',
         //assetsPublicPath: '/twitter',
 
-        //productionSourceMap: true
+        productionSourceMap: true,
     //},
     publicPath: '/twitter',
     //mode: 'production'

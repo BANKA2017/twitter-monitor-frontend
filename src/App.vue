@@ -62,7 +62,7 @@
               <router-link class="nav-link" :to="`/`+(values[0].projects.length <= 1 ? '' : 'project/'+project+'/')+values[0].name+`/all`" v-else>{{ values[0].display_name }}</router-link>
               <div class="dropdown-menu" aria-labelledby="navbarDropdown" v-if="names[project][key].length > 1" z-index="9999">
                 <div v-for="value in values" :key="value.display_name">
-                  <router-link :to="`/`+(value.projects.length <= 1 ? '' : 'project/'+project+'/')+value.name+`/all`" :class="`dropdown-item `+(value.name ? '' : 'disabled')">{{ value.display_name }}</router-link>
+                  <router-link :to="`/`+value.name+`/all`" :class="`dropdown-item `+(value.name ? '' : 'disabled')">{{ value.display_name }}</router-link>
                 </div>
               </div>
             </li>
@@ -386,6 +386,7 @@
 </template>
 
 <script>
+  import Vue from 'vue'
   import VueRouter from 'vue-router'
   import searchTips from './components/searchTips.vue'
   //import htmlText from './components/htmlText.vue'
@@ -393,11 +394,12 @@
   import twPolls from './components/twPolls.vue'
   import axios from 'axios'
   import twCard from "./components/twCard";
+  Vue.use(VueRouter);
   export default {
     name: 'App',
     data() {
       return {
-        basePath: "https://bangdream.fun/twitter",
+        basePath: process.env.NODE_ENV !== "development" ? "https://bangdream.fun/twitter" : "https://bangdream.fun/dev/tmv2",
         displayName: "Twitter",
         tag: {
           text: '',
@@ -605,10 +607,10 @@
     },
     methods: {
       getAccountList: function () {
-        return axios.get(this.basePath + "/account_info_t.json");
+        return axios.get(this.basePath + (process.env.NODE_ENV !== "development" ? "/account_info_t.json" : "/proxy.php?filename=account_info_t"));
       },
       getLanguageList: function () {
-        return axios.get(this.basePath + "/language_target.json");
+        return axios.get(this.basePath + (process.env.NODE_ENV !== "development" ? "/language_target.json" : "/proxy.php?filename=language_target"));
       },
       changeTitle: function (text = "") {
         document.title = text;

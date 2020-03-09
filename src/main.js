@@ -33,10 +33,12 @@ import VeLine from 'v-charts/lib/line.common'
 
 //gtag
 import VueGtag from "vue-gtag";
+if (process.env.NODE_ENV !== "development") {
+  Vue.use(VueGtag, {
+    config: { id: "UA-90617066-2" }
+  });
 
-Vue.use(VueGtag, {
-  config: { id: "UA-90617066-2" }
-});
+}
 
 import VueMeta from 'vue-meta'
 
