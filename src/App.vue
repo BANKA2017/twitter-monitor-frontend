@@ -44,9 +44,7 @@
         <div class="btn-group" role="group">
           <button class="navbar-toggler" type="button" @click="$router.go(-1)">
             <span>
-              <svg class="bi bi-chevron-left text-success" width="30" height="30" viewBox="0 0 20 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                <path fill-rule="evenodd" d="M13.354 3.646a.5.5 0 010 .708L7.707 10l5.647 5.646a.5.5 0 01-.708.708l-6-6a.5.5 0 010-.708l6-6a.5.5 0 01.708 0z" clip-rule="evenodd"/>
-              </svg>
+              <chevronLeft status="text-success" width="30" height="30" />
             </span>
           </button>
           <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation" v-if="project && projects.length && tweetStatus.displayType === 'timeline'">
@@ -94,17 +92,9 @@
                       <div class="col-8">
                         <h5 class="card-title mt-0">
                           <b>{{ info.display_name }}</b>
-                          <svg v-if="info.verified" class="text-primary" width="1em" height="1em" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M22.5 12.5c0-1.58-.875-2.95-2.148-3.6.154-.435.238-.905.238-1.4 0-2.21-1.71-3.998-3.818-3.998-.47 0-.92.084-1.336.25C14.818 2.415 13.51 1.5 12 1.5s-2.816.917-3.437 2.25c-.415-.165-.866-.25-1.336-.25-2.11 0-3.818 1.79-3.818 4 0 .494.083.964.237 1.4-1.272.65-2.147 2.018-2.147 3.6 0 1.495.782 2.798 1.942 3.486-.02.17-.032.34-.032.514 0 2.21 1.708 4 3.818 4 .47 0 .92-.086 1.335-.25.62 1.334 1.926 2.25 3.437 2.25 1.512 0 2.818-.916 3.437-2.25.415.163.865.248 1.336.248 2.11 0 3.818-1.79 3.818-4 0-.174-.012-.344-.033-.513 1.158-.687 1.943-1.99 1.943-3.484zm-6.616-3.334l-4.334 6.5c-.145.217-.382.334-.625.334-.143 0-.288-.04-.416-.126l-.115-.094-2.415-2.415c-.293-.293-.293-.768 0-1.06s.768-.294 1.06 0l1.77 1.767 3.825-5.74c.23-.345.696-.436 1.04-.207.346.23.44.696.21 1.04z"></path>
-                          </svg>
-                          <svg v-if="info.deleted" class="bi bi-trash text-danger" width="1em" height="1em" viewBox="0 0 20 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                            <path fill-rule="evenodd" d="M6 6v8.5c0 .47.124.874.297 1.144.177.275.361.356.489.356h6.428c.127 0 .312-.08.489-.356.173-.27.297-.673.297-1.144V6h1v8.5c0 .634-.164 1.23-.456 1.685-.288.448-.747.815-1.33.815H6.786c-.583 0-1.042-.367-1.33-.815C5.164 15.73 5 15.134 5 14.5V6h1z" clip-rule="evenodd"/>
-                            <path fill-rule="evenodd" d="M7.5 7.5A.5.5 0 018 8v6a.5.5 0 01-1 0V8a.5.5 0 01.5-.5zm2.5 0a.5.5 0 01.5.5v6a.5.5 0 01-1 0V8a.5.5 0 01.5-.5zm2.5 0a.5.5 0 01.5.5v6a.5.5 0 01-1 0V8a.5.5 0 01.5-.5zm3-3.5h-11v1h11V4zm-11-1a1 1 0 00-1 1v1a1 1 0 001 1h11a1 1 0 001-1V4a1 1 0 00-1-1h-11z" clip-rule="evenodd"/>
-                            <path d="M8 3a1 1 0 011-1h2a1 1 0 011 1v1H8V3z"/>
-                          </svg>
-                          <svg v-else-if="info.locked" class="bi bi-lock text-danger" width="1em" height="1em" viewBox="0 0 20 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                            <path fill-rule="evenodd" d="M13.655 9H6.333c-.264 0-.398.068-.471.121a.73.73 0 00-.224.296 1.626 1.626 0 00-.138.59V15c0 .342.076.531.14.635.064.106.151.18.256.237a1.122 1.122 0 00.436.127l.013.001h7.322c.264 0 .398-.068.471-.121a.73.73 0 00.224-.296 1.627 1.627 0 00.138-.59V10c0-.342-.076-.531-.14-.635a.658.658 0 00-.255-.237 1.123 1.123 0 00-.45-.128zm.012-1H6.333C4.5 8 4.5 10 4.5 10v5c0 2 1.833 2 1.833 2h7.334c1.833 0 1.833-2 1.833-2v-5c0-2-1.833-2-1.833-2zM6.5 5a3.5 3.5 0 117 0v3h-1V5a2.5 2.5 0 00-5 0v3h-1V5z" clip-rule="evenodd"/>
-                          </svg>
+                          <verified status="text-primary" width="1em" height="1em"  v-if="info.verified" />
+                          <deleted status="text-primary" width="1em" height="1em"  v-if="info.deleted" />
+                          <locked status="text-primary" width="1em" height="1em" v-else-if="info.locked" />
                         </h5>
                         <p>
                           <small>
@@ -114,18 +104,7 @@
                       </div>
                     </div>
                     <div v-html="`<p class='card-text'>`+info.description+`</p>`"></div>
-                    <div v-if="info.translate_source === ''" class='card-text'>
-                      <span style="cursor:pointer"><small style="color:#1DA1F2" @click="translate(-1, info.uid)">翻译简介</small></span>
-                    </div>
-                    <div v-else-if="info.translate_source === 'pending'" class="spinner-grow spinner-grow-sm" style="color: #1DA1F2" role="status">
-                      <span class="sr-only">Loading...</span>
-                    </div>
-                    <div v-else>
-                      <hr class="my-4">
-                      <p class='card-text'><small class="text-muted">由 {{ info.translate_source }} 翻译</small></p>
-                      <p v-if="info.translate" v-html="`<p class='card-text'>`+info.translate+`</p>`"></p>
-                      <span style="cursor:pointer"><small style="color: #1DA1F2" @click="translate(-1, info.uid)">重新翻译</small></span>
-                    </div>
+                    <translate :basePath="basePath" :type="1" :id="info.uid" :to="settings.data.language" />
                   </div>
                 </div>
               </template>
@@ -216,9 +195,7 @@
                           <p v-if="tweetStatus.displayType === 'timeline' && tweet.tweet_id === info.top"><small class="text-muted">置顶推文</small></p>
                           <div>
                             <small v-if="tweet.retweet_from" class="text-muted">
-                              <svg class="bi" width="1em" height="1em" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M23.77 15.67c-.292-.293-.767-.293-1.06 0l-2.22 2.22V7.65c0-2.068-1.683-3.75-3.75-3.75h-5.85c-.414 0-.75.336-.75.75s.336.75.75.75h5.85c1.24 0 2.25 1.01 2.25 2.25v10.24l-2.22-2.22c-.293-.293-.768-.293-1.06 0s-.294.768 0 1.06l3.5 3.5c.145.147.337.22.53.22s.383-.072.53-.22l3.5-3.5c.294-.292.294-.767 0-1.06zm-10.66 3.28H7.26c-1.24 0-2.25-1.01-2.25-2.25V6.46l2.22 2.22c.148.147.34.22.532.22s.384-.073.53-.22c.293-.293.293-.768 0-1.06l-3.5-3.5c-.293-.294-.768-.294-1.06 0l-3.5 3.5c-.294.292-.294.767 0 1.06s.767.293 1.06 0l2.22-2.22V16.7c0 2.068 1.683 3.75 3.75 3.75h5.85c.414 0 .75-.336.75-.75s-.337-.75-.75-.75z"></path>
-                              </svg>
+                              <retweet status="" width="1em" height="1em"/>
                               <router-link :to="`/`+tweet.name+(tweetStatus.displayType === 'status' ? `/` + tweetStatus.display : `/status/`+tweet.tweet_id)" class="text-muted">
                                 {{ tweet.display_name }}
                               </router-link>
@@ -232,21 +209,11 @@
                           </template>
                           <!--media-->
                           <span v-if="tweet.media === '1'" @click="settings.data.displayPicture=!settings.data.displayPicture" style="cursor:pointer">
-                          <svg class="bi bi-image text-success" width="2em" height="2em" viewBox="0 0 20 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                            <path fill-rule="evenodd" d="M16.002 4h-12a1 1 0 00-1 1v10a1 1 0 001 1h12a1 1 0 001-1V5a1 1 0 00-1-1zm-12-1a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2h-12z" clip-rule="evenodd" />
-                            <path d="M12.648 9.646a.5.5 0 01.577-.093l3.777 1.947V16h-14v-2l2.646-2.354a.5.5 0 01.63-.062l2.66 1.773 3.71-3.71z" />
-                            <path fill-rule="evenodd" d="M6.502 9a1.5 1.5 0 100-3 1.5 1.5 0 000 3z" clip-rule="evenodd" />
-                          </svg>
-                        </span>
-                          <svg v-if="tweet.video === '1'" class="bi bi-camera-video text-danger" width="2em" height="2em" viewBox="0 0 20 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                            <path fill-rule="evenodd" d="M4.667 5.5c-.645 0-1.167.522-1.167 1.167v6.666c0 .645.522 1.167 1.167 1.167h6.666c.645 0 1.167-.522 1.167-1.167V6.667c0-.645-.522-1.167-1.167-1.167H4.667zM2.5 6.667C2.5 5.47 3.47 4.5 4.667 4.5h6.666c1.197 0 2.167.97 2.167 2.167v6.666c0 1.197-.97 2.167-2.167 2.167H4.667A2.167 2.167 0 012.5 13.333V6.667z" clip-rule="evenodd"/>
-                            <path fill-rule="evenodd" d="M13.25 7.65l2.768-1.605a.318.318 0 01.482.263v7.384c0 .228-.26.393-.482.264l-2.767-1.605-.502.865 2.767 1.605c.859.498 1.984-.095 1.984-1.129V6.308c0-1.033-1.125-1.626-1.984-1.128L12.75 6.785l.502.865z" clip-rule="evenodd"/>
-                          </svg>
+                            <image-icon status="text-success" width="2em" height="2em" />
+                          </span>
+                          <camera-video-icon status="text-danger" width="2em" height="2em"  v-if="tweet.video === '1'"/>
                           <a :href="`//twitter.com/i/status/`+tweet.tweet_id" target="_blank">
-                            <svg class="bi bi-box-arrow-up-right text-primary" width="2em" height="2em" viewBox="0 0 20 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                              <path fill-rule="evenodd" d="M3.5 15A1.5 1.5 0 005 16.5h8a1.5 1.5 0 001.5-1.5v-4a.5.5 0 00-1 0v4a.5.5 0 01-.5.5H5a.5.5 0 01-.5-.5V7a.5.5 0 01.5-.5h4a.5.5 0 000-1H5A1.5 1.5 0 003.5 7v8zm7-11a.5.5 0 01.5-.5h5a.5.5 0 01.5.5v5a.5.5 0 01-1 0V4.5H11a.5.5 0 01-.5-.5z" clip-rule="evenodd"/>
-                              <path fill-rule="evenodd" d="M16.354 3.646a.5.5 0 010 .708l-8 8a.5.5 0 01-.708-.708l8-8a.5.5 0 01.708 0z" clip-rule="evenodd"/>
-                            </svg>
+                            <box-arrow-up-right status="text-primary" width="2em" height="2em" />
                           </a>
                           <div class="my-4"></div>
                           <div v-html="`<p class='card-text'>`+tweet.full_text+`</p>`"></div>
@@ -257,19 +224,7 @@
                               {{ tweet.full_text_origin }}
                             </p>
                           </template>-->
-                          <!--translate-->
-                          <div v-if="tweet.translate_source === ''" class='card-text'>
-                            <span style="cursor:pointer" class="text-decoration-none"><small style="color:#1DA1F2" @click="translate(order)">翻译推文</small></span>
-                          </div>
-                          <div v-else-if="tweet.translate_source === 'pending'" class="spinner-grow spinner-grow-sm" role="status" style="color:#1DA1F2">
-                            <span class="sr-only">Loading...</span>
-                          </div>
-                          <div v-else>
-                            <hr class="my-4">
-                            <p class='card-text'><small class="text-muted">由 {{ tweet.translate_source }} 翻译</small></p>
-                            <p v-if="tweet.translate" v-html="`<p class='card-text'>`+tweet.translate+`</p>`"></p>
-                            <span style="cursor:pointer" class="text-decoration-none"><small style="color:#1DA1F2" @click="translate(order)">重新翻译</small></span>
-                          </div>
+                          <translate :basePath="basePath" :type="0" :id="tweet.tweet_id" :to="settings.data.language" />
                           <!--media-->
                           <template v-if="tweet.media === '1'&&!settings.data.displayPicture">
                             <div class="my-4"></div>
@@ -278,36 +233,7 @@
                           <!--quote-->
                           <template v-if="tweet.quote_status !== '0'">
                             <div class="my-4"></div>
-                            <div class="container">
-                              <div class="card mb-3">
-                                <div class='card-body'>
-                                  <span class="card-text" v-if="!tweet.quoteObject.full_text">这条推文不可用。</span>
-                                  <template v-else>
-                                    <div>
-                                      <span class="text-muted">{{ tweet.quoteObject.display_name }}</span>
-                                      <el-divider direction="vertical"></el-divider>
-                                      <small>@{{ tweet.quoteObject.name }}</small>
-                                      <a :href="`//twitter.com/i/status/`+tweet.quoteObject.tweet_id" target="_blank">
-                                        <svg class="bi bi-box-arrow-up-right text-primary" width="2em" height="2em" viewBox="0 0 20 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                                          <path fill-rule="evenodd" d="M3.5 15A1.5 1.5 0 005 16.5h8a1.5 1.5 0 001.5-1.5v-4a.5.5 0 00-1 0v4a.5.5 0 01-.5.5H5a.5.5 0 01-.5-.5V7a.5.5 0 01.5-.5h4a.5.5 0 000-1H5A1.5 1.5 0 003.5 7v8zm7-11a.5.5 0 01.5-.5h5a.5.5 0 01.5.5v5a.5.5 0 01-1 0V4.5H11a.5.5 0 01-.5-.5z" clip-rule="evenodd"/>
-                                          <path fill-rule="evenodd" d="M16.354 3.646a.5.5 0 010 .708l-8 8a.5.5 0 01-.708-.708l8-8a.5.5 0 01.708 0z" clip-rule="evenodd"/>
-                                        </svg>
-                                      </a>
-                                    </div>
-                                    <div class="my-4"></div>
-                                    <div v-html="`<p class='card-text'>`+tweet.quoteObject.full_text+`</p>`"></div>
-                                    <!--media-->
-                                    <template v-if="tweet.quoteObject.media === '1'&&!settings.data.displayPicture">
-                                      <div class="my-4"></div>
-                                      <image-list :list="tweet.mediaObject.quoteMedia" :is_video="tweet.quoteObject.video" :basePath="basePath"/>
-                                    </template>
-                                    <div id="quotefoot">
-                                      <small class="text-muted">{{ (new Date(tweet.quoteObject.time * 1000)).toLocaleString(settings.data.language) }}</small>
-                                    </div>
-                                  </template>
-                                </div>
-                              </div>
-                            </div>
+                            <quote-card :quote-object="tweet.quoteObject" :quote-media="tweet.mediaObject.quoteMedia" :base-path="basePath" :display-picture="settings.data.displayPicture" :language="settings.data.language" />
                           </template>
                           <!--polls-->
                           <template v-if="tweet.poll === '1'">
@@ -342,7 +268,6 @@
               </div>
               <div class="my-4"></div>
             </template>
-
           </div>
           <div class="col-md-2">
             <!--有确定的project-->
@@ -394,9 +319,37 @@
   import twPolls from './components/twPolls.vue'
   import axios from 'axios'
   import twCard from "./components/twCard";
+  import translate from "./components/translate";
+  //import icons
+  import chevronLeft from "./components/icons/chevronLeft";
+  import Verified from "./components/icons/verified";
+  import Deleted from "./components/icons/deleted";
+  import Locked from "./components/icons/locked";
+  import Retweet from "./components/icons/retweet";
+  import BoxArrowUpRight from "./components/icons/boxArrowUpRight";
+  import CameraVideoIcon from "./components/icons/cameraVideoIcon";
+  import ImageIcon from "./components/icons/imageIcon";
+  import QuoteCard from "./components/quoteCard";
   Vue.use(VueRouter);
   export default {
     name: 'App',
+    components: {
+      QuoteCard,
+      ImageIcon,
+      CameraVideoIcon,
+      BoxArrowUpRight,
+      Retweet,
+      Locked,
+      Deleted,
+      Verified,
+      twCard,
+      searchTips,
+      //htmlText,
+      imageList,
+      twPolls,
+      translate,
+      chevronLeft,
+    },
     data() {
       return {
         basePath: process.env.NODE_ENV !== "development" ? "https://bangdream.fun/twitter" : "https://bangdream.fun/dev/tmv2",
@@ -786,29 +739,6 @@
           this.tweetStatus.displayType = 'search';
         }
       },
-      translate: function (order = -1, uid = 0) {
-        if (order+1) {
-          this.tweets[order].translate_source = "pending";
-          axios.get(this.basePath + '/api/v2/data/translate/?tr_type=tweets&tweet_id=' + this.tweets[order].tweet_id+ '&to=' + this.settings.data.language).then(response => {
-            this.tweets[order].translate = response.data.data.translate;
-            this.tweets[order].translate_source = response.data.data.translate_source;
-          }).catch(error => {
-            this.notice(error, "error");
-            this.tweets[order].translate = '';
-          })
-        } else if (uid) {
-          this.info.translate_source = "pending";
-          axios.get(this.basePath + '/api/v2/data/translate/?tr_type=profile&uid=' + uid+ '&to=' + this.settings.data.language).then(response => {
-            this.info.translate = response.data.data.translate;
-            this.info.translate_source = response.data.data.translate_source;
-          }).catch(error => {
-            this.notice(error, "error");
-            this.info.translate = '';
-          })
-        } else {
-          this.notice("无输入", "error");
-        }
-      },
       localrun: function() {
         //localStorage
         if (!localStorage.getItem('tm_settings')) {
@@ -832,13 +762,6 @@
       //  return false;
       //},
     },
-    components: {
-      twCard,
-      searchTips,
-      //htmlText,
-      imageList,
-      twPolls,
-    }
   }
 </script>
 
