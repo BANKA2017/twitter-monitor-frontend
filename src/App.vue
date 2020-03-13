@@ -1,41 +1,6 @@
 <template>
   <div id="app">
-    <template v-if="tweetStatus.displayType === 'userSelector'">
-      <div class="jumbotron">
-        <h1 class="display-4">Twitter Monitor</h1>
-      </div>
-      <div class="container">
-        <div class="col-md-8 offset-md-2">
-          <div id="searchCard">
-            <div class="input-group mb-3 input-group-lg">
-              <input type="text" class="form-control" placeholder="搜索..." aria-describedby="search" v-model.trim="search.keywords" focus>
-            </div>
-            <searchTips v-if="search.keywords && (search.keywords.toLowerCase() === 'help' || search.keywords === '帮助')" />
-          </div>
-          <div class="list-group" v-if="search.keywords && search.mode === 0 && search.keywords.slice(0, 1) !== '!' || project">
-            <template v-if="search.keywords && search.keywords.slice(0, 1) !== '!' && search.mode === 0">
-              <!--<a :href="`#/project/`+search_user.project+`/`+search_user.name+`/all`" class="list-group-item list-group-item-action" v-for="search_user in findUser(search.toString().slice(1).toLowerCase(), names)"><b>{{ search_user.display_name }}</b> | <small>@{{ search_user.name }}</small> > <small>{{ search_user.project }}</small></a>-->
-              <router-link :to="`/hashtag/`+search.keywords.slice(1)" class="list-group-item list-group-item-action" v-if="search.keywords.slice(0, 1) === '#'">查找标签 {{ search.keywords }}</router-link>
-              <router-link :to="`/cashtag/`+search.keywords.slice(1)" class="list-group-item list-group-item-action" v-if="search.keywords.slice(0, 1) === '$'">查找标签 {{ search.keywords }}</router-link>
-              <router-link :to="`/`+name+`/status/`+search.keywords" class="list-group-item list-group-item-action" v-if="search.keywords > 0 && search.keywords.match(/[0-9]+/g)[0] === search.keywords">查找推文 {{ search.keywords }}</router-link>
-              <router-link :to="`/search/`+search.keywords" class="list-group-item list-group-item-action" v-if="search.mode === 0"><span class="d-inline-block text-truncate" style="max-width: 250px;">搜索项目 {{ search.keywords }}</span></router-link>
-            </template>
-            <template v-if="project && names[project] && !home">
-              <router-link :to="`/i/project/`+user.project+`/`+user.name+`/all`" class="list-group-item list-group-item-action" v-for="(user, s) in userWithProjectList" :key="s"><b>{{ user.display_name }}</b> | <small>@{{ user.name }}</small> > <small>{{ $route.params.project + ' (' + user.tag + ')' }}</small></router-link>
-              <div class="my-4"></div>
-            </template>
-          </div>
-          <el-row>
-            <template v-for="(project, s) in projects">
-              <router-link :to="`/i/project/`+project" :key="s">
-                <el-button size="mini" class="text-decoration-none" round>{{ project }}</el-button>
-              </router-link>
-            </template>
-          </el-row>
-          <div class="my-4"></div>
-        </div>
-      </div>
-    </template>
+    <user-selector v-if="tweetStatus.displayType === 'userSelector'" :display-type="tweetStatus.displayType" :names="names" :project="project" :projects="projects" :home="home" :search="search" :user-with-project-list="userWithProjectList"  />
     <template v-else>
       <nav class="navbar navbar-expand-lg navbar-light text-center bg-light">
         <span class="navbar-brand mb-0 h1 d-inline-block text-truncate" style="max-width: 250px;">
@@ -54,9 +19,9 @@
         <div class="collapse navbar-collapse" id="navbarNav" v-if="tweetStatus.displayType === 'timeline'">
           <ul class="navbar-nav" v-if="project">
             <li class="nav-item dropdown" v-for="(values, key) in names[project]" :key="key">
-              <a class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" :href="$route.path" v-if="names[project][key].length > 1">
+              <router-link style="cursor:pointer" is="a" class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-if="names[project][key].length > 1">
                 {{ key }}
-              </a>
+              </router-link>
               <router-link class="nav-link" :to="`/`+(values[0].projects.length <= 1 ? '' : 'project/'+project+'/')+values[0].name+`/all`" v-else>{{ values[0].display_name }}</router-link>
               <div class="dropdown-menu" aria-labelledby="navbarDropdown" v-if="names[project][key].length > 1" z-index="9999">
                 <div v-for="value in values" :key="value.display_name">
@@ -125,37 +90,7 @@
               <div class="my-4"></div>
             </div>
             <template v-else>
-              <div id="searchTweets">
-                <el-input placeholder="请输入内容" v-model.trim="search.keywords" class="input-with-select" :type="(search.mode && tweetStatus.displayType === 'timeline') ? 'date' : 'text'" :clearable="search.mode === 0">
-                  <el-select v-model="search.mode" slot="prepend" placeholder="请选择" v-if="tweetStatus.displayType === 'timeline'">
-                    <el-option label="文字搜索" :value="0"></el-option>
-                    <el-option label="日期搜索" :value="1"></el-option>
-                  </el-select>
-                </el-input>
-                <!--
-                <div class="input-group mb-3">
-                  <input type="text" class="form-control" placeholder="搜索..." aria-describedby="search" v-model.trim="search.keywords" v-if="search.mode === 0">
-                  <input type="date" class="form-control" aria-describedby="search" v-model="search.keywords" v-if="search.mode === 1">
-                  <div class="input-group-append" v-if="tweetStatus.displayType === 'timeline' || tweetStatus.displayType === 'search'">
-                    <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">搜索模式</button>
-                    <div class="dropdown-menu dropdown-menu-right">
-                      <button class="dropdown-item" @click="()=>{search.mode = searchType[1];search.keywords = ''}" type="button" v-for="searchType in [['文字搜索', 0], ['日期搜索', 1]]" :key="searchType">{{ searchType[0] }}</button>
-                    </div>
-                  </div>
-                </div>
-                -->
-                <div class="my-4"></div>
-                <search-tips v-if="search.keywords === 'help' || search.keywords === '帮助'" />
-              </div>
-              <div class="list-group" v-if="search.keywords && search.mode === 0 && search.keywords.slice(0, 1) !== '!' || $route.params.project">
-                <template v-if="search.keywords && search.keywords.slice(0, 1) !== '!' && search.mode === 0">
-                  <!--<a :href="`#/project/`+search_user.project+`/`+search_user.name+`/all`" class="list-group-item list-group-item-action" v-for="search_user in findUser(search.toString().slice(1).toLowerCase(), names)"><b>{{ search_user.display_name }}</b> | <small>@{{ search_user.name }}</small> > <small>{{ search_user.project }}</small></a>-->
-                  <router-link :to="`/hashtag/`+search.keywords.slice(1)" class="list-group-item list-group-item-action" v-if="search.keywords.slice(0, 1) === '#'">查找标签 {{ search.keywords }}</router-link>
-                  <router-link :to="`/cashtag/`+search.keywords.slice(1)" class="list-group-item list-group-item-action" v-if="search.keywords.slice(0, 1) === '$'">查找标签 {{ search.keywords }}</router-link>
-                  <router-link :to="`/`+name+`/status/`+search.keywords" class="list-group-item list-group-item-action" v-if="search.keywords > 0 && search.keywords.match(/[0-9]+/g)[0] === search.keywords">查找推文 {{ search.keywords }}</router-link>
-                  <router-link :to="`/search/`+search.keywords" class="list-group-item list-group-item-action" v-if="search.mode === 0"><span class="d-inline-block text-truncate" style="max-width: 250px;">搜索项目 {{ search.keywords }}</span></router-link>
-                </template>
-              </div>
+              <search :name="name" :search="search" :display-type="tweetStatus.displayType"/>
               <div class="my-4"></div>
               <nav class="nav nav-pills nav-fill">
                 <template  v-if="tweetStatus.displayType === 'timeline' && !load.leftCard">
@@ -313,14 +248,11 @@
 <script>
   import Vue from 'vue'
   import VueRouter from 'vue-router'
-  import searchTips from './components/searchTips.vue'
-  //import htmlText from './components/htmlText.vue'
   import imageList from './components/imageList.vue'
   import twPolls from './components/twPolls.vue'
   import axios from 'axios'
   import twCard from "./components/twCard";
   import translate from "./components/translate";
-  //import icons
   import chevronLeft from "./components/icons/chevronLeft";
   import Verified from "./components/icons/verified";
   import Deleted from "./components/icons/deleted";
@@ -330,10 +262,14 @@
   import CameraVideoIcon from "./components/icons/cameraVideoIcon";
   import ImageIcon from "./components/icons/imageIcon";
   import QuoteCard from "./components/quoteCard";
+  import Search from "./components/search";
+  import UserSelector from "./components/template/userSelector";
   Vue.use(VueRouter);
   export default {
     name: 'App',
     components: {
+      UserSelector,
+      Search,
       QuoteCard,
       ImageIcon,
       CameraVideoIcon,
@@ -343,8 +279,6 @@
       Deleted,
       Verified,
       twCard,
-      searchTips,
-      //htmlText,
       imageList,
       twPolls,
       translate,
