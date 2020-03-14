@@ -1,6 +1,8 @@
 <template>
   <div id="app">
-    <user-selector v-if="tweetStatus.displayType === 'userSelector'" :display-type="tweetStatus.displayType" :names="names" :project="project" :projects="projects" :home="home" :search="search" :user-with-project-list="userWithProjectList"  />
+    <user-selector v-if="tweetStatus.displayType === 'userSelector'" :names="names" :display-type="tweetStatus.displayType" :project="project" :projects="projects" :home="home" :search="search" :user-with-project-list="userWithProjectList"  />
+    <about v-else-if="tweetStatus.displayType === 'about'" />
+    <api v-else-if="tweetStatus.displayType === 'api'" />
     <template v-else>
       <nav class="navbar navbar-expand-lg navbar-light text-center bg-light">
         <span class="navbar-brand mb-0 h1 d-inline-block text-truncate" style="max-width: 250px;">
@@ -222,6 +224,7 @@
               <div class="my-4"></div>
             </template>
             <span style="cursor:pointer" class="text-decoration-none badge badge-pill badge-primary" @click="settings.panel = true">设置</span>
+            <router-link class="text-decoration-none badge badge-pill badge-primary" to="/about">关于</router-link>
             <hr class="my-4">
             <template v-for="(link, s) in links">
               <span :key="s" v-if="s!==0"> · </span>
@@ -264,10 +267,14 @@
   import QuoteCard from "./components/quoteCard";
   import Search from "./components/search";
   import UserSelector from "./components/template/userSelector";
+  import About from "./components/template/about";
+  import Api from "./components/template/api";
   Vue.use(VueRouter);
   export default {
     name: 'App',
     components: {
+      Api,
+      About,
       UserSelector,
       Search,
       QuoteCard,
@@ -305,7 +312,7 @@
         project: "",
         projectS: false,
         projects: [],
-        names: [],
+        names: {},
         //nsfwList: [],
         links: [],
         info: [],
@@ -313,7 +320,7 @@
         name: "",
         home: true,
         tweetStatus: {
-          displayType: "userSelector",//timeline, tag, search, status, userSelector
+          displayType: "userSelector",//timeline, tag, search, status, userSelector, about
           display: 'all',
           moreTweets: true,
           topTweetId: 0,
@@ -397,6 +404,12 @@
       base: '/',
       routes: [
         {
+          path: '/about'
+        },
+        {
+          path: '/api'
+        },
+        {
           path: '/i',
           children: [
             {
@@ -407,6 +420,12 @@
                 {path: ':name/status/:status'}
               ]
             },
+            {
+              path: 'stats',
+            },
+            {
+              path: 'status',
+            }
           ]
         },{
           path: '/hashtag/:hashtag',
@@ -435,9 +454,12 @@
           this.tweetStatus.userExist = true;
           let is_project = this.$route.path.substr(3, 7);//提前处理
           this.routeCase();
-          if (this.tweetStatus.displayType !== 'userSelector' && is_project !== 'project') {
+          if (this.tweetStatus.displayType !== 'userSelector' && this.tweetStatus.displayType !== 'about' && this.tweetStatus.displayType !== 'api' && is_project !== 'project') {
             this.load.timeline = true;
             this.update();
+            if (this.load.leftCard === true && this.tweetStatus.displayType === 'timeline') {
+              this.getUserInfo(this.name);
+            }
           }
         },
         deep: true,
@@ -485,7 +507,7 @@
           this.notice('当前网速较慢，已关闭图片显示', 'warning');
         }
         //check $route
-        if (this.tweetStatus.displayType !== 'userSelector' && is_project !== 'project') {
+        if (this.tweetStatus.displayType !== 'userSelector' && this.tweetStatus.displayType !== 'about' && this.tweetStatus.displayType !== 'api' && is_project !== 'project') {
           this.update();
         }
       })).catch(error => {
@@ -556,7 +578,10 @@
             this.notice("chart: " + response.data.message, "warning");
           }
         }).catch(error => {
-          this.notice('加载失败，请稍后再试 #' + error, 'error');
+          if (this.tweetStatus.displayType === "timeline") {
+            this.notice('加载失败，5s后重试重试 #' + error, 'error');
+            setTimeout(() => {this.createChart()}, 5000);
+          }
         });
       },
       update: function () {
@@ -608,6 +633,17 @@
         return url;
       },
       routeCase: function () {
+        //特殊类型
+        if (this.$route.path === '/about') {
+          this.tweetStatus.displayType = 'about';
+          this.changeTitle("关于");
+          return;
+        }
+        if (this.$route.path === '/api') {
+          this.tweetStatus.displayType = 'api';
+          this.changeTitle("API");
+          return;
+        }
         //none
         if (this.$route.path === '/') {
           this.home = true;

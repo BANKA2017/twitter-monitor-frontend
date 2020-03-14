@@ -34,7 +34,10 @@
             displayType: String,
             project: String,
             projects: Array,
-            names: Object,
+            names: {
+                type: Object,
+                default: () => {},
+            },
             userWithProjectList: Array,
         }
     }
