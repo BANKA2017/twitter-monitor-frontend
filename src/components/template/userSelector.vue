@@ -1,7 +1,9 @@
 <template>
     <div id="userSelector">
-        <div class="jumbotron">
-            <h1 class="display-4">Twitter Monitor</h1>
+        <div class="jumbotron jumbotron-fluid">
+            <div class="container">
+                <h1 class="display-4">Twitter Monitor</h1>
+            </div>
         </div>
         <div class="container">
             <div class="col-md-8 offset-md-2">

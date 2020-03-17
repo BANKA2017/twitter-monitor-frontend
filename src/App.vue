@@ -1,8 +1,7 @@
 <template>
   <div id="app">
     <user-selector v-if="tweetStatus.displayType === 'userSelector'" :names="names" :display-type="tweetStatus.displayType" :project="project" :projects="projects" :home="home" :search="search" :user-with-project-list="userWithProjectList"  />
-    <about v-else-if="tweetStatus.displayType === 'about'" />
-    <api v-else-if="tweetStatus.displayType === 'api'" />
+    <router-view v-else-if="tweetStatus.displayType === 'about' || tweetStatus.displayType === 'api' || tweetStatus.displayType === 'serverStatus' || tweetStatus.displayType === 'stats'"/>
     <template v-else>
       <nav class="navbar navbar-expand-lg navbar-light text-center bg-light">
         <span class="navbar-brand mb-0 h1 d-inline-block text-truncate" style="max-width: 250px;">
@@ -178,6 +177,7 @@
                           </template>
                           <!--card-->
                           <template v-else-if="tweet.card !== ''">
+                            <div class="my-4"></div>
                             <tw-card :object="tweet.cardObject" :media="tweet.mediaObject.cardMedia" :mediaState="!settings.data.displayPicture" :basePath="basePath"></tw-card>
                           </template>
                           <!--time && source-->
@@ -269,12 +269,14 @@
   import UserSelector from "./components/template/userSelector";
   import About from "./components/template/about";
   import Api from "./components/template/api";
+  import Stats from "./components/template/stats";
+  import Status from "./components/template/status";
+  //import LeftCard from "./components/template/leftCard";
   Vue.use(VueRouter);
   export default {
     name: 'App',
     components: {
-      Api,
-      About,
+      //LeftCard,
       UserSelector,
       Search,
       QuoteCard,
@@ -343,7 +345,7 @@
               'following': '正在关注',
               'statuses_count': '总推文数',
             },
-            legendName: [],
+            legendName: {},
             scale: [true, true],
           },
           chartOptions: {
@@ -404,10 +406,12 @@
       base: '/',
       routes: [
         {
-          path: '/about'
+          path: '/about',
+          component: About
         },
         {
-          path: '/api'
+          path: '/api',
+          component: Api
         },
         {
           path: '/i',
@@ -422,9 +426,11 @@
             },
             {
               path: 'stats',
+              component: Stats
             },
             {
               path: 'status',
+              component: Status
             }
           ]
         },{
@@ -454,7 +460,7 @@
           this.tweetStatus.userExist = true;
           let is_project = this.$route.path.substr(3, 7);//提前处理
           this.routeCase();
-          if (this.tweetStatus.displayType !== 'userSelector' && this.tweetStatus.displayType !== 'about' && this.tweetStatus.displayType !== 'api' && is_project !== 'project') {
+          if (this.tweetStatus.displayType !== 'userSelector' && this.tweetStatus.displayType !== 'about' && this.tweetStatus.displayType !== 'api' && this.tweetStatus.displayType !== 'stats' && this.tweetStatus.displayType !== 'serverStatus' && is_project !== 'project') {
             this.load.timeline = true;
             this.update();
             if (this.load.leftCard === true && this.tweetStatus.displayType === 'timeline') {
@@ -507,7 +513,7 @@
           this.notice('当前网速较慢，已关闭图片显示', 'warning');
         }
         //check $route
-        if (this.tweetStatus.displayType !== 'userSelector' && this.tweetStatus.displayType !== 'about' && this.tweetStatus.displayType !== 'api' && is_project !== 'project') {
+        if (this.tweetStatus.displayType !== 'userSelector' && this.tweetStatus.displayType !== 'about' && this.tweetStatus.displayType !== 'api' && this.tweetStatus.displayType !== 'stats' && this.tweetStatus.displayType !== 'serverStatus' && is_project !== 'project') {
           this.update();
         }
       })).catch(error => {
@@ -636,12 +642,22 @@
         //特殊类型
         if (this.$route.path === '/about') {
           this.tweetStatus.displayType = 'about';
-          this.changeTitle("关于");
+          //this.changeTitle("关于");
           return;
         }
         if (this.$route.path === '/api') {
           this.tweetStatus.displayType = 'api';
           this.changeTitle("API");
+          return;
+        }
+        if (this.$route.path === '/i/stats') {
+          this.tweetStatus.displayType = 'stats';
+          this.changeTitle("STATS");
+          return;
+        }
+        if (this.$route.path === '/i/status') {
+          this.tweetStatus.displayType = 'serverStatus';
+          this.changeTitle("STATUS");
           return;
         }
         //none

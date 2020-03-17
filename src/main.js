@@ -1,6 +1,7 @@
 //'use strict';
 import Vue from 'vue'
 import App from './App.vue'
+//import router from './router'
 //import 'bootstrap';
 import 'bootstrap/js/dist/util'
 import 'bootstrap/js/dist/button'
@@ -72,4 +73,5 @@ Vue.config.productionTip = false;
 
 new Vue({
   render: h => h(App),
+  //router,
 }).$mount('#app');

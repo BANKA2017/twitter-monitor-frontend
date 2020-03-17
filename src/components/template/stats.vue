@@ -1,10 +1,12 @@
 <template>
-    $END$
+    <div id="stats">
+        tt
+    </div>
 </template>
 
 <script>
     export default {
-        name: "skeleton"
+        name: "stats"
     }
 </script>
 

@@ -14,14 +14,14 @@
                     </div>
                     <div class="my-4"></div>
                     <div v-html="`<p class='card-text'>`+quoteObject.full_text+`</p>`"></div>
-                    <!--media-->
-                    <template v-if="quoteObject.media === '1'&&!displayPicture">
-                        <div class="my-4"></div>
-                        <image-list :list="quoteMedia" :is_video="quoteObject.video" :basePath="basePath"/>
-                    </template>
                     <div id="quotefoot">
                         <small class="text-muted">{{ (new Date(quoteObject.time * 1000)).toLocaleString(language) }}</small>
                     </div>
+                    <!--media-->
+                    <template v-if="quoteObject.media === '1'&&!displayPicture">
+                        <div class="my-4"></div>
+                        <image-list :list="quoteMedia" :is_video="quoteObject.video" :basePath="basePath" :bottom="true"/>
+                    </template>
                 </template>
             </div>
         </div>

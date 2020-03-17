@@ -1,7 +1,9 @@
 <template>
     <div id="about">
-        <div class="jumbotron" style="background-color: #1da1f2">
-            <h1 class="display-4" style="color: white">关于</h1>
+        <div class="jumbotron jumbotron-fluid" style="background-color: #1da1f2">
+            <div class="container">
+                <h1 class="display-4" style="color: white">关于</h1>
+            </div>
         </div>
         <div class="container">
             <div class="row">
@@ -25,6 +27,8 @@
                     <hr class="my-4">
                     <div class="text-center"><el-button icon="el-icon-back" circle @click="$router.go(-1)"></el-button></div>
                     <div class="my-4"></div>
+                    <div class="text-center"> >_ Twitter Monitor </div>
+                    <div class="my-4"></div>
                 </div>
             </div>
         </div>
@@ -34,6 +38,15 @@
 <script>
     export default {
         name: "about",
+        metaInfo () {
+            return {
+                title: "关于",
+                meta: [{
+                    name: "theme-color",
+                    content: "#1da1f2"
+                }]
+            }
+        },
     }
 </script>
 
