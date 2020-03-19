@@ -25,6 +25,7 @@ import {
   MessageBox,
   Message,
   Progress,
+  Switch,
   Notification,//https://github.com/ElemeFE/element/issues/3450#issuecomment-500717476
 } from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
@@ -56,6 +57,7 @@ Vue.use(Divider);
 Vue.use(Icon);
 Vue.use(Button);
 Vue.use(Progress);
+Vue.use(Switch);
 Vue.use(Loading.directive);
 Vue.use(Skeleton);
 

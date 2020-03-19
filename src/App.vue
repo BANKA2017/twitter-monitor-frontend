@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <user-selector v-if="tweetStatus.displayType === 'userSelector'" :names="names" :display-type="tweetStatus.displayType" :project="project" :projects="projects" :home="home" :search="search" :user-with-project-list="userWithProjectList"  />
-    <router-view v-else-if="tweetStatus.displayType === 'about' || tweetStatus.displayType === 'api' || tweetStatus.displayType === 'serverStatus' || tweetStatus.displayType === 'stats'"/>
+    <router-view v-else-if="tweetStatus.displayType === 'about' || tweetStatus.displayType === 'api' || tweetStatus.displayType === 'serverStatus' || tweetStatus.displayType === 'stats' || tweetStatus.displayType === 'Online'"/>
     <template v-else>
       <nav class="navbar navbar-expand-lg navbar-light text-center bg-light">
         <span class="navbar-brand mb-0 h1 d-inline-block text-truncate" style="max-width: 250px;">
@@ -271,6 +271,7 @@
   import Api from "./components/template/api";
   import Stats from "./components/template/stats";
   import Status from "./components/template/status";
+  import Online from "./components/template/online";
   //import LeftCard from "./components/template/leftCard";
   Vue.use(VueRouter);
   export default {
@@ -414,6 +415,18 @@
           component: Api
         },
         {
+          path: '/i/stats',
+          component: Stats
+        },
+        {
+          path: '/i/status',
+          component: Status
+        },
+        {
+          path: '/i/online',
+          component: Online
+        },
+        {
           path: '/i',
           children: [
             {
@@ -423,14 +436,6 @@
                 {path: ':name/:display'},
                 {path: ':name/status/:status'}
               ]
-            },
-            {
-              path: 'stats',
-              component: Stats
-            },
-            {
-              path: 'status',
-              component: Status
             }
           ]
         },{
@@ -460,7 +465,7 @@
           this.tweetStatus.userExist = true;
           let is_project = this.$route.path.substr(3, 7);//提前处理
           this.routeCase();
-          if (this.tweetStatus.displayType !== 'userSelector' && this.tweetStatus.displayType !== 'about' && this.tweetStatus.displayType !== 'api' && this.tweetStatus.displayType !== 'stats' && this.tweetStatus.displayType !== 'serverStatus' && is_project !== 'project') {
+          if (this.tweetStatus.displayType !== 'userSelector' && this.tweetStatus.displayType !== 'about' && this.tweetStatus.displayType !== 'api' && this.tweetStatus.displayType !== 'stats' && this.tweetStatus.displayType !== 'serverStatus' && this.tweetStatus.displayType !== 'Online' && is_project !== 'project') {
             this.load.timeline = true;
             this.update();
             if (this.load.leftCard === true && this.tweetStatus.displayType === 'timeline') {
@@ -513,7 +518,7 @@
           this.notice('当前网速较慢，已关闭图片显示', 'warning');
         }
         //check $route
-        if (this.tweetStatus.displayType !== 'userSelector' && this.tweetStatus.displayType !== 'about' && this.tweetStatus.displayType !== 'api' && this.tweetStatus.displayType !== 'stats' && this.tweetStatus.displayType !== 'serverStatus' && is_project !== 'project') {
+        if (this.tweetStatus.displayType !== 'userSelector' && this.tweetStatus.displayType !== 'about' && this.tweetStatus.displayType !== 'api' && this.tweetStatus.displayType !== 'stats' && this.tweetStatus.displayType !== 'serverStatus' && this.tweetStatus.displayType !== 'Online' && is_project !== 'project') {
           this.update();
         }
       })).catch(error => {
@@ -658,6 +663,10 @@
         if (this.$route.path === '/i/status') {
           this.tweetStatus.displayType = 'serverStatus';
           this.changeTitle("STATUS");
+          return;
+        }
+        if (this.$route.path === '/i/online') {
+          this.tweetStatus.displayType = 'Online';
           return;
         }
         //none
