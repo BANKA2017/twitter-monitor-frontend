@@ -3,7 +3,7 @@
         <div class="card mb-3">
             <a class="text-decoration-none" :href="object.url" target="_blank">
                 <template v-if="object.type === 'summary' || object.type === 'audio' || object.type === 'app' || object.type === 'moment'">
-                    <div class="container">
+                    <div class="container-fluid">
                         <div class="row no-gutters">
                             <div class="col-4">
                                 <el-image v-if="object.media === '1' && mediaState" class="card-img" :src="basePath+`/api/v2/media/tweets/`+media[0].cover" alt="cardImage" lazy></el-image>

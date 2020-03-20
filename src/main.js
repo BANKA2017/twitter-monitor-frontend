@@ -33,6 +33,9 @@ import '@femessage/element-ui/lib/theme-chalk/skeleton.css';
 import Skeleton from '@femessage/element-ui/lib/skeleton.js';
 import VeLine from 'v-charts/lib/line.common'
 
+//import VueHighlightJS from 'vue-highlightjs'
+//Vue.use(VueHighlightJS);
+
 //gtag
 import VueGtag from "vue-gtag";
 if (process.env.NODE_ENV !== "development") {

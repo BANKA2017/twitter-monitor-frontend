@@ -273,6 +273,8 @@
   import Status from "./components/template/status";
   import Online from "./components/template/online";
   //import LeftCard from "./components/template/leftCard";
+  const CancelToken = axios.CancelToken;
+  let cancel;
   Vue.use(VueRouter);
   export default {
     name: 'App',
@@ -425,6 +427,12 @@
         {
           path: '/i/online',
           component: Online
+        },{
+          path: '/hashtag/:hashtag',
+        },{
+          path: '/cashtag/:cashtag',
+        },{
+          path: '/search/:search',
         },
         {
           path: '/i',
@@ -438,12 +446,6 @@
               ]
             }
           ]
-        },{
-          path: '/hashtag/:hashtag',
-        },{
-          path: '/cashtag/:cashtag',
-        },{
-          path: '/search/:search',
         },{
           path: '/:name',
           children: [
@@ -461,7 +463,8 @@
           //this.scrollToTop();
 
           //处理未加载完成的
-          window.stop();
+          //window.stop();
+          cancel();
           this.tweetStatus.userExist = true;
           let is_project = this.$route.path.substr(3, 7);//提前处理
           this.routeCase();
@@ -539,25 +542,27 @@
         if (this.tweetStatus.bottomTweetId && this.tweetStatus.topTweetId) {
           //0 -> top, 1 -> bottom
           this.load[(type === 0 ? 'top' : 'bottom')] = true;
-          axios.get(this.mergeUrl()+(type === 0 ? '&refresh=1&tweet_id=' + this.tweetStatus.topTweetId.toString() : '&refresh=0&tweet_id=' + this.tweetStatus.bottomTweetId.toString())).then(response => {
+          axios.get(this.mergeUrl()+(type === 0 ? '&refresh=1&tweet_id=' + this.tweetStatus.topTweetId.toString() : '&refresh=0&tweet_id=' + this.tweetStatus.bottomTweetId.toString()), {
+            cancelToken: new CancelToken(c => cancel = c)
+          }).then(response => {
             if (type === 0) {
               this.notice("已更新"+response.data.data.tweets.length+"条推文", "success");
               //this.getUserInfo();
               if (response.data.data.top_tweet_id) {
                 this.tweetStatus.topTweetId = response.data.data.top_tweet_id;
               }
-              this.tweets = response.data.data.tweets.concat(this.tweets);
+              this.tweets = [...response.data.data.tweets, ...this.tweets];
               this.load.top = false;
             } else {
               this.tweetStatus.moreTweets = response.data.data.hasmore;
               if (response.data.data.bottom_tweet_id) {
                 this.tweetStatus.bottomTweetId = response.data.data.bottom_tweet_id;
               }
-              this.tweets = this.tweets.concat(response.data.data.tweets);
+              this.tweets.push(...response.data.data.tweets);
               this.load.bottom = false;
             }
           }).catch(error => {
-            this.notice(error, 'error');
+            if (error.toString() !== 'Cancel') {this.notice(error, "error")}
             this.load[(type === 0 ? 'top' : 'bottom')] = false;
           });
         } else {
@@ -566,7 +571,9 @@
       },
       getUserInfo: function (name) {
         this.load.leftCard = true;
-        axios.get(this.basePath + '/api/v2/data/userinfo/?name=' + name).then(response => {
+        axios.get(this.basePath + '/api/v2/data/userinfo/?name=' + name, {
+          cancelToken: new CancelToken(c => cancel = c)
+        }).then(response => {
           this.info = response.data.data;
           if (response.data.code === 200) {
             this.chart.chartSettings.legendName = {'关注者': '关注者 ' + this.info.followers, '正在关注': '正在关注 ' + this.info.following, '总推文数': '总推文数 ' + this.info.statuses_count};
@@ -578,7 +585,7 @@
           }
           this.load.leftCard = false;
         }).catch(error => {
-          this.notice(error, "error");
+          if (error.toString() !== 'Cancel') {this.notice(error, "error")}
           //this.load.leftCard = false;
         });
       },
@@ -589,24 +596,28 @@
             this.notice("chart: " + response.data.message, "warning");
           }
         }).catch(error => {
-          if (this.tweetStatus.displayType === "timeline") {
+          if (this.tweetStatus.displayType === "timeline" && error.toString() !== 'Cancel') {
             this.notice('加载失败，5s后重试重试 #' + error, 'error');
             setTimeout(() => {this.createChart()}, 5000);
           }
         });
       },
       update: function () {
-        axios.get(this.mergeUrl()).then(response => {
-          this.tweets = response.data.data.tweets;
+        axios.get(this.mergeUrl(), {
+          cancelToken: new CancelToken(c => cancel = c)
+        }).then(response => {
+          this.tweets = response.data.data.tweets ? response.data.data.tweets : [];//404时无任何数据
           this.tweetStatus.moreTweets = response.data.data.hasmore;
           this.tweetStatus.topTweetId = response.data.data.top_tweet_id;
           this.tweetStatus.bottomTweetId = response.data.data.bottom_tweet_id;
           this.load.timeline = false;
-          this.tweetStatus.reload = response.data.code !== 200;
+          this.tweetStatus.reload = (response.data.code !== 200 && response.data.code !== 404 && response.data.code !== 403);
         }).catch(error => {
-          this.notice(error, 'error');
-          this.load.timeline = false;
-          this.tweetStatus.reload = true;
+          if (error.toString() !== 'Cancel') {
+            this.notice(error, "error");
+            this.tweetStatus.reload = true;
+            this.load.timeline = false;
+          }
         })
       },
       mergeUrl: function () {
@@ -631,7 +642,7 @@
           url += '?name=' + this.name + '&date=' + Date.parse(this.search.keywords+' GMT'+this.userTimeZone)/1000;
         }
         else if (this.search.keywords && this.tweetStatus.displayType === 'search') {
-          url += '?q=' + this.search.keywords;
+          url += '?q=' + encodeURIComponent(this.search.keywords);
         }
         //二层
         else if(this.tweetStatus.displayType === 'timeline') {
@@ -691,7 +702,7 @@
           }
         }
         //name
-        if (this.$route.params.name) {
+        if (this.$route.params.name && this.$route.params.name !== 'search') {
           this.name = this.$route.params.name;
           this.tweetStatus.displayType = 'timeline';
           //display
@@ -718,6 +729,11 @@
           } else {
             this.$router.replace({path: '/'+this.name+'/all/'});
           }
+        } else if (this.$route.params.name === 'search') {
+          this.search.keywords = this.$route.params.search;
+          this.load.leftCard = false;
+          this.tweetStatus.displayType = 'search';
+          return;
         }
         //hashtag & cashtag
         if (this.$route.params.hashtag || this.$route.params.cashtag) {
