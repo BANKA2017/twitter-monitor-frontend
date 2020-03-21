@@ -3,84 +3,89 @@
     <user-selector v-if="tweetStatus.displayType === 'userSelector'" :names="names" :display-type="tweetStatus.displayType" :project="project" :projects="projects" :home="home" :search="search" :user-with-project-list="userWithProjectList"  />
     <router-view v-else-if="tweetStatus.displayType === 'about' || tweetStatus.displayType === 'api' || tweetStatus.displayType === 'serverStatus' || tweetStatus.displayType === 'stats' || tweetStatus.displayType === 'Online'"/>
     <template v-else>
-      <nav class="navbar navbar-expand-lg navbar-light text-center bg-light">
+        <nav class="navbar navbar-expand-lg navbar-light text-center bg-light">
         <span class="navbar-brand mb-0 h1 d-inline-block text-truncate" style="max-width: 250px;">
           {{ displayName }}
         </span>
-        <div class="btn-group" role="group">
-          <button class="navbar-toggler" type="button" @click="$router.go(-1)">
+          <div class="btn-group" role="group">
+            <button class="navbar-toggler" type="button" @click="$router.go(-1)">
             <span>
               <chevronLeft status="text-success" width="30" height="30" />
             </span>
-          </button>
-          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation" v-if="project && projects.length && tweetStatus.displayType === 'timeline'">
-            <span class="navbar-toggler-icon"></span>
-          </button>
-        </div>
-        <div class="collapse navbar-collapse" id="navbarNav" v-if="tweetStatus.displayType === 'timeline'">
-          <ul class="navbar-nav" v-if="project">
-            <li class="nav-item dropdown" v-for="(values, key) in names[project]" :key="key">
-              <router-link style="cursor:pointer" is="a" class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-if="names[project][key].length > 1">
-                {{ key }}
-              </router-link>
-              <router-link class="nav-link" :to="`/`+(values[0].projects.length <= 1 ? '' : 'project/'+project+'/')+values[0].name+`/all`" v-else>{{ values[0].display_name }}</router-link>
-              <div class="dropdown-menu" aria-labelledby="navbarDropdown" v-if="names[project][key].length > 1" z-index="9999">
-                <div v-for="value in values" :key="value.display_name">
-                  <router-link :to="`/`+value.name+`/all`" :class="`dropdown-item `+(value.name ? '' : 'disabled')">{{ value.display_name }}</router-link>
+            </button>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation" v-if="project && projects.length && tweetStatus.displayType === 'timeline'">
+              <span class="navbar-toggler-icon"></span>
+            </button>
+          </div>
+          <div class="collapse navbar-collapse" id="navbarNav" v-if="tweetStatus.displayType === 'timeline'">
+            <ul class="navbar-nav" v-if="project">
+              <li class="nav-item dropdown" v-for="(values, key) in names[project]" :key="key">
+                <router-link style="cursor:pointer" is="a" class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-if="names[project][key].length > 1">
+                  {{ key }}
+                </router-link>
+                <router-link class="nav-link" :to="`/`+(values[0].projects.length <= 1 ? '' : 'project/'+project+'/')+values[0].name+`/all`" v-else>{{ values[0].display_name }}</router-link>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown" v-if="names[project][key].length > 1" z-index="9999">
+                  <div v-for="value in values" :key="value.display_name">
+                    <router-link :to="`/`+value.name+`/all`" :class="`dropdown-item `+(value.name ? '' : 'disabled')">{{ value.display_name }}</router-link>
+                  </div>
                 </div>
-              </div>
-            </li>
-          </ul>
-        </div>
-      </nav>
+              </li>
+            </ul>
+          </div>
+        </nav>
       <div class="my-4"></div>
       <main role="main" class="container">
         <div class="row">
           <div class="col-md-4" v-if="tweetStatus.displayType !== 'status' && tweetStatus.userExist">
-            <el-skeleton avatar active :paragraph="{rows: 5}" v-if="load.leftCard"/>
-            <div class="card" v-else>
-              <template>
-                <el-image v-if="info.banner !== '0' && tweetStatus.displayType !== 'search' && tweetStatus.displayType !== 'tag'" class="card-img-top" :src="basePath+`/api/v2/media/userinfo/pbs.twimg.com/profile_banners/`+info.uid+`/`+info.banner+`.banner`" alt="Banner" :preview-src-list="[basePath+`/api/v2/media/userinfo/pbs.twimg.com/profile_banners/`+info.uid+`/`+info.banner+`.banner`]" ></el-image>
-                <div class="card-body">
-                  <h3 v-if="tweetStatus.displayType === 'search'">搜索</h3>
-                  <router-link :to="`/hashtag/`+tag.text" v-else-if="tweetStatus.displayType === 'tag' && tag.type === 0"><h3>#{{ tag.text }}</h3></router-link>
-                  <router-link :to="`/cashtag/`+tag.text" v-else-if="tweetStatus.displayType === 'tag' && tag.type === 1"><h3>${{ tag.text }}</h3></router-link>
-                  <div class="container" v-else>
-                    <div class="row">
-                      <div class="col-4" style="max-height: 100px; max-width: 100px">
-                        <el-image class="rounded-circle img-fluid" :src="basePath+`/api/v2/media/userinfo/`+info.header" v-if="info.header" lazy :preview-src-list="[basePath+`/api/v2/media/userinfo/`+info.header]">
-                          <div slot="error" class="image-slot">
-                            <i class="el-icon-user-solid"></i>
-                          </div>
-                        </el-image>
-                        <div class="my-4"></div>
+            <el-skeleton avatar active :paragraph="{rows: 5}" :loading="load.leftCard">
+              <div class="card">
+                <template>
+                  <el-image v-if="info.banner !== '0' && tweetStatus.displayType !== 'search' && tweetStatus.displayType !== 'tag'" class="card-img-top" :src="basePath+`/api/v2/media/userinfo/pbs.twimg.com/profile_banners/`+info.uid+`/`+info.banner+`.banner`" alt="Banner" :preview-src-list="[basePath+`/api/v2/media/userinfo/pbs.twimg.com/profile_banners/`+info.uid+`/`+info.banner+`.banner`]" ></el-image>
+                  <div class="card-body">
+                    <h3 v-if="tweetStatus.displayType === 'search'">搜索</h3>
+                    <router-link :to="`/hashtag/`+tag.text" v-else-if="tweetStatus.displayType === 'tag' && tag.type === 0"><h3>#{{ tag.text }}</h3></router-link>
+                    <router-link :to="`/cashtag/`+tag.text" v-else-if="tweetStatus.displayType === 'tag' && tag.type === 1"><h3>${{ tag.text }}</h3></router-link>
+                    <div class="container" v-else>
+                      <div class="row">
+                        <div class="col-4" style="max-height: 100px; max-width: 100px">
+                          <el-image class="rounded-circle img-fluid" :src="basePath+`/api/v2/media/userinfo/`+info.header" v-if="info.header" lazy :preview-src-list="[basePath+`/api/v2/media/userinfo/`+info.header]">
+                            <div slot="error" class="image-slot">
+                              <el-skeleton active avatar :paragraph="false" :title="false" />
+                            </div>
+                            <div slot="placeholder" class="image-slot" >
+                              <el-skeleton active avatar :paragraph="false" :title="false" />
+                            </div>
+                          </el-image>
+                          <div class="my-4"></div>
+                        </div>
+                        <div class="col-8">
+                          <h5 class="card-title mt-0">
+                            <b>{{ info.display_name }}</b>
+                            <verified status="text-primary" width="1em" height="1em"  v-if="info.verified" />
+                            <deleted status="text-primary" width="1em" height="1em"  v-if="info.deleted" />
+                            <locked status="text-primary" width="1em" height="1em" v-else-if="info.locked" />
+                          </h5>
+                          <p>
+                            <small>
+                              <a :href="`//twitter.com/`+info.name" target="_blank" class="text-dark">@{{ info.name }}</a>
+                            </small>
+                          </p>
+                        </div>
                       </div>
-                      <div class="col-8">
-                        <h5 class="card-title mt-0">
-                          <b>{{ info.display_name }}</b>
-                          <verified status="text-primary" width="1em" height="1em"  v-if="info.verified" />
-                          <deleted status="text-primary" width="1em" height="1em"  v-if="info.deleted" />
-                          <locked status="text-primary" width="1em" height="1em" v-else-if="info.locked" />
-                        </h5>
-                        <p>
-                          <small>
-                            <a :href="`//twitter.com/`+info.name" target="_blank" class="text-dark">@{{ info.name }}</a>
-                          </small>
-                        </p>
-                      </div>
+                      <div v-html="`<p class='card-text'>`+info.description+`</p>`"></div>
+                      <translate :basePath="basePath" :type="1" :id="info.uid" :to="settings.data.language" />
                     </div>
-                    <div v-html="`<p class='card-text'>`+info.description+`</p>`"></div>
-                    <translate :basePath="basePath" :type="1" :id="info.uid" :to="settings.data.language" />
                   </div>
-                </div>
-              </template>
-            </div>
+                </template>
+              </div>
+            </el-skeleton>
             <template v-if="tweetStatus.displayType === 'timeline'">
               <!--Load data-->
               <div class="my-4"></div>
               <template v-if="chart.chartData">
-                <el-skeleton active :title="false" :paragraph="{rows: 4}" v-if="!chart.chartData.rows.length"/>
-                <ve-line v-else :data="chart.chartData" :settings="chart.chartSettings" :extend="chart.chartOptions" :init-options="{renderer: 'svg'}" :height="chart.chartHeight"></ve-line>
+                <el-skeleton active :title="false" :paragraph="{rows: 4}" :loading="!chart.chartData.rows.length">
+                  <ve-line :data="chart.chartData" :settings="chart.chartSettings" :extend="chart.chartOptions" :init-options="{renderer: 'svg'}" :height="chart.chartHeight"></ve-line>
+                </el-skeleton>
               </template>
             </template>
             <div class="my-4"></div>
@@ -106,103 +111,104 @@
               </nav>
               <hr class="my-4">
               <!--user tweets-->
-              <el-skeleton :paragraph="{rows: 5}" v-if="load.timeline" active/>
-              <div v-else>
-                <template v-if="tweetStatus.displayType === 'timeline' && (info.deleted || info.locked)">
-                  <div class="card card-border border-info" id="alertMsg">
-                    <div class='card-body'>
-                      {{ '此账户已'+(info.deleted ? '删除' : '被保护')+'，我们将不再监控此账户' }}
-                    </div>
-                  </div>
-                  <hr class="my-4">
-                </template>
-                <div v-if="tweetStatus.reload" class="text-center">
-                  <el-button round icon="el-icon-refresh-left" @click="() => {load.timeline=true;update()}">重试</el-button>
-                </div>
-                <div v-if="load.top" class="text-center" v-loading="load.top" style="height: 50px"></div>
-                <div v-if="!tweetStatus.reload && tweets.length">
-                  <div v-for="(tweet, order) in tweets" :key="order">
-                    <div v-if="tweet.type === 'msg'" class="text-center">
-                      {{ tweet.full_text }}
-                    </div>
-                    <div v-else>
-                      <div :class="`card card-border`+((tweetStatus.displayType === 'timeline' && tweet.tweet_id === info.top) ? ' border-primary' : '')" :id="tweet.tweet_id">
-                        <div class='card-body'>
-                          <p v-if="tweetStatus.displayType === 'timeline' && tweet.tweet_id === info.top"><small class="text-muted">置顶推文</small></p>
-                          <div>
-                            <small v-if="tweet.retweet_from" class="text-muted">
-                              <retweet status="" width="1em" height="1em"/>
-                              <router-link :to="`/`+tweet.name+(tweetStatus.displayType === 'status' ? `/` + tweetStatus.display : `/status/`+tweet.tweet_id)" class="text-muted">
-                                {{ tweet.display_name }}
-                              </router-link>
-                            </small>
-                          </div>
-                          <template>
-                            <router-link :to="`/`+tweet.name+(tweetStatus.displayType === 'status' ? `/all` : `/status/`+tweet.tweet_id)" class="card-title text-dark">
-                              {{ tweet.retweet_from ? tweet.retweet_from : tweet.display_name }}
-                            </router-link>
-                            | <small>@{{ tweet.retweet_from ? tweet.retweet_from_name : tweet.name }}</small>
-                          </template>
-                          <!--media-->
-                          <span v-if="tweet.media === '1'" @click="settings.data.displayPicture=!settings.data.displayPicture" style="cursor:pointer">
-                            <image-icon status="text-success" width="2em" height="2em" />
-                          </span>
-                          <camera-video-icon status="text-danger" width="2em" height="2em"  v-if="tweet.video === '1'"/>
-                          <a :href="`//twitter.com/i/status/`+tweet.tweet_id" target="_blank">
-                            <box-arrow-up-right status="text-primary" width="2em" height="2em" />
-                          </a>
-                          <div class="my-4"></div>
-                          <div v-html="`<p class='card-text'>`+tweet.full_text+`</p>`"></div>
-                          <!--excited!-->
-                          <!--<htmlText :origin="tweet.full_text_origin" :replaceList="tweet.entities" v-if="tweet.entities.length" />
-                          <template v-else>
-                            <p class='card-text'>
-                              {{ tweet.full_text_origin }}
-                            </p>
-                          </template>-->
-                          <translate :basePath="basePath" :type="0" :id="tweet.tweet_id" :to="settings.data.language" />
-                          <!--media-->
-                          <template v-if="tweet.media === '1'&&!settings.data.displayPicture">
-                            <div class="my-4"></div>
-                            <image-list :list="tweet.mediaObject.tweetsMedia" :is_video="tweet.video" :basePath="basePath"/>
-                          </template>
-                          <!--quote-->
-                          <template v-if="tweet.quote_status !== '0'">
-                            <div class="my-4"></div>
-                            <quote-card :quote-object="tweet.quoteObject" :quote-media="tweet.mediaObject.quoteMedia" :base-path="basePath" :display-picture="settings.data.displayPicture" :language="settings.data.language" />
-                          </template>
-                          <!--polls-->
-                          <template v-if="tweet.poll === '1'">
-                            <tw-polls :polls="tweet.pollObject" :tweet_id="tweet.tweet_id" :language="settings.data.language" :media="tweet.mediaObject.cardMedia" :basePath="basePath" />
-                          </template>
-                          <!--card-->
-                          <template v-else-if="tweet.card !== ''">
-                            <div class="my-4"></div>
-                            <tw-card :object="tweet.cardObject" :media="tweet.mediaObject.cardMedia" :mediaState="!settings.data.displayPicture" :basePath="basePath"></tw-card>
-                          </template>
-                          <!--time && source-->
-                          <div id="foot">
-                            <small class="text-muted">{{ (new Date(tweet.time * 1000)).toLocaleString(settings.data.language) }} · <span style="color: #1DA1F2">{{ tweet.source }}</span></small>
-                          </div>
-                        </div>
+              <el-skeleton :paragraph="{rows: 5}" :loading="load.timeline" active>
+                <div>
+                  <template v-if="tweetStatus.displayType === 'timeline' && (info.deleted || info.locked)">
+                    <div class="card card-border border-info" id="alertMsg">
+                      <div class='card-body'>
+                        {{ '此账户已'+(info.deleted ? '删除' : '被保护')+'，我们将不再监控此账户' }}
                       </div>
                     </div>
                     <hr class="my-4">
-                  </div>
-                  <template>
-                    <button type="button" class="btn btn-primary btn-lg btn-block" @click="loading(1)" v-if="tweetStatus.moreTweets && !load.bottom">
-                      <span>加载更多</span>
-                    </button>
-                    <el-skeleton :paragraph="{rows: 1}" v-else-if="tweetStatus.moreTweets && load.bottom" active/>
-                    <div v-else-if="!tweetStatus.displayType === 'status'">
-                      <h5 class="text-center">已经没有更多内容</h5>
-                    </div>
                   </template>
+                  <div v-if="tweetStatus.reload" class="text-center">
+                    <el-button round icon="el-icon-refresh-left" @click="() => {load.timeline=true;update()}">重试</el-button>
+                  </div>
+                  <div v-if="load.top" class="text-center" v-loading="load.top" style="height: 50px"></div>
+                  <div v-if="!tweetStatus.reload && tweets.length">
+                    <div v-for="(tweet, order) in tweets" :key="order">
+                      <div v-if="tweet.type === 'msg'" class="text-center">
+                        {{ tweet.full_text }}
+                      </div>
+                      <div v-else>
+                        <div :class="`card card-border`+((tweetStatus.displayType === 'timeline' && tweet.tweet_id === info.top) ? ' border-primary' : '')" :id="tweet.tweet_id">
+                          <div class='card-body'>
+                            <p v-if="tweetStatus.displayType === 'timeline' && tweet.tweet_id === info.top"><small class="text-muted">置顶推文</small></p>
+                            <div>
+                              <small v-if="tweet.retweet_from" class="text-muted">
+                                <retweet status="" width="1em" height="1em"/>
+                                <router-link :to="`/`+tweet.name+(tweetStatus.displayType === 'status' ? `/` + tweetStatus.display : `/status/`+tweet.tweet_id)" class="text-muted">
+                                  {{ tweet.display_name }}
+                                </router-link>
+                              </small>
+                            </div>
+                            <template>
+                              <router-link :to="`/`+tweet.name+(tweetStatus.displayType === 'status' ? `/all` : `/status/`+tweet.tweet_id)" class="card-title text-dark">
+                                {{ tweet.retweet_from ? tweet.retweet_from : tweet.display_name }}
+                              </router-link>
+                              | <small>@{{ tweet.retweet_from ? tweet.retweet_from_name : tweet.name }}</small>
+                            </template>
+                            <!--media-->
+                            <span v-if="tweet.media === '1'" @click="settings.data.displayPicture=!settings.data.displayPicture" style="cursor:pointer">
+                            <image-icon status="text-success" width="2em" height="2em" />
+                          </span>
+                            <camera-video-icon status="text-danger" width="2em" height="2em"  v-if="tweet.video === '1'"/>
+                            <a :href="`//twitter.com/i/status/`+tweet.tweet_id" target="_blank">
+                              <box-arrow-up-right status="text-primary" width="2em" height="2em" />
+                            </a>
+                            <div class="my-4"></div>
+                            <div v-html="`<p class='card-text'>`+tweet.full_text+`</p>`"></div>
+                            <!--excited!-->
+                            <!--<htmlText :origin="tweet.full_text_origin" :replaceList="tweet.entities" v-if="tweet.entities.length" />
+                            <template v-else>
+                              <p class='card-text'>
+                                {{ tweet.full_text_origin }}
+                              </p>
+                            </template>-->
+                            <translate :basePath="basePath" :type="0" :id="tweet.tweet_id" :to="settings.data.language" />
+                            <!--media-->
+                            <template v-if="tweet.media === '1'&&!settings.data.displayPicture">
+                              <div class="my-4"></div>
+                              <image-list :list="tweet.mediaObject.tweetsMedia" :is_video="tweet.video" :basePath="basePath"/>
+                            </template>
+                            <!--quote-->
+                            <template v-if="tweet.quote_status !== '0'">
+                              <div class="my-4"></div>
+                              <quote-card :quote-object="tweet.quoteObject" :quote-media="tweet.mediaObject.quoteMedia" :base-path="basePath" :display-picture="settings.data.displayPicture" :language="settings.data.language" />
+                            </template>
+                            <!--polls-->
+                            <template v-if="tweet.poll === '1'">
+                              <tw-polls :polls="tweet.pollObject" :tweet_id="tweet.tweet_id" :language="settings.data.language" :media="tweet.mediaObject.cardMedia" :basePath="basePath" />
+                            </template>
+                            <!--card-->
+                            <template v-else-if="tweet.card !== ''">
+                              <div class="my-4"></div>
+                              <tw-card :object="tweet.cardObject" :media="tweet.mediaObject.cardMedia" :mediaState="!settings.data.displayPicture" :basePath="basePath"></tw-card>
+                            </template>
+                            <!--time && source-->
+                            <div id="foot">
+                              <small class="text-muted">{{ timeGap(tweet.time) }} · <span style="color: #1DA1F2">{{ tweet.source }}</span></small>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <hr class="my-4">
+                    </div>
+                    <template>
+                      <button type="button" class="btn btn-primary btn-lg btn-block" @click="loading(1)" v-if="tweetStatus.moreTweets && !load.bottom">
+                        <span>加载更多</span>
+                      </button>
+                      <el-skeleton :paragraph="{rows: 1}" v-else-if="tweetStatus.moreTweets && load.bottom" active/>
+                      <div v-else-if="!tweetStatus.displayType === 'status'">
+                        <h5 class="text-center">已经没有更多内容</h5>
+                      </div>
+                    </template>
+                  </div>
+                  <div v-else-if="!tweetStatus.reload">
+                    <h5 class="text-center">已经没有更多内容</h5>
+                  </div>
                 </div>
-                <div v-else-if="!tweetStatus.reload">
-                  <h5 class="text-center">已经没有更多内容</h5>
-                </div>
-              </div>
+              </el-skeleton>
               <div class="my-4"></div>
             </template>
           </div>
@@ -380,6 +386,9 @@
       }
     },
     computed: {
+      now: function () {
+        return new Date();
+      },
       userList: function() {
         let users = [];
         Object.keys(this.names).forEach(value1 => {
@@ -506,6 +515,7 @@
     },
     mounted: function () {
       let is_project = this.$route.path.substr(3, 7);//提前处理
+      new CancelToken(c => cancel = c);//提前生成
       this.localrun();
       //处理路由
       this.routeCase();
@@ -537,6 +547,18 @@
       },
       changeTitle: function (text = "") {
         document.title = text;
+      },
+      timeGap: function (timestamp) {
+        let gap = (this.now - (timestamp * 1000))/1000;
+        if (gap < 60) {
+          return gap + '秒前';
+        } else if (gap < 3600) {
+          return Math.ceil(gap/60) + '分钟前';
+        } else if (gap < 86400) {
+          return Math.ceil(gap/3600) + '小时前';
+        } else {
+          return (new Date(timestamp * 1000)).toLocaleString(this.settings.data.language);
+        }
       },
       loading: function (type = 0) {
         if (this.tweetStatus.bottomTweetId && this.tweetStatus.topTweetId) {
@@ -777,6 +799,14 @@
 </script>
 
 <style>
+  .wrapper {
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+  .content {
+    flex: 1;
+  }
   #app {
     position: absolute;
     top: 0;

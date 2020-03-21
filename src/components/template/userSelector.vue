@@ -1,26 +1,31 @@
 <template>
     <div id="userSelector">
-        <div class="jumbotron jumbotron-fluid">
-            <div class="container">
-                <h1 class="display-4">Twitter Monitor</h1>
+        <div style="min-height: calc(100vh - 25px);">
+            <div class="jumbotron jumbotron-fluid">
+                <div class="container">
+                    <h1 class="display-4">Twitter Monitor</h1>
+                </div>
             </div>
-        </div>
-        <div class="container">
-            <div class="col-md-8 offset-md-2">
-                <search name="" :search="search" :display-type="displayType"/>
-                <div class="list-group" v-if="project && names[project] && !home">
-                    <router-link :to="`/i/project/`+user.project+`/`+user.name+`/all`" class="list-group-item list-group-item-action" v-for="(user, s) in userWithProjectList" :key="s"><b>{{ user.display_name }}</b> | <small>@{{ user.name }}</small> > <small>{{ project + ' (' + user.tag + ')' }}</small></router-link>
+            <div class="container">
+                <div class="col-md-8 offset-md-2">
+                    <search name="" :search="search" :display-type="displayType"/>
+                    <div class="list-group" v-if="project && names[project] && !home">
+                        <router-link :to="`/i/project/`+user.project+`/`+user.name+`/all`" class="list-group-item list-group-item-action" v-for="(user, s) in userWithProjectList" :key="s"><b>{{ user.display_name }}</b> | <small>@{{ user.name }}</small> > <small>{{ project + ' (' + user.tag + ')' }}</small></router-link>
+                        <div class="my-4"></div>
+                    </div>
+                    <el-row>
+                        <template v-for="(project, s) in projects">
+                            <router-link :to="`/i/project/`+project" :key="s">
+                                <el-button size="mini" class="text-decoration-none" round>{{ project }}</el-button>
+                            </router-link>
+                        </template>
+                    </el-row>
                     <div class="my-4"></div>
                 </div>
-                <el-row>
-                    <template v-for="(project, s) in projects">
-                        <router-link :to="`/i/project/`+project" :key="s">
-                            <el-button size="mini" class="text-decoration-none" round>{{ project }}</el-button>
-                        </router-link>
-                    </template>
-                </el-row>
-                <div class="my-4"></div>
             </div>
+        </div>
+        <div class="text-center" style="height: 25px">
+            >_ KDNETWORK
         </div>
     </div>
 </template>

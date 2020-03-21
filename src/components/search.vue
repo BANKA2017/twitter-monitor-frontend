@@ -16,7 +16,7 @@
                 <router-link :to="`/hashtag/`+search.keywords.slice(1)" class="list-group-item list-group-item-action" v-if="search.keywords.slice(0, 1) === '#'">查找标签 {{ search.keywords }}</router-link>
                 <router-link :to="`/cashtag/`+search.keywords.slice(1)" class="list-group-item list-group-item-action" v-if="search.keywords.slice(0, 1) === '$'">查找标签 {{ search.keywords }}</router-link>
                 <router-link :to="`/`+name+`/status/`+search.keywords" class="list-group-item list-group-item-action" v-if="name.length && search.keywords > 0 && search.keywords.match(/[0-9]+/g)[0] === search.keywords">查找推文 {{ search.keywords }}</router-link>
-                <router-link :to="`/search/`+encodeURIComponent(search.keywords)" class="list-group-item list-group-item-action" v-if="search.mode === 0"><span class="d-inline-block text-truncate" style="max-width: 250px;">搜索项目 {{ search.keywords }}</span></router-link>
+                <router-link :to="`/search/`+encodeURIComponent(search.keywords)" class="list-group-item list-group-item-action" v-if="search.mode === 0"><span class="d-inline-block text-truncate" style="max-width: 250px;">搜索 {{ search.keywords }}</span></router-link>
             </template>
         </div>
     </div>
