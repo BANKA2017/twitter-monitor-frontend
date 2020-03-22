@@ -174,7 +174,7 @@
                             <!--quote-->
                             <template v-if="tweet.quote_status !== '0'">
                               <div class="my-4"></div>
-                              <quote-card :quote-object="tweet.quoteObject" :quote-media="tweet.mediaObject.quoteMedia" :base-path="basePath" :display-picture="settings.data.displayPicture" :language="settings.data.language" />
+                              <quote-card :quote-object="tweet.quoteObject" :quote-media="tweet.mediaObject.quoteMedia" :base-path="basePath" :display-picture="settings.data.displayPicture" :language="settings.data.language" :now="now" />
                             </template>
                             <!--polls-->
                             <template v-if="tweet.poll === '1'">
@@ -187,7 +187,7 @@
                             </template>
                             <!--time && source-->
                             <div id="foot">
-                              <small class="text-muted">{{ timeGap(tweet.time) }} · <span style="color: #1DA1F2">{{ tweet.source }}</span></small>
+                              <small class="text-muted">{{ timeGap(tweet.time, now, settings.data.language) }} · <span style="color: #1DA1F2">{{ tweet.source }}</span></small>
                             </div>
                           </div>
                         </div>
@@ -306,6 +306,7 @@
       return {
         basePath: process.env.NODE_ENV !== "development" ? "https://bangdream.fun/twitter" : "https://bangdream.fun/dev/tmv2",
         displayName: "Twitter",
+        now: new Date(),
         tag: {
           text: '',
           type: 0
@@ -386,9 +387,6 @@
       }
     },
     computed: {
-      now: function () {
-        return new Date();
-      },
       userList: function() {
         let users = [];
         Object.keys(this.names).forEach(value1 => {
@@ -519,6 +517,7 @@
       this.localrun();
       //处理路由
       this.routeCase();
+      this.updateNow();
       let startTime = Date.now();
       axios.all([this.getAccountList(), this.getLanguageList()]).then(axios.spread((accountList, languageList) => {
         this.languageList = languageList.data;
@@ -548,16 +547,21 @@
       changeTitle: function (text = "") {
         document.title = text;
       },
-      timeGap: function (timestamp) {
-        let gap = (this.now - (timestamp * 1000))/1000;
+      updateNow: function () {
+        this.now = new Date();
+        console.log(this.now);
+        setTimeout(this.updateNow, 1000);
+      },
+      timeGap: function (timestamp, now, language) {
+        let gap = (now - (timestamp * 1000))/1000;
         if (gap < 60) {
-          return gap + '秒前';
+          return gap + '秒';
         } else if (gap < 3600) {
-          return Math.ceil(gap/60) + '分钟前';
+          return Math.floor(gap/60) + '分钟';
         } else if (gap < 86400) {
-          return Math.ceil(gap/3600) + '小时前';
+          return Math.floor(gap/3600) + '小时';
         } else {
-          return (new Date(timestamp * 1000)).toLocaleString(this.settings.data.language);
+          return (new Date(timestamp * 1000)).toLocaleString(language);
         }
       },
       loading: function (type = 0) {

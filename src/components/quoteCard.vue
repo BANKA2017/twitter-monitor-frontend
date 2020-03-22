@@ -15,7 +15,7 @@
                     <div class="my-4"></div>
                     <div v-html="`<p class='card-text'>`+quoteObject.full_text+`</p>`"></div>
                     <div id="quotefoot">
-                        <small class="text-muted">{{ timeGap(quoteObject.time) }}</small>
+                        <small class="text-muted">{{ timeGap(quoteObject.time, now, language) }}</small>
                     </div>
                     <!--media-->
                     <template v-if="quoteObject.media === '1'&&!displayPicture">
@@ -40,23 +40,19 @@
             quoteMedia: Array,
             displayPicture: Boolean,
             language: String,
-        },
-        computed: {
-            now: function () {
-                return new Date();
-            },
+            now: Date,
         },
         methods: {
-            timeGap: function (timestamp) {
-                let gap = (this.now - (timestamp * 1000))/1000;
+            timeGap: function (timestamp, now, language) {
+                let gap = (now - (timestamp * 1000))/1000;
                 if (gap < 60) {
-                    return gap + '秒前';
+                    return gap + '秒';
                 } else if (gap < 3600) {
-                    return Math.ceil(gap/60) + '分钟前';
+                    return Math.floor(gap/60) + '分钟';
                 } else if (gap < 86400) {
-                    return Math.ceil(gap/3600) + '小时前';
+                    return Math.floor(gap/3600) + '小时';
                 } else {
-                    return (new Date(timestamp * 1000)).toLocaleString(this.language);
+                    return (new Date(timestamp * 1000)).toLocaleString(language);
                 }
             },
         }
