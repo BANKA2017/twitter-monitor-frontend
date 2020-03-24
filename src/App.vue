@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="app" class="el-top">
     <user-selector v-if="tweetStatus.displayType === 'userSelector'" :names="names" :display-type="tweetStatus.displayType" :project="project" :projects="projects" :home="home" :search="search" :user-with-project-list="userWithProjectList"  />
     <router-view v-else-if="tweetStatus.displayType === 'about' || tweetStatus.displayType === 'api' || tweetStatus.displayType === 'serverStatus' || tweetStatus.displayType === 'stats' || tweetStatus.displayType === 'Online'"/>
     <template v-else>
@@ -473,6 +473,7 @@
           //window.stop();
           cancel();
           this.tweetStatus.userExist = true;
+          this.scrollToTop();
           let is_project = this.$route.path.substr(3, 7);//提前处理
           this.routeCase();
           if (this.tweetStatus.displayType !== 'userSelector' && this.tweetStatus.displayType !== 'about' && this.tweetStatus.displayType !== 'api' && this.tweetStatus.displayType !== 'stats' && this.tweetStatus.displayType !== 'serverStatus' && this.tweetStatus.displayType !== 'Online' && is_project !== 'project') {
@@ -517,7 +518,6 @@
       this.localrun();
       //处理路由
       this.routeCase();
-      this.updateNow();
       let startTime = Date.now();
       axios.all([this.getAccountList(), this.getLanguageList()]).then(axios.spread((accountList, languageList) => {
         this.languageList = languageList.data;
@@ -549,8 +549,13 @@
       },
       updateNow: function () {
         this.now = new Date();
-        console.log(this.now);
         setTimeout(this.updateNow, 1000);
+      },
+      scrollToTop: function (top = 0) {
+        document.getElementById("app").scrollTo({
+          top: top,
+          behavior: "smooth"
+        });
       },
       timeGap: function (timestamp, now, language) {
         let gap = (now - (timestamp * 1000))/1000;
@@ -783,6 +788,8 @@
         } else {
           this.settings.data = JSON.parse(localStorage.getItem('tm_settings'));
         }
+        //time
+        this.updateNow();
       },
       notice: function(text, status = 'success') {
         this.$message({
@@ -811,13 +818,13 @@
   .content {
     flex: 1;
   }
-  #app {
+  .el-top {
     position: absolute;
     top: 0;
     bottom: 0;
     left: 0;
     right: 0;
-    overflow-y: scroll;
+    overflow-y: auto;
   }
   .el-select .el-input {
     width: 130px;

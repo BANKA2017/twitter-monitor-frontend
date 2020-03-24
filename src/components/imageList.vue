@@ -16,8 +16,7 @@
             <el-image style="max-height: 300px; object-fit: cover;" class="rounded card-img-top" v-for="(media, s) in list" :key="media.tweet_id+s" :src="basePath +(online ? '/api/v2/online/media/?url=' : '/api/v2/media/tweets/') +media.url" lazy fit="cover" :preview-src-list="previewList" :preview-src-list-order="s" :alt="media.uid+'_'+media.tweet_id+'_'+s" :id="media.uid+'_'+media.tweet_id+'_'+s">
                 <div slot="error" class="image-slot"></div>
                 <div slot="placeholder" class="image-slot" >
-                    <!--此处待新操作 //TODO-->
-                    <div v-loading="true" class="loading-height" />
+                    <div style="height: 300px" v-loading="true" />
                 </div>
             </el-image>
         </div>
@@ -49,7 +48,5 @@
 </script>
 
 <style scoped>
-    .loading-height {
-        height: 300px;
-    }
+
 </style>

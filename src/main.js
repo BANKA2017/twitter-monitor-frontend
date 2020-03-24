@@ -7,7 +7,7 @@ import 'bootstrap/js/dist/util'
 import 'bootstrap/js/dist/button'
 import 'bootstrap/js/dist/dropdown'
 import 'bootstrap/js/dist/collapse'
-import 'bootstrap/dist/css/bootstrap.css';
+import "bootstrap/scss/bootstrap.scss";
 import 'jquery';
 //import 'popper.js';
 import {
@@ -28,7 +28,6 @@ import {
   Switch,
   Notification,//https://github.com/ElemeFE/element/issues/3450#issuecomment-500717476
 } from 'element-ui';
-import 'element-ui/lib/theme-chalk/index.css';
 import '@femessage/element-ui/lib/theme-chalk/skeleton.css';
 import Skeleton from '@femessage/element-ui/lib/skeleton.js';
 import VeLine from 'v-charts/lib/line.common'
