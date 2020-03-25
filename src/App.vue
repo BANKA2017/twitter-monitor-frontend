@@ -325,6 +325,7 @@
         project: "",
         projectS: false,
         projects: [],
+        is_project: '',
         names: {},
         //nsfwList: [],
         links: [],
@@ -465,27 +466,19 @@
       ]
     }),
     watch: {
-      "$route.path":  {
+      "tweetStatus.displayType": {
         handler: function () {
-          //console.log(this.$route.path);
-          //this.scrollToTop();
-
-          //处理未加载完成的
-          //window.stop();
-          cancel();
-          this.tweetStatus.userExist = true;
-          this.scrollToTop();
-          let is_project = this.$route.path.substr(3, 7);//提前处理
-          this.routeCase();
-          if (this.tweetStatus.displayType !== 'userSelector' && this.tweetStatus.displayType !== 'about' && this.tweetStatus.displayType !== 'api' && this.tweetStatus.displayType !== 'stats' && this.tweetStatus.displayType !== 'serverStatus' && this.tweetStatus.displayType !== 'Online' && is_project !== 'project') {
-            this.load.timeline = true;
-            this.update();
-            if (this.load.leftCard === true && this.tweetStatus.displayType === 'timeline') {
-              this.getUserInfo(this.name);
-            }
-          }
+          //暴力处理
+          window.stop();
         },
-        deep: true,
+        deep: true
+      },
+      "tweetStatus.display": {
+        handler: function () {
+          //暴力处理
+          window.stop();
+        },
+        deep: true
       },
       "name": function () {
         //clean
@@ -514,11 +507,32 @@
       }
     },
     mounted: function () {
-      let is_project = this.$route.path.substr(3, 7);//提前处理
       new CancelToken(c => cancel = c);//提前生成
       this.localrun();
       //处理路由
       this.routeCase();
+      if (this.tweetStatus.displayType !== 'userSelector' && this.tweetStatus.displayType !== 'about' && this.tweetStatus.displayType !== 'api' && this.tweetStatus.displayType !== 'stats' && this.tweetStatus.displayType !== 'serverStatus' && this.tweetStatus.displayType !== 'Online' && this.is_project !== 'project') {
+        this.update();
+      }
+      this.$router.afterEach(() => {
+          //console.log(this.$route.path);
+          //this.scrollToTop();
+
+          //处理未加载完成的
+          cancel();
+          this.tweetStatus.userExist = true;
+          this.scrollToTop();
+          this.is_project = this.$route.path.substr(3, 7);//提前处理
+          this.routeCase();
+          if (this.tweetStatus.displayType !== 'userSelector' && this.tweetStatus.displayType !== 'about' && this.tweetStatus.displayType !== 'api' && this.tweetStatus.displayType !== 'stats' && this.tweetStatus.displayType !== 'serverStatus' && this.tweetStatus.displayType !== 'Online' && this.is_project !== 'project') {
+            this.load.timeline = true;
+            this.update();
+            if (this.load.leftCard === true && this.tweetStatus.displayType === 'timeline') {
+              this.getUserInfo(this.name);
+            }
+          }
+        }
+      );
       let startTime = Date.now();
       axios.all([this.getAccountList(), this.getLanguageList()]).then(axios.spread((accountList, languageList) => {
         this.languageList = languageList.data;
@@ -529,10 +543,6 @@
         if(Date.now() - startTime > 3000){
           this.settings.data.displayPicture = true;
           this.notice('当前网速较慢，已关闭图片显示', 'warning');
-        }
-        //check $route
-        if (this.tweetStatus.displayType !== 'userSelector' && this.tweetStatus.displayType !== 'about' && this.tweetStatus.displayType !== 'api' && this.tweetStatus.displayType !== 'stats' && this.tweetStatus.displayType !== 'serverStatus' && this.tweetStatus.displayType !== 'Online' && is_project !== 'project') {
-          this.update();
         }
       })).catch(error => {
         this.notice(error, 'error');
