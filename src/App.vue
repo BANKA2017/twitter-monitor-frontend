@@ -1,5 +1,7 @@
 <template>
-  <div id="app" class="el-top">
+  <div id="app">
+    <div style="position: absolute"></div>
+    <el-backtop></el-backtop>
     <user-selector v-if="tweetStatus.displayType === 'userSelector'" :names="names" :display-type="tweetStatus.displayType" :project="project" :projects="projects" :home="home" :search="search" :user-with-project-list="userWithProjectList"  />
     <router-view v-else-if="tweetStatus.displayType === 'about' || tweetStatus.displayType === 'api' || tweetStatus.displayType === 'serverStatus' || tweetStatus.displayType === 'stats' || tweetStatus.displayType === 'Online'"/>
     <template v-else>
@@ -250,7 +252,6 @@
         </el-drawer>
       </main>
     </template>
-    <el-backtop target="#app"></el-backtop>
   </div>
 </template>
 
@@ -552,7 +553,7 @@
         setTimeout(this.updateNow, 1000);
       },
       scrollToTop: function (top = 0) {
-        document.getElementById("app").scrollTo({
+        window.scrollTo({
           top: top,
           behavior: "smooth"
         });
@@ -810,22 +811,6 @@
 </script>
 
 <style>
-  .wrapper {
-    min-height: 100%;
-    display: flex;
-    flex-direction: column;
-  }
-  .content {
-    flex: 1;
-  }
-  .el-top {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    overflow-y: auto;
-  }
   .el-select .el-input {
     width: 130px;
   }
