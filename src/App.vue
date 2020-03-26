@@ -22,7 +22,7 @@
           <div class="collapse navbar-collapse" id="navbarNav" v-if="tweetStatus.displayType === 'timeline'">
             <ul class="navbar-nav" v-if="project">
               <li class="nav-item dropdown" v-for="(values, key) in names[project]" :key="key">
-                <router-link style="cursor:pointer" is="a" class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-if="names[project][key].length > 1">
+                <router-link style="cursor:pointer" is="a" class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-if="names[project][key].length > 1" to="">
                   {{ key }}
                 </router-link>
                 <router-link class="nav-link" :to="`/`+(values[0].projects.length <= 1 ? '' : 'project/'+project+'/')+values[0].name+`/all`" v-else>{{ values[0].display_name }}</router-link>
@@ -42,7 +42,14 @@
             <el-skeleton avatar active :paragraph="{rows: 5}" :loading="load.leftCard">
               <div class="card">
                 <template>
-                  <el-image v-if="info.banner !== '0' && tweetStatus.displayType !== 'search' && tweetStatus.displayType !== 'tag'" class="card-img-top" :src="basePath+`/api/v2/media/userinfo/pbs.twimg.com/profile_banners/`+info.uid+`/`+info.banner+`.banner`" alt="Banner" :preview-src-list="[basePath+`/api/v2/media/userinfo/pbs.twimg.com/profile_banners/`+info.uid+`/`+info.banner+`.banner`]" ></el-image>
+                  <el-image v-if="info.banner !== '0' && tweetStatus.displayType !== 'search' && tweetStatus.displayType !== 'tag'" class="card-img-top" :src="basePath+`/api/v2/media/userinfo/pbs.twimg.com/profile_banners/`+info.uid+`/`+info.banner+`.banner`" alt="Banner" :preview-src-list="[basePath+`/api/v2/media/userinfo/pbs.twimg.com/profile_banners/`+info.uid+`/`+info.banner+`.banner`]">
+                    <div slot="error" class="image-slot container">
+                      <div v-loading="true" element-loading-background="rgba(0, 0, 0, 0)" style="height: 20vh"></div>
+                    </div>
+                    <div slot="placeholder" class="image-slot container" >
+                      <div v-loading="true" element-loading-background="rgba(0, 0, 0, 0)" style="height: 20vh"></div>
+                    </div>
+                  </el-image>
                   <div class="card-body">
                     <h3 v-if="tweetStatus.displayType === 'search'">搜索</h3>
                     <router-link :to="`/hashtag/`+tag.text" v-else-if="tweetStatus.displayType === 'tag' && tag.type === 0"><h3>#{{ tag.text }}</h3></router-link>

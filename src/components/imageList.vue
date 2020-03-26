@@ -5,18 +5,22 @@
         </div>
         <div v-else-if="list.length > 1">
             <el-image class="rounded img-thumbnail" v-for="(media, s) in list" :key="media.tweet_id+s" :src="basePath+(online ? '/api/v2/online/media/?url=' : '/api/v2/media/tweets/') +media.url+':thumb'" lazy style="width: 180px; height: 180px" fit="cover" :preview-src-list="previewList" :preview-src-list-order="s" :alt="media.uid+'_'+media.tweet_id+'_'+s">
-                <div slot="error" class="image-slot"></div>
+                <div slot="error" class="image-slot">
+                    <div style="height: 180px" v-loading="true" element-loading-background="rgba(0, 0, 0, 0)" />
+                </div>
                 <div slot="placeholder" class="image-slot">
                     <!--此处可写死-->
-                    <div style="height: 180px" v-loading="true" />
+                    <div style="height: 180px" v-loading="true" element-loading-background="rgba(0, 0, 0, 0)" />
                 </div>
             </el-image>
         </div>
         <div v-else class="card">
             <el-image style="max-height: 300px; object-fit: cover;" class="rounded card-img-top" v-for="(media, s) in list" :key="media.tweet_id+s" :src="basePath +(online ? '/api/v2/online/media/?url=' : '/api/v2/media/tweets/') +media.url" lazy fit="cover" :preview-src-list="previewList" :preview-src-list-order="s" :alt="media.uid+'_'+media.tweet_id+'_'+s" :id="media.uid+'_'+media.tweet_id+'_'+s">
-                <div slot="error" class="image-slot"></div>
+                <div slot="error" class="image-slot">
+                    <div style="height: 300px" v-loading="true" element-loading-background="rgba(0, 0, 0, 0)" />
+                </div>
                 <div slot="placeholder" class="image-slot" >
-                    <div style="height: 300px" v-loading="true" />
+                    <div style="height: 300px" v-loading="true" element-loading-background="rgba(0, 0, 0, 0)" />
                 </div>
             </el-image>
         </div>
