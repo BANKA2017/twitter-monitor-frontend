@@ -36,13 +36,13 @@ import VeLine from 'v-charts/lib/line.common'
 //Vue.use(VueHighlightJS);
 
 //gtag
-import VueGtag from "vue-gtag";
-if (process.env.NODE_ENV !== "development") {
-  Vue.use(VueGtag, {
-    config: { id: "UA-90617066-2" }
-  });
-
-}
+//import VueGtag from "vue-gtag";
+//if (process.env.NODE_ENV !== "development") {
+//  Vue.use(VueGtag, {
+//    config: { id: "UA-90617066-2" }
+//  });
+//
+//}
 
 import VueMeta from 'vue-meta'
 
