@@ -5,51 +5,45 @@
     <user-selector v-if="tweetStatus.displayType === 'userSelector'" :names="names" :display-type="tweetStatus.displayType" :project="project" :projects="projects" :home="home" :search="search" :user-with-project-list="userWithProjectList"  />
     <router-view v-else-if="tweetStatus.displayType === 'about' || tweetStatus.displayType === 'api' || tweetStatus.displayType === 'serverStatus' || tweetStatus.displayType === 'stats' || tweetStatus.displayType === 'Online'"/>
     <template v-else>
-        <nav class="navbar navbar-expand-lg navbar-light text-center bg-light">
+      <nav class="navbar navbar-expand-lg navbar-light text-center bg-light sticky-top" id="nav">
         <span class="navbar-brand mb-0 h1 d-inline-block text-truncate" style="max-width: 250px;">
           {{ displayName }}
         </span>
-          <div class="btn-group" role="group">
-            <button class="navbar-toggler" type="button" @click="$router.go(-1)">
-            <span>
-              <chevronLeft status="text-success" width="30" height="30" />
-            </span>
-            </button>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation" v-if="project && projects.length && tweetStatus.displayType === 'timeline'">
-              <span class="navbar-toggler-icon"></span>
-            </button>
-          </div>
-          <div class="collapse navbar-collapse" id="navbarNav" v-if="tweetStatus.displayType === 'timeline'">
-            <ul class="navbar-nav" v-if="project">
-              <li class="nav-item dropdown" v-for="(values, key) in names[project]" :key="key">
-                <router-link style="cursor:pointer" is="a" class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-if="names[project][key].length > 1" to="">
-                  {{ key }}
-                </router-link>
-                <router-link class="nav-link" :to="`/`+(values[0].projects.length <= 1 ? '' : 'project/'+project+'/')+values[0].name+`/all`" v-else>{{ values[0].display_name }}</router-link>
-                <div class="dropdown-menu" aria-labelledby="navbarDropdown" v-if="names[project][key].length > 1" z-index="9999">
-                  <div v-for="value in values" :key="value.display_name">
-                    <router-link :to="`/`+value.name+`/all`" :class="`dropdown-item `+(value.name ? '' : 'disabled')">{{ value.display_name }}</router-link>
-                  </div>
+        <div class="btn-group" role="group">
+          <button class="navbar-toggler" type="button" @click="$router.go(-1)"><span>
+            <chevronLeft status="text-success" width="30" height="30" />
+          </span>
+          </button>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation" v-if="project && projects.length && tweetStatus.displayType === 'timeline'">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+        </div>
+        <div class="collapse navbar-collapse" id="navbarNav" v-if="tweetStatus.displayType === 'timeline'">
+          <ul class="navbar-nav" v-if="project">
+            <li class="nav-item dropdown" v-for="(values, key) in names[project]" :key="key">
+              <router-link style="cursor:pointer" is="a" class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-if="names[project][key].length > 1" to="">
+                {{ key }}
+              </router-link>
+              <router-link class="nav-link" :to="`/`+(values[0].projects.length <= 1 ? '' : 'project/'+project+'/')+values[0].name+`/all`" v-else>{{ values[0].display_name }}</router-link>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown" v-if="names[project][key].length > 1" z-index="9999">
+                <div v-for="value in values" :key="value.display_name">
+                  <router-link :to="`/`+value.name+`/all`" :class="`dropdown-item `+(value.name ? '' : 'disabled')">{{ value.display_name }}</router-link>
                 </div>
-              </li>
-            </ul>
-          </div>
-        </nav>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </nav>
       <div class="my-4"></div>
-      <main role="main" class="container">
+      <main role="main" class="container" id="main">
         <div class="row">
-          <div class="col-md-4" v-if="tweetStatus.displayType !== 'status' && tweetStatus.userExist">
+          <div class="col-md-4" v-if="tweetStatus.userExist">
             <el-skeleton avatar active :paragraph="{rows: 5}" :loading="load.leftCard">
               <div class="card">
                 <template>
-                  <el-image v-if="info.banner !== '0' && tweetStatus.displayType !== 'search' && tweetStatus.displayType !== 'tag'" class="card-img-top" :src="basePath+`/api/v2/media/userinfo/pbs.twimg.com/profile_banners/`+info.uid+`/`+info.banner+`.banner`" alt="Banner" :preview-src-list="[basePath+`/api/v2/media/userinfo/pbs.twimg.com/profile_banners/`+info.uid+`/`+info.banner+`.banner`]">
-                    <div slot="error" class="image-slot container">
-                      <div v-loading="true" element-loading-background="rgba(0, 0, 0, 0)" style="height: 20vh"></div>
-                    </div>
-                    <div slot="placeholder" class="image-slot container" >
-                      <div v-loading="true" element-loading-background="rgba(0, 0, 0, 0)" style="height: 20vh"></div>
-                    </div>
-                  </el-image>
+                  <div class="row no-gutters">
+                    <el-image v-if="info.banner !== '0' && tweetStatus.displayType !== 'search' && tweetStatus.displayType !== 'tag'" fit="cover" style="max-height: 20vh" class="col-12 card-img-top" :src="basePath+`/api/v2/media/userinfo/pbs.twimg.com/profile_banners/`+info.uid+`/`+info.banner+`.banner`" alt="Banner" :preview-src-list="[basePath+`/api/v2/media/userinfo/pbs.twimg.com/profile_banners/`+info.uid+`/`+info.banner+`.banner`]"></el-image>
+                  </div>
                   <div class="card-body">
                     <h3 v-if="tweetStatus.displayType === 'search'">搜索</h3>
                     <router-link :to="`/hashtag/`+tag.text" v-else-if="tweetStatus.displayType === 'tag' && tag.type === 0"><h3>#{{ tag.text }}</h3></router-link>
@@ -99,7 +93,7 @@
             </template>
             <div class="my-4"></div>
           </div>
-          <div :class="`col-md-` + ((tweetStatus.displayType === 'status' || !tweetStatus.userExist) ? '10' : '6')">
+          <div class="col-md-6">
             <div v-if="!tweetStatus.userExist">
               <h5 class="text-center">@{{ name }} 不存在</h5>
               <div class="my-4"></div>
@@ -315,6 +309,7 @@
         basePath: process.env.NODE_ENV !== "development" ? "https://bangdream.fun/twitter" : "https://bangdream.fun/dev/tmv2",
         displayName: "Twitter",
         now: new Date(),
+        height: 0,
         tag: {
           text: '',
           type: 0

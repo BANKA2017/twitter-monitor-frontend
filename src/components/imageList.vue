@@ -1,28 +1,47 @@
 <template>
     <div id="imageList">
         <div v-if="is_video === '1'">
-            <video :src="basePath+(online ? '/api/v2/online/media/?url=' : '/api/v2/media/tweets/') +list[0].url" :poster="basePath+(online ? '/api/v2/online/media/?url=' : '/api/v2/media/tweets/') +list[0].cover" :type="list[0].content_type" preload="none" controls muted playsinline loop width="100%" id="videoPlayer"></video>
+            <div class="row no-gutters">
+                <video class="col-12 border" style="max-height: 300px; border-radius: 10px 10px 10px 10px" :src="basePath+(online ? '/api/v2/online/media/?url=' : '/api/v2/media/tweets/') +list[0].url" :poster="basePath+(online ? '/api/v2/online/media/?url=' : '/api/v2/media/tweets/') +list[0].cover" :type="list[0].content_type" preload="none" controls muted playsinline loop id="videoPlayer"></video>
+            </div>
         </div>
-        <div v-else-if="list.length > 1">
-            <el-image class="rounded img-thumbnail" v-for="(media, s) in list" :key="media.tweet_id+s" :src="basePath+(online ? '/api/v2/online/media/?url=' : '/api/v2/media/tweets/') +media.url+':thumb'" lazy style="width: 180px; height: 180px" fit="cover" :preview-src-list="previewList" :preview-src-list-order="s" :alt="media.uid+'_'+media.tweet_id+'_'+s">
-                <div slot="error" class="image-slot">
-                    <div style="height: 180px" v-loading="true" element-loading-background="rgba(0, 0, 0, 0)" />
-                </div>
-                <div slot="placeholder" class="image-slot">
-                    <!--此处可写死-->
-                    <div style="height: 180px" v-loading="true" element-loading-background="rgba(0, 0, 0, 0)" />
-                </div>
-            </el-image>
+        <div v-else-if="list.length === 1">
+            <div class="row no-gutters">
+                <el-image class="col-12 border" style="height: 300px; border-radius: 10px 10px 10px 10px" :src="basePath+(online ? '/api/v2/online/media/?url=' : '/api/v2/media/tweets/') +list[0].url+':small'" lazy fit="cover" :preview-src-list="previewList" :preview-src-list-order="0" :alt="list[0].uid+'_'+list[0].tweet_id+'_'+0"></el-image>
+            </div>
         </div>
-        <div v-else class="card">
-            <el-image style="max-height: 300px; object-fit: cover;" class="rounded card-img-top" v-for="(media, s) in list" :key="media.tweet_id+s" :src="basePath +(online ? '/api/v2/online/media/?url=' : '/api/v2/media/tweets/') +media.url" lazy fit="cover" :preview-src-list="previewList" :preview-src-list-order="s" :alt="media.uid+'_'+media.tweet_id+'_'+s" :id="media.uid+'_'+media.tweet_id+'_'+s">
-                <div slot="error" class="image-slot">
-                    <div style="height: 300px" v-loading="true" element-loading-background="rgba(0, 0, 0, 0)" />
+        <div v-else-if="list.length === 2">
+            <div class="row no-gutters">
+                <el-image class="col-6 border" style="height: 300px; border-radius: 10px 0 0 10px" :src="basePath+(online ? '/api/v2/online/media/?url=' : '/api/v2/media/tweets/') +list[0].url+':small'" lazy fit="cover" :preview-src-list="previewList" :preview-src-list-order="0" :alt="list[0].uid+'_'+list[0].tweet_id+'_'+0"></el-image>
+                <el-image class="col-6 border" style="height: 300px; border-radius: 0 10px 10px 0" :src="basePath+(online ? '/api/v2/online/media/?url=' : '/api/v2/media/tweets/') +list[1].url+':small'" lazy fit="cover" :preview-src-list="previewList" :preview-src-list-order="1" :alt="list[1].uid+'_'+list[1].tweet_id+'_'+1"></el-image>
+            </div>
+        </div>
+        <div v-else-if="list.length === 3">
+            <div class="row no-gutters">
+                <el-image class="col-6 border" style="height: 300px; border-radius: 10px 0 0 10px" :src="basePath+(online ? '/api/v2/online/media/?url=' : '/api/v2/media/tweets/') +list[0].url+':small'" lazy fit="cover" :preview-src-list="previewList" :preview-src-list-order="0" :alt="list[0].uid+'_'+list[0].tweet_id+'_'+0"></el-image>
+                <div class="col-6">
+                    <div class="row no-gutters">
+                        <el-image class="col-12 border" style="height: 150px; border-top-right-radius: 10px 10px" :src="basePath+(online ? '/api/v2/online/media/?url=' : '/api/v2/media/tweets/') +list[1].url+':small'" lazy fit="cover" :preview-src-list="previewList" :preview-src-list-order="1" :alt="list[1].uid+'_'+list[1].tweet_id+'_'+1"></el-image>
+                        <el-image class="col-12 border" style="height: 150px; border-bottom-right-radius: 10px 10px" :src="basePath+(online ? '/api/v2/online/media/?url=' : '/api/v2/media/tweets/') +list[2].url+':small'" lazy fit="cover" :preview-src-list="previewList" :preview-src-list-order="2" :alt="list[2].uid+'_'+list[2].tweet_id+'_'+2"></el-image>
+                    </div>
                 </div>
-                <div slot="placeholder" class="image-slot" >
-                    <div style="height: 300px" v-loading="true" element-loading-background="rgba(0, 0, 0, 0)" />
+            </div>
+        </div>
+        <div v-else-if="list.length === 4">
+            <div class="row no-gutters">
+                <div class="col-6">
+                    <div class="row no-gutters">
+                        <el-image class="col-12 border" style="height: 150px; border-top-left-radius: 10px 10px" :src="basePath+(online ? '/api/v2/online/media/?url=' : '/api/v2/media/tweets/') +list[0].url+':small'" lazy fit="cover" :preview-src-list="previewList" :preview-src-list-order="0" :alt="list[0].uid+'_'+list[0].tweet_id+'_'+0"></el-image>
+                        <el-image class="col-12 border" style="height: 150px; border-bottom-left-radius: 10px 10px" :src="basePath+(online ? '/api/v2/online/media/?url=' : '/api/v2/media/tweets/') +list[1].url+':small'" lazy fit="cover" :preview-src-list="previewList" :preview-src-list-order="1" :alt="list[1].uid+'_'+list[1].tweet_id+'_'+1"></el-image>
+                    </div>
                 </div>
-            </el-image>
+                <div class="col-6">
+                    <div class="row no-gutters">
+                        <el-image class="col-12 border" style="height: 150px; border-top-right-radius: 10px 10px" :src="basePath+(online ? '/api/v2/online/media/?url=' : '/api/v2/media/tweets/') +list[2].url+':small'" lazy fit="cover" :preview-src-list="previewList" :preview-src-list-order="2" :alt="list[2].uid+'_'+list[2].tweet_id+'_'+2"></el-image>
+                        <el-image class="col-12 border" style="height: 150px; border-bottom-right-radius: 10px 10px" :src="basePath+(online ? '/api/v2/online/media/?url=' : '/api/v2/media/tweets/') +list[3].url+':small'" lazy fit="cover" :preview-src-list="previewList" :preview-src-list-order="3" :alt="list[3].uid+'_'+list[3].tweet_id+'_'+3"></el-image>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </template>

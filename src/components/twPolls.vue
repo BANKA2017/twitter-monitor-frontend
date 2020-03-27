@@ -2,11 +2,11 @@
     <div id="twPolls">
         <div class="my-4"></div>
         <div class="container text-decoration-none" :id="tweet_id+`_poll`">
-            <div class="row">
+            <div class="row no-gutters">
                 <div class="card mx-auto" v-if="media.length">
-                    <el-image class="card-img-top" :src="basePath+`/api/v2/media/tweets/`+media[0].url+''" lazy style="width: 180px; height: 180px" fit="cover" :preview-src-list="[basePath+`/api/v2/media/tweets/`+media[0].url+'']" :alt="pollImage">
-                        <div slot="error" class="image-slot"></div>
-                    </el-image>
+                    <div class="row no-gutters">
+                        <el-image class="col-12 card-img-top" :src="basePath+`/api/v2/media/tweets/`+media[0].url+''" lazy style="height: 300px" fit="cover" :preview-src-list="[basePath+`/api/v2/media/tweets/`+media[0].url+'']" :alt="pollImage"></el-image>
+                    </div>
                 </div>
                 <div v-if="this.etaSeconds <= 0 && this.polls[0].checked === '1'" class="col-12">
                     <el-progress :percentage="Math.ceil((poll.count/pollCount)*100)" v-for="poll in polls" :format="() => poll.choice_label+' (' + Math.ceil((poll.count/pollCount)*100) + '%)'" :key="poll.poll_order"></el-progress>

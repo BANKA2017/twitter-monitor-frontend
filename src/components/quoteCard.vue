@@ -1,5 +1,5 @@
 <template>
-    <div class="container" id="quote">
+    <div class="row no-gutters" id="quote">
         <div class="card mb-3">
             <div class='card-body'>
                 <span class="card-text" v-if="!quoteObject.full_text">这条推文不可用。</span>
