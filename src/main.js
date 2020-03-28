@@ -36,13 +36,19 @@ import VeLine from 'v-charts/lib/line.common'
 //Vue.use(VueHighlightJS);
 
 //gtag
-//import VueGtag from "vue-gtag";
-//if (process.env.NODE_ENV !== "development") {
-//  Vue.use(VueGtag, {
-//    config: { id: "UA-90617066-2" }
-//  });
-//
-//}
+//骚玩法不要学, 老老实实写代码
+import VueGtag from "vue-gtag";
+Vue.prototype.ready = false;
+if (process.env.NODE_ENV !== "development") {
+  Vue.use(VueGtag, {
+    config: { id: "UA-90617066-2" },
+    onReady () {
+      Vue.prototype.ready = true;
+    }
+  });
+} else {
+  Vue.prototype.ready = true;
+}
 
 import VueMeta from 'vue-meta'
 
