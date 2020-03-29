@@ -8,7 +8,7 @@
                         <el-image class="col-12 card-img-top" :src="basePath+`/api/v2/media/tweets/`+media[0].url+''" lazy style="height: 300px" fit="cover" :preview-src-list="[basePath+`/api/v2/media/tweets/`+media[0].url+'']" :alt="pollImage"></el-image>
                     </div>
                 </div>
-                <div v-if="this.etaSeconds <= 0 && this.polls[0].checked === '1'" class="col-12">
+                <div v-if="etaSeconds <= 0 && polls[0].checked === '1'" class="col-12">
                     <el-progress :percentage="Math.ceil((poll.count/pollCount)*100)" v-for="poll in polls" :format="() => poll.choice_label+' (' + Math.ceil((poll.count/pollCount)*100) + '%)'" :key="poll.poll_order"></el-progress>
                 </div>
                 <template v-else>
@@ -27,9 +27,10 @@
         props: {
             polls: Array,
             basePath: String,
-            tweet_id: Number,
+            tweet_id: String,
             language: String,
             media: Array,
+            now: Date,
         },
         computed: {
             pollCount: function () {
@@ -41,11 +42,13 @@
             },
             etaSeconds: function () {
                 //对比当前时间
-                return (parseInt(this.polls[0].end_datetime) * 1000 - new Date())/1000;
+                return (parseInt(this.polls[0].end_datetime) * 1000 - this.now)/1000;
             },
             eta: function () {
-                if (this.etaSeconds <= 0) {
+                if (this.etaSeconds <= 0 && this.polls[0].checked === '1') {
                     return this.pollCount + ' 次投票 · 最终结果';
+                } else if (this.etaSeconds <= 0) {
+                    return this.pollCount + ' 次投票 · 等待同步';
                 } else if (this.etaSeconds < 60) {
                     return this.pollCount + ' 次投票 · 剩下' + Math.ceil(this.etaSeconds) + '秒';
                 } else if (this.etaSeconds < 3600) {

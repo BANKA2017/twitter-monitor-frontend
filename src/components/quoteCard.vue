@@ -1,5 +1,5 @@
 <template>
-    <div class="no-gutters card" id="quote">
+    <div class="no-gutters card" id="quote" style="border-radius: 14px 14px 14px 14px">
         <div class='card-body'>
             <span class="card-text" v-if="!quoteObject.full_text">这条推文不可用。</span>
             <template v-else>

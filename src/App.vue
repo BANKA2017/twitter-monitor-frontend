@@ -181,7 +181,7 @@
                             </template>
                             <!--polls-->
                             <template v-if="tweet.poll === '1'">
-                              <tw-polls :polls="tweet.pollObject" :tweet_id="tweet.tweet_id" :language="settings.data.language" :media="tweet.mediaObject.cardMedia" :basePath="basePath" />
+                              <tw-polls :polls="tweet.pollObject" :tweet_id="tweet.tweet_id" :language="settings.data.language" :media="tweet.mediaObject.cardMedia" :now="now" :basePath="basePath" />
                             </template>
                             <!--card-->
                             <template v-else-if="tweet.card !== ''">
@@ -343,6 +343,7 @@
           bottomTweetId: 0,
           reload: false,
           userExist: true,
+          lock: false,
           //statusMode: false,
         },
         displayMode: [['全部', 'all', 0], ['原创', 'self', 0], ['转推', 'retweet', 0], ['媒体', 'media', 0]],
@@ -479,12 +480,12 @@
           this.scrollToTop();
           this.is_project = this.$route.path.substr(3, 7);//提前处理
           this.routeCase();
-          if (this.tweetStatus.displayType !== 'userSelector' && this.tweetStatus.displayType !== 'about' && this.tweetStatus.displayType !== 'api' && this.tweetStatus.displayType !== 'stats' && this.tweetStatus.displayType !== 'serverStatus' && this.tweetStatus.displayType !== 'Online' && this.is_project !== 'project') {
+          if (this.lock) {
             this.load.timeline = true;
             this.update();
-            if (this.load.leftCard === true && this.tweetStatus.displayType === 'timeline') {
-              this.getUserInfo(this.name);
-            }
+            //if (this.load.leftCard === true && this.tweetStatus.displayType === 'timeline') {
+            //  this.getUserInfo(this.name);
+            //}
           }
         },
         deep: true,
@@ -508,9 +509,11 @@
         deep: true
       },
       "name": function () {
-        //clean
-        this.chart.chartData.rows = [];
-        this.getUserInfo(this.name);
+        if (this.lock) {
+          //clean
+          this.chart.chartData.rows = [];
+          this.getUserInfo(this.name);
+        }
       },
       "info": function(){
         //バンドリ！ BanG Dream! 公式 (@bang_dream_info) / Twitter
@@ -538,6 +541,10 @@
       this.localrun();
       //处理路由
       this.routeCase();
+      //check $route
+      if (this.lock) {
+        this.update();
+      }
       let startTime = Date.now();
       axios.all([this.getAccountList(), this.getLanguageList()]).then(axios.spread((accountList, languageList) => {
         this.languageList = languageList.data;
@@ -548,10 +555,6 @@
         if(Date.now() - startTime > 3000){
           this.settings.data.displayPicture = true;
           this.notice('当前网速较慢，已关闭图片显示', 'warning');
-        }
-        //check $route
-        if (this.tweetStatus.displayType !== 'userSelector' && this.tweetStatus.displayType !== 'about' && this.tweetStatus.displayType !== 'api' && this.tweetStatus.displayType !== 'stats' && this.tweetStatus.displayType !== 'serverStatus' && this.tweetStatus.displayType !== 'Online' && this.is_project !== 'project') {
-          this.update();
         }
       })).catch(error => {
         this.notice(error, 'error');
@@ -710,25 +713,30 @@
         if (this.$route.path === '/about') {
           this.tweetStatus.displayType = 'about';
           //this.changeTitle("关于");
+          this.lock = false;
           return;
         }
         if (this.$route.path === '/api') {
           this.tweetStatus.displayType = 'api';
           this.changeTitle("API");
+          this.lock = false;
           return;
         }
         if (this.$route.path === '/i/stats') {
           this.tweetStatus.displayType = 'stats';
           this.changeTitle("STATS");
+          this.lock = false;
           return;
         }
         if (this.$route.path === '/i/status') {
           this.tweetStatus.displayType = 'serverStatus';
           this.changeTitle("STATUS");
+          this.lock = false;
           return;
         }
         if (this.$route.path === '/i/online') {
           this.tweetStatus.displayType = 'Online';
+          this.lock = false;
           return;
         }
         //none
@@ -738,6 +746,7 @@
           this.search.keywords = '';
           this.tweetStatus.displayType = 'userSelector';
           this.search.mode = 0;
+          this.lock = false;
           return;
         }
         this.home = false;
@@ -746,10 +755,14 @@
           this.project = this.$route.params.project;
           this.search.keywords = '';
           if (this.$route.params.name) {
+            this.lock = false;
             this.$router.replace({path: '/'+this.$route.params.name+(this.$route.params.status ? ('/status/' + this.$route.params.status + '/') : (this.$route.params.display ? ('/' + this.$route.params.display + '/') : '/all/'))});
+            return;
           } else {
             this.changeTitle(this.project + ' / Twitter Monitor');
             this.tweetStatus.displayType = 'userSelector';
+            this.lock = false;
+            return;
           }
         }
         //name
@@ -772,18 +785,23 @@
                 //all
                 this.tweetStatus.display = 'all';
             }
+            this.lock = true;
             return;
           } else if (this.$route.params.status) {
             //status
             this.tweetStatus.displayType = 'status';
+            this.lock = true;
             return;
           } else {
+            this.lock = false;
             this.$router.replace({path: '/'+this.name+'/all/'});
+            return;
           }
         } else if (this.$route.params.name === 'search') {
           this.search.keywords = this.$route.params.search;
           this.load.leftCard = false;
           this.tweetStatus.displayType = 'search';
+          this.lock = true;
           return;
         }
         //hashtag & cashtag
@@ -792,6 +810,7 @@
           this.tag.type = this.$route.params.hashtag ? 0 : 1;
           this.tweetStatus.displayType = 'tag';
           this.load.leftCard = false;
+          this.lock = true;
           return;
         }
         //search
@@ -799,6 +818,7 @@
           this.search.keywords = this.$route.params.search;
           this.load.leftCard = false;
           this.tweetStatus.displayType = 'search';
+          this.lock = true;
         }
       },
       localrun: function() {
