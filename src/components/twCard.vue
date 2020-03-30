@@ -17,8 +17,8 @@
                     </div>
                 </template>
                 <template v-else>
-                    <div class="row no-gutters">
-                        <el-image v-if="object.media === '1' && mediaState" class="card-img-top col-12" style="height: 250px; border-radius: 14px 14px 0 0" fit="cover" :src="basePath+`/api/v2/media/tweets/`+media[0].cover" alt="cardImage" lazy></el-image>
+                    <div class="no-gutters" v-if="object.media === '1' && mediaState" :style="`width: 100%; padding-bottom: ` + (media[0].origin_info_width / media[0].origin_info_height > 16 / 9 ? media[0].origin_info_height / media[0].origin_info_width * 100 : 56.25) +  `%; height: 0; border-radius: 14px 14px 14px 14px`">
+                        <el-image class="card-img-top" style="width: 100%; position: absolute; border-radius: 14px 14px 0 0" fit="cover" :src="basePath+`/api/v2/media/tweets/`+media[0].cover" alt="cardImage" lazy></el-image>
                     </div>
                     <div class="card-body position-static">
                         <p class="card-title" style="color: black">{{ object.title }}</p>
