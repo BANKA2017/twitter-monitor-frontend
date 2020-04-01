@@ -4,7 +4,7 @@
             <a class="text-decoration-none" :href="object.url" target="_blank">
                 <template v-if="object.type === 'summary' || object.type === 'audio' || object.type === 'app' || object.type === 'moment'">
                     <div class="row no-gutters">
-                        <el-image v-if="object.media === '1' && mediaState" class="col-4 card-img" fit="cover" :src="basePath+`/api/v2/media/tweets/`+media[0].cover" alt="cardImage" lazy></el-image>
+                        <el-image v-if="object.media === '1' && mediaState" class="col-4 card-img border-right" style="border-radius: 14px 0 0 14px" fit="cover" :src="basePath+`/api/v2/media/tweets/`+media[0].cover" alt="cardImage" lazy></el-image>
                         <div class="col-8">
                             <div class="card-body">
                                 <div class="row no-gutters">
@@ -12,18 +12,20 @@
                                     <template v-if="object.description !== ''"><small class="text-muted text-truncate col-12">{{ object.description }}</small><br></template>
                                     <small class="text-muted col-12" v-if="object.vanity_url !== ''"><i class="el-icon-link"></i>{{ object.vanity_url }}</small>
                                 </div>
-                                </div>
+                            </div>
                         </div>
                     </div>
                 </template>
                 <template v-else>
-                    <div class="no-gutters" v-if="object.media === '1' && mediaState" :style="`width: 100%; padding-bottom: ` + (media[0].origin_info_width / media[0].origin_info_height > 16 / 9 ? media[0].origin_info_height / media[0].origin_info_width * 100 : 56.25) +  `%; height: 0; border-radius: 14px 14px 14px 14px`">
-                        <el-image class="card-img-top" style="width: 100%; position: absolute; border-radius: 14px 14px 0 0" fit="cover" :src="basePath+`/api/v2/media/tweets/`+media[0].cover" alt="cardImage" lazy></el-image>
+                    <div class="border-bottom">
+                        <div class="no-gutters" v-if="object.media === '1' && mediaState" :style="`width: 100%; padding-bottom: ` + (media[0].origin_info_width / media[0].origin_info_height > 16 / 9 ? media[0].origin_info_height / media[0].origin_info_width * 100 : 56.25) +  `%; height: 0; border-radius: 14px 14px 0 0`">
+                            <el-image class="card-img-top" style="width: 100%; position: absolute; border-radius: 14px 14px 0 0" fit="cover" :src="basePath+`/api/v2/media/tweets/`+media[0].cover" alt="cardImage" lazy></el-image>
+                        </div>
                     </div>
                     <div class="card-body position-static">
                         <p class="card-title" style="color: black">{{ object.title }}</p>
                         <template v-if="object.description !== ''"><small class="text-muted">{{ object.description }}</small><br></template>
-                        <small class="text-muted" v-if="object.vanity_url !== ''"><i class="el-icon-link"></i>{{ object.vanity_url }}</small>
+                        <small class="text-muted" v-if="object.vanity_url.length"><i class="el-icon-link"></i>{{ object.vanity_url }}</small>
                     </div>
                 </template>
             </a>

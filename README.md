@@ -7,17 +7,17 @@ npm install
 
 ### Compiles and hot-reloads for development
 ```
-npm run serve
+npx vue-cli-service serve
 ```
 
 ### Compiles and minifies for production
 ```
-npm run build
+npx vue-cli-service build
 ```
 
 ### Lints and fixes files
 ```
-npm run lint
+npx vue-cli-service lint
 ```
 
 ### Customize configuration
