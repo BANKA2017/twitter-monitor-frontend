@@ -37,65 +37,67 @@
       <div class="my-4"></div>
       <main role="main" class="container" id="main">
         <div class="row">
-          <div class="col-md-4" v-if="tweetStatus.userExist">
-            <el-skeleton avatar active :paragraph="{rows: 5}" :loading="load.leftCard">
-              <div class="card">
-                <template>
-                  <div class="row no-gutters">
-                    <el-image v-if="info.banner !== '0' && tweetStatus.displayType !== 'search' && tweetStatus.displayType !== 'tag'" fit="cover" style="max-height: 20vh" class="col-12 card-img-top" :src="basePath+`/api/v2/media/userinfo/pbs.twimg.com/profile_banners/`+info.uid+`/`+info.banner+`.banner`" alt="Banner" :preview-src-list="[basePath+`/api/v2/media/userinfo/pbs.twimg.com/profile_banners/`+info.uid+`/`+info.banner+`.banner`]"></el-image>
-                  </div>
-                  <div class="card-body">
-                    <h3 v-if="tweetStatus.displayType === 'search'">搜索</h3>
-                    <router-link :to="`/hashtag/`+tag.text" v-else-if="tweetStatus.displayType === 'tag' && tag.type === 0"><h3>#{{ tag.text }}</h3></router-link>
-                    <router-link :to="`/cashtag/`+tag.text" v-else-if="tweetStatus.displayType === 'tag' && tag.type === 1"><h3>${{ tag.text }}</h3></router-link>
-                    <div class="container" v-else>
-                      <div class="row">
-                        <div class="col-4" style="max-height: 100px; max-width: 100px">
-                          <el-image class="rounded-circle img-fluid" :src="basePath+`/api/v2/media/userinfo/`+info.header" v-if="info.header" lazy :preview-src-list="[basePath+`/api/v2/media/userinfo/`+info.header]">
-                            <div slot="error" class="image-slot">
-                              <el-skeleton active avatar :paragraph="false" :title="false" />
-                            </div>
-                            <div slot="placeholder" class="image-slot" >
-                              <el-skeleton active avatar :paragraph="false" :title="false" />
-                            </div>
-                          </el-image>
-                          <div class="my-4"></div>
-                        </div>
-                        <div class="col-8">
-                          <h5 class="card-title mt-0">
-                            <b>{{ info.display_name }}</b>
-                            <verified status="text-primary" width="1em" height="1em"  v-if="info.verified" />
-                            <deleted status="text-primary" width="1em" height="1em"  v-if="info.deleted" />
-                            <locked status="text-primary" width="1em" height="1em" v-else-if="info.locked" />
-                          </h5>
-                          <p>
-                            <small>
-                              <a :href="`//twitter.com/`+info.name" target="_blank" class="text-dark">@{{ info.name }}</a>
-                            </small>
-                          </p>
-                        </div>
-                      </div>
-                      <div v-html="`<p class='card-text'>`+info.description+`</p>`"></div>
-                      <translate :basePath="basePath" :type="1" :id="info.uid" :to="settings.data.language" />
+          <div class="col-md-4">
+            <template v-if="tweetStatus.userExist">
+              <el-skeleton avatar active :paragraph="{rows: 5}" :loading="load.leftCard">
+                <div class="card">
+                  <template>
+                    <div class="row no-gutters">
+                      <el-image v-if="info.banner !== '0' && tweetStatus.displayType !== 'search' && tweetStatus.displayType !== 'tag'" fit="cover" style="max-height: 20vh" class="col-12 card-img-top" :src="basePath+`/api/v2/media/userinfo/pbs.twimg.com/profile_banners/`+info.uid+`/`+info.banner+`.banner`" alt="Banner" :preview-src-list="[basePath+`/api/v2/media/userinfo/pbs.twimg.com/profile_banners/`+info.uid+`/`+info.banner+`.banner`]"></el-image>
                     </div>
-                  </div>
+                    <div class="card-body">
+                      <h3 v-if="tweetStatus.displayType === 'search'">搜索</h3>
+                      <router-link :to="`/hashtag/`+tag.text" v-else-if="tweetStatus.displayType === 'tag' && tag.type === 0"><h3>#{{ tag.text }}</h3></router-link>
+                      <router-link :to="`/cashtag/`+tag.text" v-else-if="tweetStatus.displayType === 'tag' && tag.type === 1"><h3>${{ tag.text }}</h3></router-link>
+                      <div class="container" v-else>
+                        <div class="row">
+                          <div class="col-4" style="max-height: 100px; max-width: 100px">
+                            <el-image class="rounded-circle img-fluid" :src="basePath+`/api/v2/media/userinfo/`+info.header" v-if="info.header" lazy :preview-src-list="[basePath+`/api/v2/media/userinfo/`+info.header]">
+                              <div slot="error" class="image-slot">
+                                <el-skeleton active avatar :paragraph="false" :title="false" />
+                              </div>
+                              <div slot="placeholder" class="image-slot" >
+                                <el-skeleton active avatar :paragraph="false" :title="false" />
+                              </div>
+                            </el-image>
+                            <div class="my-4"></div>
+                          </div>
+                          <div class="col-8">
+                            <h5 class="card-title mt-0">
+                              <b>{{ info.display_name }}</b>
+                              <verified status="text-primary" width="1em" height="1em"  v-if="info.verified" />
+                              <deleted status="text-primary" width="1em" height="1em"  v-if="info.deleted" />
+                              <locked status="text-primary" width="1em" height="1em" v-else-if="info.locked" />
+                            </h5>
+                            <p>
+                              <small>
+                                <a :href="`//twitter.com/`+info.name" target="_blank" class="text-dark">@{{ info.name }}</a>
+                              </small>
+                            </p>
+                          </div>
+                        </div>
+                        <div v-html="`<p class='card-text'>`+info.description+`</p>`"></div>
+                        <translate :basePath="basePath" :type="1" :id="info.uid" :to="settings.data.language" />
+                      </div>
+                    </div>
+                  </template>
+                </div>
+              </el-skeleton>
+              <template v-if="tweetStatus.displayType === 'timeline'">
+                <!--Load data-->
+                <div class="my-4"></div>
+                <template v-if="chart.chartData">
+                  <el-skeleton active :title="false" :paragraph="{rows: 4}" :loading="!chart.chartData.rows.length">
+                    <ve-line :data="chart.chartData" :settings="chart.chartSettings" :extend="chart.chartOptions" :init-options="{renderer: 'svg'}" :height="chart.chartHeight"></ve-line>
+                  </el-skeleton>
                 </template>
-              </div>
-            </el-skeleton>
-            <template v-if="tweetStatus.displayType === 'timeline'">
-              <!--Load data-->
-              <div class="my-4"></div>
-              <template v-if="chart.chartData">
-                <el-skeleton active :title="false" :paragraph="{rows: 4}" :loading="!chart.chartData.rows.length">
-                  <ve-line :data="chart.chartData" :settings="chart.chartSettings" :extend="chart.chartOptions" :init-options="{renderer: 'svg'}" :height="chart.chartHeight"></ve-line>
-                </el-skeleton>
               </template>
+              <div class="my-4"></div>
             </template>
-            <div class="my-4"></div>
           </div>
           <div class="col-md-6">
             <div v-if="!tweetStatus.userExist">
-              <h5 class="text-center">@{{ name }} 不存在</h5>
+              <h5 class="col-5">@{{ name }} 不存在</h5>
               <div class="my-4"></div>
             </div>
             <template v-else>
