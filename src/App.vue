@@ -97,7 +97,7 @@
           </div>
           <div class="col-md-6">
             <div v-if="!tweetStatus.userExist">
-              <h5 class="col-5">@{{ name }} 不存在</h5>
+              <h5 class="mx-auto">@{{ name }} 不存在</h5>
               <div class="my-4"></div>
             </div>
             <template v-else>
@@ -162,14 +162,9 @@
                               <box-arrow-up-right status="text-primary" width="2em" height="2em" />
                             </a>
                             <div class="my-4"></div>
-                            <div v-html="`<p class='card-text'>`+tweet.full_text+`</p>`"></div>
+                            <!--<div v-html="`<p class='card-text'>`+tweet.full_text+`</p>`"></div>-->
                             <!--excited!-->
-                            <!--<htmlText :origin="tweet.full_text_origin" :replaceList="tweet.entities" v-if="tweet.entities.length" />
-                            <template v-else>
-                              <p class='card-text'>
-                                {{ tweet.full_text_origin }}
-                              </p>
-                            </template>-->
+                            <html-text :textObject="tweet.text_object" :tweet_id="tweet.tweet_id"/>
                             <translate :basePath="basePath" :type="0" :id="tweet.tweet_id" :to="settings.data.language" />
                             <!--media-->
                             <template v-if="tweet.media === '1'&&!settings.data.displayPicture">
@@ -282,6 +277,7 @@
   import Stats from "./components/template/stats";
   import Status from "./components/template/status";
   import Online from "./components/template/online";
+  import HtmlText from "./components/htmlText";
   //import LeftCard from "./components/template/leftCard";
   const CancelToken = axios.CancelToken;
   let cancel;
@@ -289,6 +285,7 @@
   export default {
     name: 'App',
     components: {
+      HtmlText,
       //LeftCard,
       UserSelector,
       Search,
@@ -420,7 +417,8 @@
       },
     },
     router: new VueRouter({
-      base: '/',
+      mode: 'history',
+      base: '/twitter/',
       routes: [
         {
           path: '/about',
