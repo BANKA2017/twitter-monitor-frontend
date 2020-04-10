@@ -129,7 +129,7 @@
                   <div v-if="tweetStatus.reload" class="text-center">
                     <el-button round icon="el-icon-refresh-left" @click="() => {load.timeline=true;update()}">重试</el-button>
                   </div>
-                  <div v-if="load.top" class="text-center" v-loading="load.top" style="height: 50px"></div>
+                  <div z-index="-1" v-if="load.top" class="text-center" v-loading="load.top" style="height: 60px" element-loading-background="rgba(255, 255, 0, 0)"></div>
                   <div v-if="!tweetStatus.reload && tweets.length">
                     <div v-for="(tweet, order) in tweets" :key="order">
                       <div v-if="tweet.type === 'msg'" class="text-center">
@@ -174,7 +174,7 @@
                             <!--media-->
                             <template v-if="tweet.media === '1'&&!settings.data.displayPicture">
                               <div class="my-4"></div>
-                              <image-list :list="tweet.mediaObject.tweetsMedia" :is_video="tweet.video" :basePath="basePath"/>
+                              <image-list :list="tweet.mediaObject.tweetsMedia" :is_video="tweet.video" :basePath="basePath" :unlimited="tweetStatus.displayType === 'status'" />
                             </template>
                             <!--quote-->
                             <template v-if="tweet.quote_status !== '0'">

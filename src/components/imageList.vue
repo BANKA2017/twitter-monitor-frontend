@@ -6,7 +6,7 @@
             </div>
         </div>
         <div v-else-if="list.length === 1">
-            <div class="no-gutters card" :style="`width: 100%; padding-bottom: ` + (list[0].origin_info_width / list[0].origin_info_height > 16 / 9 ? list[0].origin_info_height / list[0].origin_info_width * 100 : 56.25) +  `%; height: 0; border-radius: 14px 14px 14px 14px`">
+            <div class="no-gutters card" :style="`width: 100%; padding-bottom: ` + ((unlimited || list[0].origin_info_width / list[0].origin_info_height > 16 / 9) ? list[0].origin_info_height / list[0].origin_info_width * 100 : 56.25) +  `%; height: 0; border-radius: 14px 14px 14px 14px`">
                 <el-image class="border border-white" style="width: 100%; height: 100%; position: absolute; border-radius: 14px 14px 14px 14px" :src="basePath+(online ? '/api/v2/online/media/?url=' : '/api/v2/media/tweets/') +list[0].url+':small'" lazy fit="cover" :preview-src-list="previewList" :preview-src-list-order="0" :alt="list[0].uid+'_'+list[0].tweet_id+'_'+0"></el-image>
             </div>
         </div>
@@ -46,6 +46,10 @@
                 default: false
             },
             online: {
+                type: Boolean,
+                default: false,
+            },
+            unlimited: {
                 type: Boolean,
                 default: false,
             }
