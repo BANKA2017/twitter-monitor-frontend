@@ -76,7 +76,7 @@
                             </p>
                           </div>
                         </div>
-                        <div v-html="`<p class='card-text'>`+info.description+`</p>`"></div>
+                        <div v-html="`<p class='card-text'>`+info.description.replace(/<script>/, '')+`</p>`"></div>
                         <translate :basePath="basePath" :type="1" :id="info.uid" :to="settings.data.language" />
                       </div>
                     </div>
@@ -164,7 +164,7 @@
                             <div class="my-4"></div>
                             <!--<div v-html="`<p class='card-text'>`+tweet.full_text+`</p>`"></div>-->
                             <!--excited!-->
-                            <html-text :textObject="tweet.text_object" :tweet_id="tweet.tweet_id"/>
+                            <html-text :full_text_origin="tweet.full_text_origin" :entities="tweet.entities"/>
                             <translate :basePath="basePath" :type="0" :id="tweet.tweet_id" :to="settings.data.language" />
                             <!--media-->
                             <template v-if="tweet.media === '1'&&!settings.data.displayPicture">
@@ -417,8 +417,8 @@
       },
     },
     router: new VueRouter({
-      mode: 'history',
-      base: '/twitter/',
+      mode: 'history',//hash history
+      base: '/twitter/',//hash mode not require
       routes: [
         {
           path: '/about',
