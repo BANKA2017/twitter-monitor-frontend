@@ -3,7 +3,7 @@
     <div style="position: absolute"></div>
     <el-backtop></el-backtop>
     <user-selector v-if="tweetStatus.displayType === 'userSelector'" :names="names" :display-type="tweetStatus.displayType" :project="project" :projects="projects" :home="home" :search="search" :user-with-project-list="userWithProjectList"  />
-    <router-view v-else-if="tweetStatus.displayType === 'about' || tweetStatus.displayType === 'api' || tweetStatus.displayType === 'serverStatus' || tweetStatus.displayType === 'stats' || tweetStatus.displayType === 'Online'"/>
+    <router-view v-else-if="tweetStatus.displayType === 'about' || tweetStatus.displayType === 'api' || tweetStatus.displayType === 'serverStatus' || tweetStatus.displayType === 'stats' || tweetStatus.displayType === 'Online' || tweetStatus.displayType === 'account'"/>
     <template v-else>
       <nav class="navbar navbar-expand-lg navbar-light text-center bg-light sticky-top" id="nav">
         <span class="navbar-brand mb-0 h1 d-inline-block text-truncate" style="max-width: 250px;">
@@ -76,7 +76,7 @@
                             </p>
                           </div>
                         </div>
-                        <div v-html="`<p class='card-text'>`+info.description.replace(/<script>/, '')+`</p>`"></div>
+                        <p v-html="`<p class='card-text'>`+info.description+`</p>`"></p>
                         <translate :basePath="basePath" :type="1" :id="info.uid" :to="settings.data.language" />
                       </div>
                     </div>
@@ -165,11 +165,11 @@
                             <!--<div v-html="`<p class='card-text'>`+tweet.full_text+`</p>`"></div>-->
                             <!--excited!-->
                             <html-text :full_text_origin="tweet.full_text_origin" :entities="tweet.entities"/>
-                            <translate :basePath="basePath" :type="0" :id="tweet.tweet_id" :to="settings.data.language" />
+                            <translate :type="0" :id="tweet.tweet_id" :to="settings.data.language" />
                             <!--media-->
                             <template v-if="tweet.media === '1'&&!settings.data.displayPicture">
                               <div class="my-4"></div>
-                              <image-list :list="tweet.mediaObject.tweetsMedia" :is_video="tweet.video" :basePath="basePath" :unlimited="tweetStatus.displayType === 'status'" />
+                              <image-list :list="tweet.mediaObject.tweetsMedia" :is_video="tweet.video" :unlimited="tweetStatus.displayType === 'status'" />
                             </template>
                             <!--quote-->
                             <template v-if="tweet.quote_status !== '0'">
@@ -178,12 +178,12 @@
                             </template>
                             <!--polls-->
                             <template v-if="tweet.poll === '1'">
-                              <tw-polls :polls="tweet.pollObject" :tweet_id="tweet.tweet_id" :language="settings.data.language" :media="tweet.mediaObject.cardMedia" :now="now" :basePath="basePath" />
+                              <tw-polls :polls="tweet.pollObject" :tweet_id="tweet.tweet_id" :language="settings.data.language" :media="tweet.mediaObject.cardMedia" :now="now" />
                             </template>
                             <!--card-->
                             <template v-else-if="tweet.card !== ''">
                               <div class="my-4"></div>
-                              <tw-card :object="tweet.cardObject" :media="tweet.mediaObject.cardMedia" :mediaState="!settings.data.displayPicture" :basePath="basePath"></tw-card>
+                              <tw-card :object="tweet.cardObject" :media="tweet.mediaObject.cardMedia" :mediaState="!settings.data.displayPicture"></tw-card>
                             </template>
                             <!--time && source-->
                             <div id="foot">
@@ -274,6 +274,7 @@
   import UserSelector from "./components/template/userSelector";
   import About from "./components/template/about";
   import Api from "./components/template/api";
+  import Account from "./components/template/account";
   import Stats from "./components/template/stats";
   import Status from "./components/template/status";
   import Online from "./components/template/online";
@@ -305,7 +306,6 @@
     },
     data() {
       return {
-        basePath: process.env.NODE_ENV !== "development" ? "https://bangdream.fun/twitter" : "https://bangdream.fun/dev/tmv2",
         displayName: "Twitter",
         now: new Date(),
         height: 0,
@@ -335,7 +335,7 @@
         name: "",
         home: true,
         tweetStatus: {
-          displayType: "userSelector",//timeline, tag, search, status, userSelector, about
+          displayType: "userSelector",//timeline, tag, search, status, userSelector, about, account
           display: 'all',
           moreTweets: true,
           topTweetId: 0,
@@ -427,6 +427,10 @@
         {
           path: '/api',
           component: Api
+        },
+        {
+          path: '/account',
+          component: Account
         },
         {
           path: '/i/stats',
@@ -719,6 +723,12 @@
         if (this.$route.path === '/api') {
           this.tweetStatus.displayType = 'api';
           this.changeTitle("API");
+          this.lock = false;
+          return;
+        }
+        if (this.$route.path === '/account') {
+          this.tweetStatus.displayType = 'account';
+          this.changeTitle("Account");
           this.lock = false;
           return;
         }

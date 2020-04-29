@@ -33,7 +33,6 @@
         name: "quoteCard",
         components: {ImageList, BoxArrowUpRight},
         props: {
-            basePath: String,
             quoteObject: Object,
             quoteMedia: Array,
             displayPicture: Boolean,

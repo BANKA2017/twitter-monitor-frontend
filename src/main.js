@@ -35,6 +35,8 @@ import VeLine from 'v-charts/lib/line.common'
 //import VueHighlightJS from 'vue-highlightjs'
 //Vue.use(VueHighlightJS);
 
+Vue.prototype.basePath = process.env.NODE_ENV !== "development" ? "https://bangdream.fun/twitter" : "https://bangdream.fun/dev/tmv2";
+//Vue.prototype.mediaPath = process.env.NODE_ENV !== "development" ? "https://bangdream.fun/twitter" : "https://bangdream.fun/dev/tmv2";
 //gtag
 //骚玩法不要学, 老老实实写代码
 import VueGtag from "vue-gtag";

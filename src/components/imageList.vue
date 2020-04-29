@@ -40,7 +40,6 @@
         props: {
             list: Array,
             is_video: String,
-            basePath: String,
             bottom: {
                 type: Boolean,
                 default: false

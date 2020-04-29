@@ -21,7 +21,6 @@
     export default {
         name: "translate",
         props: {
-            basePath: String,
             type: Number,
             id: String,//tweet_id or uid
             to: String,

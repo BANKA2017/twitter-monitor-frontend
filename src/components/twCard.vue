@@ -18,8 +18,8 @@
                     </div>
                 </template>
                 <template v-else>
-                    <div class="border-bottom">
-                        <div class="no-gutters" v-if="object.media === '1' && mediaState" :style="`width: 100%; padding-bottom: ` + (media[0].origin_info_width / media[0].origin_info_height > 16 / 9 ? media[0].origin_info_height / media[0].origin_info_width * 100 : 56.25) +  `%; height: 0; border-radius: 14px 14px 0 0`">
+                    <div class="border-bottom" v-if="object.media === '1' && mediaState">
+                        <div class="no-gutters" :style="`width: 100%; padding-bottom: ` + (media[0].origin_info_width / media[0].origin_info_height > 16 / 9 ? media[0].origin_info_height / media[0].origin_info_width * 100 : 56.25) +  `%; height: 0; border-radius: 14px 14px 0 0`">
                             <el-image class="card-img-top" style="width: 100%; position: absolute; border-radius: 14px 14px 0 0" fit="cover" :src="basePath+`/api/v2/media/tweets/`+media[0].cover" alt="cardImage" lazy :preview-src-list="[basePath+`/api/v2/media/tweets/`+media[0].cover]"></el-image>
                         </div>
                     </div>
@@ -41,7 +41,6 @@
             object: Object,
             media: Array,
             mediaState: Boolean,
-            basePath: String
         },
     }
 </script>

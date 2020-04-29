@@ -26,7 +26,6 @@
         name: "twPolls",
         props: {
             polls: Array,
-            basePath: String,
             tweet_id: String,
             language: String,
             media: Array,
