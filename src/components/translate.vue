@@ -2,7 +2,7 @@
     <div id="translate">
         <!--translate-->
         <div v-if="status === 0" class='card-text'>
-            <span style="cursor:pointer" class="text-decoration-none"><small style="color:#1DA1F2" @click="translate(id, type)">{{ whatToTranslate }}</small></span>
+            <span role="button" class="text-decoration-none"><small style="color:#1DA1F2" @click="translate(id, type)">{{ whatToTranslate }}</small></span>
         </div>
         <div v-else-if="status === 1" class="spinner-grow spinner-grow-sm" role="status" style="color:#1DA1F2">
             <span class="sr-only">Loading...</span>

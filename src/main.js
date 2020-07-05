@@ -26,11 +26,16 @@ import {
   Message,
   Progress,
   Switch,
+  Table,
+  TableColumn,
+  Tag,
   Notification,//https://github.com/ElemeFE/element/issues/3450#issuecomment-500717476
 } from 'element-ui';
 import '@femessage/element-ui/lib/theme-chalk/skeleton.css';
 import Skeleton from '@femessage/element-ui/lib/skeleton.js';
 import VeLine from 'v-charts/lib/line.common'
+import VeHistogram from 'v-charts/lib/histogram.common'
+import 'v-charts/lib/style.css'
 
 //import VueHighlightJS from 'vue-highlightjs'
 //Vue.use(VueHighlightJS);
@@ -68,6 +73,9 @@ Vue.use(Icon);
 Vue.use(Button);
 Vue.use(Progress);
 Vue.use(Switch);
+Vue.use(Table);
+Vue.use(TableColumn);
+Vue.use(Tag);
 Vue.use(Loading.directive);
 Vue.use(Skeleton);
 
@@ -79,11 +87,17 @@ Vue.prototype.$prompt = MessageBox.prompt;
 Vue.prototype.$notify = Notification;
 Vue.prototype.$message = Message;
 Vue.component(VeLine.name, VeLine);
+Vue.component(VeHistogram.name, VeHistogram);
 //Vue.use(ElementUI);
 
 Vue.config.productionTip = false;
 
 new Vue({
   render: h => h(App),
+  data() {
+    return {
+      projects: [],
+    }
+  }
   //router,
 }).$mount('#app');

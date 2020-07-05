@@ -2,7 +2,7 @@
   <div id="app">
     <div style="position: absolute"></div>
     <el-backtop></el-backtop>
-    <user-selector v-if="tweetStatus.displayType === 'userSelector'" :names="names" :display-type="tweetStatus.displayType" :project="project" :projects="projects" :home="home" :search="search" :user-with-project-list="userWithProjectList"  />
+    <user-selector v-if="tweetStatus.displayType === 'userSelector'" :names="names" :display-type="tweetStatus.displayType" :project="project" :projects="$root.projects" :home="home" :search="search" :user-with-project-list="userWithProjectList"  />
     <router-view v-else-if="tweetStatus.displayType === 'about' || tweetStatus.displayType === 'api' || tweetStatus.displayType === 'serverStatus' || tweetStatus.displayType === 'stats' || tweetStatus.displayType === 'Online' || tweetStatus.displayType === 'account'"/>
     <template v-else>
       <nav class="navbar navbar-expand-lg navbar-light text-center bg-light sticky-top" id="nav">
@@ -14,7 +14,7 @@
             <chevronLeft status="text-success" width="30" height="30" />
           </span>
           </button>
-          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation" v-if="project && projects.length && tweetStatus.displayType === 'timeline'">
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation" v-if="project && $root.projects.length && tweetStatus.displayType === 'timeline'">
             <span class="navbar-toggler-icon"></span>
           </button>
         </div>
@@ -129,7 +129,7 @@
                   <div v-if="tweetStatus.reload" class="text-center">
                     <el-button round icon="el-icon-refresh-left" @click="() => {load.timeline=true;update()}">重试</el-button>
                   </div>
-                  <div z-index="-1" v-if="load.top" class="text-center" v-loading="load.top" style="height: 60px" element-loading-background="rgba(255, 255, 0, 0)"></div>
+                  <div v-if="load.top" class="text-center" v-loading="load.top" style="height: 60px" element-loading-background="rgba(255, 255, 0, 0)"></div>
                   <div v-if="!tweetStatus.reload && tweets.length">
                     <div v-for="(tweet, order) in tweets" :key="order">
                       <div v-if="tweet.type === 'msg'" class="text-center">
@@ -199,7 +199,7 @@
                         <span>加载更多</span>
                       </button>
                       <el-skeleton :paragraph="{rows: 1}" v-else-if="tweetStatus.moreTweets && load.bottom" active/>
-                      <div v-else-if="!tweetStatus.displayType === 'status'">
+                      <div v-else-if="!(tweetStatus.displayType === 'status')">
                         <h5 class="text-center">已经没有更多内容</h5>
                       </div>
                     </template>
@@ -215,22 +215,26 @@
           <div class="col-md-2">
             <!--有确定的project-->
             <template v-if="project">
-              <button type="button" class="btn btn-outline-primary btn-block btn-sm" @click="projectS = !projectS">{{ project }}</button>
-              <div class="my-4"></div>
+              <button class="btn btn-outline-primary btn-block btn-sm" @click="projectS = !projectS">{{ project }}</button>
+              <div  class="my-4"></div>
             </template>
             <!--未确定project-->
             <template v-else>
-              <router-link type="button" class="btn btn-outline-primary btn-block btn-sm" to="/">选择企划</router-link>
+              <router-link class="btn btn-outline-primary btn-block btn-sm" to="/">选择企划</router-link>
               <div class="my-4"></div>
             </template>
             <template v-if="projectS">
               <div class="list-group">
-                <router-link type="button" :to="`/i/project/`+project_" :class="`list-group-item list-group-item-action`+(project_.toLowerCase() === project.toLowerCase() ? ' active' : '')" v-for="project_ in projects" :key="project_" @click="projectS = !projectS">{{ project_ }}</router-link>
+                <router-link :to="`/i/project/`+project_" :class="`list-group-item list-group-item-action`+(project_.toLowerCase() === project.toLowerCase() ? ' active' : '')" v-for="project_ in $root.projects" :key="project_" @click="projectS = !projectS">{{ project_ }}</router-link>
               </div>
               <div class="my-4"></div>
             </template>
-            <span style="cursor:pointer" class="text-decoration-none badge badge-pill badge-primary" @click="settings.panel = true">设置</span>
-            <router-link class="text-decoration-none badge badge-pill badge-primary" to="/about">关于</router-link>
+            <div class="mb-1">
+              <span style="cursor:pointer" class="text-decoration-none badge badge-pill badge-primary" @click="settings.panel = true">设置</span>
+              <router-link class="text-decoration-none badge badge-pill badge-primary" to="/about">关于</router-link>
+              <router-link class="text-decoration-none badge badge-pill badge-primary" to="/i/stats">统计</router-link>
+              <a class="text-decoration-none badge badge-pill badge-primary" :href="basePath + `/api/v2/rss/` + info.name + `.xml`" v-if="tweetStatus.displayType === 'timeline' || tweetStatus.displayType === 'status'">RSS</a>
+            </div>
             <hr class="my-4">
             <template v-for="(link, s) in links">
               <span :key="s" v-if="s!==0"> · </span>
@@ -325,7 +329,7 @@
         },
         project: "",
         projectS: false,
-        projects: [],
+        //projects: [],
         is_project: '',
         names: {},
         //nsfwList: [],
@@ -553,7 +557,7 @@
       axios.all([this.getAccountList(), this.getLanguageList()]).then(axios.spread((accountList, languageList) => {
         this.languageList = languageList.data;
         this.names = accountList.data.account_info;
-        this.projects = accountList.data.projects;
+        this.$root.projects = accountList.data.projects;
         this.links = accountList.data.links;
         //处理网速
         if(Date.now() - startTime > 3000){
