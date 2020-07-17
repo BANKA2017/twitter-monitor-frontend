@@ -55,8 +55,8 @@
 </template>
 
 <script>
-    import UserInfo from "../userInfo";
-    import TimeLine from "../timeLine";
+    import UserInfo from "../modules/userInfo";
+    import TimeLine from "../modules/timeLine";
     export default {
         name: "online",
         components: {TimeLine, UserInfo},

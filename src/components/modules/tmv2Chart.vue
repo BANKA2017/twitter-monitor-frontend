@@ -39,9 +39,6 @@
                             bottom: '3%',
                             containLabel: true
                         },
-                        series: {
-                            label: { show: true, position: "top"}
-                        },
                         xAxis: {
                             axisLabel: {
                                 rotate: 45

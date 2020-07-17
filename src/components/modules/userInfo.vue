@@ -49,8 +49,8 @@
 
 <script>
     import axios from "axios";
-    import Verified from "./icons/verified";
-    import Locked from "./icons/locked";
+    import Verified from "../icons/verified";
+    import Locked from "../icons/locked";
 
     export default {
         name: "userInfo",

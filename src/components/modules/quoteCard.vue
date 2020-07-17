@@ -27,7 +27,7 @@
 </template>
 
 <script>
-    import BoxArrowUpRight from "./icons/boxArrowUpRight";
+    import BoxArrowUpRight from "../icons/boxArrowUpRight";
     import ImageList from "./imageList";
     export default {
         name: "quoteCard",

@@ -31,7 +31,7 @@
 </template>
 
 <script>
-    import Search from "../search";
+    import Search from "../modules/search";
     export default {
         name: "userSelector",
         components: {Search},

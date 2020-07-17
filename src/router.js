@@ -6,11 +6,11 @@ export default new VueRouter({
     routes: [
         {
             path: '/about',
-            component: () => import("./components/template/about"),
+            component: () => import("./components/pages/about"),
         },
         {
             path: '/api',
-            component: () => import("./components/template/api"),
+            component: () => import("./components/pages/api"),
         },
         {
             path: '/i',
@@ -25,11 +25,11 @@ export default new VueRouter({
                 },
                 {
                     path: 'stats',
-                    component: () => import("./components/template/stats"),
+                    component: () => import("./components/pages/stats"),
                 },
                 {
                     path: 'status',
-                    component: () => import("./components/template/status"),
+                    component: () => import("./components/pages/status"),
                 }
             ]
         },{

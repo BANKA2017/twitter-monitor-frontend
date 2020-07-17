@@ -47,7 +47,7 @@
     import Verified from "../icons/verified";
     import Deleted from "../icons/deleted";
     import Locked from "../icons/locked";
-    import Translate from "../translate";
+    import Translate from "../modules/translate";
     import DataChart from "./dataChart";
     import axios from "axios";
     export default {

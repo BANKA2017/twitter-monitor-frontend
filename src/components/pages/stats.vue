@@ -28,8 +28,8 @@
 
 <script>
     import axios from 'axios';
-    import Tmv2Table from "../tmv2Table";
-    import Tmv2Chart from "../tmv2Chart";
+    import Tmv2Table from "../modules/tmv2Table";
+    import Tmv2Chart from "../modules/tmv2Chart";
     export default {
         name: "stats",
         components: {Tmv2Chart, Tmv2Table},
@@ -51,6 +51,7 @@
             },
         },
         mounted: function () {
+            document.title = 'Stats/统计';
             axios.get(this.basePath + '/api/v2/data/stats').then(response => {
                 this.rawData = response.data.data;
             }).catch(error => {
@@ -65,7 +66,7 @@
                 return this.rawData.map(x => {
                     return {
                         name: x.display_name,
-                        [type]: x.followers,
+                        [type]: x[type],
                     }})
             },
         }

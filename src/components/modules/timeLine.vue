@@ -48,8 +48,8 @@
 
 <script>
     import axios from "axios";
-    import Retweet from "./icons/retweet";
-    import BoxArrowUpRight from "./icons/boxArrowUpRight";
+    import Retweet from "../icons/retweet";
+    import BoxArrowUpRight from "../icons/boxArrowUpRight";
     import ImageList from "./imageList";
 
     export default {

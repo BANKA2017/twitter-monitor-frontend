@@ -260,11 +260,11 @@
 <script>
   import Vue from 'vue'
   import VueRouter from 'vue-router'
-  import imageList from './components/imageList.vue'
-  import twPolls from './components/twPolls.vue'
+  import imageList from './components/modules/imageList.vue'
+  import twPolls from './components/modules/twPolls.vue'
   import axios from 'axios'
-  import twCard from "./components/twCard";
-  import translate from "./components/translate";
+  import twCard from "./components/modules/twCard";
+  import translate from "./components/modules/translate";
   import chevronLeft from "./components/icons/chevronLeft";
   import Verified from "./components/icons/verified";
   import Deleted from "./components/icons/deleted";
@@ -273,16 +273,16 @@
   import BoxArrowUpRight from "./components/icons/boxArrowUpRight";
   import CameraVideoIcon from "./components/icons/cameraVideoIcon";
   import ImageIcon from "./components/icons/imageIcon";
-  import QuoteCard from "./components/quoteCard";
-  import Search from "./components/search";
-  import UserSelector from "./components/template/userSelector";
-  import About from "./components/template/about";
-  import Api from "./components/template/api";
-  import Account from "./components/template/account";
-  import Stats from "./components/template/stats";
-  import Status from "./components/template/status";
-  import Online from "./components/template/online";
-  import HtmlText from "./components/htmlText";
+  import QuoteCard from "./components/modules/quoteCard";
+  import Search from "./components/modules/search";
+  import UserSelector from "./components/pages/userSelector";
+  import About from "./components/pages/about";
+  import Api from "./components/pages/api";
+  import Account from "./components/pages/account";
+  import Stats from "./components/pages/stats";
+  import Status from "./components/pages/status";
+  import Online from "./components/pages/online";
+  import HtmlText from "./components/modules/htmlText";
   //import LeftCard from "./components/template/leftCard";
   const CancelToken = axios.CancelToken;
   let cancel;
