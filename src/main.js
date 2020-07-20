@@ -1,7 +1,7 @@
 //'use strict';
 import Vue from 'vue'
 import App from './App.vue'
-//import router from './router'
+import router from './router'
 //import 'bootstrap';
 import 'bootstrap/js/dist/util'
 import 'bootstrap/js/dist/button'
@@ -41,7 +41,7 @@ import 'v-charts/lib/style.css'
 //Vue.use(VueHighlightJS);
 
 Vue.prototype.basePath = process.env.NODE_ENV !== "development" ? "https://bangdream.fun/twitter" : "https://bangdream.fun/dev/tmv2";
-//Vue.prototype.mediaPath = process.env.NODE_ENV !== "development" ? "https://bangdream.fun/twitter" : "https://bangdream.fun/dev/tmv2";
+
 //gtag
 //骚玩法不要学, 老老实实写代码
 import VueGtag from "vue-gtag";
@@ -92,12 +92,41 @@ Vue.component(VeHistogram.name, VeHistogram);
 
 Vue.config.productionTip = false;
 
+//public functions
+Vue.prototype.scrollToTop = function (top = 0) {
+  window.scrollTo({
+    top: top,
+    behavior: "smooth"
+  });
+};
+
+Vue.prototype.notice = function (text, status = 'success') {
+  this.$message({
+    message: text,
+    type: status
+  });
+}
+
 new Vue({
   render: h => h(App),
+  router,
   data() {
     return {
+      now: new Date(),
       projects: [],
+      names: [],
+      languageList: [],
+      links: [],
+      home: true,
+      project: "",
+      settings: {
+        data: {
+          language: /zh/.test(window.navigator.language.toLowerCase()) ? window.navigator.language.toLowerCase() : 'en',
+          cookie_accept: false,
+          displayPicture: false,
+        },
+        panel: false,
+      },
     }
-  }
-  //router,
+  },
 }).$mount('#app');

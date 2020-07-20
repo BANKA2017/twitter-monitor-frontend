@@ -56,7 +56,6 @@
             paddingBottom: function (height, width, link) {
                 let getScale = /name=([0-9]+)x([0-9]+)/.exec(link);
                 if (getScale) {
-                    console.log(getScale)
                     return (getScale[2] / getScale[1]) * 100;
                 } else {
                     return (height / width) * 100;

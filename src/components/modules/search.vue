@@ -28,10 +28,22 @@
         name: "search",
         components: {SearchTips},
         props: {
-            search: Object,
+            search: {
+                type: Object,
+                default: function () {
+                    return {keywords: '', mode: 0,}
+                }//0->keywords, 1->date
+            },
             displayType: String,
             name: String,
-        }
+        },
+
+        //TODO search user in twitter monitor
+        //computed: {
+        //    isUser: function () {
+        //        return this.$root.names.map()
+        //    }
+        //}
     }
 </script>
 

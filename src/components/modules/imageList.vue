@@ -2,7 +2,11 @@
     <div id="imageList">
         <div v-if="is_video === '1'">
             <div :class="`no-gutters embed-responsive embed-responsive-` + (list[0].origin_info_width / list[0].origin_info_height < 16 / 9 ? '4by3' : '16by9')">
-                <video class="border" style="width: 100%; height: 100%; border-radius: 14px 14px 14px 14px; background-color: black" :src="basePath+(online ? '/api/v2/online/media/?url=' : '/api/v2/media/tweets/') +list[0].url" :poster="basePath+(online ? '/api/v2/online/media/?url=' : '/api/v2/media/tweets/') +list[0].cover" :type="list[0].content_type" preload="none" controls muted playsinline loop id="videoPlayer"></video>
+                <video :poster="basePath+(online ? '/api/v2/online/media/?url=' : '/api/v2/media/tweets/') +list[0].cover"
+                       :src="basePath+(online ? '/api/v2/online/media/?url=' : '/api/v2/media/tweets/') +list[0].url"
+                       :type="list[0].content_type" class="border" controls id="videoPlayer" loop playsinline
+                       preload="none"
+                       style="width: 100%; height: 100%; border-radius: 14px 14px 14px 14px; background-color: black"></video>
             </div>
         </div>
         <div v-else-if="list.length === 1">

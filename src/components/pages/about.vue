@@ -1,5 +1,5 @@
 <template>
-    <div id="about">
+    <div id="about" v-once>
         <div class="jumbotron jumbotron-fluid" style="background-color: #1da1f2">
             <div class="container">
                 <h1 class="display-4" style="color: white">关于</h1>

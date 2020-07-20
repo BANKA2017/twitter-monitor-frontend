@@ -14,7 +14,7 @@
                 <div class="my-4"></div>
                 <div v-html="`<p class='card-text'>`+quoteObject.full_text.replace(/<script>/, '')+`</p>`"></div>
                 <div id="quotefoot">
-                    <small class="text-muted">{{ timeGap(quoteObject.time, now, language) }}</small>
+                    <small class="text-muted">{{ timeGap(quoteObject.time, $root.now, language) }}</small>
                 </div>
                 <!--media-->
                 <template v-if="quoteObject.media === '1'&&!displayPicture">
@@ -37,7 +37,6 @@
             quoteMedia: Array,
             displayPicture: Boolean,
             language: String,
-            now: Date,
         },
         methods: {
             timeGap: function (timestamp, now, language) {

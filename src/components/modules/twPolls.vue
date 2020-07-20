@@ -29,7 +29,6 @@
             tweet_id: String,
             language: String,
             media: Array,
-            now: Date,
         },
         computed: {
             pollCount: function () {
@@ -41,7 +40,7 @@
             },
             etaSeconds: function () {
                 //对比当前时间
-                return (parseInt(this.polls[0].end_datetime) * 1000 - this.now)/1000;
+                return (parseInt(this.polls[0].end_datetime) * 1000 - this.$root.now) / 1000;
             },
             eta: function () {
                 if (this.etaSeconds <= 0 && this.polls[0].checked === '1') {
