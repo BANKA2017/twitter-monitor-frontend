@@ -31,6 +31,7 @@ import {
   Tag,
   Notification,//https://github.com/ElemeFE/element/issues/3450#issuecomment-500717476
 } from 'element-ui';
+//import CollapseTransition from 'element-ui/lib/transitions/collapse-transition';
 import '@femessage/element-ui/lib/theme-chalk/skeleton.css';
 import Skeleton from '@femessage/element-ui/lib/skeleton.js';
 import VeLine from 'v-charts/lib/line.common'
@@ -45,14 +46,16 @@ Vue.prototype.basePath = process.env.NODE_ENV !== "development" ? "https://bangd
 //gtag
 //骚玩法不要学, 老老实实写代码
 import VueGtag from "vue-gtag";
+
 Vue.prototype.ready = false;
+Vue.prototype.GA_ID = "UA-90617066-2";
 if (process.env.NODE_ENV !== "development") {
   Vue.use(VueGtag, {
-    config: { id: "UA-90617066-2" },
-    onReady () {
+    config: {id: Vue.prototype.GA_ID},
+    onReady() {
       Vue.prototype.ready = true;
     }
-  });
+  }, router);
 } else {
   Vue.prototype.ready = true;
 }
@@ -88,6 +91,7 @@ Vue.prototype.$notify = Notification;
 Vue.prototype.$message = Message;
 Vue.component(VeLine.name, VeLine);
 Vue.component(VeHistogram.name, VeHistogram);
+//Vue.component(CollapseTransition.name, CollapseTransition);
 //Vue.use(ElementUI);
 
 Vue.config.productionTip = false;
@@ -107,6 +111,10 @@ Vue.prototype.notice = function (text, status = 'success') {
   });
 }
 
+router.afterEach(() => {
+  Vue.prototype.scrollToTop()
+})
+
 new Vue({
   render: h => h(App),
   router,
@@ -119,6 +127,8 @@ new Vue({
       links: [],
       home: true,
       project: "",
+      //height: 0,
+      //altitudeDifference: 0,
       settings: {
         data: {
           language: /zh/.test(window.navigator.language.toLowerCase()) ? window.navigator.language.toLowerCase() : 'en',
@@ -129,4 +139,22 @@ new Vue({
       },
     }
   },
+  computed: {
+    userList: function () {
+      let users = [];
+      Object.keys(this.$root.names).forEach(value1 => {
+        Object.keys(this.$root.names[value1]).forEach(value2 => {
+          Object.keys(this.$root.names[value1][value2]).forEach(value3 => {
+            users.push({
+              name: this.$root.names[value1][value2][value3]["name"],
+              display_name: this.$root.names[value1][value2][value3]["display_name"],
+              project: value1,
+              tag: value2
+            });
+          })
+        })
+      });
+      return users;
+    },
+  }
 }).$mount('#app');

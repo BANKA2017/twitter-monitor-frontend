@@ -1,13 +1,14 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-import About from "./components/pages/about";
-import Api from "./components/pages/api";
-import Account from "./components/pages/account";
-import Stats from "./components/pages/stats";
-import Status from "./components/pages/status";
-import Online from "./components/pages/online";
-import timeLine from "./components/pages/timeLine";
-import UserSelector from "./components/pages/userSelector"
+
+const About = () => import("./components/pages/about");
+const Api = () => import("./components/pages/api");
+const Account = () => import("./components/pages/account");
+const Stats = () => import("./components/pages/stats");
+const Status = () => import("./components/pages/status");
+const Online = () => import("./components/pages/online");
+const timeLine = () => import("./components/pages/timeLine");
+const UserSelector = () => import("./components/pages/userSelector");
 
 Vue.use(VueRouter);
 export default new VueRouter({
@@ -54,7 +55,6 @@ export default new VueRouter({
                 path: 'index.html'
             }, {
                 path: 'i',
-                //component: timeLine,
                 children: [
                     {
                         path: 'project/:project',

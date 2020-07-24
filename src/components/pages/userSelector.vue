@@ -1,6 +1,6 @@
 <template>
     <div id="userSelector">
-        <div style="min-height: calc(100vh - 25px);">
+        <div style="min-height: calc(100vh - 30px);">
             <div class="jumbotron jumbotron-fluid">
                 <div class="container">
                     <h1 class="display-4">Twitter Monitor</h1>
@@ -39,25 +39,9 @@
         name: "userSelector",
         components: {Search},
         computed: {
-            userList: function () {
-                let users = [];
-                Object.keys(this.$root.names).forEach(value1 => {
-                    Object.keys(this.$root.names[value1]).forEach(value2 => {
-                        Object.keys(this.$root.names[value1][value2]).forEach(value3 => {
-                            users.push({
-                                name: this.$root.names[value1][value2][value3]["name"],
-                                display_name: this.$root.names[value1][value2][value3]["display_name"],
-                                project: value1,
-                                tag: value2
-                            });
-                        })
-                    })
-                });
-                return users;
-            },
             userWithProjectList: function () {
                 let list = [];
-                this.userList.forEach(values => {
+                this.$root.userList.forEach(values => {
                     if (values.project === this.$root.project && values.name) {
                         list.push(values);
                     }
@@ -65,21 +49,20 @@
                 return list;
             },
         },
-        watch: {
-            "$route.path": {
-                handler: function () {
-                    //this.tweetStatus.userExist = true;
-                    this.scrollToTop();
-                    //this.is_project = this.$route.path.substr(3, 7);//提前处理
-                    this.routeCase();
-                },
-                deep: true,
-            },
+        beforeRouteUpdate(to, from, next) {
+            this.routeCase(to)
+            next()
+        },
+        beforeRouteEnter(to, from, next) {
+            //none
+            next(vm => {
+                vm.routeCase(to)
+                next()
+            })
         },
         mounted: function () {
-            this.routeCase();
             //check $route
-            if (this.$root.names.length === 0) {
+            if (this.$root.names.length === 0 || this.$root.languageList.length === 0) {
                 let startTime = Date.now();
                 axios.all([this.getAccountList(), this.getLanguageList()]).then(axios.spread((accountList, languageList) => {
                     this.$root.languageList = languageList.data;
@@ -104,18 +87,15 @@
             getLanguageList: function () {
                 return axios.get(this.basePath + (process.env.NODE_ENV !== "development" ? "/language_target.json" : "/proxy.php?filename=language_target"));
             },
-            routeCase: function () {
+            routeCase: function (to = this.$route) {
                 //project
-                if (this.$route.params.project) {
+                if (to.params.project) {
                     this.$root.home = false
-                    this.$root.project = this.$route.params.project;
-                    if (this.$route.params.name) {
-                        this.lock = false;
-                        this.$router.replace({path: '/' + this.$route.params.name + (this.$route.params.status ? ('/status/' + this.$route.params.status + '/') : (this.$route.params.display ? ('/' + this.$route.params.display + '/') : '/all/'))});
+                    this.$root.project = to.params.project;
+                    if (to.params.name) {
+                        this.$router.replace({path: '/' + to.params.name + (to.params.status ? ('/status/' + to.params.status + '/') : (to.params.display ? ('/' + to.params.display + '/') : '/all/'))});
                     } else {
                         document.title = this.$root.project + ' / Twitter Monitor';
-                        //this.tweetStatus.displayType = 'userSelector';
-                        //this.lock = false;
                     }
                 }
             }

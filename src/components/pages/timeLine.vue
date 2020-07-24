@@ -246,7 +246,8 @@
                     bottomTweetId: 0,
                     reload: false,
                     userExist: true,
-                    lock: false,
+                    statusId: 0,
+                    //lock: false,
                     //statusMode: false,
                 },
                 displayMode: [['全部', 'all', 0], ['原创', 'self', 0], ['转推', 'retweet', 0], ['媒体', 'media', 0]],
@@ -291,29 +292,21 @@
                 return timeValue >= 0 ? '+' + timeValue.toString() : timeValue.toString();
             },
         },
+        beforeRouteEnter(to, from, next) {
+            //none
+            next(vm => {
+                cancel();
+                vm.routeCase(to)
+                vm.update()
+                next()
+            })
+        },
+        beforeRouteUpdate(to, from, next) {
+            this.routeCase(to)
+            this.update()
+            next()
+        },
         watch: {
-            "$route.path": {
-                handler: function () {
-                    //console.log(this.$route.path);
-                    //this.scrollToTop();
-
-                    console.log(this.$route.params)
-                    //处理未加载完成的
-                    cancel();
-                    this.tweetStatus.userExist = true;
-                    this.scrollToTop();
-                    //this.is_project = this.$route.path.substr(3, 7);//提前处理
-                    this.routeCase();
-                    if (this.lock) {
-                        this.load.timeline = true;
-                        this.update();
-                        //if (this.load.leftCard === true && this.tweetStatus.displayType === 'timeline') {
-                        //  this.getUserInfo(this.name);
-                        //}
-                    }
-                },
-                deep: true,
-            },
             "tweetStatus.displayType": {
                 handler: function () {
                     //暴力处理
@@ -333,11 +326,8 @@
                 deep: true
             },
             "name": function () {
-                if (this.lock) {
-                    //clean
-                    this.chart.chartData.rows = [];
-                    this.getUserInfo(this.name);
-                }
+                this.chart.chartData.rows = [];
+                this.getUserInfo(this.name);
             },
             "info": function () {
                 //バンドリ！ BanG Dream! 公式 (@bang_dream_info) / Twitter
@@ -363,12 +353,8 @@
         mounted: function () {
             new CancelToken(c => cancel = c);//提前生成
             //处理路由
-            this.routeCase();
             //check $route
-            if (this.lock) {
-                this.update();
-            }
-            if (this.$root.names.length === 0) {
+            if (this.$root.names.length === 0 || this.$root.languageList.length === 0) {
                 let startTime = Date.now();
                 axios.all([this.getAccountList(), this.getLanguageList()]).then(axios.spread((accountList, languageList) => {
                     this.$root.languageList = languageList.data;
@@ -516,29 +502,19 @@
                 }
                 //status
                 else if (this.tweetStatus.displayType === 'status') {
-                    url += '?name=' + this.name + '&is_status=1&tweet_id=' + this.$route.params.status;
+                    url += '?name=' + this.name + '&is_status=1&tweet_id=' + this.tweetStatus.statusId;
                 }
                 return url;
             },
-            routeCase: function () {
-                //none
-                if (this.$route.path === '/') {
-                    this.$root.home = true;
-                    this.changeTitle('Twitter Monitor');
-                    this.search.keywords = '';
-                    this.tweetStatus.displayType = 'userSelector';
-                    this.search.mode = 0;
-                    this.lock = false;
-                    return;
-                }
+            routeCase: function (to = this.$route) {
                 this.$root.home = false;
                 //name
-                if (this.$route.params.name && this.$route.params.name !== 'search') {
-                    this.name = this.$route.params.name;
+                if (to.params.name && to.params.name !== 'search') {
+                    this.name = to.params.name;
                     this.tweetStatus.displayType = 'timeline';
                     //display
-                    if (this.$route.params.display) {
-                        switch (this.$route.params.display.toLowerCase()) {
+                    if (to.params.display) {
+                        switch (to.params.display.toLowerCase()) {
                             case "self":
                                 this.tweetStatus.display = 'self';
                                 break;
@@ -552,40 +528,30 @@
                                 //all
                                 this.tweetStatus.display = 'all';
                         }
-                        this.lock = true;
-                        return;
-                    } else if (this.$route.params.status) {
+                    } else if (to.params.status) {
                         //status
                         this.tweetStatus.displayType = 'status';
-                        this.lock = true;
-                        return;
+                        this.tweetStatus.statusId = to.params.status;
                     } else {
-                        this.lock = false;
                         this.$router.replace({path: '/' + this.name + '/all/'});
-                        return;
                     }
-                } else if (this.$route.params.name === 'search') {
-                    this.search.keywords = this.$route.params.search;
+                } else if (to.params.name === 'search') {
+                    this.search.keywords = to.params.search;
                     this.load.leftCard = false;
                     this.tweetStatus.displayType = 'search';
-                    this.lock = true;
-                    return;
                 }
                 //hashtag & cashtag
-                if (this.$route.params.hashtag || this.$route.params.cashtag) {
-                    this.tag.text = this.$route.params.hashtag ? this.$route.params.hashtag : this.$route.params.cashtag;
-                    this.tag.type = this.$route.params.hashtag ? 0 : 1;
+                if (to.params.hashtag || to.params.cashtag) {
+                    this.tag.text = to.params.hashtag ? to.params.hashtag : to.params.cashtag;
+                    this.tag.type = to.params.hashtag ? 0 : 1;
                     this.tweetStatus.displayType = 'tag';
                     this.load.leftCard = false;
-                    this.lock = true;
-                    return;
                 }
                 //search
-                if (this.$route.params.search) {
-                    this.search.keywords = this.$route.params.search;
+                if (to.params.search) {
+                    this.search.keywords = to.params.search;
                     this.load.leftCard = false;
                     this.tweetStatus.displayType = 'search';
-                    this.lock = true;
                 }
             },
             //nsfwSearcher: function (name){

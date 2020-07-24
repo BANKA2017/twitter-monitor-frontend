@@ -52,6 +52,15 @@
         },
         mounted: function () {
             document.title = 'Stats/统计';
+            if (this.$root.names.length === 0) {
+                axios.get(this.basePath + (process.env.NODE_ENV !== "development" ? "/account_info_t.json" : "/proxy.php?filename=account_info_t")).then(response => {
+                    this.$root.names = response.data.account_info;
+                    this.$root.projects = response.data.projects;
+                    this.$root.links = response.data.links;
+                }).catch(error => {
+                    this.notice(error, 'error');
+                });
+            }
             axios.get(this.basePath + '/api/v2/data/stats').then(response => {
                 this.rawData = response.data.data;
             }).catch(error => {

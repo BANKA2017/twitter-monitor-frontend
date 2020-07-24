@@ -1,5 +1,6 @@
 <template>
-    <el-drawer :visible.sync="$root.settings.panel" direction="btt" id="settings" title="设置">
+    <el-drawer :visible.sync="$root.settings.panel" close-on-press-escape direction="btt" id="settings" show-close
+               title="设置">
         <div class="modal-body">
             <label for="selectLaguage">语言</label>
             <select class="form-control" id="selectLaguage" v-model="$root.settings.data.language">
