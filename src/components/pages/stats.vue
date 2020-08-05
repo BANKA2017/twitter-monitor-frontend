@@ -9,20 +9,31 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-6">
-                    <tmv2-chart :account-data="chartData('followers')" :label-map="['followers', '关注者']" :colors="['#19d4ae']"/>
+                    <tmv2-chart :chart-rows="chartData('followers')" :colors="['#19d4ae']"
+                                :label-map="{'name': 'name', 'followers': '关注者'}" sort-key="followers" sort-limit="15"
+                                x-axis-rotate="45"/>
                     <div class="my-4"></div>
-                    <tmv2-chart :account-data="chartData('following')" :label-map="['following', '正在关注']" :colors="['#5ab1ef']"/>
+                  <tmv2-chart :chart-rows="chartData('following')" :colors="['#5ab1ef']"
+                              :label-map="{'name': 'name', 'following': '正在关注'}" sort-key="following" sort-limit="15"
+                              x-axis-rotate="45"/>
                     <div class="my-4"></div>
-                    <tmv2-chart :account-data="chartData('statuses_count')" :label-map="['statuses_count', '总推文数']" :colors="['#fa6e86']" />
+                  <tmv2-chart :chart-rows="chartData('statuses_count')" :colors="['#fa6e86']"
+                              :label-map="{'name': 'name', 'statuses_count': '总推文数'}" sort-key="statuses_count"
+                              sort-limit="15" x-axis-rotate="45"/>
                 </div>
-                <div class="col-md-6">
-                    <tmv2-table :table-data="tableData" />
-                </div>
+              <div class="col-md-6">
+                <tmv2-table :table-data="tableData"/>
+              </div>
             </div>
         </div>
-        <div class="my-4"></div>
-        <div class="text-center"><el-button icon="el-icon-back" circle @click="$router.go(-1)"></el-button></div>
-        <div class="my-4"></div>
+      <div class="my-4"></div>
+      <div class="text-center">
+        <el-button icon="el-icon-back" circle @click="$router.go(-1)"></el-button>
+      </div>
+      <div class="my-4"></div>
+      <div class="text-center" style="height: 30px">
+        >_ KDNETWORK
+      </div>
     </div>
 </template>
 
@@ -31,23 +42,33 @@
     import Tmv2Table from "../modules/tmv2Table";
     import Tmv2Chart from "../modules/tmv2Chart";
     export default {
-        name: "stats",
-        components: {Tmv2Chart, Tmv2Table},
-        data() {
+      name: "stats",
+      components: {Tmv2Chart, Tmv2Table},
+      data() {
+        return {
+          rawData: [],
+        }
+      },
+      metaInfo() {
+        return {
+          title: "统计",
+          meta: [{
+            name: "theme-color",
+            content: "#1da1f2"
+          }]
+        }
+      },
+      computed: {
+        tableData: function () {
+          return this.rawData.map(x => {
             return {
-                rawData: [],
+              name: x.display_name,
+              following: x.following,
+              followers: x.followers,
+              statuses_count: x.statuses_count,
+              group: x.group
             }
-        },
-        computed: {
-            tableData: function () {
-                return this.rawData.map(x => {
-                    return {
-                        name: x.display_name,
-                        following: x.following,
-                        followers: x.followers,
-                        statuses_count: x.statuses_count,
-                        group: x.group
-                    }})
+          })
             },
         },
         mounted: function () {

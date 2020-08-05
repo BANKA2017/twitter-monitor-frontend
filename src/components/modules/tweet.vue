@@ -8,18 +8,18 @@
                     <small class="text-muted" v-if="tweet.retweet_from">
                         <retweet height="1em" status="" width="1em"/>
                         <router-link
-                                :to="`/`+tweet.name+(displayType === 'status' ? `/` + display : `/status/`+tweet.tweet_id)"
-                                class="text-muted">
-                            {{ tweet.display_name }}
+                            :to="`/`+tweet.name+(displayType === 'status' ? `/` + display : `/status/`+tweet.tweet_id)"
+                            class="text-muted">
+                          {{ tweet.display_name }}
                         </router-link>
                     </small>
                 </div>
                 <template>
-                    <router-link
-                            :to="`/`+tweet.name+(displayType === 'status' ? `/` + display : `/status/`+tweet.tweet_id)"
-                            class="card-title text-dark">
-                        {{ tweet.retweet_from ? tweet.retweet_from : tweet.display_name }}
-                    </router-link>
+                  <router-link
+                      :to="`/`+ (tweet.retweet_from_name && $root.userList.map(x => x.name).includes(tweet.retweet_from_name) ? tweet.retweet_from_name + '/all' : tweet.name + (displayType === 'status' ? `/` + display : `/status/`+tweet.tweet_id))"
+                      class="card-title text-dark">
+                    {{ tweet.retweet_from ? tweet.retweet_from : tweet.display_name }}
+                  </router-link>
                     | <small>@{{ tweet.retweet_from ? tweet.retweet_from_name : tweet.name }}</small>
                 </template>
                 <!--media-->

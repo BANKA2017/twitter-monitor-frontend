@@ -34,9 +34,6 @@ import {
 //import CollapseTransition from 'element-ui/lib/transitions/collapse-transition';
 import '@femessage/element-ui/lib/theme-chalk/skeleton.css';
 import Skeleton from '@femessage/element-ui/lib/skeleton.js';
-import VeLine from 'v-charts/lib/line.common'
-import VeHistogram from 'v-charts/lib/histogram.common'
-import 'v-charts/lib/style.css'
 
 //import VueHighlightJS from 'vue-highlightjs'
 //Vue.use(VueHighlightJS);
@@ -89,8 +86,6 @@ Vue.prototype.$confirm = MessageBox.confirm;
 Vue.prototype.$prompt = MessageBox.prompt;
 Vue.prototype.$notify = Notification;
 Vue.prototype.$message = Message;
-Vue.component(VeLine.name, VeLine);
-Vue.component(VeHistogram.name, VeHistogram);
 //Vue.component(CollapseTransition.name, CollapseTransition);
 //Vue.use(ElementUI);
 
@@ -127,6 +122,7 @@ new Vue({
       links: [],
       home: true,
       project: "",
+      title: "Twitter Monitor",
       //height: 0,
       //altitudeDifference: 0,
       settings: {

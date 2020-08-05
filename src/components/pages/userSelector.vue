@@ -36,18 +36,26 @@
     import Search from "../modules/search";
     import axios from "axios";
     export default {
-        name: "userSelector",
-        components: {Search},
-        computed: {
-            userWithProjectList: function () {
-                let list = [];
-                this.$root.userList.forEach(values => {
-                    if (values.project === this.$root.project && values.name) {
-                        list.push(values);
-                    }
-                });
-                return list;
-            },
+      name: "userSelector",
+      components: {Search},
+      metaInfo() {
+        return {
+          title: this.$root.title,
+          htmlAttrs: {
+            lang: 'zh',
+          }
+        }
+      },
+      computed: {
+        userWithProjectList: function () {
+          let list = [];
+          this.$root.userList.forEach(values => {
+            if (values.project === this.$root.project && values.name) {
+              list.push(values);
+            }
+          });
+          return list;
+        },
         },
         beforeRouteUpdate(to, from, next) {
             this.routeCase(to)
@@ -56,7 +64,8 @@
         beforeRouteEnter(to, from, next) {
             //none
             next(vm => {
-                vm.routeCase(to)
+              vm.$root.title = "Twitter Monitor"
+              vm.routeCase(to)
                 next()
             })
         },
@@ -88,16 +97,19 @@
                 return axios.get(this.basePath + (process.env.NODE_ENV !== "development" ? "/language_target.json" : "/proxy.php?filename=language_target"));
             },
             routeCase: function (to = this.$route) {
-                //project
-                if (to.params.project) {
-                    this.$root.home = false
-                    this.$root.project = to.params.project;
-                    if (to.params.name) {
-                        this.$router.replace({path: '/' + to.params.name + (to.params.status ? ('/status/' + to.params.status + '/') : (to.params.display ? ('/' + to.params.display + '/') : '/all/'))});
-                    } else {
-                        document.title = this.$root.project + ' / Twitter Monitor';
-                    }
+              if (to.path === '/') {
+                this.$root.project = ''
+              }
+              //project
+              if (to.params.project) {
+                this.$root.home = false
+                this.$root.project = to.params.project;
+                if (to.params.name) {
+                  this.$router.replace({path: '/' + to.params.name + (to.params.status ? ('/status/' + to.params.status + '/') : (to.params.display ? ('/' + to.params.display + '/') : '/all/'))});
+                } else {
+                  this.$root.title = this.$root.project + ' / Twitter Monitor';
                 }
+              }
             }
         }
     }

@@ -70,16 +70,14 @@
                             </div>
                         </el-skeleton>
                         <template v-if="tweetStatus.displayType === 'timeline'">
-                            <!--Load data-->
-                            <div class="my-4"></div>
-                            <template v-if="chart.chartData">
-                                <el-skeleton :loading="!chart.chartData.rows.length" :paragraph="{rows: 4}"
-                                             :title="false" active>
-                                    <ve-line :data="chart.chartData" :extend="chart.chartOptions"
-                                             :height="chart.chartHeight" :init-options="{renderer: 'svg'}"
-                                             :settings="chart.chartSettings"></ve-line>
-                                </el-skeleton>
-                            </template>
+                          <!--Load data-->
+                          <div class="my-4"></div>
+                          <el-skeleton :loading="!chart.rows.length" :paragraph="{rows: 4}" :title="false" active
+                                       v-if="chart.rows">
+                            <tmv2-chart :chart-height="chart.chartHeight" :chart-rows="chart.rows"
+                                        :label-map="chart.labelMap" :legend-name="chart.legendName"
+                                        chart-type="ve-line"></tmv2-chart>
+                          </el-skeleton>
                         </template>
                         <div class="my-4"></div>
                     </template>
@@ -164,16 +162,19 @@
                 </div>
                 <div class="col-md-2">
                     <project-list/>
-                    <div class="mb-1">
+                  <div class="mb-1">
                         <span @click="$root.settings.panel = true"
                               class="text-decoration-none badge badge-pill badge-primary" type="button">设置</span>
-                        <span class="text-decoration-none badge badge-pill badge-primary" is="router-link" to="/about">关于</span>
-                        <span class="text-decoration-none badge badge-pill badge-primary" is="router-link"
-                              to="/i/stats">统计</span>
-                        <span :href="basePath + `/api/v2/rss/` + info.name + `.xml`"
-                              class="text-decoration-none badge badge-pill badge-primary" is="a"
-                              v-if="tweetStatus.displayType === 'timeline' || tweetStatus.displayType === 'status'">RSS</span>
-                    </div>
+                    <span class="text-decoration-none badge badge-pill badge-primary" is="router-link"
+                          to="/about">关于</span>
+                    <span class="text-decoration-none badge badge-pill badge-primary" is="router-link"
+                          to="/i/stats">统计</span>
+                    <span class="text-decoration-none badge badge-pill badge-primary" is="router-link"
+                          to="/i/status">状态</span>
+                    <span :href="basePath + `/api/v2/rss/` + info.name + `.xml`"
+                          class="text-decoration-none badge badge-pill badge-primary" is="a"
+                          v-if="tweetStatus.displayType === 'timeline' || tweetStatus.displayType === 'status'">RSS</span>
+                  </div>
                     <hr class="my-4">
                     <link-list/>
                 </div>
@@ -197,22 +198,24 @@
     import Settings from "../modules/settings";
     import ProjectList from "../modules/projectList";
     import LinkList from "../modules/linkList";
+    import Tmv2Chart from "@/components/modules/tmv2Chart";
 
     const CancelToken = axios.CancelToken;
     let cancel;
     export default {
         name: 'App',
         components: {
-            LinkList,
-            ProjectList,
-            Settings,
-            Navigation,
-            Tweet,
-            Search,
-            Locked,
-            Deleted,
-            Verified,
-            translate,
+          Tmv2Chart,
+          LinkList,
+          ProjectList,
+          Settings,
+          Navigation,
+          Tweet,
+          Search,
+          Locked,
+          Deleted,
+          Verified,
+          translate,
         },
         data() {
             return {
@@ -252,38 +255,24 @@
                 },
                 displayMode: [['全部', 'all', 0], ['原创', 'self', 0], ['转推', 'retweet', 0], ['媒体', 'media', 0]],
                 chart: {
-                    chartHeight: "250px",
-                    chartData: {
-                        columns: ['timestamp', 'followers', 'following', 'statuses_count'],
-                        rows: []
-                    },
-                    chartSettings: {
-                        labelMap: {
-                            'timestamp': '日期',
-                            'followers': '关注者',
-                            'following': '正在关注',
-                            'statuses_count': '总推文数',
-                        },
-                        legendName: {},
-                        scale: [true, true],
-                    },
-                    chartOptions: {
-                        grid: {
-                            left: '3%',
-                            right: '4%',
-                            bottom: '3%',
-                            containLabel: true
-                        },
-                    },
+                  chartHeight: "250px",
+                  rows: [],
+                  labelMap: {
+                    'timestamp': '日期',
+                    'followers': '关注者',
+                    'following': '正在关注',
+                    'statuses_count': '总推文数',
+                  },
+                  legendName: {},
                 },
             };
         },
         metaInfo() {
             return {
-                title: this.displayType,
-                htmlAttrs: {
-                    lang: 'zh',
-                }
+              title: this.$root.title,
+              htmlAttrs: {
+                lang: 'zh',
+              }
             }
         },
         computed: {
@@ -302,7 +291,8 @@
             })
         },
         beforeRouteUpdate(to, from, next) {
-            this.routeCase(to)
+          this.load.timeline = true
+          this.routeCase(to)
             this.update()
             next()
         },
@@ -326,12 +316,12 @@
                 deep: true
             },
             "name": function () {
-                this.chart.chartData.rows = [];
-                this.getUserInfo(this.name);
+              this.chart.rows = [];
+              this.getUserInfo(this.name);
             },
             "info": function () {
                 //バンドリ！ BanG Dream! 公式 (@bang_dream_info) / Twitter
-                this.changeTitle(this.info.display_name ? this.info.display_name + ' (@' + this.info.name + ') / Twitter Monitor' : "Twitter Monitor");
+              this.$root.title = this.info.display_name ? this.info.display_name + ' (@' + this.info.name + ') / Twitter Monitor' : "Twitter Monitor";
                 //this.display_name = this.info.display_name;
             },
             "search.keywords": {
@@ -378,9 +368,6 @@
             getLanguageList: function () {
                 return axios.get(this.basePath + (process.env.NODE_ENV !== "development" ? "/language_target.json" : "/proxy.php?filename=language_target"));
             },
-            changeTitle: function (text = "") {
-                document.title = text;
-            },
             loading: function (type = 0) {
                 if (this.tweetStatus.bottomTweetId && this.tweetStatus.topTweetId) {
                     //0 -> top, 1 -> bottom
@@ -421,16 +408,16 @@
                 }).then(response => {
                     this.info = response.data.data;
                     if (response.data.code === 200) {
-                        this.chart.chartSettings.legendName = {
-                            '关注者': '关注者 ' + this.info.followers,
-                            '正在关注': '正在关注 ' + this.info.following,
-                            '总推文数': '总推文数 ' + this.info.statuses_count
-                        };
+                      this.chart.legendName = {
+                        '关注者': '关注者 ' + this.info.followers,
+                        '正在关注': '正在关注 ' + this.info.following,
+                        '总推文数': '总推文数 ' + this.info.statuses_count
+                      };
                         this.createChart();
                     } else {
-                        this.notice(response.data.message, "error");
-                        this.chart.chartSettings.legendName = {'关注者': '关注者', '正在关注': '正在关注', '总推文数': '总推文数'};
-                        this.tweetStatus.userExist = false;
+                      this.notice(response.data.message, "error");
+                      this.chart.legendName = {'关注者': '关注者', '正在关注': '正在关注', '总推文数': '总推文数'};
+                      this.tweetStatus.userExist = false;
                     }
                     this.load.leftCard = false;
                 }).catch(error => {
@@ -442,10 +429,10 @@
             },
             createChart: function () {
                 axios.get(this.basePath + '/api/v2/data/chart/?uid=' + this.info.uid).then(response => {
-                    this.chart.chartData.rows = response.data.data;
-                    if (!this.chart.chartData.rows.length) {
-                        this.notice("chart: " + response.data.message, "warning");
-                    }
+                  this.chart.rows = response.data.data;
+                  if (!this.chart.rows.length) {
+                    this.notice("chart: " + response.data.message, "warning");
+                  }
                 }).catch(error => {
                     if (this.tweetStatus.displayType === "timeline" && error.toString() !== 'Cancel') {
                         this.notice('加载失败，5s后重试重试 #' + error, 'error');

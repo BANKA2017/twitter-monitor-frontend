@@ -1,8 +1,7 @@
 <template>
     <div id="tmv2Table">
         <el-table v-loading="!tableData.length" ref="accountData" :data="tableData" style="width: 100%" :default-sort = "{prop: 'followers', order: 'descending'}">
-            <el-table-column prop="name" label="用户名">
-            </el-table-column>
+            <el-table-column label="用户名" prop="name"></el-table-column>
             <el-table-column show-overflow-tooltip sortable prop="followers" label="关注者"></el-table-column>
             <el-table-column show-overflow-tooltip sortable prop="following" label="正在关注"></el-table-column>
             <el-table-column sortable prop="statuses_count" label="总推文数"></el-table-column>
