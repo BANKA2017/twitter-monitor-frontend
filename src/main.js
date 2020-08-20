@@ -39,6 +39,7 @@ import Skeleton from '@femessage/element-ui/lib/skeleton.js';
 //Vue.use(VueHighlightJS);
 
 Vue.prototype.basePath = process.env.NODE_ENV !== "development" ? "https://bangdream.fun/twitter" : "https://bangdream.fun/dev/tmv2";
+Vue.prototype.onlinePath = ""
 
 //gtag
 //骚玩法不要学, 老老实实写代码

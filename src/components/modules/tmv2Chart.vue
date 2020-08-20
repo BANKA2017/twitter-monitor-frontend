@@ -89,12 +89,6 @@ export default {
                           rotate: this.xAxisRotate
                         }
                       },
-                      title: {
-                        text: '雨量流量关系图',
-                        subtext: '数据来自西安兰特水电测控技术有限公司',
-                        left: 'center',
-                        align: 'right'
-                      },
                     },
                 },
             }

@@ -9,6 +9,19 @@
 <script>
   export default {
     name: 'App',
+    metaInfo () {
+      return {
+        title: "关于",
+        meta: [{
+          name: "description",
+          content: "Twitter Monitor with bangdream.fun"
+        },
+        {
+          name: "keywords",
+            content: "bangdream, LoveLive!, 少女乐团派对twitter, Twitter Monitor, twitter监控"
+        }]
+      }
+    },
     mounted: function () {
       this.localrun();
     },
