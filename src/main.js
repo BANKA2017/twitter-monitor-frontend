@@ -2,7 +2,6 @@
 import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
-import './registerServiceWorker';
 //import 'bootstrap';
 import 'bootstrap/js/dist/util'
 import 'bootstrap/js/dist/button'
@@ -62,7 +61,6 @@ if (process.env.NODE_ENV !== "development") {
 import VueMeta from 'vue-meta'
 import './registerServiceWorker'
 
-//import './registerServiceWorker'
 Vue.use(VueMeta);
 Vue.use(Input);
 Vue.use(Drawer);
