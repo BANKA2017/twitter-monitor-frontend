@@ -1,32 +1,35 @@
-const path = require('path');
-const PrerenderSPAPlugin = require('prerender-spa-plugin');
-const Renderer = PrerenderSPAPlugin.PuppeteerRenderer;
+//const path = require('path');
+//const PrerenderSPAPlugin = require('prerender-spa-plugin');
+//const Renderer = PrerenderSPAPlugin.PuppeteerRenderer;
 
 module.exports = {
     assetsDir: 'static',
     productionSourceMap: true,
 
-    publicPath: '/twitter',
+    publicPath: '/twitter/',
+    //outputDir: 'dist/twitter/',
     //mode: 'production'
 
-    configureWebpack: () => {
-        if (process.env.NODE_ENV === "production") {
-            return {
-                plugins: [
-                    new PrerenderSPAPlugin({
-                        staticDir: path.join(__dirname, "dist"),
-                        routes: ["/", "/about", "/api", "/account", "/i/stats", "/i/status",],
-                        renderer: new Renderer({
-                            inject: {
-                                foo: "bar"
-                            },
-                            headless: false,
-                        })
-                    })
-                ]
-            };
-        }
-    },
+    //configureWebpack: () => {
+    //    if (process.env.NODE_ENV === "production") {
+    //        return {
+    //            plugins: [
+    //                new PrerenderSPAPlugin({
+    //                    staticDir: path.join(__dirname, "dist"),
+    //                    publicPath: '/twitter/',
+    //                    indexPath: path.join(__dirname, 'dist/twitter/index.html'),
+    //                    routes: ["/", "/about", "/api", "/account", "/i/stats", "/i/status",],
+    //                    renderer: new Renderer({
+    //                        inject: {
+    //                            foo: "bar"
+    //                        },
+    //                        headless: false,
+    //                    })
+    //                })
+    //            ]
+    //        };
+    //    }
+    //},
     pwa: {
         name: 'Twitter Monitor',
         themeColor: '#ffffff',
