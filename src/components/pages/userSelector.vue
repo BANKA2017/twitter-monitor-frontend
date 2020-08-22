@@ -74,15 +74,15 @@
             if (this.$root.names.length === 0 || this.$root.languageList.length === 0) {
                 let startTime = Date.now();
                 axios.all([this.getAccountList(), this.getLanguageList()]).then(axios.spread((accountList, languageList) => {
-                    this.$root.languageList = languageList.data;
-                    this.$root.names = accountList.data.account_info;
-                    this.$root.projects = accountList.data.projects;
-                    this.$root.links = accountList.data.links;
-                    //处理网速
-                    if (Date.now() - startTime > 3000) {
-                        this.$root.settings.data.displayPicture = true;
-                        this.notice('当前网速较慢，已关闭图片显示', 'warning');
-                    }
+                  this.$root.languageList = languageList.data;
+                  this.$root.names = accountList.data.data.account_info;
+                  this.$root.projects = accountList.data.data.projects;
+                  this.$root.links = accountList.data.data.links;
+                  //处理网速
+                  if (Date.now() - startTime > 3000) {
+                    this.$root.settings.data.displayPicture = true;
+                    this.notice('当前网速较慢，已关闭图片显示', 'warning');
+                  }
                 })).catch(error => {
                     this.notice(error, 'error');
                 });
@@ -91,7 +91,7 @@
         },
         methods: {
             getAccountList: function () {
-                return axios.get(this.basePath + (process.env.NODE_ENV !== "development" ? "/account_info_t.json" : "/proxy.php?filename=account_info_t"));
+              return axios.get(this.basePath + "/api/v2/data/accounts/");
             },
             getLanguageList: function () {
                 return axios.get(this.basePath + (process.env.NODE_ENV !== "development" ? "/language_target.json" : "/proxy.php?filename=language_target"));
