@@ -10,20 +10,19 @@
           <h4>创建配置文件 Config.json</h4>
           <nav>
             <div class="nav nav-tabs" id="nav-tab" role="list">
-              <a aria-controls="config-user" aria-selected="true" class="nav-item nav-link active" data-toggle="tab"
-                 href="#config-user" id="config-user-tab" role="tab">账户</a>
-              <a aria-controls="config-url" aria-selected="false" class="nav-item nav-link" data-toggle="tab"
-                 href="#config-url" id="config-url-tab" role="tab">链接</a>
-              <a aria-controls="config-nsfwList" aria-selected="false" class="nav-item nav-link" data-toggle="tab"
-                 href="#config-nsfwList" id="config-nsfwList-tab" role="tab">NSFW列表</a>
+              <div is="a" v-for="(list, key) in {user: '帐户', url: '链接', nsfwList: 'NSFW列表'}" :id="`config-`+key+`-tab`"
+                   :key="key" :aria-controls="`config-`+key"
+                   :class="`nav-item nav-link ` + (type === key ? 'active' : '')" aria-selected="true" data-toggle="tab"
+                   role="button" @click="type=key">{{ list }}
+              </div>
             </div>
           </nav>
           <div class="tab-content" id="nav-tabContent">
-            <div aria-labelledby="config-user-tab" class="tab-pane fade show active" id="config-user" role="panel">
+            <div id="config-user" :class="`tab-pane fade` + (type==='user' ? 'show active' : '')" role="panel">
               <template id="nameList">
                 <div class="my-4"></div>
                 <template v-for="(info, index) in userList">
-                  <a :class="`text-decoration-none badge badge-pill badge-` + (info.organization ? 'success' : 'primary')"
+                  <a :class="`mb-1 text-decoration-none badge badge-pill badge-` + (info.organization ? 'success' : 'primary')"
                      :href="`#item` + index" :key="index" role="button">{{ info.display_name }}</a>
                 </template>
                 <div class="my-4"></div>
@@ -89,7 +88,7 @@
                 <hr class="my-4">
               </div>
             </div>
-            <div aria-labelledby="config-url-tab" class="tab-pane fade" id="config-url" role="panel">
+            <div id="config-url" :class="`tab-pane fade` + (type==='url' ? 'show active' : '')" role="panel">
               <div :key="s" v-for="(url, s) in config.links">
                 <div class="form-group">
                   <label :for="`url`+s+`url`"
@@ -118,7 +117,7 @@
                 <button @click="action('add', 'links')" class="btn btn-primary">增加</button>
               </template>
             </div>
-            <div aria-labelledby="config-nsfwList-tab" class="tab-pane fade" id="config-nsfwList" role="panel">
+            <div id="config-nsfwList" :class="`tab-pane fade` + (type==='nsfwList' ? 'show active' : '')" role="panel">
               <div class="my-4"></div>
               <div :key="s" v-for="(nsfwUser, s) in config.nsfwList">
                 <div class="input-group">
@@ -166,12 +165,11 @@
 </template>
 
 <script>
-import axios from 'axios'
-
 export default {
   name: "devConfig",
   data() {
     return {
+      type: "user",//user links
       config: {
         users: [
           {
@@ -237,7 +235,7 @@ export default {
       if (this.textareaData) {
         try {
           let textareaDataArray = JSON.parse(this.textareaData);
-          if (textareaDataArray !== this.config && (textareaDataArray.users && textareaDataArray.links && textareaDataArray.nsfwList)) {
+          if (textareaDataArray !== this.config && (textareaDataArray.users && textareaDataArray.links)) {
             this.config = textareaDataArray;
           }
         } catch {
@@ -247,15 +245,10 @@ export default {
     }
   },
   mounted: function () {
-    axios.get("./config.json").then(response => {
-      this.config = response.data
-      this.autoSave();
-    }).catch(() => {
-      if (localStorage.getItem('twitter_monitor_config')) {
-        this.config = JSON.parse(localStorage.getItem('twitter_monitor_config'));
-        this.autoSave();
-      }
-    })
+    if (localStorage.getItem('twitter_monitor_config')) {
+      //this.config = JSON.parse(localStorage.getItem('twitter_monitor_config'));
+      //this.autoSave();
+    }
     this.textareaData = JSON.stringify(this.config, null, 4);
   },
   methods: {

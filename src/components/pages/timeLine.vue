@@ -171,6 +171,8 @@
                           to="/i/stats">统计</span>
                     <span class="text-decoration-none badge badge-pill badge-primary" is="router-link"
                           to="/i/status">状态</span>
+                    <span is="router-link" class="text-decoration-none badge badge-pill badge-primary"
+                          to="/api">API</span>
                     <span :href="basePath + `/api/v2/rss/` + info.name + `.xml`"
                           class="text-decoration-none badge badge-pill badge-primary" is="a"
                           v-if="tweetStatus.displayType === 'timeline' || tweetStatus.displayType === 'status'">RSS</span>

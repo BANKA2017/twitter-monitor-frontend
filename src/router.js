@@ -9,7 +9,7 @@ const Status = () => import("./components/pages/status");
 const Online = () => import("./components/pages/online");
 const timeLine = () => import("./components/pages/timeLine");
 const UserSelector = () => import("./components/pages/userSelector");
-//const devConfig = () => import("./components/pages/devConfig");
+const devConfig = () => import("./components/pages/devConfig");
 
 Vue.use(VueRouter);
 export default new VueRouter({
@@ -40,10 +40,10 @@ export default new VueRouter({
             path: '/i/online',
             component: Online
         },
-        //{
-        //    path: '/i/dev/config',
-        //    component: devConfig
-        //},
+        {
+            path: '/i/dev/config',
+            component: devConfig
+        },
         {
             path: '/hashtag/:hashtag',
             component: timeLine,
