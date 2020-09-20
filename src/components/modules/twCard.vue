@@ -19,9 +19,15 @@
                 </template>
                 <template v-else>
                     <div class="border-bottom" v-if="object.media === '1' && mediaState">
-                        <div class="no-gutters" :style="`width: 100%; padding-bottom: ` +  paddingBottom(latestMedia.origin_info_height, latestMedia.origin_info_width, latestMedia.cover) +  `%; height: 0; border-radius: 14px 14px 0 0`">
-                            <el-image class="card-img-top" style="width: 100%; position: absolute; border-radius: 14px 14px 0 0" fit="cover" :src="basePath+`/api/v2/media/tweets/`+latestMedia.cover" alt="cardImage" lazy :preview-src-list="[basePath+`/api/v2/media/tweets/`+latestMedia.cover]"></el-image>
-                        </div>
+                      <div
+                          :style="`width: 100%; padding-bottom: ` +  paddingBottom( latestMedia.cover, latestMedia.origin_info_height, latestMedia.origin_info_width) +  `%; height: 0; border-radius: 14px 14px 0 0`"
+                          class="no-gutters">
+                        <el-image :preview-src-list="[basePath+`/api/v2/media/tweets/`+latestMedia.cover]"
+                                  :src="basePath+`/api/v2/media/tweets/`+latestMedia.cover" alt="cardImage"
+                                  class="card-img-top" fit="cover" lazy
+                                  style="width: 100%; position: absolute; border-radius: 14px 14px 0 0"
+                                  @load="load = true"></el-image>
+                      </div>
                     </div>
                     <div class="card-body position-static">
                         <p class="card-title" style="color: black">{{ object.title }}</p>
@@ -36,31 +42,43 @@
 
 <script>
     export default {
-        name: "twCard",
-        props: {
-            object: Object,
-            media: Array,
-            mediaState: Boolean,
-        },
-        computed: {
-            latestMedia: function() {
-                if (this.media.length) {
-                    return this.media[this.media.length - 1];
-                } else {
-                    return []
-                }
+      name: "twCard",
+      props: {
+        object: Object,
+        media: Array,
+        mediaState: Boolean,
+      },
+      data() {
+        return {
+          load: false,
+        }
+      },
+      computed: {
+        latestMedia: function () {
+          if (this.media.length) {
+            return this.media[this.media.length - 1];
+          } else {
+            return []
+          }
 
-            }
-        },
+        }
+      },
         methods: {
-            paddingBottom: function (height, width, link) {
-                let getScale = /name=([0-9]+)x([0-9]+)/.exec(link);
-                if (getScale) {
-                    return (getScale[2] / getScale[1]) * 100;
-                } else {
-                    return (height / width) * 100;
-                }
+          paddingBottom: function (link, height, width) {
+            if (this.load) {
+              let img = new Image();
+              img.src = this.basePath + `/api/v2/media/tweets/` + link;
+              return (img.height / img.width) * 100
+            } else {
+              let getScale = /name=([0-9]+)x([0-9]+)/.exec(link);
+              if (getScale) {
+                return (getScale[2] / getScale[1]) * 100;
+              } else {
+                return (height / width) * 100;
+              }
             }
+
+          },
         }
     }
 </script>

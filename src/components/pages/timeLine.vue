@@ -62,8 +62,7 @@
                                                 </div>
                                             </div>
                                             <p v-html="`<p class='card-text'>`+info.description+`</p>`"></p>
-                                            <translate :basePath="basePath" :id="info.uid"
-                                                       :to="$root.settings.data.language" :type="1"/>
+                                            <translate :id="info.uid" :to="$root.settings.data.language" :type="1"/>
                                         </div>
                                     </div>
                                 </template>
@@ -93,19 +92,19 @@
                         <nav class="nav nav-pills nav-fill">
                             <template v-if="tweetStatus.displayType === 'timeline' && !load.leftCard">
                                 <li :key="s" class="nav-item" v-for="(value, s) in displayMode">
-                                    <div @click="loading( 0)" class="nav-link active" type="button"
-                                         v-if="value[1] === tweetStatus.display">{{ value[0] }}
-                                    </div>
+                                  <div class="nav-link active" role="button" @click="loading( 0)"
+                                       v-if="value[1] === tweetStatus.display">{{ value[0] }}
+                                  </div>
                                     <router-link :to="`/`+info.name+`/`+value[1]" class="nav-link" v-else>{{ value[0]
                                         }}
                                     </router-link>
                                 </li>
                             </template>
                             <li class="nav-item">
-                                <div :class="`nav-link `+($root.settings.data.displayPicture ? 'active' : 'text-primary')"
-                                     @click="$root.settings.data.displayPicture=!$root.settings.data.displayPicture"
-                                     type="button">无图
-                                </div>
+                              <div :class="`nav-link `+($root.settings.data.displayPicture ? 'active' : 'text-primary')"
+                                   @click="$root.settings.data.displayPicture=!$root.settings.data.displayPicture"
+                                   role="button">无图
+                              </div>
                             </li>
                         </nav>
                         <hr class="my-4">
@@ -119,26 +118,27 @@
                                             {{ '此账户已'+(info.deleted ? '删除' : '被保护')+'，我们将不再监控此账户' }}
                                         </div>
                                     </div>
-                                    <hr class="my-4">
+                                  <hr class="my-4">
                                 </template>
-                                <div class="text-center" v-if="tweetStatus.reload">
-                                    <el-button @click="() => {load.timeline=true;update()}" icon="el-icon-refresh-left"
-                                               round>重试
-                                    </el-button>
-                                </div>
-                                <div class="text-center" element-loading-background="rgba(255, 255, 0, 0)"
-                                     style="height: 60px" v-if="load.top" v-loading="load.top"></div>
-                                <div v-if="!tweetStatus.reload && tweets.length">
-                                    <div :key="order" v-for="(tweet, order) in tweets">
-                                        <div class="text-center" v-if="tweet.type === 'msg'">
-                                            {{ tweet.full_text }}
-                                        </div>
-                                        <div v-else>
-                                            <tweet :display="tweetStatus.display"
-                                                   :display-type="tweetStatus.displayType" :top="info.top"
-                                                   :tweet="tweet"/>
-                                        </div>
-                                        <hr class="my-4">
+                              <div class="text-center" v-if="tweetStatus.reload">
+                                <el-button @click="() => {load.timeline=true;update()}" icon="el-icon-refresh-left"
+                                           round>重试
+                                </el-button>
+                              </div>
+                              <div class="text-center" element-loading-background="rgba(255, 255, 0, 0)"
+                                   style="height: 60px" v-if="load.top" v-loading="load.top"></div>
+                              <div v-if="!tweetStatus.reload && $root.tweets.length">
+                                <div v-for="(tweet, order) in $root.tweets" :key="order">
+                                  <div class="text-center" v-if="tweet.type === 'msg'">
+                                    {{ tweet.full_text }}
+                                  </div>
+                                  <div v-else>
+                                    <tweet :display="tweetStatus.display"
+                                           :display-type="tweetStatus.displayType" :top="info.top"
+                                           :order="order"
+                                           :tweet="tweet"/>
+                                  </div>
+                                  <hr class="my-4">
                                     </div>
                                     <template>
                                         <button @click="loading(1)" class="btn btn-primary btn-lg btn-block"
@@ -164,7 +164,7 @@
                     <project-list/>
                   <div class="mb-1">
                         <span @click="$root.settings.panel = true"
-                              class="text-decoration-none badge badge-pill badge-primary" type="button">设置</span>
+                              class="text-decoration-none badge badge-pill badge-primary" role="button">设置</span>
                     <span class="text-decoration-none badge badge-pill badge-primary" is="router-link"
                           to="/about">关于</span>
                     <span class="text-decoration-none badge badge-pill badge-primary" is="router-link"
@@ -241,7 +241,7 @@
                 //nsfwList: [],
                 links: [],
                 info: [],
-                tweets: [],
+              //tweets: [],
                 name: "",
                 tweetStatus: {
                     displayType: "timeline",//timeline, tag, search, status,//后面的已独立 userSelector, about, account
@@ -383,15 +383,15 @@
                             if (response.data.data.top_tweet_id) {
                                 this.tweetStatus.topTweetId = response.data.data.top_tweet_id;
                             }
-                            this.tweets = [...response.data.data.tweets, ...this.tweets];
-                            this.load.top = false;
+                          this.$root.tweets = [...response.data.data.tweets, ...this.$root.tweets];
+                          this.load.top = false;
                         } else {
                             this.tweetStatus.moreTweets = response.data.data.hasmore;
                             if (response.data.data.bottom_tweet_id) {
                                 this.tweetStatus.bottomTweetId = response.data.data.bottom_tweet_id;
                             }
-                            this.tweets.push(...response.data.data.tweets);
-                            this.load.bottom = false;
+                          this.$root.tweets.push(...response.data.data.tweets);
+                          this.load.bottom = false;
                         }
                     }).catch(error => {
                         if (error.toString() !== 'Cancel') {
@@ -421,26 +421,26 @@
                       this.chart.legendName = {'关注者': '关注者', '正在关注': '正在关注', '总推文数': '总推文数'};
                       this.tweetStatus.userExist = false;
                     }
-                    this.load.leftCard = false;
+                  this.load.leftCard = false;
                 }).catch(error => {
-                    if (error.toString() !== 'Cancel') {
-                        this.notice(error, "error")
-                    }
-                    //this.load.leftCard = false;
+                  if (error.toString() !== 'Cancel') {
+                    this.notice(error, "error")
+                  }
+                  //this.load.leftCard = false;
                 });
             },
-            createChart: function () {
-                axios.get(this.basePath + '/api/v2/data/chart/?uid=' + this.info.uid).then(response => {
-                  this.chart.rows = response.data.data;
-                  if (!this.chart.rows.length) {
-                    this.notice("chart: " + response.data.message, "warning");
-                  }
-                }).catch(error => {
-                    if (this.tweetStatus.displayType === "timeline" && error.toString() !== 'Cancel') {
-                        this.notice('加载失败，5s后重试重试 #' + error, 'error');
-                        setTimeout(() => {
-                            this.createChart()
-                        }, 5000);
+          createChart: function (time = 0) {
+            axios.get(this.basePath + '/api/v2/data/chart/?uid=' + this.info.uid + (time > 0 ? '&' : '')).then(response => {
+              this.chart.rows = response.data.data;
+              if (!this.chart.rows.length) {
+                this.notice("chart: " + response.data.message, "warning");
+              }
+            }).catch(error => {
+              if (this.tweetStatus.displayType === "timeline" && error.toString() !== 'Cancel') {
+                this.notice('加载失败，5s后重试重试 #' + error, 'error');
+                setTimeout(() => {
+                  this.createChart()
+                }, 5000);
                     }
                 });
             },
@@ -448,12 +448,12 @@
                 axios.get(this.mergeUrl(), {
                     cancelToken: new CancelToken(c => cancel = c)
                 }).then(response => {
-                    this.tweets = response.data.data.tweets ? response.data.data.tweets : [];//404时无任何数据
-                    this.tweetStatus.moreTweets = response.data.data.hasmore;
-                    this.tweetStatus.topTweetId = response.data.data.top_tweet_id;
-                    this.tweetStatus.bottomTweetId = response.data.data.bottom_tweet_id;
-                    this.load.timeline = false;
-                    this.tweetStatus.reload = (response.data.code !== 200 && response.data.code !== 404 && response.data.code !== 403);
+                  this.$root.tweets = response.data.data.tweets ? response.data.data.tweets : [];//404时无任何数据
+                  this.tweetStatus.moreTweets = response.data.data.hasmore;
+                  this.tweetStatus.topTweetId = response.data.data.top_tweet_id;
+                  this.tweetStatus.bottomTweetId = response.data.data.bottom_tweet_id;
+                  this.load.timeline = false;
+                  this.tweetStatus.reload = (response.data.code !== 200 && response.data.code !== 404 && response.data.code !== 403);
                 }).catch(error => {
                     if (error.toString() !== 'Cancel') {
                         this.notice(error, "error");

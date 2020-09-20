@@ -16,10 +16,13 @@
                 </div>
                 <template>
                   <router-link
-                      :to="`/`+ (tweet.retweet_from_name && $root.userList.map(x => x.name).includes(tweet.retweet_from_name) ? tweet.retweet_from_name + '/all' : tweet.name + (displayType === 'status' ? `/` + display : `/status/`+tweet.tweet_id))"
+                      v-if="!tweet.retweet_from_name || (tweet.retweet_from_name && $root.userList.map(x => x.name).includes(tweet.retweet_from_name))"
+                      :to="`/`+ (tweet.retweet_from ? tweet.retweet_from_name : tweet.name) + (tweet.retweet_from_name && tweet.retweet_from_name !== tweet.name ? '/all' : displayType === 'status' ? `/` + display : `/status/`+tweet.tweet_id)"
                       class="card-title text-dark">
                     {{ tweet.retweet_from ? tweet.retweet_from : tweet.display_name }}
                   </router-link>
+                  <a v-else :href="`//twitter.com/` + tweet.retweet_from_name" class="text-dark"
+                     target="_blank">{{ tweet.retweet_from }}</a>
                     | <small>@{{ tweet.retweet_from ? tweet.retweet_from_name : tweet.name }}</small>
                 </template>
                 <!--media-->
@@ -35,7 +38,7 @@
                 <!--<div v-html="`<p class='card-text'>`+tweet.full_text+`</p>`"></div>-->
                 <!--excited!-->
                 <html-text :entities="tweet.entities" :full_text_origin="tweet.full_text_origin"/>
-                <translate :id="tweet.tweet_id" :to="$root.settings.data.language" :type="0"/>
+              <translate :id="tweet.tweet_id" :order="order" :to="$root.settings.data.language" :type="0"/>
                 <!--media-->
                 <template v-if="tweet.media === '1'&&!$root.settings.data.displayPicture">
                     <div class="my-4"></div>
@@ -89,13 +92,14 @@
             TwCard, TwPolls, QuoteCard, ImageList, Translate, HtmlText, BoxArrowUpRight, CameraVideoIcon, ImageIcon
         },
         props: {
-            top: {
-                type: [Number, String],
-                default: 0
-            },
-            displayType: String,
-            tweet: Object,
-            display: String,
+          top: {
+            type: [Number, String],
+            default: 0
+          },
+          displayType: String,
+          tweet: Object,
+          display: String,
+          order: Number,
         },
         methods: {
             timeGap: function (timestamp, now, language) {

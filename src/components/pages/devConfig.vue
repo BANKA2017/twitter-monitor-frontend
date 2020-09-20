@@ -235,7 +235,7 @@ export default {
       if (this.textareaData) {
         try {
           let textareaDataArray = JSON.parse(this.textareaData);
-          if (textareaDataArray !== this.config && (textareaDataArray.users && textareaDataArray.links)) {
+          if (textareaDataArray !== this.config && (textareaDataArray.users && textareaDataArray.links && textareaDataArray.nsfwList)) {
             this.config = textareaDataArray;
           }
         } catch {
