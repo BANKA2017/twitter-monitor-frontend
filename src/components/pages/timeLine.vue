@@ -177,12 +177,15 @@
                           class="text-decoration-none badge badge-pill badge-primary" is="a"
                           v-if="tweetStatus.displayType === 'timeline' || tweetStatus.displayType === 'status'">RSS</span>
                   </div>
-                    <hr class="my-4">
-                    <link-list/>
+                  <hr class="my-4">
+                  <link-list/>
                 </div>
             </div>
-            <!--setting-->
-            <settings/>
+          <!--setting-->
+          <settings/>
+          <div class="el-backtop" icon="" style="right: 40px; bottom: 90px" @click="()=>{scrollToTop();loading(0)}">
+            <i class="el-icon-refresh-right"></i>
+          </div>
         </main>
     </div>
 
@@ -343,17 +346,17 @@
             }
         },
         mounted: function () {
-            new CancelToken(c => cancel = c);//提前生成
-            //处理路由
-            //check $route
-            if (this.$root.names.length === 0 || this.$root.languageList.length === 0) {
-                let startTime = Date.now();
-                axios.all([this.getAccountList(), this.getLanguageList()]).then(axios.spread((accountList, languageList) => {
-                  this.$root.languageList = languageList.data;
-                  this.$root.names = accountList.data.data.account_info;
-                  this.$root.projects = accountList.data.data.projects;
-                  this.$root.links = accountList.data.data.links;
-                  //处理网速
+          new CancelToken(c => cancel = c);//提前生成
+          //处理路由
+          //check $route
+          if (this.$root.names.length === 0 || this.$root.languageList.length === 0) {
+            let startTime = Date.now();
+            axios.all([this.getAccountList(), this.getLanguageList()]).then(axios.spread((accountList, languageList) => {
+              this.$root.languageList = languageList.data;
+              this.$root.names = accountList.data.data.account_info;
+              this.$root.projects = accountList.data.data.projects;
+              this.$root.links = accountList.data.data.links;
+              //处理网速
                   if (Date.now() - startTime > 3000) {
                     this.$root.settings.data.displayPicture = true;
                     this.notice('当前网速较慢，已关闭图片显示', 'warning');
