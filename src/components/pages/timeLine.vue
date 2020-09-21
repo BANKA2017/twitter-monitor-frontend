@@ -183,9 +183,12 @@
             </div>
           <!--setting-->
           <settings/>
-          <div class="el-backtop" icon="" style="right: 40px; bottom: 90px" @click="()=>{scrollToTop();loading(0)}">
-            <i class="el-icon-refresh-right"></i>
-          </div>
+          <transition name="el-fade-in">
+            <div v-if="tweetStatus.displayType === 'timeline'" class="el-backtop" style="right: 40px; bottom: 90px"
+                 @click="()=>{scrollToTop();loading(0)}">
+              <i class="el-icon-refresh-right"></i>
+            </div>
+          </transition>
         </main>
     </div>
 
