@@ -263,6 +263,7 @@
                 },
                 displayMode: [['全部', 'all', 0], ['原创', 'self', 0], ['转推', 'retweet', 0], ['媒体', 'media', 0]],
                 chart: {
+                  latestTimestamp: 0,
                   chartHeight: "250px",
                   rows: [],
                   labelMap: {
@@ -390,6 +391,7 @@
                                 this.tweetStatus.topTweetId = response.data.data.top_tweet_id;
                             }
                           this.$root.tweets = [...response.data.data.tweets, ...this.$root.tweets];
+                          this.createChart(this.chart.latestTimestamp, true)
                           this.load.top = false;
                         } else {
                             this.tweetStatus.moreTweets = response.data.data.hasmore;
@@ -435,20 +437,27 @@
                   //this.load.leftCard = false;
                 });
             },
-          createChart: function (time = 0) {
-            axios.get(this.basePath + '/api/v2/data/chart/?uid=' + this.info.uid + (time > 0 ? '&' : '')).then(response => {
-              this.chart.rows = response.data.data;
-              if (!this.chart.rows.length) {
+          createChart: function (time = 0, refresh = false) {
+            axios.get(this.basePath + '/api/v2/data/chart/?uid=' + this.info.uid + (time > 0 ? '&end=' + time : '') + (refresh ? '&refresh=1' : '')).then(response => {
+              if (response.data.data.length) {
+                this.chart.latestTimestamp = response.data.data.slice(-1)[0].timestamp
+              }
+              let tmpRows = response.data.data.map(x => {
+                x.timestamp = (new Date(x.timestamp * 1000)).toLocaleString(this.$root.settings.data.language)
+                return x
+              })
+              this.chart.rows = refresh ? [...this.chart.rows, ...tmpRows] : tmpRows
+              if (!this.chart.rows.length && !refresh) {
                 this.notice("chart: " + response.data.message, "warning");
               }
             }).catch(error => {
               if (this.tweetStatus.displayType === "timeline" && error.toString() !== 'Cancel') {
                 this.notice('加载失败，5s后重试重试 #' + error, 'error');
                 setTimeout(() => {
-                  this.createChart()
+                  this.createChart(time, refresh)
                 }, 5000);
-                    }
-                });
+              }
+            });
             },
             update: function () {
                 axios.get(this.mergeUrl(), {

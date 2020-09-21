@@ -69,7 +69,7 @@
               docs: [
                 "// /data/userinfo/?name={$username}\n// /?mode=data&type=userinfo&name=bang_dream_info\n// /?mode=data&type=userinfo&uid=3009772568",
                 "// /data/tweets/?name={$username}[&tweet_id={$tweet_id}[&is_status]]\n// /?mode=data&type=tweets&name=bang_dream_info",
-                "// /data/chart/?name={$username}[&end={$endTimestamp}[&length={$length}]]\n// /?mode=data&type=chart&name=bang_dream_info\n// /?mode=data&type=chart&uid=3009772568",
+                "// /data/chart/?name={$username}[&end={$endTimestamp}[&refresh=1[&length={$length}]]]\n// /?mode=data&type=chart&name=bang_dream_info\n// /?mode=data&type=chart&uid=3009772568",
                 "// /data/search/?q={$q}[&tweet_id={$tweet_id}]\n// /?mode=data&type=search&q={$q}",
                 "// /data/hashtag/?hash={$hashtag}\n// /data/symbol/?hash={$hashtag}//cashtag\n// /?mode=data&type=tag&hash=gg",
                 "// /data/translate/?tweet_id={$tweet_id}&to={$language}&tr_type={$translate_type}\n// /?mode=data&type=translate&tweet_id=0&to=zh_CN&tr_type=tweets //for tweets\n// /?mode=data&type=translate&uid=0&to=zh_CN&tr_type=profile //for user description",
