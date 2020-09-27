@@ -1,19 +1,22 @@
 <template>
     <div id="tweet">
-        <div :class="`card card-border`+(tweet.tweet_id === top ? ' border-primary' : '')" :id="tweet.tweet_id">
-            <div class='card-body'>
-                <p v-if="displayType === 'timeline' && tweet.tweet_id === top"><small class="text-muted">置顶推文</small>
-                </p>
-                <div>
-                    <small class="text-muted" v-if="tweet.retweet_from">
-                        <retweet height="1em" status="" width="1em"/>
-                        <router-link
-                            :to="`/`+tweet.name+(displayType === 'status' ? `/` + display : `/status/`+tweet.tweet_id)"
-                            class="text-muted">
-                          {{ tweet.display_name }}
-                        </router-link>
-                    </small>
-                </div>
+        <div :id="tweet.tweet_id"
+             :class="`card card-border`+(tweet.dispute === '1' ? ' border-danger' : tweet.tweet_id === top ? ' border-primary' : '')">
+          <div class='card-body'>
+            <p v-if="displayType === 'timeline' && tweet.tweet_id === top"><small class="text-muted">置顶推文</small></p>
+            <p v-if="tweet.dispute === '1'"><small class="text-muted">⚠ 这是一条有争议的推文
+              <router-link to="/about">了解更多</router-link>
+            </small></p>
+            <div>
+              <small class="text-muted" v-if="tweet.retweet_from">
+                <retweet height="1em" status="" width="1em"/>
+                <router-link
+                    :to="`/`+tweet.name+(displayType === 'status' ? `/` + display : `/status/`+tweet.tweet_id)"
+                    class="text-muted">
+                  {{ tweet.display_name }}
+                </router-link>
+              </small>
+            </div>
                 <template>
                   <router-link
                       v-if="!tweet.retweet_from_name || (tweet.retweet_from_name && $root.userList.map(x => x.name).includes(tweet.retweet_from_name))"

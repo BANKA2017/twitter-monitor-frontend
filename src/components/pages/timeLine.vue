@@ -72,11 +72,18 @@
                           <!--Load data-->
                           <div class="my-4"></div>
                           <el-skeleton :loading="!chart.rows.length" :paragraph="{rows: 4}" :title="false" active
-                                       v-if="chart.rows">
+                                       v-if="chart.rows && chart.generate">
                             <tmv2-chart :chart-height="chart.chartHeight" :chart-rows="chart.rows"
                                         :label-map="chart.labelMap" :legend-name="chart.legendName"
                                         chart-type="ve-line"></tmv2-chart>
                           </el-skeleton>
+                          <el-table v-else
+                                    :data="[{followers: info.followers, following: info.following, statuses_count: info.statuses_count}]"
+                                    style="width: 100%">
+                            <el-table-column label="关注者" prop="followers"></el-table-column>
+                            <el-table-column label="正在关注" prop="following"></el-table-column>
+                            <el-table-column label="总推文数" prop="statuses_count"></el-table-column>
+                          </el-table>
                         </template>
                         <div class="my-4"></div>
                     </template>
@@ -239,30 +246,32 @@
                     top: false,
                     bottom: false,
                 },
-                search: {
-                    keywords: '',
-                    mode: 0,//0->keywords, 1->date
-                },
-                //is_project: '',
-                //nsfwList: [],
-                links: [],
-                info: [],
+              search: {
+                keywords: '',
+                mode: 0,//0->keywords, 1->date
+              },
+              //is_project: '',
+              //nsfwList: [],
+              links: [],
+              info: [],
               //tweets: [],
-                name: "",
-                tweetStatus: {
-                    displayType: "timeline",//timeline, tag, search, status,//后面的已独立 userSelector, about, account
-                    display: 'all',
-                    moreTweets: true,
-                    topTweetId: 0,
-                    bottomTweetId: 0,
-                    reload: false,
-                    userExist: true,
-                    statusId: 0,
-                    //lock: false,
+              name: "",
+              hidden: false,
+              tweetStatus: {
+                displayType: "timeline",//timeline, tag, search, status,//后面的已独立 userSelector, about, account
+                display: 'all',
+                moreTweets: true,
+                topTweetId: 0,
+                bottomTweetId: 0,
+                reload: false,
+                userExist: true,
+                statusId: 0,
+                //lock: false,
                     //statusMode: false,
                 },
                 displayMode: [['全部', 'all', 0], ['原创', 'self', 0], ['转推', 'retweet', 0], ['媒体', 'media', 0]],
                 chart: {
+                  generate: true,
                   latestTimestamp: 0,
                   chartHeight: "250px",
                   rows: [],
@@ -329,9 +338,14 @@
               this.getUserInfo(this.name);
             },
             "info": function () {
-                //バンドリ！ BanG Dream! 公式 (@bang_dream_info) / Twitter
+              //バンドリ！ BanG Dream! 公式 (@bang_dream_info) / Twitter
               this.$root.title = this.info.display_name ? this.info.display_name + ' (@' + this.info.name + ') / Twitter Monitor' : "Twitter Monitor";
-                //this.display_name = this.info.display_name;
+              //隐藏帐号
+              if (!this.$root.userList.map(x => x.name).includes(this.info.name)) {
+                this.hidden = true
+                this.update()
+              }
+              //this.display_name = this.info.display_name;
             },
             "search.keywords": {
                 handler: function () {
@@ -381,17 +395,19 @@
                 if (this.tweetStatus.bottomTweetId && this.tweetStatus.topTweetId) {
                     //0 -> top, 1 -> bottom
                     this.load[(type === 0 ? 'top' : 'bottom')] = true;
-                    axios.get(this.mergeUrl() + (type === 0 ? '&refresh=1&tweet_id=' + this.tweetStatus.topTweetId.toString() : '&refresh=0&tweet_id=' + this.tweetStatus.bottomTweetId.toString()), {
-                        cancelToken: new CancelToken(c => cancel = c)
-                    }).then(response => {
+                  axios.get(this.mergeUrl() + (type === 0 ? '&refresh=1&tweet_id=' + this.tweetStatus.topTweetId.toString() : '&refresh=0&tweet_id=' + this.tweetStatus.bottomTweetId.toString() + (this.hidden ? '&hidden=1' : '')), {
+                    cancelToken: new CancelToken(c => cancel = c)
+                  }).then(response => {
                         if (type === 0) {
-                            this.notice("已更新" + response.data.data.tweets.length + "条推文", "success");
-                            //this.getUserInfo();
-                            if (response.data.data.top_tweet_id) {
-                                this.tweetStatus.topTweetId = response.data.data.top_tweet_id;
-                            }
+                          this.notice("已更新" + response.data.data.tweets.length + "条推文", "success");
+                          //this.getUserInfo();
+                          if (response.data.data.top_tweet_id) {
+                            this.tweetStatus.topTweetId = response.data.data.top_tweet_id;
+                          }
                           this.$root.tweets = [...response.data.data.tweets, ...this.$root.tweets];
-                          this.createChart(this.chart.latestTimestamp, true)
+                          if (this.chart.generate) {
+                            this.createChart(this.chart.latestTimestamp, true)
+                          }
                           this.load.top = false;
                         } else {
                             this.tweetStatus.moreTweets = response.data.data.hasmore;
@@ -448,11 +464,12 @@
               })
               this.chart.rows = refresh ? [...this.chart.rows, ...tmpRows] : tmpRows
               if (!this.chart.rows.length && !refresh) {
-                this.notice("chart: " + response.data.message, "warning");
+                this.chart.generate = false
+                //this.notice("chart: " + response.data.message, "warning");
               }
             }).catch(error => {
               if (this.tweetStatus.displayType === "timeline" && error.toString() !== 'Cancel') {
-                this.notice('加载失败，5s后重试重试 #' + error, 'error');
+                this.notice('图表加载失败 #' + error, 'error');
                 setTimeout(() => {
                   this.createChart(time, refresh)
                 }, 5000);
@@ -460,9 +477,9 @@
             });
             },
             update: function () {
-                axios.get(this.mergeUrl(), {
-                    cancelToken: new CancelToken(c => cancel = c)
-                }).then(response => {
+              axios.get(this.mergeUrl() + (this.hidden ? '&hidden=1' : ''), {
+                cancelToken: new CancelToken(c => cancel = c)
+              }).then(response => {
                   this.$root.tweets = response.data.data.tweets ? response.data.data.tweets : [];//404时无任何数据
                   this.tweetStatus.moreTweets = response.data.data.hasmore;
                   this.tweetStatus.topTweetId = response.data.data.top_tweet_id;

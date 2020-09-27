@@ -70,7 +70,7 @@
                   <small class="form-text text-muted" id="projectHelp">两格从左到右分别是<code>一级目录|二级目录</code></small>
                 </div>
                 <template
-                    v-for="(checkInfo, checkType) in {hidden: '隐藏此账户', deleted: '账户已删除', locked: '推文已被保护', organization: '机构账户'}">
+                    v-for="(checkInfo, checkType) in {hidden: '隐藏此账户', deleted: '账户已删除', locked: '推文已被保护', organization: '机构账户', not_analytics: '不统计数据'}">
                   <div :key="checkType" class="form-group form-check">
                     <input :id="`user`+s+checkType" class="form-check-input" type="checkbox"
                            v-model="config.users[s][checkType]">
@@ -179,6 +179,7 @@ export default {
             deleted: false,
             locked: false,
             organization: false,
+            not_analytics: false,
             projects: [
               ["project1", "tag1"],
             ],
@@ -200,6 +201,7 @@ export default {
           hidden: false,
           deleted: false,
           locked: false,
+          not_analytics: false,
           organization: false,
           projects: [],
         },

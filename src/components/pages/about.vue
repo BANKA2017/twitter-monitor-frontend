@@ -23,19 +23,27 @@
                   <a href="https://blog.nest.moe/2020/03/08/about-element-ui/" target="_blank">
                     <el-button class="text-decoration-none" round size="mini">使用Element-ui遇到的坑</el-button>
                   </a>
-                    <hr class="my-4">
-                    <h3>关于旧版</h3>
-                    <p>虽然旧的版本的数据不再更新，但还是可以访问的，<a href="/tmv1/" target="_blank">回到旧版</a></p>
-                    <a href="https://github.com/BANKA2017/twitter-monitor" target="_blank"><el-button size="mini" class="text-decoration-none" round>GitHub</el-button></a>
+                  <hr class="my-4">
+                  <h3>关于旧版</h3>
+                  <p>虽然旧的版本的数据不再更新，但还是可以访问的，<a href="/tmv1/" target="_blank">回到旧版</a></p>
+                  <a href="https://github.com/BANKA2017/twitter-monitor" target="_blank">
+                    <el-button size="mini" class="text-decoration-none" round>GitHub</el-button>
+                  </a>
                   <a href="https://5my-my.sharepoint.com/:u:/g/personal/chika_aqours_in/EZG4nGGnvJBFnVtIwFcOfpoBhMIYRfzBdZI8FiT8IJU9eQ?e=eZWVua"
                      target="_blank">
                     <el-button class="text-decoration-none" round size="mini">数据库备份</el-button>
                   </a>
-                    <hr class="my-4">
-                    <div class="text-center"><el-button icon="el-icon-back" circle @click="$router.go(-1)"></el-button></div>
-                    <div class="my-4"></div>
-                    <div class="text-center"> >_ Twitter Monitor </div>
-                    <div class="my-4"></div>
+                  <hr class="my-4">
+                  <h3>关于争议性内容</h3>
+                  <p>言多必失。本站仅对推文进行存档以及展示，不会支持或反对推文中的任何观点，对于有争议的内容，本站会尽可能快地对内容进行<span style="color: red">⚠ 标红警告</span>
+                  </p>
+                  <hr class="my-4">
+                  <div class="text-center">
+                    <el-button icon="el-icon-back" circle @click="$router.go(-1)"></el-button>
+                  </div>
+                  <div class="my-4"></div>
+                  <div class="text-center"> >_ Twitter Monitor</div>
+                  <div class="my-4"></div>
                 </div>
             </div>
         </div>
