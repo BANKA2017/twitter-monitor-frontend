@@ -1,10 +1,10 @@
 <template>
     <div id="tweet">
         <div :id="tweet.tweet_id"
-             :class="`card card-border`+(tweet.dispute === '1' ? ' border-danger' : tweet.tweet_id === top ? ' border-primary' : '')">
+             :class="{'card': true, 'card-border': true, 'border-danger': tweet.dispute === '1', 'border-primary': tweet.tweet_id === top}">
           <div class='card-body'>
             <p v-if="displayType === 'timeline' && tweet.tweet_id === top"><small class="text-muted">置顶推文</small></p>
-            <p v-if="tweet.dispute === '1'"><small class="text-muted">⚠ 这是一条有争议的推文
+            <p v-if="tweet.dispute === '1'"><small class="text-muted"><i class="el-icon-warning"></i> 这是一条有争议的推文
               <router-link to="/about">了解更多</router-link>
             </small></p>
             <div>

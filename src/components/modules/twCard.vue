@@ -6,25 +6,34 @@
                 <template v-if="object.type === 'summary' || object.type === 'audio' || object.type === 'app' || object.type === 'moment'">
                     <div class="row no-gutters">
                         <el-image v-if="object.media === '1' && mediaState" class="col-4 card-img border-right" style="border-radius: 14px 0 0 14px" fit="cover" :src="basePath+`/api/v2/media/tweets/`+latestMedia.cover" alt="cardImage" lazy :preview-src-list="[basePath+`/api/v2/media/tweets/`+latestMedia.cover]"></el-image>
-                        <div class="col-8">
-                            <div class="card-body">
-                                <div class="row no-gutters">
-                                    <p class="col-12 text-truncate card-title" style="color: black">{{ object.title }}</p>
-                                    <template v-if="object.description !== ''"><small class="text-muted text-truncate col-12">{{ object.description }}</small><br></template>
-                                    <small class="text-muted col-12" v-if="object.vanity_url !== ''"><i class="el-icon-link"></i>{{ object.vanity_url }}</small>
-                                </div>
-                            </div>
+                      <div class="col-8">
+                        <div class="card-body">
+                          <div class="row no-gutters">
+                            <p class="col-12 text-truncate card-title" style="color: black">{{ object.title }}</p>
+                            <template v-if="object.description !== ''"><small
+                                class="text-muted text-truncate col-12">{{ object.description }}</small><br></template>
+                            <small class="text-muted col-12" v-if="object.vanity_url !== ''"><i
+                                class="el-icon-link"></i>{{ object.vanity_url }}</small>
+                          </div>
                         </div>
+                      </div>
                     </div>
                 </template>
-                <template v-else>
-                    <div class="border-bottom" v-if="object.media === '1' && mediaState">
-                      <div
-                          :style="`width: 100%; padding-bottom: ` +  paddingBottom( latestMedia.cover, latestMedia.origin_info_height, latestMedia.origin_info_width) +  `%; height: 0; border-radius: 14px 14px 0 0`"
-                          class="no-gutters">
-                        <el-image :preview-src-list="[basePath+`/api/v2/media/tweets/`+latestMedia.cover]"
-                                  :src="basePath+`/api/v2/media/tweets/`+latestMedia.cover" alt="cardImage"
-                                  class="card-img-top" fit="cover" lazy
+              <template
+                  v-else-if="object.type === 'unified_card' && object.secondly_type !== 'image_app' && object.secondly_type !== 'image_website' && object.secondly_type !== 'video_website'">
+                <!-- 这是麻烦的类型 -->
+                <!-- 我真是怕了你了 -->
+                <span class="text-center">不支持的卡片类型</span>
+
+              </template>
+              <template v-else>
+                <div class="border-bottom" v-if="object.media === '1' && mediaState">
+                  <div
+                      :style="`width: 100%; padding-bottom: ` +  paddingBottom( latestMedia.cover, latestMedia.origin_info_height, latestMedia.origin_info_width) +  `%; height: 0; border-radius: 14px 14px 0 0`"
+                      class="no-gutters">
+                    <el-image :preview-src-list="[basePath+`/api/v2/media/tweets/`+latestMedia.cover]"
+                              :src="basePath+`/api/v2/media/tweets/`+latestMedia.cover" alt="cardImage"
+                              class="card-img-top" fit="cover" lazy
                                   style="width: 100%; position: absolute; border-radius: 14px 14px 0 0"
                                   @load="load = true"></el-image>
                       </div>

@@ -35,7 +35,8 @@
                   </a>
                   <hr class="my-4">
                   <h3>关于争议性内容</h3>
-                  <p>言多必失。本站仅对推文进行存档以及展示，不会支持或反对推文中的任何观点，对于有争议的内容，本站会尽可能快地对内容进行<span style="color: red">⚠ 标红警告</span>
+                  <p>言多必失。本站仅对推文进行存档以及展示，不会支持或反对推文中的任何观点，对于有争议的内容，本站会尽可能快地对内容进行<span style="color: red"><i
+                      class="el-icon-warning"></i>  标红警告</span>
                   </p>
                   <hr class="my-4">
                   <div class="text-center">

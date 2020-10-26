@@ -10,6 +10,7 @@ const Online = () => import("./components/pages/online");
 const timeLine = () => import("./components/pages/timeLine");
 const UserSelector = () => import("./components/pages/userSelector");
 const devConfig = () => import("./components/pages/devConfig");
+const Admin = () => import("./components/pages/admin");
 
 Vue.use(VueRouter);
 export default new VueRouter({
@@ -43,6 +44,10 @@ export default new VueRouter({
         {
             path: '/i/dev/config',
             component: devConfig
+        },
+        {
+            path: '/i/admin',
+            component: Admin
         },
         {
             path: '/hashtag/:hashtag',

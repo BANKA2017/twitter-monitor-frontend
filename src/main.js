@@ -134,6 +134,8 @@ new Vue({
           displayPicture: false,
         },
         panel: false,
+        adminStatus: false,
+        kdPassToken: localStorage.getItem('kdPassToken') ? localStorage.getItem('kdPassToken') : "",
       },
     }
   },

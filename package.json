@@ -14,6 +14,7 @@
     "babel-plugin-component": "^1.1.1",
     "bootstrap": "^4.5.0",
     "core-js": "^3.6.4",
+    "dplayer": "^1.26.0",
     "echarts": "^4.6.0",
     "element-ui": "git+https://gitee.com/kdwnil/element.git#npm",
     "jquery": "^3.5.1",

@@ -27,18 +27,24 @@
                                             <h3>${{ tag.text }}</h3></router-link>
                                         <div class="container" v-else>
                                             <div class="row">
-                                                <div class="col-4" style="max-height: 100px; max-width: 100px">
-                                                    <el-image
-                                                            :preview-src-list="[basePath+`/api/v2/media/userinfo/`+info.header]"
-                                                            :src="basePath+`/api/v2/media/userinfo/`+info.header"
-                                                            class="rounded-circle img-fluid" lazy v-if="info.header">
-                                                        <div class="image-slot" slot="error">
-                                                            <el-skeleton :paragraph="false" :title="false" active
-                                                                         avatar/>
-                                                        </div>
-                                                        <div class="image-slot" slot="placeholder">
-                                                            <el-skeleton :paragraph="false" :title="false" active
-                                                                         avatar/>
+                                              <div class="col-12 text-right">
+                                                <verified v-if="info.verified" height="1.2em" status="text-primary"
+                                                          width="1.2em"/>
+                                                <deleted v-if="info.deleted" height="1.2em" status="text-danger"
+                                                         width="1.2em"/>
+                                                <locked v-else-if="info.locked" height="1.2em" status="text-danger"
+                                                        width="1.2em"/>
+                                              </div>
+                                              <div class="col-4" style="max-height: 100px; max-width: 100px">
+                                                <el-image
+                                                    :preview-src-list="[basePath+`/api/v2/media/userinfo/`+info.header]"
+                                                    :src="basePath+`/api/v2/media/userinfo/`+info.header"
+                                                    class="rounded-circle img-fluid" lazy v-if="info.header">
+                                                  <div class="image-slot" slot="error">
+                                                    <el-skeleton :paragraph="false" :title="false" active avatar/>
+                                                  </div>
+                                                  <div class="image-slot" slot="placeholder">
+                                                    <el-skeleton :paragraph="false" :title="false" active avatar/>
                                                         </div>
                                                     </el-image>
                                                     <div class="my-4"></div>
@@ -46,12 +52,6 @@
                                                 <div class="col-8">
                                                     <h5 class="card-title mt-0">
                                                         <b>{{ info.display_name }}</b>
-                                                        <verified height="1em" status="text-primary"
-                                                                  v-if="info.verified" width="1em"/>
-                                                        <deleted height="1em" status="text-primary" v-if="info.deleted"
-                                                                 width="1em"/>
-                                                        <locked height="1em" status="text-primary"
-                                                                v-else-if="info.locked" width="1em"/>
                                                     </h5>
                                                     <p>
                                                         <small>
@@ -108,9 +108,10 @@
                                 </li>
                             </template>
                             <li class="nav-item">
-                              <div :class="`nav-link `+($root.settings.data.displayPicture ? 'active' : 'text-primary')"
-                                   @click="$root.settings.data.displayPicture=!$root.settings.data.displayPicture"
-                                   role="button">无图
+                              <div
+                                  :class="{'nav-link': true, 'active': $root.settings.data.displayPicture, 'text-primary': !$root.settings.data.displayPicture}"
+                                  @click="$root.settings.data.displayPicture=!$root.settings.data.displayPicture"
+                                  role="button">无图
                               </div>
                             </li>
                         </nav>
@@ -182,7 +183,10 @@
                           to="/api">API</span>
                     <span :href="basePath + `/api/v2/rss/` + info.name + `.xml`"
                           class="text-decoration-none badge badge-pill badge-primary" is="a"
-                          v-if="tweetStatus.displayType === 'timeline' || tweetStatus.displayType === 'status'">RSS</span>
+                          v-if="!hidden && (tweetStatus.displayType === 'timeline' || tweetStatus.displayType === 'status')">RSS</span>
+                    <span is="router-link" v-if="$root.settings.adminStatus"
+                          class="text-decoration-none badge badge-pill badge-dark"
+                          to="/i/admin">管理</span>
                   </div>
                   <hr class="my-4">
                   <link-list/>
@@ -315,34 +319,34 @@
             next()
         },
         watch: {
-            "tweetStatus.displayType": {
-                handler: function () {
-                    //暴力处理
-                    if (this.ready) {
-                        window.stop();
-                    }
-                },
-                deep: true
-            },
-            "tweetStatus.display": {
-                handler: function () {
-                    //暴力处理
-                    if (this.ready) {
-                        window.stop();
-                    }
-                },
-                deep: true
-            },
-            "name": function () {
-              this.chart.rows = [];
-              this.getUserInfo(this.name);
-            },
-            "info": function () {
-              //バンドリ！ BanG Dream! 公式 (@bang_dream_info) / Twitter
-              this.$root.title = this.info.display_name ? this.info.display_name + ' (@' + this.info.name + ') / Twitter Monitor' : "Twitter Monitor";
-              //隐藏帐号
-              if (!this.$root.userList.map(x => x.name).includes(this.info.name)) {
-                this.hidden = true
+          //"tweetStatus.displayType": {
+          //    handler: function () {
+          //        //暴力处理
+          //        if (this.ready) {
+          //            window.stop();
+          //        }
+          //    },
+          //    deep: true
+          //},
+          //"tweetStatus.display": {
+          //    handler: function () {
+          //        //暴力处理
+          //        if (this.ready) {
+          //            window.stop();
+          //        }
+          //    },
+          //    deep: true
+          //},
+          "name": function () {
+            this.chart.rows = [];
+            this.getUserInfo(this.name);
+          },
+          "info": function () {
+            //バンドリ！ BanG Dream! 公式 (@bang_dream_info) / Twitter
+            this.$root.title = this.info.display_name ? this.info.display_name + ' (@' + this.info.name + ') / Twitter Monitor' : "Twitter Monitor";
+            //隐藏帐号
+            if (!this.$root.userList.map(x => x.name).includes(this.info.name)) {
+              this.hidden = true
                 this.update()
               }
               //this.display_name = this.info.display_name;
@@ -374,6 +378,7 @@
               this.$root.names = accountList.data.data.account_info;
               this.$root.projects = accountList.data.data.projects;
               this.$root.links = accountList.data.data.links;
+              this.$root.settings.adminStatus = !!accountList.data.whiteIP
               //处理网速
                   if (Date.now() - startTime > 3000) {
                     this.$root.settings.data.displayPicture = true;

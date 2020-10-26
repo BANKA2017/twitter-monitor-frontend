@@ -8,7 +8,7 @@
       </div>
       <div class="container">
         <div class="row">
-          <div :key="order" class="col-md-6" v-for="(row, order) in itemRows">
+          <div v-for="(row, order) in itemRows" :key="order" class="col-md-12">
             <tmv2-chart :chart-rows="row" :colors="color[order]" :label-map="labelMap[order]"
                         chart-type="ve-line"></tmv2-chart>
           </div>
@@ -44,18 +44,20 @@ export default {
       labelMap: {
         account: {
           'time': '日期',
-          'total_users': '帐户数',
+          'total_users': '帐号数',
         },
         tweets: {
           'time': '日期',
+          'total_media_count': '总媒体数',
           'total_tweets': '推文数',
           'total_req_tweets': '处理推文数',
           'total_throw_tweets': '丢弃推文数',
-          'total_media_count': '总媒体数',
+
         },
         requests: {
           'time': '日期',
           'total_req_times': '总请求数',
+          'total_errors_count': '总失败数',
         },
         timeCount: {
           'time': '日期',
@@ -65,7 +67,7 @@ export default {
       color: {
         account: ['#19d4ae'],
         tweets: ['#5ab1ef', '#fa6e86', '#ffb980', '#c4b4e4'],
-        requests: ['#0067a6'],
+        requests: ['#0067a6', '#5ab1ef'],
         timeCount: ['#d87a80'],
       }
     }
@@ -82,16 +84,22 @@ export default {
   watch: {
     "rows": function () {
       this.rows.map(x => {
-        this.itemRows.account.push({time: x.time, total_users: x.total_users})
+        let time = new Date(x.time * 1000)
+        time = time.getFullYear() + '-' + (time.getMonth() + 1) + '-' + time.getDate() + ' ' + time.getHours() + ':' + time.getMinutes()
+        this.itemRows.account.push({time: time, total_users: x.total_users})
         this.itemRows.tweets.push({
-          time: x.time,
+          time: time,
           total_tweets: x.total_tweets,
           total_req_tweets: x.total_req_tweets,
           total_throw_tweets: x.total_throw_tweets,
           total_media_count: x.total_media_count
         })
-        this.itemRows.requests.push({time: x.time, total_req_times: x.total_req_times})
-        this.itemRows.timeCount.push({time: x.time, total_time_cost: x.total_time_cost})
+        this.itemRows.requests.push({
+          time: time,
+          total_req_times: x.total_req_times,
+          total_errors_count: x.total_errors_count
+        })
+        this.itemRows.timeCount.push({time: time, total_time_cost: x.total_time_cost})
       })
     },
   },

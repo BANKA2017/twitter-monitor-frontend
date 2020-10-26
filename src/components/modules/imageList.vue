@@ -39,16 +39,18 @@
 </template>
 
 <script>
-    export default {
-        name: "imageList",
-        props: {
-            list: Array,
-            is_video: String,
-            bottom: {
-                type: Boolean,
-                default: false
-            },
-            online: {
+//import DPlayer from 'dplayer';
+//const dp = new DPlayer(options);
+export default {
+  name: "imageList",
+  props: {
+    list: Array,
+    is_video: String,
+    bottom: {
+      type: Boolean,
+      default: false
+    },
+    online: {
                 type: Boolean,
                 default: false,
             },

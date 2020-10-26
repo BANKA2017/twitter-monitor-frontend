@@ -1,8 +1,5 @@
 <template>
   <div id="devConfig">
-    <nav class="navbar navbar-expand-lg navbar-light text-center bg-light">
-      <span class="navbar-brand mb-0 h1">Twitter Monitor</span>
-    </nav>
     <div class="my-4"></div>
     <div class="container">
       <div class="row">
@@ -12,17 +9,19 @@
             <div class="nav nav-tabs" id="nav-tab" role="list">
               <div is="a" v-for="(list, key) in {user: '帐户', url: '链接', nsfwList: 'NSFW列表'}" :id="`config-`+key+`-tab`"
                    :key="key" :aria-controls="`config-`+key"
-                   :class="`nav-item nav-link ` + (type === key ? 'active' : '')" aria-selected="true" data-toggle="tab"
+                   :class="{'nav-item': true, 'nav-link': true, 'active': type === key}" aria-selected="true"
+                   data-toggle="tab"
                    role="button" @click="type=key">{{ list }}
               </div>
             </div>
           </nav>
           <div class="tab-content" id="nav-tabContent">
-            <div id="config-user" :class="`tab-pane fade` + (type==='user' ? 'show active' : '')" role="panel">
+            <div id="config-user"
+                 :class="{'tab-pane': true, 'fade': true, 'show': type==='user', 'active': type==='user'}" role="panel">
               <template id="nameList">
                 <div class="my-4"></div>
                 <template v-for="(info, index) in userList">
-                  <a :class="`mb-1 text-decoration-none badge badge-pill badge-` + (info.organization ? 'success' : 'primary')"
+                  <a :class="{'mb-1': true, 'text-decoration-none': true, 'badge': true, 'badge-pill': true, 'badge-success': info.organization, 'badge-primary': !info.organization}"
                      :href="`#item` + index" :key="index" role="button">{{ info.display_name }}</a>
                 </template>
                 <div class="my-4"></div>
@@ -32,19 +31,19 @@
                   <label :for="`user`+s+`name`" :style="user.name ? '' : 'color: orange'">id</label>
                   <input :id="`user`+s+`name`" aria-describedby="idHelp" class="form-control" type="text"
                          v-model="config.users[s].name">
-                  <small class="form-text text-muted" id="idHelp">Twitter账户id</small>
+                  <small id="idHelp" class="form-text text-muted">Twitter帐号id</small>
                 </div>
                 <div class="form-group">
                   <label :for="`user`+s+`display_name`" :style="(!user.display_name && !user.name) ? 'color: red' : ''">备注</label>
                   <input :id="`user`+s+`display_name`" aria-describedby="display_nameHelp" class="form-control"
                          type="text" v-model="config.users[s].display_name">
-                  <small class="form-text text-muted" id="display_nameHelp">留空则使用账户名称</small>
+                  <small id="display_nameHelp" class="form-text text-muted">留空则使用帐号名称</small>
                 </div>
                 <div class="form-group" v-if="user.uid">
                   <label :for="`user`+s+`uid`">UID</label>
                   <input :id="`user`+s+`uid`" aria-describedby="uidHelp" class="form-control" type="text"
                          v-model="config.users[s].uid">
-                  <small class="form-text text-muted" id="uidHelp">Twitter账户uid，无需理会</small>
+                  <small id="uidHelp" class="form-text text-muted">Twitter帐号uid，无需理会</small>
                 </div>
                 <div v-if="user.projects.length">
                   <template v-for="(project, ss) in user.projects">
@@ -70,7 +69,7 @@
                   <small class="form-text text-muted" id="projectHelp">两格从左到右分别是<code>一级目录|二级目录</code></small>
                 </div>
                 <template
-                    v-for="(checkInfo, checkType) in {hidden: '隐藏此账户', deleted: '账户已删除', locked: '推文已被保护', organization: '机构账户', not_analytics: '不统计数据'}">
+                    v-for="(checkInfo, checkType) in {hidden: '隐藏此帐号', deleted: '帐号已删除', locked: '推文已被保护', organization: '机构帐号', not_analytics: '不统计数据'}">
                   <div :key="checkType" class="form-group form-check">
                     <input :id="`user`+s+checkType" class="form-check-input" type="checkbox"
                            v-model="config.users[s][checkType]">
@@ -78,17 +77,18 @@
                   </div>
                 </template>
                 <button @click="action('add', 'project', s)" class="btn btn-primary">添加目录</button>
-                <button :class="`btn btn-primary`+((!user.display_name && !user.name) ? ' disabled' : '')"
-                        @click="(!user.display_name && !user.name) ? '' : action('add', 'users', s)">新增账户
+                <button :class="{'btn': true, 'btn-primary': true, 'disabled': (!user.display_name && !user.name)}"
+                        @click="(!user.display_name && !user.name) ? '' : action('add', 'users', s)">新增帐号
                 </button>
                 <button @click="action('del', 'users', s)" class="btn btn-outline-danger"
-                        v-if="config.users.length > 1">删除账户
+                        v-if="config.users.length > 1">删除帐号
                 </button>
 
                 <hr class="my-4">
               </div>
             </div>
-            <div id="config-url" :class="`tab-pane fade` + (type==='url' ? 'show active' : '')" role="panel">
+            <div id="config-url" :class="{'tab-pane': true, 'fade': true, 'show': type==='url', 'active': type==='url'}"
+                 role="panel">
               <div :key="s" v-for="(url, s) in config.links">
                 <div class="form-group">
                   <label :for="`url`+s+`url`"
@@ -105,9 +105,10 @@
                 <!--<option :value="badgeClass[0]" v-for="badgeClass in [['primary', 'Primary'], ['secondary', 'Secondary'], ['success', 'Success'], ['danger', 'Danger'], ['warning', 'Warning'],  ['info', 'Info'], ['light', 'Light'], ['dark', 'Dark']]">{{ badgeClass[1] }}</option>-->
                 <!--</select>-->
                 <!--</div>-->
-                <button :class="`btn btn-primary`+(/(http|https|ftp):\/\/[^.]+\..*/gm.test(url.url) ? '' : ' disabled')"
-                        @click="/(http|https|ftp):\/\/[^.]+\..*/gm.test(url.url) ? action('add', 'links') : ''"
-                        v-if="s+1 === config.links.length">增加
+                <button
+                    :class="{'btn': true, 'btn-primary': true, 'disabled': !(/(http|https|ftp):\/\/[^.]+\..*/gm.test(url.url))}"
+                    @click="/(http|https|ftp):\/\/[^.]+\..*/gm.test(url.url) ? action('add', 'links', config.links.length) : ''"
+                    v-if="s+1 === config.links.length">增加
                 </button>
                 <button @click="action('del', 'links', s)" class="btn btn-outline-danger">删除</button>
                 <hr class="my-4">
@@ -117,15 +118,18 @@
                 <button @click="action('add', 'links')" class="btn btn-primary">增加</button>
               </template>
             </div>
-            <div id="config-nsfwList" :class="`tab-pane fade` + (type==='nsfwList' ? 'show active' : '')" role="panel">
+            <div id="config-nsfwList"
+                 :class="{'tab-pane': true, 'fade': true, 'show': type==='nsfwList', 'active': type==='nsfwList'}"
+                 role="panel">
               <div class="my-4"></div>
               <div :key="s" v-for="(nsfwUser, s) in config.nsfwList">
                 <div class="input-group">
                   <input :aria-describedby="`nsfwUser`+s" class="form-control" type="text" v-model="config.nsfwList[s]">
                   <div :id="`nsfwUser`+s" class="input-group-append">
-                    <button :class="`btn btn-primary`+((nsfwUser && s+1===config.nsfwList.length) ? '' : ' disabled')"
-                            @click="((nsfwUser && s+1===config.nsfwList.length) ? action('add', 'nsfwList') : '')"
-                            type="button" v-if="s+1===config.nsfwList.length">增加
+                    <button
+                        :class="{'btn': true, 'btn-primary': true, 'disabled': !(nsfwUser && s+1===config.nsfwList.length)}"
+                        @click="((nsfwUser && s+1===config.nsfwList.length) ? action('add', 'nsfwList') : '')"
+                        type="button" v-if="s+1===config.nsfwList.length">增加
                     </button>
                     <button @click="action('del', 'nsfwList', s)" class="btn btn-outline-danger" type="button">删除
                     </button>
@@ -241,7 +245,7 @@ export default {
             this.config = textareaDataArray;
           }
         } catch {
-          //console.log('error');
+          this.notice("无法解析的内容", "error")
         }
       }
     }
@@ -289,7 +293,7 @@ export default {
         try {
           this.config = JSON.parse(oFReader.result);
         } catch {
-          console.log('文件不可解析');
+          this.notice('文件不可解析', "error")
         }
       }
     },

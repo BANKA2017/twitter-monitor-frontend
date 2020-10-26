@@ -27,7 +27,10 @@
             </div>
         </div>
         <div class="text-center" style="height: 30px">
-            >_ KDNETWORK
+          >_ KDNETWORK
+          <span is="router-link" v-if="$root.settings.adminStatus"
+                class="text-decoration-none badge badge-pill badge-dark"
+                to="/i/admin">管理</span>
         </div>
     </div>
 </template>
@@ -78,6 +81,7 @@
                   this.$root.names = accountList.data.data.account_info;
                   this.$root.projects = accountList.data.data.projects;
                   this.$root.links = accountList.data.data.links;
+                  this.$root.settings.adminStatus = !!accountList.data.whiteIP
                   //处理网速
                   if (Date.now() - startTime > 3000) {
                     this.$root.settings.data.displayPicture = true;
