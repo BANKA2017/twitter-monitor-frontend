@@ -4,17 +4,17 @@
         <div class="my-4"></div>
         <main class="container" id="main" role="main">
             <div class="row">
-                <div class="col-md-4">
-                    <template v-if="tweetStatus.userExist">
-                        <el-skeleton :loading="load.leftCard" :paragraph="{rows: 5}" active avatar>
-                            <div class="card">
-                                <template>
-                                    <div class="row no-gutters">
-                                        <el-image
-                                                :preview-src-list="[basePath+`/api/v2/media/userinfo/pbs.twimg.com/profile_banners/`+info.uid+`/`+info.banner+`.banner`]"
-                                                :src="basePath+`/api/v2/media/userinfo/pbs.twimg.com/profile_banners/`+info.uid+`/`+info.banner+`.banner`"
-                                                alt="Banner" class="col-12 card-img-top" fit="cover"
-                                                style="max-height: 20vh"
+                <div class="col-sm-12 col-md-4">
+                  <template v-if="tweetStatus.userExist">
+                    <el-skeleton :loading="load.leftCard" :paragraph="{rows: 5}" active avatar>
+                      <div class="card">
+                        <template>
+                          <div class="row no-gutters">
+                            <el-image
+                                :preview-src-list="[basePath+`/api/v2/media/userinfo/pbs.twimg.com/profile_banners/`+info.uid+`/`+info.banner+`.banner`]"
+                                :src="basePath+`/api/v2/media/userinfo/pbs.twimg.com/profile_banners/`+info.uid+`/`+info.banner+`.banner`"
+                                alt="Banner" class="col-12 card-img-top" fit="cover"
+                                style="max-height: 20vh"
                                                 v-if="info.banner !== '0' && tweetStatus.displayType !== 'search' && tweetStatus.displayType !== 'tag'"></el-image>
                                     </div>
                                     <div class="card-body">
@@ -38,7 +38,7 @@
                                               <div class="col-4" style="max-height: 100px; max-width: 100px">
                                                 <el-image
                                                     :preview-src-list="[basePath+`/api/v2/media/userinfo/`+info.header]"
-                                                    :src="basePath+`/api/v2/media/userinfo/`+info.header"
+                                                    :src="basePath+`/api/v2/media/userinfo/`+info.header.replace(/([\w]+)\.([\w]+)$/gm, `$1_bigger.$2`)"
                                                     class="rounded-circle img-fluid" lazy v-if="info.header">
                                                   <div class="image-slot" slot="error">
                                                     <el-skeleton :paragraph="false" :title="false" active avatar/>
@@ -88,17 +88,17 @@
                         <div class="my-4"></div>
                     </template>
                 </div>
-                <div class="col-md-6">
-                    <div v-if="!tweetStatus.userExist">
-                        <h5 class="mx-auto">@{{ name }} 不存在</h5>
-                        <div class="my-4"></div>
-                    </div>
-                    <template v-else>
-                        <search :display-type="tweetStatus.displayType" :name="name" :search="search"/>
-                        <div class="my-4"></div>
-                        <nav class="nav nav-pills nav-fill">
-                            <template v-if="tweetStatus.displayType === 'timeline' && !load.leftCard">
-                                <li :key="s" class="nav-item" v-for="(value, s) in displayMode">
+              <div class="col-sm-12 col-md-6">
+                <div v-if="!tweetStatus.userExist">
+                  <h5 class="mx-auto">@{{ name }} 不存在</h5>
+                  <div class="my-4"></div>
+                </div>
+                <template v-else>
+                  <search :display-type="tweetStatus.displayType" :name="name" :search="search"/>
+                  <div class="my-4"></div>
+                  <nav class="nav nav-pills nav-fill">
+                    <template v-if="tweetStatus.displayType === 'timeline' && !load.leftCard">
+                      <li :key="s" class="nav-item" v-for="(value, s) in displayMode">
                                   <div class="nav-link active" role="button" @click="loading( 0)"
                                        v-if="value[1] === tweetStatus.display">{{ value[0] }}
                                   </div>
@@ -168,24 +168,24 @@
                         <div class="my-4"></div>
                     </template>
                 </div>
-                <div class="col-md-2">
-                    <project-list/>
-                  <div class="mb-1">
-                        <span @click="$root.settings.panel = true"
-                              class="text-decoration-none badge badge-pill badge-primary" role="button">设置</span>
-                    <span class="text-decoration-none badge badge-pill badge-primary" is="router-link"
-                          to="/about">关于</span>
-                    <span class="text-decoration-none badge badge-pill badge-primary" is="router-link"
-                          to="/i/stats">统计</span>
-                    <span class="text-decoration-none badge badge-pill badge-primary" is="router-link"
-                          to="/i/status">状态</span>
-                    <span is="router-link" class="text-decoration-none badge badge-pill badge-primary"
-                          to="/api">API</span>
-                    <span :href="basePath + `/api/v2/rss/` + info.name + `.xml`"
-                          class="text-decoration-none badge badge-pill badge-primary" is="a"
-                          v-if="!hidden && (tweetStatus.displayType === 'timeline' || tweetStatus.displayType === 'status')">RSS</span>
+              <div class="col-sm-12 col-md-2">
+                <project-list/>
+                <div class="mb-1">
+                    <span class="text-decoration-none badge badge-pill badge-primary mx-1"
+                          role="button" @click="$root.settings.panel = true">设置</span>
+                  <span is="router-link" class="text-decoration-none badge badge-pill badge-primary mx-1"
+                        to="/about">关于</span>
+                  <span is="router-link" class="text-decoration-none badge badge-pill badge-primary mx-1"
+                        to="/i/stats">统计</span>
+                  <span is="router-link" class="text-decoration-none badge badge-pill badge-primary mx-1"
+                        to="/i/status">状态</span>
+                  <span is="router-link" class="text-decoration-none badge badge-pill badge-primary mx-1"
+                        to="/api">API</span>
+                  <span :href="basePath + `/api/v2/rss/` + info.name + `.xml`"
+                        is="a" class="text-decoration-none badge badge-pill badge-primary mx-1"
+                        v-if="!hidden && (tweetStatus.displayType === 'timeline' || tweetStatus.displayType === 'status')">RSS</span>
                     <span is="router-link" v-if="$root.settings.adminStatus"
-                          class="text-decoration-none badge badge-pill badge-dark"
+                          class="text-decoration-none badge badge-pill badge-dark mx-1"
                           to="/i/admin">管理</span>
                   </div>
                   <hr class="my-4">
@@ -345,12 +345,12 @@
             //バンドリ！ BanG Dream! 公式 (@bang_dream_info) / Twitter
             this.$root.title = this.info.display_name ? this.info.display_name + ' (@' + this.info.name + ') / Twitter Monitor' : "Twitter Monitor";
             //隐藏帐号
-            if (!this.$root.userList.map(x => x.name).includes(this.info.name)) {
+            if (this.$root.userList.length !== 0 && !this.$root.userList.map(x => x.name).includes(this.info.name)) {
               this.hidden = true
-                this.update()
-              }
-              //this.display_name = this.info.display_name;
-            },
+              this.update()
+            }
+            //this.display_name = this.info.display_name;
+          },
             "search.keywords": {
                 handler: function () {
                     if (this.search.mode === 1 && this.tweetStatus.displayType !== 'userSelector') {
@@ -380,11 +380,15 @@
               this.$root.links = accountList.data.data.links;
               this.$root.settings.adminStatus = !!accountList.data.whiteIP
               //处理网速
-                  if (Date.now() - startTime > 3000) {
-                    this.$root.settings.data.displayPicture = true;
-                    this.notice('当前网速较慢，已关闭图片显示', 'warning');
-                  }
-                })).catch(error => {
+              if (Date.now() - startTime > 3000) {
+                this.$root.settings.data.displayPicture = true;
+                this.notice('当前网速较慢，已关闭图片显示', 'warning');
+              }
+              //处理隐藏
+              if (this.$root.userList.length !== 0 && !this.$root.userList.map(x => x.name).includes(this.info.name)) {
+                this.update()
+              }
+            })).catch(error => {
                     this.notice(error, 'error');
                 });
             }

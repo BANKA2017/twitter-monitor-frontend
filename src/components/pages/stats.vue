@@ -72,7 +72,7 @@
             },
         },
         mounted: function () {
-            document.title = 'Stats/统计';
+            //document.title = 'Stats/统计';
             if (this.$root.names.length === 0) {
               axios.get(this.basePath + "/api/v2/data/accounts/").then(response => {
                 this.$root.names = response.data.data.account_info;

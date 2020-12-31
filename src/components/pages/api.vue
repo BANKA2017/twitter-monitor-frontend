@@ -14,7 +14,8 @@
                     <li>短时间需要大量请求请联系站长设置IP白名单，否则可能会遇到CloudFlare的 5秒盾/人机验证</li>
                     <li>如果只是为了爬本站的数据（尤其是要爬全部数据），请联系站长导出数据库而不是爬半天还得防反爬</li>
                     <li>以下所有api仅限于本站已开放的功能</li>
-                    <li>下面的内容选自 <a href="https://github.com/BANKA2017/twitter-monitor/blob/master/v2api.php">BANKA2017:
+                    <li>下面的内容选自 <a href="https://github.com/BANKA2017/twitter-monitor/blob/master/v2api.php"
+                                   target="_blank">BANKA2017:
                       twitter-monitor~/v2api.php</a> 注释，组合后可使用
                     </li>
                   </ul>

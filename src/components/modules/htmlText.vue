@@ -6,7 +6,7 @@
         <router-link v-if="obj.type === 'hashtag' || obj.type === 'symbol'" :to="(obj.type === 'hashtag' ? `/hashtag/` : `/cashtag/`) + obj.tag_text" :key="order">#{{ obj.tag_text }}</router-link>
         <router-link
             v-else-if="obj.type === 'user_mention' && $root.userList.map(x => x.name).includes(obj.tag_text.substring(1))"
-            :key="order" :to="`/`+obj.tag_text.substring(1)+`/all`">#{{ obj.tag_text }}
+            :key="order" :to="`/`+obj.tag_text.substring(1)+`/all`">{{ obj.tag_text }}
         </router-link>
         <a v-else :href="obj.url" :key="order" target="_blank" id="url">{{ obj.tag_text }}</a>
       </template>

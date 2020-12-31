@@ -4,15 +4,14 @@
           {{ displayName }}
         </span>
         <div class="btn-group" role="group">
-            <button @click="$router.go(-1)" class="navbar-toggler" type="button"><span>
-            <chevron-left height="30" status="text-success" width="30"/>
-          </span>
-            </button>
-            <button aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation"
-                    class="navbar-toggler" data-target="#navbarNav" data-toggle="collapse" type="button"
-                    v-if="$root.project && $root.projects.length && displayType === 'timeline'">
-                <span class="navbar-toggler-icon"></span>
-            </button>
+          <button class="btn navbar-toggler" type="button" @click="$router.go(-1)">
+            <span><chevron-left height="30" status="text-success" width="30"/></span>
+          </button>
+          <button aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation"
+                  class="btn navbar-toggler" data-target="#navbarNav" data-toggle="collapse" type="button"
+                  v-if="$root.project && $root.projects.length && displayType === 'timeline'">
+            <span class="navbar-toggler-icon"></span>
+          </button>
         </div>
         <div class="collapse navbar-collapse" id="navbarNav" v-if="displayType === 'timeline'">
             <ul class="navbar-nav" v-if="$root.project">

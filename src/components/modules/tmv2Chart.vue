@@ -61,6 +61,10 @@ export default {
     chartArea: {
       type: Boolean,
       default: false
+    },
+    yAxis: {
+      type: Object,
+      default: () => ({type: 'value'})
     }
   },
         data() {
@@ -89,6 +93,7 @@ export default {
                           rotate: this.xAxisRotate
                         }
                       },
+                      yAxis: this.yAxis
                     },
                 },
             }

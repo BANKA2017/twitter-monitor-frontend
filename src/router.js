@@ -11,15 +11,20 @@ const timeLine = () => import("./components/pages/timeLine");
 const UserSelector = () => import("./components/pages/userSelector");
 const devConfig = () => import("./components/pages/devConfig");
 const Admin = () => import("./components/pages/admin");
+const Annual2020 = () => import("./components/pages/events/annual2020");
 
 Vue.use(VueRouter);
 export default new VueRouter({
     mode: 'history',//hash history
-    base: '/twitter/',//hash mode not require
+    base: '/',//hash mode not require
     routes: [
         {
             path: '/about',
             component: About
+        },
+        {
+            path: '/i/events/2020',//2020年度总结
+            component: Annual2020,
         },
         {
             path: '/api',

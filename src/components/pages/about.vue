@@ -13,28 +13,29 @@
                     <p>那时我还在住校，没有电脑，没有ide，只有一台手机和安装着的文本编辑器，用着免费的RedHat OpenShift Online的机器。当年主要是为了爬内容发贴吧拿吧主，但后来吧主拿下来了，转推机还是保留了下来，一是为了保持发帖量保吧主，二是我觉得这玩意对于还是特殊人群有用的</p>
                     <p>但好景不长，后来贴吧删封愈加严重，我为了账号停掉了断断续续运转了两年的转推机</p>
                     <p>后来看到<a href="https://twi.lovelive.cx" target="_blank">愿光蓝鸟</a>上线，本来也有些想法的我，开始为本项目码下第一行代码并持续维护至今</p>
-                    <p style="color: white" class="small">做网页的想法其实是来自看到的一篇文章，提到某国总统喜欢删推，所以我一直想记录下来（虽然现在本站在原则上不允许添加任何涉政类的帐号）</p>
+                    <p class="small" style="color: white">
+                      做网页的想法其实是来自看到的一篇文章，提到某国前总统喜欢删推，所以我一直想记录下来（虽然现在本站在原则上不允许添加任何涉政类的帐号）</p>
                     <hr class="my-4">
                     <h3>碰过的坑</h3>
                     <p>坑肯定碰过不少，我能想到的、能整理的暂时都总结在下面，希望能对后来者有所帮助</p>
                     <a href="https://blog.nest.moe/2020/02/26/how-to-crawl-twitter/" target="_blank">
-                      <el-button class="text-decoration-none" round size="mini">怎么爬 Twitter</el-button>
+                      <el-button class="text-decoration-none mx-1" round size="mini">怎么爬 Twitter</el-button>
                     </a>
                   <a href="https://blog.nest.moe/2020/03/08/about-element-ui/" target="_blank">
-                    <el-button class="text-decoration-none" round size="mini">使用Element-ui遇到的坑</el-button>
+                    <el-button class="text-decoration-none mx-1" round size="mini">使用Element-ui遇到的坑</el-button>
                   </a>
                   <hr class="my-4">
                   <h3>关于旧版</h3>
-                  <p>虽然旧的版本的数据不再更新，但还是可以访问的，<a href="/tmv1/" target="_blank">回到旧版</a></p>
+                  <p>虽然旧的版本的数据不再更新，但还是可以访问的，<a href="https://bangdream.fun/tmv1/" target="_blank">回到旧版</a></p>
                   <a href="https://github.com/BANKA2017/twitter-monitor" target="_blank">
-                    <el-button size="mini" class="text-decoration-none" round>GitHub</el-button>
+                    <el-button class="text-decoration-none mx-1" round size="mini">GitHub</el-button>
                   </a>
                   <a href="https://5my-my.sharepoint.com/:u:/g/personal/chika_aqours_in/EZG4nGGnvJBFnVtIwFcOfpoBhMIYRfzBdZI8FiT8IJU9eQ?e=eZWVua"
                      target="_blank">
-                    <el-button class="text-decoration-none" round size="mini">数据库备份</el-button>
+                    <el-button class="text-decoration-none mx-1" round size="mini">数据库备份</el-button>
                   </a>
                   <hr class="my-4">
-                  <h3>关于争议性内容</h3>
+                  <h3>中立性</h3>
                   <p>言多必失。本站仅对推文进行存档以及展示，不会支持或反对推文中的任何观点，对于有争议的内容，本站会尽可能快地对内容进行<span style="color: red"><i
                       class="el-icon-warning"></i>  标红警告</span>
                   </p>

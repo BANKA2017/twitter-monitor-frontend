@@ -19,7 +19,10 @@
                     <div class="my-4"></div>
                     <template v-for="(project, s) in $root.projects">
                         <router-link :to="`/i/project/`+project" :key="s">
-                            <el-button size="mini" class="text-decoration-none" round>{{ project }}</el-button>
+                            <el-button class="text-decoration-none mx-1 mb-1" round size="mini">{{
+                                project
+                              }}
+                            </el-button>
                         </router-link>
                     </template>
                     <div class="my-4"></div>

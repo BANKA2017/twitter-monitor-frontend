@@ -38,7 +38,7 @@ import Skeleton from '@femessage/element-ui/lib/skeleton.js';
 //import VueHighlightJS from 'vue-highlightjs'
 //Vue.use(VueHighlightJS);
 
-Vue.prototype.basePath = process.env.NODE_ENV !== "development" ? "https://bangdream.fun/twitter" : "https://bangdream.fun/dev/tmv2";
+Vue.prototype.basePath = process.env.NODE_ENV !== "development" ? "https://tm.bangdream.fun" : "https://tm.bangdream.fun/tmv2";
 Vue.prototype.onlinePath = ""
 
 //gtag
@@ -46,7 +46,7 @@ Vue.prototype.onlinePath = ""
 import VueGtag from "vue-gtag";
 
 Vue.prototype.ready = false;
-Vue.prototype.GA_ID = "UA-90617066-2";
+Vue.prototype.GA_ID = "UA-90617066-8";
 if (process.env.NODE_ENV !== "development") {
   Vue.use(VueGtag, {
     config: {id: Vue.prototype.GA_ID},

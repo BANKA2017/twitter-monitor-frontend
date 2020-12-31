@@ -54,7 +54,7 @@
                         <div :id="`project`+ss" class="input-group-append">
                           <span class="input-group-text">-></span>
                         </div>
-                        <input class="form-control" placeholder="二级目录" type="text"
+                        <input class="form-control input-group-append" placeholder="二级目录" type="text"
                                v-model="config.users[s].projects[ss][1]">
                         <div :id="`project`+ss" class="input-group-append">
                           <button @click="action('del', 'project', s, ss)" class="btn btn-outline-danger" type="button">
@@ -76,11 +76,12 @@
                     <label :for="`user`+s+checkType" class="form-check-label">{{ checkInfo }}</label>
                   </div>
                 </template>
-                <button @click="action('add', 'project', s)" class="btn btn-primary">添加目录</button>
-                <button :class="{'btn': true, 'btn-primary': true, 'disabled': (!user.display_name && !user.name)}"
-                        @click="(!user.display_name && !user.name) ? '' : action('add', 'users', s)">新增帐号
+                <button class="btn btn-primary mx-1" @click="action('add', 'project', s)">添加目录</button>
+                <button
+                    :class="{'mx-1': true, 'btn': true, 'btn-primary': true, 'disabled': (!user.display_name && !user.name)}"
+                    @click="(!user.display_name && !user.name) ? '' : action('add', 'users', s)">新增帐号
                 </button>
-                <button @click="action('del', 'users', s)" class="btn btn-outline-danger"
+                <button class="btn btn-outline-danger mx-1" @click="action('del', 'users', s)"
                         v-if="config.users.length > 1">删除帐号
                 </button>
 
@@ -106,11 +107,11 @@
                 <!--</select>-->
                 <!--</div>-->
                 <button
-                    :class="{'btn': true, 'btn-primary': true, 'disabled': !(/(http|https|ftp):\/\/[^.]+\..*/gm.test(url.url))}"
+                    :class="{'mx-1': true, 'btn': true, 'btn-primary': true, 'disabled': !(/(http|https|ftp):\/\/[^.]+\..*/gm.test(url.url))}"
                     @click="/(http|https|ftp):\/\/[^.]+\..*/gm.test(url.url) ? action('add', 'links', config.links.length) : ''"
                     v-if="s+1 === config.links.length">增加
                 </button>
-                <button @click="action('del', 'links', s)" class="btn btn-outline-danger">删除</button>
+                <button class="btn btn-outline-danger mx-1" @click="action('del', 'links', s)">删除</button>
                 <hr class="my-4">
               </div>
               <template v-if="config.links.length===0">

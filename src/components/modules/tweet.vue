@@ -41,7 +41,8 @@
                 <!--<div v-html="`<p class='card-text'>`+tweet.full_text+`</p>`"></div>-->
                 <!--excited!-->
                 <html-text :entities="tweet.entities" :full_text_origin="tweet.full_text_origin"/>
-              <translate :id="tweet.tweet_id" :order="order" :to="$root.settings.data.language" :type="0"/>
+              <translate v-if="order !== -1" :id="tweet.tweet_id" :order="order" :to="$root.settings.data.language"
+                         :type="0"/>
                 <!--media-->
                 <template v-if="tweet.media === '1'&&!$root.settings.data.displayPicture">
                     <div class="my-4"></div>
@@ -102,7 +103,10 @@
           displayType: String,
           tweet: Object,
           display: String,
-          order: Number,
+          order: {
+            type: Number,
+            default: -1
+          },
         },
         methods: {
             timeGap: function (timestamp, now, language) {
