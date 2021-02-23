@@ -14,7 +14,7 @@
                           <div class="card-body">
                             <h5 class="card-title">媒体加载器帮助</h5>
                             <h6 class="card-subtitle mb-2 text-muted">只支持带有图片或视频的推文，不支持卡片中的媒体文件</h6>
-                            <span>如果一个推文链接为 <code>https://twitter.com/i/status/123456</code>，那么可在输入框填入</span>
+                            <span>填写 tweet id （即那串数字）或者推文链接，若链接为 <code>https://twitter.com/i/status/123456</code>，可在输入框填入</span>
                             <div class="card-body">
                               <ul>
                                 <li><code>123456</code></li>
@@ -34,17 +34,16 @@
                     <router-link is="el-button" slot="append" :to="`/i/online/` + tweet_id" icon="el-icon-search"></router-link>
                   </el-input>
                   <image-list :is_video="video ? '1' : '0'" :list="media" class="my-4" preload="metadata" style="width:100%" unlimited/>
-                  <template v-if="video">
+
                     <span class="lead">Download</span>
                     <div class="list-group my-2">
-                      <template v-for="(videoInfo, order) in rawData.video_info.variants">
-                        <a :key="order" :href="videoInfo.url" class="text-muted text-decoration-none list-group-item list-group-item-action d-flex justify-content-between align-items-center" target="_blank">
-                          {{ videoInfo.content_type === 'video/mp4' ? videoInfo.url.replace(/.*vid\/([0-9]+x[0-9]+).*/, `$1`) : 'm3u8' }}
-                          <span v-if="videoInfo.content_type === 'video/mp4'" class="badge badge-primary badge-pill">{{ videoInfo.bitrate / 1000 }} kbps</span>
+                      <template v-for="(mediaInfo, order) in (video ? rawData.video_info.variants : media)">
+                        <a :key="order" :href="(video ? '' : `https://`) + mediaInfo.url + (video ? '' : `:orig`)" class="text-muted text-decoration-none list-group-item list-group-item-action d-flex justify-content-between align-items-center" target="_blank">
+                          {{ video ? mediaInfo.content_type === 'video/mp4' ? mediaInfo.url.replace(/.*vid\/([0-9]+x[0-9]+).*/, `$1`) : 'm3u8' : mediaInfo.basename}}
+                          <span v-if="!video || mediaInfo.content_type === 'video/mp4'" class="badge badge-primary badge-pill">{{ video ? mediaInfo.bitrate / 1000 + 'kbps' : mediaInfo.origin_info_width + 'x' +mediaInfo.origin_info_height }}</span>
                         </a>
                       </template>
                     </div>
-                  </template>
                   <pre><code class="json">{{ rawData }}</code></pre>
                   <!--<tweet :order="-1" :tweet="tweet" class="col-md-8 offset-md-2" display="all" display-type="timeline"/>-->
                 </div>
