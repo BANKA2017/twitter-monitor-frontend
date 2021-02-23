@@ -44,7 +44,10 @@ export default new VueRouter({
         },
         {
             path: '/i/online',
-            component: Online
+            component: Online,
+            children: [{
+                path: ':tweet_id'
+            }]
         },
         {
             path: '/i/dev/config',
@@ -82,7 +85,6 @@ export default new VueRouter({
                     }
                 ]
             }]
-
         }, {
             path: '/:name',
             component: timeLine,

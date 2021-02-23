@@ -3,7 +3,7 @@
         <el-skeleton avatar active :paragraph="{rows: 5}" v-if="load"/>
         <div class="card" v-else>
             <template>
-                <el-image v-if="info.banner !== '0' && displayType !== 'search' && displayType !== 'tag'" class="card-img-top" :src="basePath+`/api/v2/media/userinfo/pbs.twimg.com/profile_banners/`+info.uid+`/`+info.banner+`.banner`" alt="Banner" :preview-src-list="[basePath+`/api/v2/media/userinfo/pbs.twimg.com/profile_banners/`+info.uid+`/`+info.banner+`.banner`]" ></el-image>
+                <el-image v-if="info.banner !== '0' && displayType !== 'search' && displayType !== 'tag'" :preview-src-list="[mediaPath+(mediaPath === basePath ? `/api/v2/media/userinfo/` : '')+`pbs.twimg.com/profile_banners/`+info.uid+`/`+info.banner+`.banner`]" :src="mediaPath+(mediaPath === basePath ? `/api/v2/media/userinfo/` : '')+`pbs.twimg.com/profile_banners/`+info.uid+`/`+info.banner+`.banner`" alt="Banner" class="card-img-top" ></el-image>
                 <div class="card-body">
                     <h3 v-if="displayType === 'search'">搜索</h3>
                     <router-link :to="`/hashtag/`+tag.text" v-else-if="displayType === 'tag' && tag.type === 0"><h3>#{{ tag.text }}</h3></router-link>
@@ -11,7 +11,7 @@
                     <div class="container" v-else>
                         <div class="row">
                             <div class="col-4" style="max-height: 100px; max-width: 100px">
-                                <el-image class="rounded-circle img-fluid" :src="basePath + `/api/v2/media/userinfo/`+info.header" v-if="info.header" lazy :preview-src-list="[basePath+`/api/v2/media/userinfo/`+info.header]">
+                                <el-image v-if="info.header" :preview-src-list="[mediaPath+(mediaPath === basePath ? `/api/v2/media/userinfo/` : '')+info.header]" :src="mediaPath + (mediaPath === basePath ? `/api/v2/media/userinfo/` : '')+info.header" class="rounded-circle img-fluid" lazy>
                                     <div slot="error" class="image-slot">
                                         <i class="el-icon-user-solid"></i>
                                     </div>

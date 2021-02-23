@@ -2,10 +2,10 @@
     <div id="twCard">
         <div class="card mb-3" style="border-radius: 14px 14px 14px 14px">
             <div>
-                <a class="stretched-link text-decoration-none" v-if="object.url.length" :href="object.url" target="_blank"></a>
+                <a v-if="object.url.length && object.type !== 'unified_card'" :href="object.url" class="stretched-link text-decoration-none" target="_blank"></a>
                 <template v-if="object.type === 'summary' || object.type === 'audio' || object.type === 'app' || object.type === 'moment'">
                     <div class="row no-gutters">
-                        <el-image v-if="object.media === '1' && mediaState" class="col-4 card-img border-right" style="border-radius: 14px 0 0 14px" fit="cover" :src="basePath+`/api/v2/media/tweets/`+latestMedia.cover" alt="cardImage" lazy :preview-src-list="[basePath+`/api/v2/media/tweets/`+latestMedia.cover]"></el-image>
+                        <el-image v-if="object.media === '1' && mediaState" :preview-src-list="[mediaPath+(mediaPath === basePath ? `/api/v2/media/tweets/` : '')+latestMedia.cover]" :src="mediaPath+(mediaPath === basePath ? `/api/v2/media/tweets/` : '')+latestMedia.cover" alt="cardImage" class="col-4 card-img border-right" fit="cover" lazy style="border-radius: 14px 0 0 14px"></el-image>
                       <div class="col-8">
                         <div class="card-body">
                           <div class="row no-gutters">
@@ -19,20 +19,57 @@
                       </div>
                     </div>
                 </template>
-              <template
-                  v-else-if="object.type === 'unified_card' && object.secondly_type !== 'image_app' && object.secondly_type !== 'image_website' && object.secondly_type !== 'video_website'">
-                <!-- 这是麻烦的类型 -->
-                <!-- 我真是怕了你了 -->
-                <span class="text-center">不支持的卡片类型</span>
+              <template v-else-if="object.type === 'unified_card'">
+                <div v-if="object.secondly_type === 'image_website' || object.secondly_type === 'image_app'"
+                    :style="`width: 100%; padding-bottom: ` +  paddingBottom( latestMedia.cover, latestMedia.origin_info_height, latestMedia.origin_info_width) +  `%; height: 0; border-radius: 14px 14px 0 0`"
+                    class="no-gutters">
+                    <el-image :preview-src-list="[mediaPath+(mediaPath === basePath ? `/api/v2/media/tweets/` : '')+latestMedia.cover]"
+                          :src="mediaPath+(mediaPath === basePath ? `/api/v2/media/tweets/` : '')+latestMedia.cover" alt="cardImage"
+                          class="card-img-top" fit="cover" lazy
+                          style="width: 100%; position: absolute; border-radius: 14px 14px 0 0"
+                          @load="load = true"></el-image>
 
+                </div>
+                <div v-else-if="object.secondly_type === 'video_website' || object.secondly_type === 'video_app'"
+                    :class="`no-gutters embed-responsive embed-responsive-` + (ratio < 16 / 9 ? (ratio < 4 / 3 ? '1by1' : '4by3') :ratio > 16 / 9 ? '21by9' : '16by9')">
+                  <video id="videoPlayer"
+                         :poster="mediaPath+(mediaPath === basePath ? `/api/v2/media/tweets/` : '') +media[0].cover"
+                         :src="mediaPath+(mediaPath === basePath ? `/api/v2/media/tweets/` : '') +media[0].url" :type="media[0].content_type" class="border" controls loop playsinline
+                         preload="none"
+                         style="width: 100%; height: 100%; border-radius: 14px 14px 0 0; background-color: black"></video>
+                </div>
+                <div v-else-if="object.secondly_type === 'image_carousel_website' || object.secondly_type === 'image_carousel_app'">
+                  <el-carousel :style="`border-radius: 14px 14px 0 0`" class="card-img-top"
+                               indicator-position="outside" trigger="click">
+                    <el-carousel-item v-for="(mediaInfo, key) in media" :key="key" :name="key.toString()">
+                      <el-image :preview-src-list="[mediaPath+(mediaPath === basePath ? `/api/v2/media/tweets/` : '')+mediaInfo.cover]"
+                                :src="mediaPath+(mediaPath === basePath ? `/api/v2/media/tweets/` : '')+mediaInfo.url" alt="cardImage"
+                                class="card-img-top" fit="cover" lazy
+                                @load="load = true"></el-image>
+                    </el-carousel-item>
+                  </el-carousel>
+                </div>
+
+                <span v-else class="text-center">不支持的卡片类型</span>
+                <div class="card-body position-relative">
+                  <a v-if="object.url.length && !object.app" :href="object.url" class="stretched-link text-decoration-none" target="_blank"></a>
+                  <p class="card-title" style="color: black">{{ object.title }}</p>
+                  <template v-if="object.description !== ''"><small class="text-muted">{{ object.description }}</small><br></template>
+                  <div v-if="object.app" class="mx-auto mt-2" >
+                    <a v-for="app in object.app" :key="app.type" :href="app.type === 'android_app' ? 'https://play.google.com/store/apps/details?id=' + app.appid : 'https://apps.apple.com/' + app.country_code.toLowerCase() + '/app/id' + app.appid" class="text-decoration-none" target="_blank">
+                      <el-button class="mx-1 mb-1" plain round size="small" type="primary">{{ device[app.type] }}</el-button>
+                    </a>
+                  </div>
+                  <small v-else-if="object.vanity_url.length" class="text-muted"><i class="el-icon-link"></i>{{ object.vanity_url }}</small>
+                </div>
               </template>
               <template v-else>
                 <div class="border-bottom" v-if="object.media === '1' && mediaState">
                   <div
                       :style="`width: 100%; padding-bottom: ` +  paddingBottom( latestMedia.cover, latestMedia.origin_info_height, latestMedia.origin_info_width) +  `%; height: 0; border-radius: 14px 14px 0 0`"
                       class="no-gutters">
-                    <el-image :preview-src-list="[basePath+`/api/v2/media/tweets/`+latestMedia.cover]"
-                              :src="basePath+`/api/v2/media/tweets/`+latestMedia.cover" alt="cardImage"
+                    <el-image :preview-src-list="[mediaPath+(mediaPath === basePath ? `/api/v2/media/tweets/` : '')+latestMedia.cover]"
+                              :src="mediaPath+(mediaPath === basePath ? `/api/v2/media/tweets/` : '')+latestMedia.cover" alt="cardImage"
                               class="card-img-top" fit="cover" lazy
                                   style="width: 100%; position: absolute; border-radius: 14px 14px 0 0"
                                   @load="load = true"></el-image>
@@ -60,6 +97,11 @@
       data() {
         return {
           load: false,
+          device: {
+            android_app: "Android",
+            iphone_app: "iPhone",
+            ipad_app: "iPad",
+          }
         }
       },
       computed: {
@@ -69,14 +111,16 @@
           } else {
             return []
           }
-
+        },
+        ratio: function () {
+          return this.media[0].origin_info_width / this.media[0].origin_info_height;
         }
       },
         methods: {
-          paddingBottom: function (link, height, width) {
+          paddingBottom: function (link, height = 0, width = 0) {
             if (this.load) {
               let img = new Image();
-              img.src = this.basePath + `/api/v2/media/tweets/` + link;
+              img.src = this.mediaPath + (this.mediaPath === this.basePath ? `/api/v2/media/tweets/` : '') + link;
               return (img.height / img.width) * 100
             } else {
               let getScale = /name=([0-9]+)x([0-9]+)/.exec(link);

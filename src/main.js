@@ -30,15 +30,18 @@ import {
   TableColumn,
   Tag,
   Notification,//https://github.com/ElemeFE/element/issues/3450#issuecomment-500717476
+  Carousel,
+  CarouselItem,
 } from 'element-ui';
 //import CollapseTransition from 'element-ui/lib/transitions/collapse-transition';
 import '@femessage/element-ui/lib/theme-chalk/skeleton.css';
 import Skeleton from '@femessage/element-ui/lib/skeleton.js';
 
 //import VueHighlightJS from 'vue-highlightjs'
-//Vue.use(VueHighlightJS);
+//Vue.use(VueHighlightJS)
 
-Vue.prototype.basePath = process.env.NODE_ENV !== "development" ? "https://tm.bangdream.fun" : "https://tm.bangdream.fun/tmv2";
+Vue.prototype.basePath = process.env.NODE_ENV !== "development" ? "https://tm.bangdream.fun" : "https://tm.bangdream.fun/tmv2"
+Vue.prototype.mediaPath = "https://tmv2media.bangdream.fun/api/v2/media/"//如果不使用特殊图片代理则填写 this.basePath
 Vue.prototype.onlinePath = ""
 
 //gtag
@@ -77,6 +80,8 @@ Vue.use(Switch);
 Vue.use(Table);
 Vue.use(TableColumn);
 Vue.use(Tag);
+Vue.use(Carousel);
+Vue.use(CarouselItem);
 Vue.use(Loading.directive);
 Vue.use(Skeleton);
 

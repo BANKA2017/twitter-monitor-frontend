@@ -22,7 +22,7 @@
           <hr class="my-4">
           <h3 class="mb-3">变动</h3>
           <h5>帐号</h5>
-          <p>比起<a href="https://blog.nest.moe/2019/12/31/twitter-monitor-2019-event/" target="_blank">2019年</a>，2020年内站内共有86个帐号，其中85个是开放账号，可以直接在站内点击访问；1个是隐藏帐号，需要使用对应链接访问。新添加的帐号主要是两个企划在
+          <p>比起<a href="https://blog.nest.moe/2019/12/31/twitter-monitor-2019-event/" target="_blank">2019年</a>，2020年站内共有86个帐号，其中85个是开放账号，可以直接在站内点击访问；1个是隐藏帐号，需要使用对应链接访问。新添加的帐号主要是两个企划在
             2020 年新发布出来的企划成员 (<span class="text-success">12</span>) ，新游戏的官推 (<span class="text-success">1</span>)
             ，更换错误的帐号 (<span class="text-success">1</span>) 以及私人原因不公开的隐藏账号 (<span class="text-success">1</span>)
             ；删除方面主要是早期添加的各种官推 (<span class="text-danger">8</span>) 和更换错误的账号 (<span class="text-danger">1</span>)
@@ -75,7 +75,7 @@
           <h5>投票</h5>
           <p>投票不多，也不难找，粗略翻了一下就找到参与人数最多的投票了……关于送啥的……果然免（bai）费（piao）才是人气所在（</p>
           <tweet :order="-1" :tweet="pollTopTweet" class="col-md-8 offset-md-2" display="all" display-type="timeline"/>
-          <h5>用户数据变动</h5>
+          <h5 class="my-3">用户数据变动</h5>
           <el-table ref="accountData" v-loading="!userData.length" :data="userData"
                     :default-sort="{prop: 'followers_add', order: 'descending'}" style="width: 100%">
             <el-table-column label="用户名" prop="display_name"></el-table-column>

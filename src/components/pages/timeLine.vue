@@ -11,8 +11,8 @@
                         <template>
                           <div class="row no-gutters">
                             <el-image
-                                :preview-src-list="[basePath+`/api/v2/media/userinfo/pbs.twimg.com/profile_banners/`+info.uid+`/`+info.banner+`.banner`]"
-                                :src="basePath+`/api/v2/media/userinfo/pbs.twimg.com/profile_banners/`+info.uid+`/`+info.banner+`.banner`"
+                                :preview-src-list="[mediaPath+(mediaPath === basePath ? `/api/v2/media/userinfo/` : '')+`pbs.twimg.com/profile_banners/`+info.uid+`/`+info.banner+`.banner`]"
+                                :src="mediaPath+(mediaPath === basePath ? `/api/v2/media/userinfo/` : '')+`pbs.twimg.com/profile_banners/`+info.uid+`/`+info.banner+`.banner`"
                                 alt="Banner" class="col-12 card-img-top" fit="cover"
                                 style="max-height: 20vh"
                                                 v-if="info.banner !== '0' && tweetStatus.displayType !== 'search' && tweetStatus.displayType !== 'tag'"></el-image>
@@ -37,8 +37,8 @@
                                               </div>
                                               <div class="col-4" style="max-height: 100px; max-width: 100px">
                                                 <el-image
-                                                    :preview-src-list="[basePath+`/api/v2/media/userinfo/`+info.header]"
-                                                    :src="basePath+`/api/v2/media/userinfo/`+info.header.replace(/([\w]+)\.([\w]+)$/gm, `$1_bigger.$2`)"
+                                                    :preview-src-list="[mediaPath+(mediaPath === basePath ? `/api/v2/media/userinfo/` : '')+info.header]"
+                                                    :src="mediaPath+(mediaPath === basePath ? `/api/v2/media/userinfo/` : '')+info.header.replace(/([\w]+)\.([\w]+)$/gm, `$1_bigger.$2`)"
                                                     class="rounded-circle img-fluid" lazy v-if="info.header">
                                                   <div class="image-slot" slot="error">
                                                     <el-skeleton :paragraph="false" :title="false" active avatar/>
@@ -181,6 +181,8 @@
                         to="/i/status">状态</span>
                   <span is="router-link" class="text-decoration-none badge badge-pill badge-primary mx-1"
                         to="/api">API</span>
+                  <span is="router-link" class="text-decoration-none badge badge-pill badge-primary mx-1"
+                        to="/i/online">媒体下载</span>
                   <span :href="basePath + `/api/v2/rss/` + info.name + `.xml`"
                         is="a" class="text-decoration-none badge badge-pill badge-primary mx-1"
                         v-if="!hidden && (tweetStatus.displayType === 'timeline' || tweetStatus.displayType === 'status')">RSS</span>
