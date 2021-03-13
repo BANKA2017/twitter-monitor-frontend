@@ -182,41 +182,41 @@ export default {
       "add": false
     }, {"name": "nekopara_anime", "display_name": "TV动画", "add": false}],
     pollTopTweet: {
-      "tweet_id": "1234312472904925184",
+      "tweet_id": 1234312472904925184,
       "name": "LLAS_STAFF",
       "display_name": "ラブライブ！スクスタ公式",
-      "media": "0",
-      "video": "0",
+      "media": 0,
+      "video": 0,
       "card": "poll2choice_text_only",
-      "poll": "1",
-      "quote_status": "0",
+      "poll": 1,
+      "quote_status": 0,
       "source": "Twitter Web App",
       "full_text": "🎊 <a href=\"#/hashtag/スクスタ\" id=\"hashtag\">#スクスタ</a> ハーフアニバーサリー特別企画🎉<br />\n4週連続　どっちが欲しい！？キャンペーン📣<br />\n投票が多かったアイテムを皆様にプレゼント！<br />\n【第1弾】<br />\n投票期間：3/2（月）12：00～3/3（火）11：59<br />\n配布日：3/5（木）<br />\nあなたの1票でプレゼントが変わる！是非投票してくださいね♪<br />\n<a href=\"#/hashtag/lovelive\" id=\"hashtag\">#lovelive</a>",
       "full_text_origin": "🎊 #スクスタ ハーフアニバーサリー特別企画🎉\n4週連続　どっちが欲しい！？キャンペーン📣\n投票が多かったアイテムを皆様にプレゼント！\n【第1弾】\n投票期間：3/2（月）12：00～3/3（火）11：59\n配布日：3/5（木）\nあなたの1票でプレゼントが変わる！是非投票してくださいね♪\n#lovelive",
       "retweet_from": "",
       "retweet_from_name": "",
-      "dispute": "0",
-      "time": "1583118000",
+      "dispute": 0,
+      "time": 1583118000,
       "type": "tweet",
       "entities": [{
         "type": "hashtag",
         "text": "スクスタ",
         "expanded_url": "",
-        "indices_start": "2",
-        "indices_end": "7"
+        "indices_start": 2,
+        "indices_end": 7
       }, {"type": "hashtag", "text": "lovelive", "expanded_url": "", "indices_start": "144", "indices_end": "153"}],
       "pollObject": [{
         "choice_label": "スキップチケット　×10",
-        "poll_order": "1",
-        "end_datetime": "1583204340",
-        "count": "8036",
-        "checked": "1"
+        "poll_order": 1,
+        "end_datetime": 1583204340,
+        "count": 8036,
+        "checked": 1
       }, {
         "choice_label": "ライブキャンディ（50％）　×10",
-        "poll_order": "2",
-        "end_datetime": "1583204340",
-        "count": "30542",
-        "checked": "1"
+        "poll_order": 2,
+        "end_datetime": 1583204340,
+        "count": 30542,
+        "checked": 1
       }],
       "cardObject": [],
       "quoteObject": [],
@@ -4100,6 +4100,15 @@ export default {
       serverStatusTotalSuccessRate: ['#0067a6'],
     }
   }),
+  metaInfo () {
+    return {
+      title: "2020统计",
+      meta: [{
+        name: "theme-color",
+        content: "#1da1f2"
+      }]
+    }
+  },
   methods: {
     filterTag(value, row) {
       let r = false

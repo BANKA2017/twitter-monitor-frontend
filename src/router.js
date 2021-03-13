@@ -11,6 +11,8 @@ const timeLine = () => import("./components/pages/timeLine");
 const UserSelector = () => import("./components/pages/userSelector");
 const devConfig = () => import("./components/pages/devConfig");
 const Admin = () => import("./components/pages/admin");
+const Trends = () => import("./components/pages/trends");
+const Annual2019 = () => import("./components/pages/events/annual2019");
 const Annual2020 = () => import("./components/pages/events/annual2020");
 
 Vue.use(VueRouter);
@@ -21,6 +23,10 @@ export default new VueRouter({
         {
             path: '/about',
             component: About
+        },
+        {
+            path: '/i/events/2019',//2019年度总结
+            component: Annual2019,
         },
         {
             path: '/i/events/2020',//2020年度总结
@@ -41,6 +47,10 @@ export default new VueRouter({
         {
             path: '/i/status',
             component: Status
+        },
+        {
+            path: '/i/trends',
+            component: Trends
         },
         {
             path: '/i/online',

@@ -17,6 +17,7 @@ import Vue from 'vue'
 import VeLine from 'v-charts/lib/line.common'
 import VeHistogram from 'v-charts/lib/histogram.common'
 import 'v-charts/lib/style.css'
+//import { Line } from '@antv/g2plot';
 
 Vue.component(VeLine.name, VeLine);
 Vue.component(VeHistogram.name, VeHistogram);
@@ -103,8 +104,61 @@ export default {
       this.updateRows()
     }
   },
+  //computed: {
+  //  rows: function () {
+  //    let tmpRows = []
+  //    this.chartRows.map(x => {
+  //      let keys = Object.keys(x)
+  //      keys.slice(1).map(y => {
+  //        tmpRows.push({
+  //          xField: x[y],
+  //          yField: x[keys[1]],
+  //          seriesField: this.labelMap[y]
+  //        })
+  //      })
+  //    })
+  //    console.log(tmpRows)
+  //    return tmpRows
+  //  }
+  //},
   mounted() {
     this.updateRows()
+    //现在只想把饿了么扬了
+    //fetch('https://gw.alipayobjects.com/os/bmw-prod/55424a73-7cb8-4f79-b60d-3ab627ac5698.json')
+    //    .then((res) => res.json())
+    //    .then((data) => {
+    //      const line = new Line('g2test', {
+    //        data,
+    //        xField: 'year',
+    //        yField: 'value',
+    //        seriesField: 'category',
+    //        xAxis: {
+    //          type: 'time',
+    //        },
+    //        yAxis: {
+    //          label: {
+    //            // 数值格式化为千分位
+    //            formatter: (v) => `${v}`.replace(/\d{1,3}(?=(\d{3})+$)/g, (s) => `${s},`),
+    //          },
+    //        },
+    //      });
+    //      line.render();
+    //    });
+
+    //const chart = new Line("g2test", {
+    //  data: [],
+    //  xField: 'xField',
+    //  yField: 'yField',
+    //  seriesField: 'seriesField',
+    //  //yAxis: {
+    //  //  label: {
+    //  //    // 数值格式化为千分位
+    //  //    formatter: (v) => `${v}`.replace(/\d{1,3}(?=(\d{3})+$)/g, (s) => `${s},`),
+    //  //  },
+    //  //},
+    //  color: this.colors,
+    //})
+    //chart.render()
   },
   methods: {
     updateRows: function () {
@@ -112,6 +166,7 @@ export default {
         return this.chart.chartData.rows = this.chartRows.sort((a, b) => b[this.sortKey] - a[this.sortKey]).slice(0, this.sortLimit);
       }
       this.chart.chartData.rows = this.chartRows;
+      //chart.changeData()
     }
   }
 }

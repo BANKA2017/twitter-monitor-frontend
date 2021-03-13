@@ -48,7 +48,7 @@
         props: {
             displayName: {
                 type: String,
-                default: "Twitter",
+                default: "Twitter Monitor",
             },
             displayType: String,
         }

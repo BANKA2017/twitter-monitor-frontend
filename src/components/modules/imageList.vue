@@ -1,10 +1,10 @@
 <template>
     <div id="imageList">
-        <div v-if="is_video === '1'">
+        <div v-if="is_video === 1">
             <div :class="`no-gutters embed-responsive embed-responsive-` + (ratio < 16 / 9 ? (ratio < 4 / 3 ? '1by1' : '4by3') :ratio > 16 / 9 ? '21by9' : '16by9')">
                 <video :poster="mediaPath+(mediaPath === basePath ? `/api/v2/media/tweets/` : '') +list[0].cover"
                        :preload="preload"
-                       :type="list[0].content_type" class="border" controls id="videoPlayer" loop playsinline
+                       id="videoPlayer" :type="list[0].content_type" class="border" controls playsinline
                        :src="mediaPath+(mediaPath === basePath ? `/api/v2/media/tweets/` : '') +list[0].url"
                        style="width: 100%; height: 100%; border-radius: 14px 14px 14px 14px; background-color: black"></video>
             </div>
@@ -45,11 +45,11 @@ export default {
   name: "imageList",
   props: {
     list: Array,
-    is_video: String,
-    //is_video: {
-    //  type: [String, Boolean, Number],
-    //  default: '1'
-    //},
+    //is_video: String,
+    is_video: {
+      type: [String, Boolean, Number],
+      default: 1
+    },
     bottom: {
       type: Boolean,
       default: false
@@ -66,10 +66,14 @@ export default {
         type: String,
         default: "none",
     },
+    size: {
+      type: String,
+      default: "large",
+    },
         },
         computed: {
             previewList: function () {
-                return this.list.map(s => this.mediaPath+(this.mediaPath === this.basePath ? `/api/v2/media/tweets/` : '') + s.url + ':large');
+                return this.list.map(s => this.mediaPath+(this.mediaPath === this.basePath ? `/api/v2/media/tweets/` : '') + s.url + ':' + this.size);
             },
             ratio: function () {
               return this.list[0].origin_info_width / this.list[0].origin_info_height;

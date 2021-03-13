@@ -23,7 +23,7 @@
         name: "translate",
         props: {
           type: Number,
-          id: String,//tweet_id or uid
+          id: [String, Number],//tweet_id or uid
           to: String,
           order: {
             type: Number,

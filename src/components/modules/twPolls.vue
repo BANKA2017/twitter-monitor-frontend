@@ -8,7 +8,7 @@
                         <el-image :alt="pollImage" :preview-src-list="[mediaPath+(mediaPath === basePath ? `/api/v2/media/tweets/` : '')+media[0].url+'']" :src="mediaPath+(mediaPath === basePath ? `/api/v2/media/tweets/` : '')+media[0].url+''" class="col-12 card-img-top" fit="cover" lazy style="height: 300px"></el-image>
                     </div>
                 </div>
-                <div v-if="etaSeconds <= 0 && polls[0].checked === '1'" class="col-12">
+                <div v-if="etaSeconds <= 0 && polls[0].checked === 1" class="col-12">
                     <el-progress :percentage="Math.ceil((poll.count/pollCount)*100)" v-for="poll in polls" :format="() => poll.choice_label+' (' + Math.ceil((poll.count/pollCount)*100) + '%)'" :key="poll.poll_order"></el-progress>
                 </div>
                 <template v-else>
@@ -26,7 +26,7 @@
         name: "twPolls",
         props: {
             polls: Array,
-            tweet_id: String,
+            tweet_id: [String, Number],
             language: String,
             media: Array,
         },
@@ -43,7 +43,7 @@
                 return (parseInt(this.polls[0].end_datetime) * 1000 - this.$root.now) / 1000;
             },
             eta: function () {
-                if (this.etaSeconds <= 0 && this.polls[0].checked === '1') {
+                if (this.etaSeconds <= 0 && this.polls[0].checked === 1) {
                     return this.pollCount + ' 次投票 · 最终结果';
                 } else if (this.etaSeconds <= 0) {
                     return this.pollCount + ' 次投票 · 等待同步';

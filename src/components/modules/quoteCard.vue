@@ -17,7 +17,7 @@
                     <small class="text-muted">{{ timeGap(quoteObject.time, $root.now, language) }}</small>
                 </div>
                 <!--media-->
-                <template v-if="quoteObject.media === '1'&&!displayPicture">
+                <template v-if="quoteObject.media === 1&&!displayPicture">
                     <div class="my-4"></div>
                     <image-list :list="quoteMedia" :is_video="quoteObject.video" :basePath="basePath" :bottom="true"/>
                 </template>

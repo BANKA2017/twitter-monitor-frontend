@@ -22,12 +22,12 @@
                         <image-list :list="tweetsMedia(tweet_id, tweet.entities.media)" :is_video="'0'" :basePath="basePath" :online="true" />
                     </template>
                     <!--quote-->
-                    <!--<template v-if="tweet.quote_status !== '0'">
+                    <!--<template v-if="tweet.quote_status !== 0">
                         <div class="my-4"></div>
                         <quote-card :quote-object="tweet.quoteObject" :quote-media="tweet.mediaObject.quoteMedia" :base-path="basePath" :display-picture="settings.data.displayPicture" :language="settings.data.language" />
                     </template>-->
                     <!--polls-->
-                    <!--<template v-if="tweet.poll === '1'">
+                    <!--<template v-if="tweet.poll === 1">
                         <tw-polls :polls="tweet.pollObject" :tweet_id="tweet.tweet_id" :language="settings.data.language" :media="tweet.mediaObject.cardMedia" :basePath="basePath" />
                     </template>-->
                     <!--card-->
@@ -57,7 +57,7 @@
         components: {ImageList, BoxArrowUpRight, Retweet},
         props: {
             displayType: String,
-            uid: String,
+            uid: [String, Number],
             basePath: String,
         },
         data() {
@@ -70,7 +70,7 @@
         },
         watch: {
             "uid": function () {
-                if (this.uid !== '0')
+                if (this.uid !== 0)
                 this.load = true;
                 this.update();
             }

@@ -5,7 +5,7 @@
                 <a v-if="object.url.length && object.type !== 'unified_card'" :href="object.url" class="stretched-link text-decoration-none" target="_blank"></a>
                 <template v-if="object.type === 'summary' || object.type === 'audio' || object.type === 'app' || object.type === 'moment'">
                     <div class="row no-gutters">
-                        <el-image v-if="object.media === '1' && mediaState" :preview-src-list="[mediaPath+(mediaPath === basePath ? `/api/v2/media/tweets/` : '')+latestMedia.cover]" :src="mediaPath+(mediaPath === basePath ? `/api/v2/media/tweets/` : '')+latestMedia.cover" alt="cardImage" class="col-4 card-img border-right" fit="cover" lazy style="border-radius: 14px 0 0 14px"></el-image>
+                        <el-image v-if="object.media === 1 && mediaState" :preview-src-list="[mediaPath+(mediaPath === basePath ? `/api/v2/media/tweets/` : '')+latestMedia.cover]" :src="mediaPath+(mediaPath === basePath ? `/api/v2/media/tweets/` : '')+latestMedia.cover" alt="cardImage" class="col-4 card-img border-right" fit="cover" lazy style="border-radius: 14px 0 0 14px"></el-image>
                       <div class="col-8">
                         <div class="card-body">
                           <div class="row no-gutters">
@@ -64,7 +64,7 @@
                 </div>
               </template>
               <template v-else>
-                <div class="border-bottom" v-if="object.media === '1' && mediaState">
+                <div v-if="object.media === 1 && mediaState" class="border-bottom">
                   <div
                       :style="`width: 100%; padding-bottom: ` +  paddingBottom( latestMedia.cover, latestMedia.origin_info_height, latestMedia.origin_info_width) +  `%; height: 0; border-radius: 14px 14px 0 0`"
                       class="no-gutters">

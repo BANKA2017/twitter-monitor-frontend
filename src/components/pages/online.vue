@@ -1,9 +1,6 @@
 <template>
     <div id="online">
-        <!--nav bar-->
-        <nav class="navbar navbar-light bg-light">
-            <span class="navbar-brand mb-0 h1">Twitter Monitor Online</span>
-        </nav>
+        <navigation display-name="Twitter Monitor Online" display-type="online" />
         <div class="container">
             <div class="row">
                 <el-skeleton v-if="load" :paragraph="{rows: 8}" active class="mt-3 col-md-8 offset-md-2" title></el-skeleton>
@@ -33,24 +30,24 @@
                   <el-input v-model="tweet_id" class="mt-4" clearable placeholder="tweet id" @change="inputChange">
                     <router-link is="el-button" slot="append" :to="`/i/online/` + tweet_id" icon="el-icon-search"></router-link>
                   </el-input>
-                  <image-list :is_video="video ? '1' : '0'" :list="media" class="my-4" preload="metadata" style="width:100%" unlimited/>
+                  <image-list :is_video="video ? '1' : '0'" :list="media" class="my-4" preload="metadata" size="orig" style="width:100%" unlimited/>
 
                     <span class="lead">Download</span>
                     <div class="list-group my-2">
                       <template v-for="(mediaInfo, order) in (video ? rawData.video_info.variants : media)">
                         <a :key="order" :href="(video ? '' : `https://`) + mediaInfo.url + (video ? '' : `:orig`)" class="text-muted text-decoration-none list-group-item list-group-item-action d-flex justify-content-between align-items-center" target="_blank">
                           {{ video ? mediaInfo.content_type === 'video/mp4' ? mediaInfo.url.replace(/.*vid\/([0-9]+x[0-9]+).*/, `$1`) : 'm3u8' : mediaInfo.basename}}
-                          <span v-if="!video || mediaInfo.content_type === 'video/mp4'" class="badge badge-primary badge-pill">{{ video ? mediaInfo.bitrate / 1000 + 'kbps' : mediaInfo.origin_info_width + 'x' +mediaInfo.origin_info_height }}</span>
+                          <span v-if="!video || mediaInfo.content_type === 'video/mp4'" class="badge badge-primary badge-pill">{{ video ? mediaInfo.bitrate / 1000 + 'kbps' : mediaInfo.origin_info_height + 'x' +mediaInfo.origin_info_width }}</span>
                         </a>
                       </template>
                     </div>
-                  <pre><code class="json">{{ rawData }}</code></pre>
+                  <pre v-if="debug"><code class="json">{{ rawData }}</code></pre>
                   <!--<tweet :order="-1" :tweet="tweet" class="col-md-8 offset-md-2" display="all" display-type="timeline"/>-->
                 </div>
 
             </div>
             <div class="mx-auto text-center">
-                <div class="my-4"></div>
+                <div class="md-4"></div>
                 >_ Twitter Monitor
             </div>
         </div>
@@ -62,12 +59,13 @@
     //import UserInfo from "../modules/userInfo";
     import axios from "axios";
     import ImageList from "@/components/modules/imageList";
+    import Navigation from "@/components/modules/Navigation";
     //import Tweet from "@/components/modules/tweet";
     const CancelToken = axios.CancelToken;
     let cancel;
     export default {
         name: "online",
-      components: {ImageList},
+      components: {Navigation, ImageList},
       //components: {Tweet, UserInfo},
         data() {
             return {
@@ -78,7 +76,7 @@
                 //users: {},
                 rawData: {},
                 media: [],
-                debug: false,
+                debug: true,
                 load: true,
                 video: false,
             }

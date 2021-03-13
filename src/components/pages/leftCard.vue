@@ -3,7 +3,7 @@
         <el-skeleton avatar active :paragraph="{rows: 5}" v-if="load"/>
         <div class="card" v-else>
             <template>
-                <el-image v-if="info.banner !== '0' && displayType !== 'search' && displayType !== 'tag'" :preview-src-list="[mediaPath+(mediaPath === basePath ? `/api/v2/media/userinfo/` : '')+`pbs.twimg.com/profile_banners/`+info.uid+`/`+info.banner+`.banner`]" :src="mediaPath+(mediaPath === basePath ? `/api/v2/media/userinfo/` : '')+`pbs.twimg.com/profile_banners/`+info.uid+`/`+info.banner+`.banner`" alt="Banner" class="card-img-top" ></el-image>
+                <el-image v-if="info.banner !== 0 && displayType !== 'search' && displayType !== 'tag'" :preview-src-list="[mediaPath+(mediaPath === basePath ? `/api/v2/media/userinfo/` : '')+`pbs.twimg.com/profile_banners/`+info.uid+`/`+info.banner+`.banner`]" :src="mediaPath+(mediaPath === basePath ? `/api/v2/media/userinfo/` : '')+`pbs.twimg.com/profile_banners/`+info.uid+`/`+info.banner+`.banner`" alt="Banner" class="card-img-top" ></el-image>
                 <div class="card-body">
                     <h3 v-if="displayType === 'search'">搜索</h3>
                     <router-link :to="`/hashtag/`+tag.text" v-else-if="displayType === 'tag' && tag.type === 0"><h3>#{{ tag.text }}</h3></router-link>

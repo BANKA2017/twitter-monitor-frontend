@@ -3,7 +3,7 @@
         <!--Load data-->
         <div class="my-4"></div>
         <template v-if="chart.chartData">
-            <el-skeleton active :title="false" :paragraph="{rows: 4}" v-if="uid === '0' || !chart.chartData.rows.length"/>
+            <el-skeleton v-if="uid === 0 || !chart.chartData.rows.length" :paragraph="{rows: 4}" :title="false" active/>
             <ve-line v-else :data="chart.chartData" :settings="chart.chartSettings" :extend="chart.chartOptions" :init-options="{renderer: 'svg'}" :height="chart.chartHeight"></ve-line>
         </template>
     </div>
@@ -15,7 +15,7 @@
         name: "dataChart",
         props: {
             basePath: String,
-            uid: String,
+            uid: [String, Number],
             baseData: Object,
         },
         data() {

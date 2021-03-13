@@ -11,20 +11,22 @@
                         <template>
                           <div class="row no-gutters">
                             <el-image
-                                :preview-src-list="[mediaPath+(mediaPath === basePath ? `/api/v2/media/userinfo/` : '')+`pbs.twimg.com/profile_banners/`+info.uid+`/`+info.banner+`.banner`]"
-                                :src="mediaPath+(mediaPath === basePath ? `/api/v2/media/userinfo/` : '')+`pbs.twimg.com/profile_banners/`+info.uid+`/`+info.banner+`.banner`"
+                                v-if="info.banner !== 0 && tweetStatus.displayType !== 'search' && tweetStatus.displayType !== 'tag'"
+                                :preview-src-list="[mediaPath+(mediaPath === basePath ? `/api/v2/media/userinfo/` : '')+`pbs.twimg.com/profile_banners/`+info.uid_str+`/`+info.banner+`.banner`]"
                                 alt="Banner" class="col-12 card-img-top" fit="cover"
                                 style="max-height: 20vh"
-                                                v-if="info.banner !== '0' && tweetStatus.displayType !== 'search' && tweetStatus.displayType !== 'tag'"></el-image>
+                                                :src="mediaPath+(mediaPath === basePath ? `/api/v2/media/userinfo/` : '')+`pbs.twimg.com/profile_banners/`+info.uid_str+`/`+info.banner+`.banner`"></el-image>
                                     </div>
                                     <div class="card-body">
                                         <h3 v-if="tweetStatus.displayType === 'search'">搜索</h3>
-                                        <router-link :to="`/hashtag/`+tag.text"
-                                                     v-else-if="tweetStatus.displayType === 'tag' && tag.type === 0">
-                                            <h3>#{{ tag.text }}</h3></router-link>
-                                        <router-link :to="`/cashtag/`+tag.text"
-                                                     v-else-if="tweetStatus.displayType === 'tag' && tag.type === 1">
-                                            <h3>${{ tag.text }}</h3></router-link>
+                                        <template v-else-if="tweetStatus.displayType === 'tag'">
+                                          <h3>
+                                            <router-link :to="(tag.type === 0 ? 'hashtag' : 'cashtag') + tag.text">{{ (tag.type === 0 ? '#' : '1') + tag.text }}</router-link>
+                                            <a :href="`https://twitter.com/search?q=`+ encodeURIComponent((tag.type === 0 ? '#' : '$') + tag.text)" target="_blank">
+                                              <box-arrow-up-right height="1em" status="text-primary" width="1em"/>
+                                            </a>
+                                          </h3>
+                                        </template>
                                         <div class="container" v-else>
                                             <div class="row">
                                               <div class="col-12 text-right">
@@ -170,7 +172,7 @@
                 </div>
               <div class="col-sm-12 col-md-2">
                 <project-list/>
-                <div class="mb-1">
+                <div class="mb-1 col-10" style="padding-left: 0;">
                     <span class="text-decoration-none badge badge-pill badge-primary mx-1"
                           role="button" @click="$root.settings.panel = true">设置</span>
                   <span is="router-link" class="text-decoration-none badge badge-pill badge-primary mx-1"
@@ -220,12 +222,14 @@
     import ProjectList from "../modules/projectList";
     import LinkList from "../modules/linkList";
     import Tmv2Chart from "@/components/modules/tmv2Chart";
+    import BoxArrowUpRight from "@/components/icons/boxArrowUpRight";
 
     const CancelToken = axios.CancelToken;
     let cancel;
     export default {
         name: 'App',
         components: {
+          BoxArrowUpRight,
           Tmv2Chart,
           LinkList,
           ProjectList,
@@ -347,10 +351,11 @@
             //バンドリ！ BanG Dream! 公式 (@bang_dream_info) / Twitter
             this.$root.title = this.info.display_name ? this.info.display_name + ' (@' + this.info.name + ') / Twitter Monitor' : "Twitter Monitor";
             //隐藏帐号
-            if (this.$root.userList.length !== 0 && !this.$root.userList.map(x => x.name).includes(this.info.name)) {
-              this.hidden = true
-              this.update()
-            }
+            //已放开隐藏账号
+            //if (this.$root.userList.length !== 0 && !this.$root.userList.map(x => x.name).includes(this.info.name)) {
+            //  this.hidden = true
+            //  this.update()
+            //}
             //this.display_name = this.info.display_name;
           },
             "search.keywords": {
