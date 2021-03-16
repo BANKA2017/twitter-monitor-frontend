@@ -111,13 +111,13 @@
           <p>下面就是没什么用的数据啦</p>
           <tmv2-chart :chart-rows="serverStatusChartMeta.serverStatusTotalTweets"
                       :colors="serverStatusColor.serverStatusTotalTweets" :label-map="serverStatusLabel.totalTweets"
-                      chart-type="ve-line"></tmv2-chart>
+                      chart-type="VeLineChart"></tmv2-chart>
           <tmv2-chart :chart-rows="serverStatusChartMeta.serverStatusTotalTime"
                       :colors="serverStatusColor.serverStatusTotalTime" :label-map="serverStatusLabel.totalTime"
-                      :y-axis="{type: 'log', name: '秒'}" chart-type="ve-line"></tmv2-chart>
+                      :y-axis="{type: 'log', name: '秒', scale: true}" chart-type="VeLineChart"></tmv2-chart>
           <tmv2-chart :chart-rows="serverStatusChartMeta.serverStatusTotalSuccessRate"
                       :colors="serverStatusColor.serverStatusTotalSuccessRate"
-                      :label-map="serverStatusLabel.successRate" chart-type="ve-line"></tmv2-chart>
+                      :label-map="serverStatusLabel.successRate" chart-type="VeLineChart"></tmv2-chart>
           <h3 class="my-3">后话</h3>
           <p><a class="text-decoration-none text-dark" href="/static/db/annual2020.json" target="_blank">本页数据</a></p>
         </div>

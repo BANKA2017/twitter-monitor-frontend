@@ -15,15 +15,15 @@
     "bootstrap": "^4.5.0",
     "core-js": "^3.6.4",
     "dplayer": "^1.26.0",
-    "echarts": "^4.6.0",
-    "element-ui": "git+https://gitee.com/kdwnil/element.git#npm",
+    "echarts": "^4.9.0",
+    "element-ui": "git+https://github.com/banka2017/element.git#npm",
     "jquery": "^3.5.1",
     "popper.js": "^1.16.1",
     "postcss-loader": "^3.0.0",
     "precss": "^4.0.0",
     "register-service-worker": "^1.7.1",
-    "v-charts": "^1.19.0",
-    "vue": "^2.6.11",
+    "ve-charts": "^0.9.5",
+    "vue": "2.6.11",
     "vue-gtag": "^1.6.2",
     "vue-highlightjs": "^1.3.3",
     "vue-meta": "^2.3.3",
@@ -39,7 +39,7 @@
     "eslint-plugin-vue": "^6.1.2",
     "sass": "^1.26.3",
     "sass-loader": "^8.0.2",
-    "vue-template-compiler": "^2.6.11"
+    "vue-template-compiler": "2.6.11"
   },
   "eslintConfig": {
     "root": true,

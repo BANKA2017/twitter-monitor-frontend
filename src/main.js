@@ -39,8 +39,8 @@ import Skeleton from '@femessage/element-ui/lib/skeleton.js';
 
 //import VueHighlightJS from 'vue-highlightjs'
 //Vue.use(VueHighlightJS)
-
-Vue.prototype.basePath = process.env.NODE_ENV !== "development" ? "https://tm.bangdream.fun" : "https://tm.bangdream.fun/tmv2"
+Vue.prototype.devmode = process.env.NODE_ENV === "development"
+Vue.prototype.basePath = !Vue.prototype.devmode ? "https://tm.bangdream.fun" : "https://tm.bangdream.fun/tmv2"
 Vue.prototype.mediaPath = "https://tmv2media.bangdream.fun/api/v2/media/"//如果不使用特殊图片代理则填写 this.basePath
 Vue.prototype.onlinePath = ""
 
@@ -50,7 +50,7 @@ import VueGtag from "vue-gtag";
 
 Vue.prototype.ready = false;
 Vue.prototype.GA_ID = "UA-90617066-8";
-if (process.env.NODE_ENV !== "development") {
+if (!Vue.prototype.devmode) {
   Vue.use(VueGtag, {
     config: {id: Vue.prototype.GA_ID},
     onReady() {

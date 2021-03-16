@@ -94,11 +94,10 @@
         },
         methods: {
             chartData: function (type) {
-                return this.rawData.map(x => {
-                    return {
+                return this.rawData.map(x => ({
                         name: x.display_name,
                         [type]: x[type],
-                    }})
+                    }))
             },
         }
     }

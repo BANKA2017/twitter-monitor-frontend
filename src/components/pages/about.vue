@@ -26,8 +26,8 @@
                   </a>
                   <hr class="my-4">
                   <h3>关于旧版</h3>
-                  <p>虽然旧的版本的数据不再更新，但还是可以访问的，<a href="https://bangdream.fun/tmv1/" target="_blank">回到旧版</a></p>
-                  <a href="https://github.com/BANKA2017/twitter-monitor" target="_blank">
+                  <p><del>虽然旧的版本的数据不再更新，但还是可以访问的，<a href="https://bangdream.fun/tmv1/" target="_blank">回到旧版</a></del>，即将合并旧版数据</p>
+                  <a href="https://github.com/BANKA2017/twitter-monitor/tree/8f7aad304f4a2377e40ac8b0db9b0801d6a01751" target="_blank">
                     <el-button class="text-decoration-none mx-1" round size="mini">GitHub</el-button>
                   </a>
                   <a href="https://5my-my.sharepoint.com/:u:/g/personal/chika_aqours_in/EZG4nGGnvJBFnVtIwFcOfpoBhMIYRfzBdZI8FiT8IJU9eQ?e=eZWVua"
@@ -36,7 +36,7 @@
                   </a>
                   <hr class="my-4">
                   <h3>中立性</h3>
-                  <p>言多必失。本站仅对推文进行存档以及展示，不会支持或反对推文中的任何观点，对于有争议的内容，本站会尽可能快地对内容进行<span style="color: red"><i
+                  <p>本站仅对推文进行存档以及展示，展示的内容不应被视为对其中包含的观点或隐私政策的认可，对于有争议的内容，本站会尽可能快地对内容进行<span style="color: red"><i
                       class="el-icon-warning"></i>  标红警告</span>
                   </p>
                   <hr class="my-4">

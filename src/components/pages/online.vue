@@ -30,8 +30,7 @@
                   <el-input v-model="tweet_id" class="mt-4" clearable placeholder="tweet id" @change="inputChange">
                     <router-link is="el-button" slot="append" :to="`/i/online/` + tweet_id" icon="el-icon-search"></router-link>
                   </el-input>
-                  <image-list :is_video="video ? '1' : '0'" :list="media" class="my-4" preload="metadata" size="orig" style="width:100%" unlimited/>
-
+                  <image-list :is_video="Number(video)" :list="media" class="my-4" preload="metadata" size="orig" style="width:100%" unlimited/>
                     <span class="lead">Download</span>
                     <div class="list-group my-2">
                       <template v-for="(mediaInfo, order) in (video ? rawData.video_info.variants : media)">
@@ -64,7 +63,7 @@
     const CancelToken = axios.CancelToken;
     let cancel;
     export default {
-        name: "online",
+      name: "online",
       components: {Navigation, ImageList},
       //components: {Tweet, UserInfo},
         data() {
@@ -135,6 +134,11 @@
         this.routeCase(to)
         next()
       },
+      metaInfo () {
+        return {
+          title: "媒体加载器",
+        }
+      },
       mounted: function () {
         this.routeCase(this.$route)
       },
@@ -203,9 +207,6 @@
                 this.load = false
               }
             },
-
-
-
             notice: function (text, status) {
                 this.$parent.notice(text, status);
             },

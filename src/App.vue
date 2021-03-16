@@ -3,6 +3,7 @@
     <div style="position: absolute"></div>
     <el-backtop></el-backtop>
     <router-view/>
+    <div v-if="this.devmode" class="bg-dark text-white" style="left: 0; bottom: 0; position: fixed">开发测试版本</div>
   </div>
 </template>
 

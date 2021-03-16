@@ -21,7 +21,7 @@
                                         <h3 v-if="tweetStatus.displayType === 'search'">搜索</h3>
                                         <template v-else-if="tweetStatus.displayType === 'tag'">
                                           <h3>
-                                            <router-link :to="(tag.type === 0 ? 'hashtag' : 'cashtag') + tag.text">{{ (tag.type === 0 ? '#' : '1') + tag.text }}</router-link>
+                                            <router-link :to="tag.text">{{ (tag.type === 0 ? '#' : '1') + tag.text }}</router-link>
                                             <a :href="`https://twitter.com/search?q=`+ encodeURIComponent((tag.type === 0 ? '#' : '$') + tag.text)" target="_blank">
                                               <box-arrow-up-right height="1em" status="text-primary" width="1em"/>
                                             </a>
@@ -77,7 +77,7 @@
                                        v-if="chart.rows && chart.generate">
                             <tmv2-chart :chart-height="chart.chartHeight" :chart-rows="chart.rows"
                                         :label-map="chart.labelMap" :legend-name="chart.legendName"
-                                        chart-type="ve-line"></tmv2-chart>
+                                        chart-type="VeLineChart"></tmv2-chart>
                           </el-skeleton>
                           <el-table v-else
                                     :data="[{followers: info.followers, following: info.following, statuses_count: info.statuses_count}]"
@@ -283,7 +283,7 @@
                 chart: {
                   generate: true,
                   latestTimestamp: 0,
-                  chartHeight: "250px",
+                  chartHeight: "250",
                   rows: [],
                   labelMap: {
                     'timestamp': '日期',
@@ -470,7 +470,7 @@
                 });
             },
           createChart: function (time = 0, refresh = false) {
-            axios.get(this.basePath + '/api/v2/data/chart/?uid=' + this.info.uid + (time > 0 ? '&end=' + time : '') + (refresh ? '&refresh=1' : '')).then(response => {
+            axios.get(this.basePath + '/api/v2/data/chart/?uid=' + this.info.uid_str + (time > 0 ? '&end=' + time : '') + (refresh ? '&refresh=1' : '')).then(response => {
               if (response.data.data.length) {
                 this.chart.latestTimestamp = response.data.data.slice(-1)[0].timestamp
               }
