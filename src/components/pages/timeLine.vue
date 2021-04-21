@@ -4,14 +4,14 @@
         <div class="my-4"></div>
         <main class="container" id="main" role="main">
             <div class="row">
-                <div class="col-sm-12 col-md-4">
+                <div :class="{'col-sm-12': true, 'col-md-4': tweetStatus.displayType !== 'search', 'col-md-3': tweetStatus.displayType === 'search'}">
                   <template v-if="tweetStatus.userExist">
                     <el-skeleton :loading="load.leftCard" :paragraph="{rows: 5}" active avatar>
                       <div class="card">
                         <template>
                           <div class="row no-gutters">
                             <el-image
-                                v-if="info.banner !== 0 && tweetStatus.displayType !== 'search' && tweetStatus.displayType !== 'tag'"
+                                v-if="!$root.settings.data.displayPicture && info.banner !== 0 && tweetStatus.displayType !== 'search' && tweetStatus.displayType !== 'tag'"
                                 :preview-src-list="[mediaPath+(mediaPath === basePath ? `/api/v2/media/userinfo/` : '')+`pbs.twimg.com/profile_banners/`+info.uid_str+`/`+info.banner+`.banner`]"
                                 alt="Banner" class="col-12 card-img-top" fit="cover"
                                 style="max-height: 20vh"
@@ -37,11 +37,11 @@
                                                 <locked v-else-if="info.locked" height="1.2em" status="text-danger"
                                                         width="1.2em"/>
                                               </div>
-                                              <div class="col-4" style="max-height: 100px; max-width: 100px">
+                                              <div :class="{'col-4': !$root.settings.data.displayPicture}" style="max-height: 100px; max-width: 100px">
                                                 <el-image
                                                     :preview-src-list="[mediaPath+(mediaPath === basePath ? `/api/v2/media/userinfo/` : '')+info.header]"
                                                     :src="mediaPath+(mediaPath === basePath ? `/api/v2/media/userinfo/` : '')+info.header.replace(/([\w]+)\.([\w]+)$/gm, `$1_bigger.$2`)"
-                                                    class="rounded-circle img-fluid" lazy v-if="info.header">
+                                                    class="rounded-circle img-fluid" lazy v-if="!$root.settings.data.displayPicture && info.header">
                                                   <div class="image-slot" slot="error">
                                                     <el-skeleton :paragraph="false" :title="false" active avatar/>
                                                   </div>
@@ -51,7 +51,7 @@
                                                     </el-image>
                                                     <div class="my-4"></div>
                                                 </div>
-                                                <div class="col-8">
+                                                <div :class="{'col-8': !$root.settings.data.displayPicture, 'col-12': $root.settings.data.displayPicture}">
                                                     <h5 class="card-title mt-0">
                                                         <b>{{ info.display_name }}</b>
                                                     </h5>
@@ -87,10 +87,11 @@
                             <el-table-column label="总推文数" prop="statuses_count"></el-table-column>
                           </el-table>
                         </template>
-                        <div class="my-4"></div>
+                        <div class="my-4">
+                        </div>
                     </template>
                 </div>
-              <div class="col-sm-12 col-md-6">
+              <div :class="{'col-sm-12': true, 'col-md-6': tweetStatus.displayType !== 'search', 'col-md-7': tweetStatus.displayType === 'search'}">
                 <div v-if="!tweetStatus.userExist">
                   <h5 class="mx-auto">@{{ name }} 不存在</h5>
                   <div class="my-4"></div>
@@ -101,73 +102,73 @@
                   <nav class="nav nav-pills nav-fill">
                     <template v-if="tweetStatus.displayType === 'timeline' && !load.leftCard">
                       <li :key="s" class="nav-item" v-for="(value, s) in displayMode">
-                                  <div class="nav-link active" role="button" @click="loading( 0)"
-                                       v-if="value[1] === tweetStatus.display">{{ value[0] }}
-                                  </div>
-                                    <router-link :to="`/`+info.name+`/`+value[1]" class="nav-link" v-else>{{ value[0]
-                                        }}
-                                    </router-link>
-                                </li>
-                            </template>
-                            <li class="nav-item">
-                              <div
-                                  :class="{'nav-link': true, 'active': $root.settings.data.displayPicture, 'text-primary': !$root.settings.data.displayPicture}"
-                                  @click="$root.settings.data.displayPicture=!$root.settings.data.displayPicture"
-                                  role="button">无图
-                              </div>
-                            </li>
-                        </nav>
+                        <div class="nav-link active" role="button" @click="loading( 0)"
+                             v-if="value[1] === tweetStatus.display">{{ value[0] }}
+                        </div>
+                        <router-link :to="`/`+info.name+`/`+value[1]" class="nav-link" v-else>{{ value[0]
+                          }}
+                        </router-link>
+                      </li>
+                    </template>
+                    <li class="nav-item">
+                      <div
+                          :class="{'nav-link': true, 'active': $root.settings.data.displayPicture, 'text-primary': !$root.settings.data.displayPicture}"
+                          @click="$root.settings.data.displayPicture=!$root.settings.data.displayPicture"
+                          role="button">无图
+                      </div>
+                    </li>
+                  </nav>
+                  <hr class="my-4">
+                  <!--user tweets-->
+                  <el-skeleton :loading="load.timeline" :paragraph="{rows: 5}" active>
+                    <div>
+                      <template
+                          v-if="tweetStatus.displayType === 'timeline' && (info.deleted || info.locked)">
+                        <div class="card card-border border-info" id="alertMsg">
+                          <div class='card-body'>
+                            {{ '此账户已'+(info.deleted ? '删除' : '被保护')+'，我们将不再监控此账户' }}
+                          </div>
+                        </div>
                         <hr class="my-4">
-                        <!--user tweets-->
-                        <el-skeleton :loading="load.timeline" :paragraph="{rows: 5}" active>
-                            <div>
-                                <template
-                                        v-if="tweetStatus.displayType === 'timeline' && (info.deleted || info.locked)">
-                                    <div class="card card-border border-info" id="alertMsg">
-                                        <div class='card-body'>
-                                            {{ '此账户已'+(info.deleted ? '删除' : '被保护')+'，我们将不再监控此账户' }}
-                                        </div>
-                                    </div>
-                                  <hr class="my-4">
-                                </template>
-                              <div class="text-center" v-if="tweetStatus.reload">
-                                <el-button @click="() => {load.timeline=true;update()}" icon="el-icon-refresh-left"
-                                           round>重试
-                                </el-button>
-                              </div>
-                              <div class="text-center" element-loading-background="rgba(255, 255, 0, 0)"
-                                   style="height: 60px" v-if="load.top" v-loading="load.top"></div>
-                              <div v-if="!tweetStatus.reload && $root.tweets.length">
-                                <div v-for="(tweet, order) in $root.tweets" :key="order">
-                                  <div class="text-center" v-if="tweet.type === 'msg'">
-                                    {{ tweet.full_text }}
-                                  </div>
-                                  <div v-else>
-                                    <tweet :display="tweetStatus.display"
-                                           :display-type="tweetStatus.displayType" :top="info.top"
-                                           :order="order"
-                                           :tweet="tweet"/>
-                                  </div>
-                                  <hr class="my-4">
-                                    </div>
-                                    <template>
-                                        <button @click="loading(1)" class="btn btn-primary btn-lg btn-block"
-                                                type="button" v-if="tweetStatus.moreTweets && !load.bottom">
-                                            <span>加载更多</span>
-                                        </button>
-                                        <el-skeleton :paragraph="{rows: 1}" active
-                                                     v-else-if="tweetStatus.moreTweets && load.bottom"/>
-                                        <div v-else-if="!(tweetStatus.displayType === 'status')">
-                                            <h5 class="text-center">已经没有更多内容</h5>
-                                        </div>
-                                    </template>
-                                </div>
-                                <div v-else-if="!tweetStatus.reload">
-                                    <h5 class="text-center">已经没有更多内容</h5>
-                                </div>
-                            </div>
-                        </el-skeleton>
-                        <div class="my-4"></div>
+                      </template>
+                      <div class="text-center" v-if="tweetStatus.reload">
+                        <el-button @click="() => {load.timeline=true;update()}" icon="el-icon-refresh-left"
+                                   round>重试
+                        </el-button>
+                      </div>
+                      <div class="text-center" element-loading-background="rgba(255, 255, 0, 0)"
+                           style="height: 60px" v-if="load.top" v-loading="load.top"></div>
+                      <div v-if="!tweetStatus.reload && $root.tweets.length">
+                        <div v-for="(tweet, order) in $root.tweets" :key="order">
+                          <div class="text-center" v-if="tweet.type === 'msg'">
+                            {{ tweet.full_text }}
+                          </div>
+                          <div v-else>
+                            <tweet :display="tweetStatus.display"
+                                   :display-type="tweetStatus.displayType" :top="info.top"
+                                   :order="order"
+                                   :tweet="tweet"/>
+                          </div>
+                          <hr class="my-4">
+                        </div>
+                        <template>
+                          <button @click="loading(1)" class="btn btn-primary btn-lg btn-block"
+                                  type="button" v-if="tweetStatus.moreTweets && !load.bottom">
+                            <span>加载更多</span>
+                          </button>
+                          <el-skeleton :paragraph="{rows: 1}" active
+                                       v-else-if="tweetStatus.moreTweets && load.bottom"/>
+                          <div v-else-if="!(tweetStatus.displayType === 'status')">
+                            <h5 class="text-center">已经没有更多内容</h5>
+                          </div>
+                        </template>
+                      </div>
+                      <div v-else-if="!tweetStatus.reload">
+                        <h5 class="text-center">已经没有更多内容</h5>
+                      </div>
+                    </div>
+                  </el-skeleton>
+                  <div class="my-4"></div>
                     </template>
                 </div>
               <div class="col-sm-12 col-md-2">
@@ -199,7 +200,7 @@
           <!--setting-->
           <settings/>
           <transition name="el-fade-in">
-            <div v-if="tweetStatus.displayType === 'timeline'" class="el-backtop" style="right: 40px; bottom: 90px"
+            <div v-if="tweetStatus.displayType !== 'status'" class="el-backtop" style="right: 40px; bottom: 90px"
                  @click="()=>{scrollToTop();loading(0)}">
               <i class="el-icon-refresh-right"></i>
             </div>
@@ -258,7 +259,27 @@
                 },
               search: {
                 keywords: '',
-                mode: 0,//0->keywords, 1->date
+                mode: 0,//0->keywords, 1->date, 2->advanced
+                advancedSearch: {
+                  user: {
+                    "text": "",
+                    "andMode": 0,
+                    "notMode": 0,
+                  },
+                  keywords: {
+                    "text": "",
+                    "orMode": 0,
+                    "notMode": 0,
+                  },
+                  tweetType: {
+                    type: 0,//0-> all, 1-> origin, 2-> retweet
+                    media: 1,//media
+                  },
+                  start: "",
+                  end: "",
+                  order: 0,//正序0, 倒序1
+                  hidden: 0,
+                }
               },
               //is_project: '',
               //nsfwList: [],
@@ -303,12 +324,6 @@
               }
             }
         },
-        computed: {
-            userTimeZone: function () {
-                let timeValue = (new Date().getTimezoneOffset() / 60) * (-1);
-                return timeValue >= 0 ? '+' + timeValue.toString() : timeValue.toString();
-            },
-        },
         beforeRouteEnter(to, from, next) {
             //none
             next(vm => {
@@ -319,21 +334,22 @@
             })
         },
         beforeRouteUpdate(to, from, next) {
+          cancel();
           this.load.timeline = true
           this.routeCase(to)
-            this.update()
-            next()
+          this.update()
+          next()
         },
         watch: {
-          //"tweetStatus.displayType": {
-          //    handler: function () {
-          //        //暴力处理
-          //        if (this.ready) {
-          //            window.stop();
-          //        }
-          //    },
-          //    deep: true
-          //},
+          "tweetStatus.displayType": {
+              handler: function () {
+                  //暴力处理
+                  if (this.tweetStatus.displayType !== 'search' && this.search.mode === 2) {
+                      this.search.mode = 0
+                  }
+              },
+              deep: true
+          },
           //"tweetStatus.display": {
           //    handler: function () {
           //        //暴力处理
@@ -361,6 +377,9 @@
             "search.keywords": {
                 handler: function () {
                     if (this.search.mode === 1 && this.tweetStatus.displayType !== 'userSelector') {
+                        this.tweetStatus.displayType = 'timeline'
+                        //this.$router.replace('../../all')
+                        cancel()
                         this.load.timeline = true;
                         this.update();
                     }
@@ -417,11 +436,11 @@
                         if (type === 0) {
                           this.notice("已更新" + response.data.data.tweets.length + "条推文", "success");
                           //this.getUserInfo();
-                          if (response.data.data.top_tweet_id) {
+                          if (response.data.data.top_tweet_id && response.data.data.top_tweet_id !== "0") {
                             this.tweetStatus.topTweetId = response.data.data.top_tweet_id;
                           }
                           this.$root.tweets = [...response.data.data.tweets, ...this.$root.tweets];
-                          if (this.chart.generate) {
+                          if (this.chart.generate && this.tweetStatus.displayType === 'timeline') {
                             this.createChart(this.chart.latestTimestamp, true)
                           }
                           this.load.top = false;
@@ -498,8 +517,12 @@
               }).then(response => {
                   this.$root.tweets = response.data.data.tweets ? response.data.data.tweets : [];//404时无任何数据
                   this.tweetStatus.moreTweets = response.data.data.hasmore;
-                  this.tweetStatus.topTweetId = response.data.data.top_tweet_id;
-                  this.tweetStatus.bottomTweetId = response.data.data.bottom_tweet_id;
+                  if (response.data.data.top_tweet_id !== "0") {
+                    this.tweetStatus.topTweetId = response.data.data.top_tweet_id;
+                  }
+                  if (response.data.data.bottom_tweet_id !== "0") {
+                    this.tweetStatus.bottomTweetId = response.data.data.bottom_tweet_id;
+                  }
                   this.load.timeline = false;
                   this.tweetStatus.reload = (response.data.code !== 200 && response.data.code !== 404 && response.data.code !== 403);
                 }).catch(error => {
@@ -528,10 +551,26 @@
                         break;
                 }
                 //date
-                if (this.search.mode === 1 && this.search.keywords) {
-                    url += '?name=' + this.name + '&date=' + Date.parse(this.search.keywords + ' GMT' + this.userTimeZone) / 1000;
-                } else if (this.search.keywords && this.tweetStatus.displayType === 'search') {
-                    url += '?q=' + encodeURIComponent(this.search.keywords);
+                if (this.search.mode === 1 && this.search.keywords && (this.tweetStatus.displayType === 'search' || this.tweetStatus.displayType === 'timeline')) {
+                    url += '?name=' + this.name + '&date=' + Date.parse(this.search.keywords + ' GMT' + this.$root.userTimeZone) / 1000;
+                } else if (this.tweetStatus.displayType === 'search' && this.search) {
+                    if (this.search.mode === 2) {
+                      url += '?q=' + encodeURIComponent(this.search.advancedSearch.keywords.text) +
+                          '&text_or_mode=' + (this.search.advancedSearch.keywords.orMode ? '1' : '0') +
+                          '&text_not_mode=' + (this.search.advancedSearch.keywords.notMode ? '1' : '0') +
+                          '&user=' + this.search.advancedSearch.user.text +
+                          '&user_and_mode=' + (this.search.advancedSearch.user.andMode ? '1' : '0') +
+                          '&user_not_mode=' + (this.search.advancedSearch.user.notMode ? '1' : '0') +
+                          '&tweet_type=' + this.search.advancedSearch.tweetType.type.toString() +
+                          '&tweet_media=' + (this.search.advancedSearch.tweetType.media ? '1' : '0') +
+                          '&start=' + (this.search.advancedSearch.start === "" ? -1 : Date.parse(this.search.advancedSearch.start + ' GMT' + this.$root.userTimeZone) / 1000).toString() +
+                          '&end=' + (this.search.advancedSearch.end === "" ? -1 : Date.parse(this.search.advancedSearch.end + ' GMT' + this.$root.userTimeZone) / 1000).toString() +
+                          '&order=' + this.search.advancedSearch.order +
+                          '&advanced=1' + (this.$root.settings.adminStatus ? '&hidden=' + this.search.advancedSearch.hidden : '')
+                    } else if (this.search.keywords) {
+                      url += '?q=' + encodeURIComponent(this.search.keywords);
+                    }
+
                 }
                 //二层
                 else if (this.tweetStatus.displayType === 'timeline') {
@@ -545,8 +584,9 @@
             },
             routeCase: function (to = this.$route) {
                 this.$root.home = false;
+                this.load.timeline = true;
                 //name
-                if (to.params.name && to.params.name !== 'search') {
+                if (to.params.name && !RegExp('^/search').test(to.path)) {
                     this.name = to.params.name;
                     this.tweetStatus.displayType = 'timeline';
                     //display
@@ -572,10 +612,6 @@
                     } else {
                         this.$router.replace({path: '/' + this.name + '/all/'});
                     }
-                } else if (to.params.name === 'search') {
-                    this.search.keywords = to.params.search;
-                    this.load.leftCard = false;
-                    this.tweetStatus.displayType = 'search';
                 }
                 //hashtag & cashtag
                 if (to.params.hashtag || to.params.cashtag) {
@@ -585,8 +621,32 @@
                     this.load.leftCard = false;
                 }
                 //search
-                if (to.params.search) {
-                    this.search.keywords = to.params.search;
+                if (RegExp('^/search').test(to.path)) {
+                    this.search.keywords = to.query.q ? to.query.q : to.params.search ? to.params.search : '';
+                    //advancedSearch
+                    if (to.query.advanced === '1') {
+                      this.search.mode = 2
+                      this.search.advancedSearch = {
+                        user: {
+                          "text": to.query.user,
+                          "andMode": to.query.user_and_mode !== '0',
+                          "notMode": to.query.user_not_mode !== '0',
+                        },
+                        keywords: {
+                          "text": to.query.q,
+                          "orMode": to.query.text_or_mode !== '0',
+                          "notMode": to.query.text_not_mode !== '0',
+                        },
+                        tweetType: {
+                          type: (to.query.text_or_mode && to.query.text_or_mode > -1 && to.query.text_or_mode < 3) ? Number(to.query.tweet_type) : 0,//0-> all, 1-> origin, 2-> retweet
+                          media: to.query.text_or_mode !== '0',//media
+                        },
+                        start: to.query.start,
+                        end: to.query.end,
+                        order: to.query.order,//正序0, 倒序1
+                        hidden: to.query.hidden ? '1' : '0',
+                      }
+                    }
                     this.load.leftCard = false;
                     this.tweetStatus.displayType = 'search';
                 }

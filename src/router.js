@@ -12,8 +12,10 @@ const UserSelector = () => import("./components/pages/userSelector");
 const devConfig = () => import("./components/pages/devConfig");
 const Admin = () => import("./components/pages/admin");
 const Trends = () => import("./components/pages/trends");
+const Event = () => import("./components/pages/events/index");
 const Annual2019 = () => import("./components/pages/events/annual2019");
 const Annual2020 = () => import("./components/pages/events/annual2020");
+const loveliveTrends = () => import("./components/pages/events/loveliveTrends");
 
 Vue.use(VueRouter);
 export default new VueRouter({
@@ -25,12 +27,23 @@ export default new VueRouter({
             component: About
         },
         {
-            path: '/i/events/2019',//2019年度总结
-            component: Annual2019,
-        },
-        {
-            path: '/i/events/2020',//2020年度总结
-            component: Annual2020,
+            path: '/i/events',
+            component: Event,
+            name: 'mainEvents',
+            children: [
+                {
+                    path: '2019',//2019年度总结
+                    component: Annual2019,
+                },
+                {
+                    path: '2020',//2020年度总结
+                    component: Annual2020,
+                },
+                {
+                    path: 'lovelive_trends',//lovelive趨勢
+                    component: loveliveTrends,
+                },
+            ]
         },
         {
             path: '/api',
@@ -74,8 +87,12 @@ export default new VueRouter({
             path: '/cashtag/:cashtag',
             component: timeLine,
         }, {
-            path: '/search/:search',
-            component: timeLine,
+            path: '/search/',
+            component: timeLine,//will no longer use params
+            children: [
+                {path: ''},
+                {path: ':search'}//to delete
+            ]
         },
         {
             path: '/',

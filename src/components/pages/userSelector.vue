@@ -9,14 +9,13 @@
             <div class="container">
                 <div class="col-md-8 offset-md-2">
                     <search display-type="userSelector" name=""/>
-                    <div class="list-group" v-if="$root.project && $root.names[$root.project] && !$root.home">
+                    <div class="list-group my-2" v-if="$root.project && $root.names[$root.project] && !$root.home">
                         <router-link :key="s" :to="`/i/project/`+user.project+`/`+user.name+`/all`"
                                      class="list-group-item list-group-item-action"
                                      v-for="(user, s) in userWithProjectList"><b>{{ user.display_name }}</b> | <small>@{{
                             user.name }}</small> > <small>{{ $root.project + ' (' + user.tag + ')' }}</small>
                         </router-link>
                     </div>
-                    <div class="my-4"></div>
                     <template v-for="(project, s) in $root.projects">
                         <router-link :to="`/i/project/`+project" :key="s">
                             <el-button class="text-decoration-none mx-1 mb-1" round size="mini">{{
@@ -30,10 +29,11 @@
             </div>
         </div>
         <div class="text-center" style="height: 30px">
-          >_ KDNETWORK
-          <span is="router-link" v-if="$root.settings.adminStatus"
-                class="text-decoration-none badge badge-pill badge-dark"
-                to="/i/admin">管理</span>
+          <link-list v-if="$root.links.length !== 0"/>
+          <span v-else>>_ KDNETWORK</span>
+          <!--<template  v-if="$root.settings.adminStatus">
+            <router-link class="text-decoration-none badge badge-pill badge-dark" to="/i/admin">管理</router-link>
+          </template>-->
         </div>
     </div>
 </template>
@@ -41,9 +41,10 @@
 <script>
     import Search from "../modules/search";
     import axios from "axios";
+    import LinkList from "@/components/modules/linkList";
     export default {
       name: "userSelector",
-      components: {Search},
+      components: {LinkList, Search},
       metaInfo() {
         return {
           title: this.$root.title,

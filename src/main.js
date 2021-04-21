@@ -32,6 +32,7 @@ import {
   Notification,//https://github.com/ElemeFE/element/issues/3450#issuecomment-500717476
   Carousel,
   CarouselItem,
+  Avatar,
 } from 'element-ui';
 //import CollapseTransition from 'element-ui/lib/transitions/collapse-transition';
 import '@femessage/element-ui/lib/theme-chalk/skeleton.css';
@@ -82,6 +83,7 @@ Vue.use(TableColumn);
 Vue.use(Tag);
 Vue.use(Carousel);
 Vue.use(CarouselItem);
+Vue.use(Avatar);
 Vue.use(Loading.directive);
 Vue.use(Skeleton);
 
@@ -96,6 +98,7 @@ Vue.prototype.$message = Message;
 //Vue.use(ElementUI);
 
 Vue.config.productionTip = false;
+Vue.prototype.adminModePassword = '9gdnhlZJHKhKERrgGWag3iKFT49H7orceIwoBhUqRNE=';
 
 //public functions
 Vue.prototype.scrollToTop = function (top = 0) {
@@ -145,6 +148,10 @@ new Vue({
     }
   },
   computed: {
+    userTimeZone: function () {
+      let timeValue = (new Date().getTimezoneOffset() / 60) * (-1);
+      return timeValue >= 0 ? '+' + timeValue.toString() : timeValue.toString();
+    },
     userList: function () {
       let users = [];
       Object.keys(this.$root.names).forEach(value1 => {

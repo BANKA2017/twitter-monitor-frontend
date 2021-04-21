@@ -1,0 +1,62 @@
+<template>
+  <div id="events-index">
+    <template v-if="$route.name === 'mainEvents'">
+      <div class="jumbotron jumbotron-fluid" style="background-color: #1da1f2">
+        <div class="container">
+          <h1 class="display-4" style="color: white">专题</h1>
+        </div>
+      </div>
+      <div class="container">
+        <div class="row">
+          <div class="col-md-8 offset-md-2 mb-4" v-for="info in events" :key="info.link">
+            <router-link class="card text-decoration-none stretched-link" :to="info.link">
+              <div class="card-body">
+                <h5 class="card-title" style="color: black">{{ info.title }}</h5>
+                <h6 class="card-subtitle mb-2 text-muted">{{ info.update_time }}</h6>
+                <p class="card-text" style="color: black">{{info.description }}</p>
+              </div>
+            </router-link>
+          </div>
+        </div>
+      </div>
+    </template>
+    <router-view v-else />
+  </div>
+</template>
+
+<script>
+export default {
+  name: "index",
+  data: () => ({
+    events: [{
+      title: "2019年度统计",
+      description: "Twitter monitor 2019年度统计，第一次做这玩意，写得很烂",
+      update_time: "2021-02-24",
+      link: "/i/events/2019/"
+    },{
+      title: "2020年度统计",
+      description: "Twitter monitor 2020年度统计，尝试整了一些新表格什么的，做的不够完整略有遗憾，明年继续努力",
+      update_time: "2020-12-31",
+      link: "/i/events/2020/"
+    },{
+      title: "Love Live! 统计",
+      description: "这是以周为单位自动生成的报告，生成的报告仅供参考，Twitter monitor 不对其内容负责",
+      update_time: "2021-04-10",
+      link: "/i/events/lovelive_trends/"
+    },].reverse()
+  }),
+  metaInfo () {
+    return {
+      title: "专题",
+      meta: [{
+        name: "theme-color",
+        content: "#1da1f2"
+      }]
+    }
+  },
+}
+</script>
+
+<style scoped>
+
+</style>
