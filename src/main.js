@@ -98,7 +98,7 @@ Vue.prototype.$message = Message;
 //Vue.use(ElementUI);
 
 Vue.config.productionTip = false;
-Vue.prototype.adminModePassword = '9gdnhlZJHKhKERrgGWag3iKFT49H7orceIwoBhUqRNE=';
+Vue.prototype.adminModePassword = 'UmZwKeqrJq4nxS6UXQ4xOgDRex430PCwPvy65CvdZHw=';
 
 //public functions
 Vue.prototype.scrollToTop = function (top = 0) {

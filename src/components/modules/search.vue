@@ -81,7 +81,7 @@
             <button type="button" :class="{'btn': true, 'btn-outline-primary': true, 'btn-sm': true, 'active': search.advancedSearch.tweetType.type === 0}" @click="search.advancedSearch.tweetType.type = 0">全部</button>
             <button type="button" :class="{'btn': true, 'btn-outline-primary': true, 'btn-sm': true, 'active': search.advancedSearch.tweetType.type === 1}" @click="search.advancedSearch.tweetType.type = 1">原创</button>
             <button type="button" :class="{'btn': true, 'btn-outline-primary': true, 'btn-sm': true, 'active': search.advancedSearch.tweetType.type === 2}" @click="search.advancedSearch.tweetType.type = 2">转推</button>
-            <button type="button" :class="{'btn': true, 'btn-outline-primary': true, 'btn-sm': true, 'active': search.advancedSearch.tweetType.media !== 0}" @click="search.advancedSearch.tweetType.media = ((search.advancedSearch.tweetType.media === 0) ? 1 : 0)">媒体</button>
+            <button :class="{'btn': true, 'btn-outline-primary': true, 'btn-sm': true, 'active': search.advancedSearch.tweetType.media !== 0}" type="button" @click="search.advancedSearch.tweetType.media = ((search.advancedSearch.tweetType.media === 0) ? 1 : 0)">仅媒体</button>
             <button role="button" :class="{'btn': true, 'btn-outline-primary': true, 'btn-sm': true, 'active': search.advancedSearch.order === 1}" @click="search.advancedSearch.order = ((search.advancedSearch.order === 0) ? 1 : 0)" >反序</button>
           </div>
           <!--<div class="btn-group btn-block" role="group">
@@ -154,7 +154,7 @@
                     },
                     tweetType: {
                       type: 0,//0-> all, 1-> origin, 2-> retweet
-                      media: 1,//media
+                      media: 0,//media
                     },
                     start: "",
                     end: "",
@@ -205,6 +205,7 @@
             },
             queryObject: function () {
                 if (this.search.mode === 2) {
+                  //TODO 优化query string
                   let returnObject = {
                     q: this.search.advancedSearch.keywords.text.trim(),
                     text_or_mode: this.search.advancedSearch.keywords.orMode ? 1 : 0,

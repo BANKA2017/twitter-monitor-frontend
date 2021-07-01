@@ -65,7 +65,7 @@
                 <template v-else-if="tweet.card !== ''">
                     <div class="my-4"></div>
                     <tw-card :media="tweet.mediaObject.cardMedia" :mediaState="!$root.settings.data.displayPicture"
-                             :object="tweet.cardObject"></tw-card>
+                             :object="tweet.cardObject" :tweet-text="tweet.full_text_origin.split(`\n`)[0]" :user-name="tweet.retweet_from ? tweet.retweet_from : tweet.display_name"></tw-card>
                 </template>
                 <!--time && source-->
                 <div id="foot">

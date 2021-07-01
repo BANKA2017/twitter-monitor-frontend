@@ -2,7 +2,7 @@
     <div id="twCard">
         <div class="card mb-3" style="border-radius: 14px 14px 14px 14px">
             <div>
-                <a v-if="object.url.length && object.type !== 'unified_card'" :href="object.url" class="stretched-link text-decoration-none" target="_blank"></a>
+                <a v-if="object.url.length && object.type !== 'unified_card'" :href="(object.type === 'audiospace' ? 'https://twitter.com/i/spaces/' : '') + object.url" class="stretched-link text-decoration-none" target="_blank"></a>
                 <template v-if="object.type === 'summary' || object.type === 'audio' || object.type === 'app' || object.type === 'moment'">
                     <div class="row no-gutters">
                         <el-image v-if="object.media === 1 && mediaState" :preview-src-list="[mediaPath+(mediaPath === basePath ? `/api/v2/media/tweets/` : '')+latestMedia.cover]" :src="mediaPath+(mediaPath === basePath ? `/api/v2/media/tweets/` : '')+latestMedia.cover" alt="cardImage" class="col-4 card-img border-right" fit="cover" lazy style="border-radius: 14px 0 0 14px"></el-image>
@@ -19,27 +19,38 @@
                       </div>
                     </div>
                 </template>
-              <template v-else-if="object.type === 'unified_card'">
-                <div v-if="object.secondly_type === 'image_website' || object.secondly_type === 'image_app'"
-                    :style="`width: 100%; padding-bottom: ` +  paddingBottom( latestMedia.cover, latestMedia.origin_info_height, latestMedia.origin_info_width) +  `%; height: 0; border-radius: 14px 14px 0 0`"
-                    class="no-gutters">
-                    <el-image :preview-src-list="[mediaPath+(mediaPath === basePath ? `/api/v2/media/tweets/` : '')+latestMedia.cover]"
-                          :src="mediaPath+(mediaPath === basePath ? `/api/v2/media/tweets/` : '')+latestMedia.cover" alt="cardImage"
-                          class="card-img-top" fit="cover" lazy
-                          style="width: 100%; position: absolute; border-radius: 14px 14px 0 0"
-                          @load="load = true"></el-image>
-
+              <template v-else-if="object.type === 'audiospace'">
+                <div style="border-radius: 14px 14px 14px 14px; background-image: linear-gradient(61.63deg, rgb(45, 66, 255) -15.05%, rgb(156, 99, 250) 104.96%);">
+                  <div class="card-body">
+                    <p style="color: #ffffff">{{ userName }} · audiospace · <box-arrow-up-right height="1em" width="1em"/></p>
+                    <span style="color: #ffffff; font-weight: 500; font-size: 1.2rem">{{ tweetText }}</span>
+                  </div>
                 </div>
-                <div v-else-if="object.secondly_type === 'video_website' || object.secondly_type === 'video_app'"
-                    :class="`no-gutters embed-responsive embed-responsive-` + (ratio < 16 / 9 ? (ratio < 4 / 3 ? '1by1' : '4by3') :ratio > 16 / 9 ? '21by9' : '16by9')">
-                  <video id="videoPlayer"
+              </template>
+              <template v-else-if="object.type === 'unified_card'">
+                <template v-if="object.secondly_type === 'image_website' || object.secondly_type === 'image_app'" >
+                  <div v-if="mediaState"
+                       :style="`width: 100%; padding-bottom: ` +  paddingBottom( latestMedia.cover, latestMedia.origin_info_height, latestMedia.origin_info_width) +  `%; height: 0; border-radius: 14px 14px 0 0`"
+                       class="no-gutters">
+                    <el-image :preview-src-list="[mediaPath+(mediaPath === basePath ? `/api/v2/media/tweets/` : '')+latestMedia.cover]"
+                              :src="mediaPath+(mediaPath === basePath ? `/api/v2/media/tweets/` : '')+latestMedia.cover" alt="cardImage"
+                              class="card-img-top" fit="cover" lazy
+                              style="width: 100%; position: absolute; border-radius: 14px 14px 0 0"
+                              @load="load = true"></el-image>
+
+                  </div>
+                </template>
+                <template v-else-if="object.secondly_type === 'video_website' || object.secondly_type === 'video_app'" >
+                  <div v-if="mediaState" :class="`no-gutters embed-responsive embed-responsive-` + (ratio < 16 / 9 ? (ratio < 4 / 3 ? '1by1' : '4by3') :ratio > 16 / 9 ? '21by9' : '16by9')">
+                    <video id="videoPlayer"
                          :poster="mediaPath+(mediaPath === basePath ? `/api/v2/media/tweets/` : '') +media[0].cover"
                          :src="mediaPath+(mediaPath === basePath ? `/api/v2/media/tweets/` : '') +media[0].url" :type="media[0].content_type" class="border" controls loop playsinline
                          preload="none"
                          style="width: 100%; height: 100%; border-radius: 14px 14px 0 0; background-color: black"></video>
-                </div>
-                <div v-else-if="object.secondly_type === 'image_carousel_website' || object.secondly_type === 'image_carousel_app'">
-                  <el-carousel :style="`border-radius: 14px 14px 0 0`" class="card-img-top"
+                  </div>
+                </template>
+                <div v-else-if="object.secondly_type === 'image_carousel_website' || object.secondly_type === 'image_carousel_app' || object.secondly_type === 'video_carousel_website'">
+                  <el-carousel v-if="mediaState" :style="`border-radius: 14px 14px 0 0`" class="card-img-top"
                                indicator-position="outside" trigger="click">
                     <el-carousel-item v-for="(mediaInfo, key) in media" :key="key" :name="key.toString()">
                       <el-image :preview-src-list="[mediaPath+(mediaPath === basePath ? `/api/v2/media/tweets/` : '')+mediaInfo.cover]"
@@ -87,12 +98,23 @@
 </template>
 
 <script>
+    import BoxArrowUpRight from "@/components/icons/boxArrowUpRight";
     export default {
       name: "twCard",
+      components: {BoxArrowUpRight},
       props: {
         object: Object,
         media: Array,
         mediaState: Boolean,
+        //only for audiospace
+        userName: {
+          type: String,
+          default: "",
+        },
+        tweetText: {
+          type: String,
+          default: "",
+        },
       },
       data() {
         return {

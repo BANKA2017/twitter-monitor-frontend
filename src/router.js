@@ -7,15 +7,16 @@ const Account = () => import("./components/pages/account");
 const Stats = () => import("./components/pages/stats");
 const Status = () => import("./components/pages/status");
 const Online = () => import("./components/pages/online");
-const timeLine = () => import("./components/pages/timeLine");
-const UserSelector = () => import("./components/pages/userSelector");
+const timeLine = () => import(/* webpackChunkName: "kernel" */ "./components/pages/timeLine");
+const UserSelector = () => import(/* webpackChunkName: "kernel" */ "./components/pages/userSelector");
 const devConfig = () => import("./components/pages/devConfig");
 const Admin = () => import("./components/pages/admin");
 const Trends = () => import("./components/pages/trends");
-const Event = () => import("./components/pages/events/index");
-const Annual2019 = () => import("./components/pages/events/annual2019");
-const Annual2020 = () => import("./components/pages/events/annual2020");
-const loveliveTrends = () => import("./components/pages/events/loveliveTrends");
+const Event = () => import(/* webpackChunkName: "events" */ "./components/pages/events/index");
+const Annual2019 = () => import(/* webpackChunkName: "events" */ "./components/pages/events/annual2019");
+const Annual2020 = () => import(/* webpackChunkName: "events" */ "./components/pages/events/annual2020");
+const loveliveTrends = () => import(/* webpackChunkName: "events" */ "./components/pages/events/loveliveTrends");
+const notFound = () => import("./components/pages/errors/notFound");
 
 Vue.use(VueRouter);
 export default new VueRouter({
@@ -120,6 +121,10 @@ export default new VueRouter({
                 {path: ':display'},
                 {path: 'status/:status'}
             ]
+        },
+        {
+            path: '*',
+            component: notFound
         },
     ]
 })

@@ -26,17 +26,23 @@
                   </a>
                   <hr class="my-4">
                   <h3>关于旧版（v1）</h3>
-                  <p><del>虽然旧的版本的数据不再更新，但还是可以访问的，<a href="https://bangdream.fun/tmv1/" target="_blank">回到旧版</a></del>，即将合并旧版数据</p>
+                  <p>虽然旧的版本的数据不再更新，但还是可以访问的，<a href="https://tm.bangdream.fun/tmv1/" target="_blank">回到旧版</a>，即将合并旧版数据</p>
                   <a href="https://github.com/BANKA2017/twitter-monitor/tree/8f7aad304f4a2377e40ac8b0db9b0801d6a01751" target="_blank">
                     <el-button class="text-decoration-none mx-1" round size="mini">GitHub</el-button>
                   </a>
-                  <a href="https://5my-my.sharepoint.com/:u:/g/personal/chika_aqours_in/EZG4nGGnvJBFnVtIwFcOfpoBhMIYRfzBdZI8FiT8IJU9eQ?e=eZWVua"
+                  <hr class="my-4">
+                  <h3>数据公开</h3>
+                  <a href="https://5my-my.sharepoint.com/:f:/g/personal/chika_aqours_in/En34oC5-535Eng8isHx5XqwB5-Di45HavsLVUEMCLUBC0w?e=LrBJjY"
                      target="_blank">
                     <el-button class="text-decoration-none mx-1" round size="mini">数据库备份</el-button>
                   </a>
+                  <ul >
+                    <li>tmv1（2019-05-12 ~ 2020-02-28）</li>
+                    <li>tmv2（约2020年初 ~ 2021-05-12）</li>
+                  </ul>
                   <hr class="my-4">
                   <h3>中立性</h3>
-                  <p>本站仅对推文进行存档以及分析展示，展示的内容不应被视为对其中包含的观点或隐私政策的认可，对于可能有争议的内容，本站会尽可能快地对内容进行<span style="color: red"><i class="el-icon-warning"></i>  标红警告</span>，如有必要，本站可能会对相关推文进行隐藏处理</p>
+                  <p>本站仅对推文进行存档以及分析展示，展示的内容不应被视为对其中包含的观点或隐私政策的认可，如有必要，本站可能会对相关推文进行隐藏处理</p>
                   <hr class="my-4">
                   <h3>交流</h3>
                   <p>有何意见，有何建议，畅所欲言，但请不要发出您认为不应该在群组作出的发言，<abbr title="Safe For Work">SFW</abbr>，谢绝色图，谢绝键政，谢绝梯子</p>

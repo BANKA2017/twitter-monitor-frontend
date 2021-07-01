@@ -64,7 +64,7 @@
                                                 </div>
                                             </div>
                                             <p v-html="`<p class='card-text'>`+info.description+`</p>`"></p>
-                                            <translate :id="info.uid" :to="$root.settings.data.language" :type="1"/>
+                                            <translate :id="info.uid_str" :to="$root.settings.data.language" :type="1"/>
                                         </div>
                                     </div>
                                 </template>
@@ -273,7 +273,7 @@
                   },
                   tweetType: {
                     type: 0,//0-> all, 1-> origin, 2-> retweet
-                    media: 1,//media
+                    media: 0,//media
                   },
                   start: "",
                   end: "",
@@ -391,7 +391,14 @@
                     this.search.keywords = '';
                 },
                 deep: true,
-            }
+            },
+          "search.advancedSearch": {
+            handler: function () {
+              this.tweetStatus.topTweetId = 0
+              this.tweetStatus.bottomTweetId = 0
+            },
+            deep: true,
+          }
         },
         mounted: function () {
           new CancelToken(c => cancel = c);//提前生成
