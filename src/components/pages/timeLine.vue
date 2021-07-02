@@ -5,70 +5,71 @@
         <main class="container" id="main" role="main">
             <div class="row">
                 <div :class="{'col-sm-12': true, 'col-md-4': tweetStatus.displayType !== 'search', 'col-md-3': tweetStatus.displayType === 'search'}">
-                  <template v-if="tweetStatus.userExist">
-                    <el-skeleton :loading="load.leftCard" :paragraph="{rows: 5}" active avatar>
-                      <div class="card">
-                        <template>
-                          <div class="row no-gutters">
-                            <el-image
-                                v-if="!$root.settings.data.displayPicture && info.banner !== 0 && tweetStatus.displayType !== 'search' && tweetStatus.displayType !== 'tag'"
-                                :preview-src-list="[mediaPath+(mediaPath === basePath ? `/api/v2/media/userinfo/` : '')+`pbs.twimg.com/profile_banners/`+info.uid_str+`/`+info.banner+`.banner`]"
-                                alt="Banner" class="col-12 card-img-top" fit="cover"
-                                style="max-height: 20vh"
-                                                :src="mediaPath+(mediaPath === basePath ? `/api/v2/media/userinfo/` : '')+`pbs.twimg.com/profile_banners/`+info.uid_str+`/`+info.banner+`.banner`"></el-image>
-                                    </div>
-                                    <div class="card-body">
-                                        <h3 v-if="tweetStatus.displayType === 'search'">搜索</h3>
-                                        <template v-else-if="tweetStatus.displayType === 'tag'">
-                                          <h3>
-                                            <router-link :to="tag.text">{{ (tag.type === 0 ? '#' : '1') + tag.text }}</router-link>
-                                            <a :href="`https://twitter.com/search?q=`+ encodeURIComponent((tag.type === 0 ? '#' : '$') + tag.text)" target="_blank">
-                                              <box-arrow-up-right height="1em" status="text-primary" width="1em"/>
-                                            </a>
-                                          </h3>
-                                        </template>
-                                        <div class="container" v-else>
-                                            <div class="row">
-                                              <div class="col-12 text-right">
-                                                <verified v-if="info.verified" height="1.2em" status="text-primary"
-                                                          width="1.2em"/>
-                                                <deleted v-if="info.deleted" height="1.2em" status="text-danger"
-                                                         width="1.2em"/>
-                                                <locked v-else-if="info.locked" height="1.2em" status="text-danger"
-                                                        width="1.2em"/>
-                                              </div>
-                                              <div :class="{'col-4': !$root.settings.data.displayPicture}" style="max-height: 100px; max-width: 100px">
-                                                <el-image
-                                                    :preview-src-list="[mediaPath+(mediaPath === basePath ? `/api/v2/media/userinfo/` : '')+info.header]"
-                                                    :src="mediaPath+(mediaPath === basePath ? `/api/v2/media/userinfo/` : '')+info.header.replace(/([\w]+)\.([\w]+)$/gm, `$1_bigger.$2`)"
-                                                    class="rounded-circle img-fluid" lazy v-if="!$root.settings.data.displayPicture && info.header">
-                                                  <div class="image-slot" slot="error">
-                                                    <el-skeleton :paragraph="false" :title="false" active avatar/>
-                                                  </div>
-                                                  <div class="image-slot" slot="placeholder">
-                                                    <el-skeleton :paragraph="false" :title="false" active avatar/>
-                                                        </div>
-                                                    </el-image>
-                                                    <div class="my-4"></div>
-                                                </div>
-                                                <div :class="{'col-8': !$root.settings.data.displayPicture, 'col-12': $root.settings.data.displayPicture}">
-                                                    <h5 class="card-title mt-0">
-                                                        <b>{{ info.display_name }}</b>
-                                                    </h5>
-                                                    <p>
-                                                        <small>
-                                                            <a :href="`//twitter.com/`+info.name" class="text-dark"
-                                                               target="_blank">@{{ info.name }}</a>
-                                                        </small>
-                                                    </p>
-                                                </div>
-                                            </div>
-                                            <p v-html="`<p class='card-text'>`+info.description+`</p>`"></p>
-                                            <translate :id="info.uid_str" :to="$root.settings.data.language" :type="1"/>
-                                        </div>
-                                    </div>
+                  <div>
+                      <template v-if="tweetStatus.userExist">
+                        <el-skeleton :loading="load.leftCard" :paragraph="{rows: 5}" active avatar>
+                          <div class="card">
+                            <template>
+                              <div class="row no-gutters">
+                                <el-image
+                                    v-if="!$root.settings.data.displayPicture && info.banner !== 0 && tweetStatus.displayType !== 'search' && tweetStatus.displayType !== 'tag'"
+                                    :preview-src-list="[mediaPath+(mediaPath === basePath ? `/api/v2/media/userinfo/` : '')+`pbs.twimg.com/profile_banners/`+info.uid_str+`/`+info.banner+`.banner`]"
+                                    :src="mediaPath+(mediaPath === basePath ? `/api/v2/media/userinfo/` : '')+`pbs.twimg.com/profile_banners/`+info.uid_str+`/`+info.banner+`.banner`" alt="Banner" class="col-12 card-img-top"
+                                    fit="cover"
+                                    style="max-height: 20vh"></el-image>
+                              </div>
+                              <div class="card-body">
+                                <h3 v-if="tweetStatus.displayType === 'search'">搜索</h3>
+                                <template v-else-if="tweetStatus.displayType === 'tag'">
+                                  <h3>
+                                    <router-link :to="tag.text">{{ (tag.type === 0 ? '#' : '1') + tag.text }}</router-link>
+                                    <a :href="`https://twitter.com/search?q=`+ encodeURIComponent((tag.type === 0 ? '#' : '$') + tag.text)" target="_blank">
+                                      <box-arrow-up-right height="1em" status="text-primary" width="1em"/>
+                                    </a>
+                                  </h3>
                                 </template>
-                            </div>
+                                <div v-else class="container">
+                                  <div class="row">
+                                    <div class="col-12 text-right">
+                                      <verified v-if="info.verified" height="1.2em" status="text-primary"
+                                                width="1.2em"/>
+                                      <deleted v-if="info.deleted" height="1.2em" status="text-danger"
+                                               width="1.2em"/>
+                                      <locked v-else-if="info.locked" height="1.2em" status="text-danger"
+                                              width="1.2em"/>
+                                    </div>
+                                    <div :class="{'col-4': !$root.settings.data.displayPicture}" style="max-height: 100px; max-width: 100px">
+                                      <el-image
+                                          v-if="!$root.settings.data.displayPicture && info.header"
+                                          :preview-src-list="[mediaPath+(mediaPath === basePath ? `/api/v2/media/userinfo/` : '')+info.header]"
+                                          :src="mediaPath+(mediaPath === basePath ? `/api/v2/media/userinfo/` : '')+info.header.replace(/([\w]+)\.([\w]+)$/gm, `$1_bigger.$2`)" class="rounded-circle img-fluid" lazy>
+                                        <div slot="error" class="image-slot">
+                                          <el-skeleton :paragraph="false" :title="false" active avatar/>
+                                        </div>
+                                        <div slot="placeholder" class="image-slot">
+                                          <el-skeleton :paragraph="false" :title="false" active avatar/>
+                                        </div>
+                                      </el-image>
+                                      <div class="my-4"></div>
+                                    </div>
+                                    <div :class="{'col-8': !$root.settings.data.displayPicture, 'col-12': $root.settings.data.displayPicture}">
+                                      <h5 class="card-title mt-0">
+                                        <b>{{ info.display_name }}</b>
+                                      </h5>
+                                      <p>
+                                        <small>
+                                          <a :href="`//twitter.com/`+info.name" class="text-dark"
+                                             target="_blank">@{{ info.name }}</a>
+                                        </small>
+                                      </p>
+                                    </div>
+                                  </div>
+                                  <p v-html="`<p class='card-text'>`+info.description+`</p>`"></p>
+                                  <translate :id="info.uid_str" :to="$root.settings.data.language" :type="1"/>
+                                </div>
+                              </div>
+                            </template>
+                          </div>
                         </el-skeleton>
                         <template v-if="tweetStatus.displayType === 'timeline'">
                           <!--Load data-->
@@ -89,7 +90,8 @@
                         </template>
                         <div class="my-4">
                         </div>
-                    </template>
+                      </template>
+                    </div>
                 </div>
               <div :class="{'col-sm-12': true, 'col-md-6': tweetStatus.displayType !== 'search', 'col-md-7': tweetStatus.displayType === 'search'}">
                 <div v-if="!tweetStatus.userExist">
@@ -97,27 +99,27 @@
                   <div class="my-4"></div>
                 </div>
                 <template v-else>
-                  <search :display-type="tweetStatus.displayType" :name="name" :search="search"/>
-                  <div class="my-4"></div>
-                  <nav class="nav nav-pills nav-fill">
-                    <template v-if="tweetStatus.displayType === 'timeline' && !load.leftCard">
-                      <li :key="s" class="nav-item" v-for="(value, s) in displayMode">
-                        <div class="nav-link active" role="button" @click="loading( 0)"
-                             v-if="value[1] === tweetStatus.display">{{ value[0] }}
+                    <search :display-type="tweetStatus.displayType" :name="name" :search="search"/>
+                    <div class="my-4"></div>
+                    <nav :style="{'position': 'sticky', 'top': '5px', 'z-index': 1, 'background-color': '#ffffff', 'border-radius': '0.25rem'}" class="nav nav-pills nav-fill border">
+                      <template v-if="tweetStatus.displayType === 'timeline' && !load.leftCard">
+                        <li v-for="(value, s) in displayMode" :key="s" class="nav-item">
+                          <div v-if="value[1] === tweetStatus.display" class="nav-link active" role="button"
+                               @click="loading( 0)">{{ value[0] }}
+                          </div>
+                          <router-link v-else :to="`/`+info.name+`/`+value[1]" class="nav-link">{{ value[0]
+                            }}
+                          </router-link>
+                        </li>
+                      </template>
+                      <li class="nav-item">
+                        <div
+                            :class="{'nav-link': true, 'active': $root.settings.data.displayPicture, 'text-primary': !$root.settings.data.displayPicture}"
+                            role="button"
+                            @click="$root.settings.data.displayPicture=!$root.settings.data.displayPicture">无图
                         </div>
-                        <router-link :to="`/`+info.name+`/`+value[1]" class="nav-link" v-else>{{ value[0]
-                          }}
-                        </router-link>
                       </li>
-                    </template>
-                    <li class="nav-item">
-                      <div
-                          :class="{'nav-link': true, 'active': $root.settings.data.displayPicture, 'text-primary': !$root.settings.data.displayPicture}"
-                          @click="$root.settings.data.displayPicture=!$root.settings.data.displayPicture"
-                          role="button">无图
-                      </div>
-                    </li>
-                  </nav>
+                    </nav>
                   <hr class="my-4">
                   <!--user tweets-->
                   <el-skeleton :loading="load.timeline" :paragraph="{rows: 5}" active>
@@ -172,23 +174,24 @@
                     </template>
                 </div>
               <div class="col-sm-12 col-md-2">
-                <project-list/>
-                <div class="mb-1 col-10" style="padding-left: 0;">
+                <div :style="{'position': 'sticky', 'top': '5px'}">
+                  <project-list/>
+                  <div class="mb-1 col-10" style="padding-left: 0;">
                     <span class="text-decoration-none badge badge-pill badge-primary mx-1"
                           role="button" @click="$root.settings.panel = true">设置</span>
-                  <span is="router-link" class="text-decoration-none badge badge-pill badge-primary mx-1"
-                        to="/about">关于</span>
-                  <span is="router-link" class="text-decoration-none badge badge-pill badge-primary mx-1"
-                        to="/i/stats">统计</span>
-                  <span is="router-link" class="text-decoration-none badge badge-pill badge-primary mx-1"
-                        to="/i/status">状态</span>
-                  <span is="router-link" class="text-decoration-none badge badge-pill badge-primary mx-1"
-                        to="/api">API</span>
-                  <span is="router-link" class="text-decoration-none badge badge-pill badge-primary mx-1"
-                        to="/i/online">媒体下载</span>
-                  <span :href="basePath + `/api/v2/rss/` + info.name + `.xml`"
-                        is="a" class="text-decoration-none badge badge-pill badge-primary mx-1"
-                        v-if="!hidden && (tweetStatus.displayType === 'timeline' || tweetStatus.displayType === 'status')">RSS</span>
+                    <span is="router-link" class="text-decoration-none badge badge-pill badge-primary mx-1"
+                          to="/about">关于</span>
+                    <span is="router-link" class="text-decoration-none badge badge-pill badge-primary mx-1"
+                          to="/i/stats">统计</span>
+                    <span is="router-link" class="text-decoration-none badge badge-pill badge-primary mx-1"
+                          to="/i/status">状态</span>
+                    <span is="router-link" class="text-decoration-none badge badge-pill badge-primary mx-1"
+                          to="/api">API</span>
+                    <span is="router-link" class="text-decoration-none badge badge-pill badge-primary mx-1"
+                          to="/i/online">媒体下载</span>
+                    <span is="a"
+                          v-if="!hidden && (tweetStatus.displayType === 'timeline' || tweetStatus.displayType === 'status')" :href="basePath + `/api/v2/rss/` + info.name + `.xml`"
+                          class="text-decoration-none badge badge-pill badge-primary mx-1">RSS</span>
                     <span is="router-link" v-if="$root.settings.adminStatus"
                           class="text-decoration-none badge badge-pill badge-dark mx-1"
                           to="/i/admin">管理</span>
@@ -196,6 +199,7 @@
                   <hr class="my-4">
                   <link-list/>
                 </div>
+              </div>
             </div>
           <!--setting-->
           <settings/>
@@ -314,6 +318,7 @@
                   },
                   legendName: {},
                 },
+              //leftDomHeight: 0,
             };
         },
         metaInfo() {
@@ -425,6 +430,7 @@
                     this.notice(error, 'error');
                 });
             }
+          //this.updateLeftDomHeight()
         },
         methods: {
             getAccountList: function () {
@@ -666,6 +672,12 @@
             //  });
             //  return false;
             //},
+          //updateLeftDomHeight: function () {
+          //  this.leftDomHeight = document.getElementById("leftDom").offsetTop
+          //  setTimeout(() => {
+          //    this.updateLeftDomHeight();
+          //  }, 500);
+          //}
         },
     }
 </script>

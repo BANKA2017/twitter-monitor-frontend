@@ -133,7 +133,7 @@ new Vue({
       project: "",
       title: "Twitter Monitor",
       tweets: [],
-      //height: 0,
+      height: 0,
       //altitudeDifference: 0,
       settings: {
         data: {

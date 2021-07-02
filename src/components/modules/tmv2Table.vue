@@ -28,9 +28,7 @@
         },
         computed: {
             filters: function () {
-                return this.$root.projects.map(x => {
-                    return {text: x, value: x}
-                })
+                return this.$root.projects.map(x => ({text: x, value: x}))
             },
             colorForGroup: function () {
                 let tmpList = [];

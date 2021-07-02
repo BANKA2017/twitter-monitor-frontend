@@ -37,18 +37,19 @@
         this.updateNow();
         //updateHeightStatus
         //this.isUp();
+        this.updateHeight()
       },
       updateNow: function () {
         this.$root.now = new Date();
         setTimeout(this.updateNow, 1000);
       },
-      //isUp: function () {
-      //  this.$root.altitudeDifference = this.$root.height - document.documentElement.scrollTop;
-      //  this.$root.height = document.documentElement.scrollTop
-      //  setTimeout(() => {
-      //    this.isUp();
-      //  }, 500);
-      //},
+      updateHeight: function () {
+        //this.$root.altitudeDifference = this.$root.height - document.documentElement.scrollTop;
+        this.$root.height = document.documentElement.scrollTop
+        setTimeout(() => {
+          this.updateHeight();
+        }, 500);
+      },
     }
   }
 </script>
