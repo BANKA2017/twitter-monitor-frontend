@@ -44,8 +44,9 @@
         setTimeout(this.updateNow, 1000);
       },
       updateHeight: function () {
-        //this.$root.altitudeDifference = this.$root.height - document.documentElement.scrollTop;
+        this.$root.altitudeDifference = this.$root.height - document.documentElement.scrollTop;
         this.$root.height = document.documentElement.scrollTop
+        this.$root.width = window.innerWidth
         setTimeout(() => {
           this.updateHeight();
         }, 500);

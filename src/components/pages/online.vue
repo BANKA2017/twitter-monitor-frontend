@@ -3,7 +3,7 @@
         <navigation display-name="Twitter Monitor Online" display-type="online" />
         <div class="container">
             <div class="row">
-                <el-skeleton v-if="load" :paragraph="{rows: 8}" active class="mt-3 col-md-8 offset-md-2" title></el-skeleton>
+                <el-skeleton v-if="load" :rows="5" animated class="mt-3 col-md-8 offset-md-2"></el-skeleton>
                 <div v-else-if="!load && media.length === 0" class="col-md-8 offset-md-2">
                     <div class="my-4" />
                       <div v-once id="tmolTips">

@@ -33,10 +33,12 @@ import {
   Carousel,
   CarouselItem,
   Avatar,
+  Skeleton,
+  SkeletonItem,
+  //InfiniteScroll
 } from 'element-ui';
-//import CollapseTransition from 'element-ui/lib/transitions/collapse-transition';
-import '@femessage/element-ui/lib/theme-chalk/skeleton.css';
-import Skeleton from '@femessage/element-ui/lib/skeleton.js';
+import CollapseTransition from 'element-ui/lib/transitions/collapse-transition';
+import VueI18n from 'vue-i18n'
 
 //import VueHighlightJS from 'vue-highlightjs'
 //Vue.use(VueHighlightJS)
@@ -86,6 +88,9 @@ Vue.use(CarouselItem);
 Vue.use(Avatar);
 Vue.use(Loading.directive);
 Vue.use(Skeleton);
+Vue.use(SkeletonItem);
+//Vue.use(InfiniteScroll);
+Vue.use(VueI18n)
 
 Vue.prototype.$loading = Loading.service;
 Vue.prototype.$msgbox = MessageBox;
@@ -94,7 +99,7 @@ Vue.prototype.$confirm = MessageBox.confirm;
 Vue.prototype.$prompt = MessageBox.prompt;
 Vue.prototype.$notify = Notification;
 Vue.prototype.$message = Message;
-//Vue.component(CollapseTransition.name, CollapseTransition);
+Vue.component(CollapseTransition.name, CollapseTransition);
 //Vue.use(ElementUI);
 
 Vue.config.productionTip = false;
@@ -134,7 +139,8 @@ new Vue({
       title: "Twitter Monitor",
       tweets: [],
       height: 0,
-      //altitudeDifference: 0,
+      width: 0,
+      altitudeDifference: 0,
       settings: {
         data: {
           language: /zh/.test(window.navigator.language.toLowerCase()) ? window.navigator.language.toLowerCase() : 'en',

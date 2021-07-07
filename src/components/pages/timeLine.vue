@@ -5,19 +5,21 @@
         <main class="container" id="main" role="main">
             <div class="row">
                 <div :class="{'col-sm-12': true, 'col-md-4': tweetStatus.displayType !== 'search', 'col-md-3': tweetStatus.displayType === 'search'}">
-                  <div>
+                  <div :style="{'position': 'sticky', 'top': '1.5rem',}">
                       <template v-if="tweetStatus.userExist">
-                        <el-skeleton :loading="load.leftCard" :paragraph="{rows: 5}" active avatar>
+                        <el-skeleton :loading="load.leftCard" animated>
                           <div class="card">
                             <template>
-                              <div class="row no-gutters">
-                                <el-image
-                                    v-if="!$root.settings.data.displayPicture && info.banner !== 0 && tweetStatus.displayType !== 'search' && tweetStatus.displayType !== 'tag'"
-                                    :preview-src-list="[mediaPath+(mediaPath === basePath ? `/api/v2/media/userinfo/` : '')+`pbs.twimg.com/profile_banners/`+info.uid_str+`/`+info.banner+`.banner`]"
-                                    :src="mediaPath+(mediaPath === basePath ? `/api/v2/media/userinfo/` : '')+`pbs.twimg.com/profile_banners/`+info.uid_str+`/`+info.banner+`.banner`" alt="Banner" class="col-12 card-img-top"
-                                    fit="cover"
-                                    style="max-height: 20vh"></el-image>
-                              </div>
+                              <el-collapse-transition>
+                                <div v-show="($root.width < 768 || $root.height === 0)" class="row no-gutters">
+                                  <el-image
+                                        v-if="!$root.settings.data.displayPicture && info.banner !== 0 && tweetStatus.displayType !== 'search' && tweetStatus.displayType !== 'tag'"
+                                        :preview-src-list="[mediaPath+(mediaPath === basePath ? `/api/v2/media/userinfo/` : '')+`pbs.twimg.com/profile_banners/`+info.uid_str+`/`+info.banner+`.banner`]"
+                                        :src="mediaPath+(mediaPath === basePath ? `/api/v2/media/userinfo/` : '')+`pbs.twimg.com/profile_banners/`+info.uid_str+`/`+info.banner+`.banner`" alt="Banner" class="col-12 card-img-top"
+                                        fit="cover"
+                                        style="max-height: 20vh"></el-image>
+                                </div>
+                              </el-collapse-transition>
                               <div class="card-body">
                                 <h3 v-if="tweetStatus.displayType === 'search'">搜索</h3>
                                 <template v-else-if="tweetStatus.displayType === 'tag'">
@@ -44,10 +46,18 @@
                                           :preview-src-list="[mediaPath+(mediaPath === basePath ? `/api/v2/media/userinfo/` : '')+info.header]"
                                           :src="mediaPath+(mediaPath === basePath ? `/api/v2/media/userinfo/` : '')+info.header.replace(/([\w]+)\.([\w]+)$/gm, `$1_bigger.$2`)" class="rounded-circle img-fluid" lazy>
                                         <div slot="error" class="image-slot">
-                                          <el-skeleton :paragraph="false" :title="false" active avatar/>
+                                          <el-skeleton :paragraph="false" :title="false" animated >
+                                            <template slot="template">
+                                              <el-skeleton-item style="height: 50px; width: 50px" variant="circle" />
+                                            </template>
+                                          </el-skeleton>
                                         </div>
                                         <div slot="placeholder" class="image-slot">
-                                          <el-skeleton :paragraph="false" :title="false" active avatar/>
+                                          <el-skeleton :paragraph="false" :title="false" animated >
+                                            <template slot="template">
+                                              <el-skeleton-item style="height: 50px; width: 50px" variant="circle" />
+                                            </template>
+                                          </el-skeleton>
                                         </div>
                                       </el-image>
                                       <div class="my-4"></div>
@@ -64,8 +74,12 @@
                                       </p>
                                     </div>
                                   </div>
-                                  <p v-html="`<p class='card-text'>`+info.description+`</p>`"></p>
-                                  <translate :id="info.uid_str" :to="$root.settings.data.language" :type="1"/>
+                                  <el-collapse-transition>
+                                    <div v-show="($root.width < 768 || $root.height < 700)">
+                                      <p class="transition-box" v-html="`<p class='card-text'>`+info.description+`</p>`"></p>
+                                      <translate :id="info.uid_str" :to="$root.settings.data.language" :type="1" class="transition-box"/>
+                                    </div>
+                                  </el-collapse-transition>
                                 </div>
                               </div>
                             </template>
@@ -74,11 +88,11 @@
                         <template v-if="tweetStatus.displayType === 'timeline'">
                           <!--Load data-->
                           <div class="my-4"></div>
-                          <el-skeleton :loading="!chart.rows.length" :paragraph="{rows: 4}" :title="false" active
+                          <el-skeleton :loading="!chart.rows.length" :rows="4" anmiated
                                        v-if="chart.rows && chart.generate">
                             <tmv2-chart :chart-height="chart.chartHeight" :chart-rows="chart.rows"
-                                        :label-map="chart.labelMap" :legend-name="chart.legendName"
-                                        chart-type="VeLineChart"></tmv2-chart>
+                                        :grid="{left: '18%', right: '18%'}" :label-map="chart.labelMap" :legend-not-selected="chart.legendNotSelected"
+                                        :y-axis="chart.yAxis" :y-axis-index="chart.yAxisIndex" chart-type="line"></tmv2-chart>
                           </el-skeleton>
                           <el-table v-else
                                     :data="[{followers: info.followers, following: info.following, statuses_count: info.statuses_count}]"
@@ -101,7 +115,7 @@
                 <template v-else>
                     <search :display-type="tweetStatus.displayType" :name="name" :search="search"/>
                     <div class="my-4"></div>
-                    <nav :style="{'position': 'sticky', 'top': '5px', 'z-index': 1, 'background-color': '#ffffff', 'border-radius': '0.25rem'}" class="nav nav-pills nav-fill border">
+                    <nav :style="{'position': 'sticky', 'top': '1.5rem', 'z-index': 1, 'background-color': 'rgba(255, 255, 255, 0.9)', 'border-radius': '0.25rem'}" class="nav nav-pills nav-fill border">
                       <template v-if="tweetStatus.displayType === 'timeline' && !load.leftCard">
                         <li v-for="(value, s) in displayMode" :key="s" class="nav-item">
                           <div v-if="value[1] === tweetStatus.display" class="nav-link active" role="button"
@@ -122,8 +136,8 @@
                     </nav>
                   <hr class="my-4">
                   <!--user tweets-->
-                  <el-skeleton :loading="load.timeline" :paragraph="{rows: 5}" active>
-                    <div>
+                  <el-skeleton v-infinite-scroll="autoLoadButtom" :loading="load.timeline" :rows="5" animated style="overflow:auto">
+                    <div >
                       <template
                           v-if="tweetStatus.displayType === 'timeline' && (info.deleted || info.locked)">
                         <div class="card card-border border-info" id="alertMsg">
@@ -158,7 +172,7 @@
                                   type="button" v-if="tweetStatus.moreTweets && !load.bottom">
                             <span>加载更多</span>
                           </button>
-                          <el-skeleton :paragraph="{rows: 1}" active
+                          <el-skeleton :rows="1" animated
                                        v-else-if="tweetStatus.moreTweets && load.bottom"/>
                           <div v-else-if="!(tweetStatus.displayType === 'status')">
                             <h5 class="text-center">已经没有更多内容</h5>
@@ -174,7 +188,7 @@
                     </template>
                 </div>
               <div class="col-sm-12 col-md-2">
-                <div :style="{'position': 'sticky', 'top': '5px'}">
+                <div :style="{'position': 'sticky', 'top': '1.5rem'}">
                   <project-list/>
                   <div class="mb-1 col-10" style="padding-left: 0;">
                     <span class="text-decoration-none badge badge-pill badge-primary mx-1"
@@ -308,15 +322,18 @@
                 chart: {
                   generate: true,
                   latestTimestamp: 0,
-                  chartHeight: "250",
+                  chartHeight: "250px",
                   rows: [],
                   labelMap: {
-                    'timestamp': '日期',
-                    'followers': '关注者',
-                    'following': '正在关注',
-                    'statuses_count': '总推文数',
+                    timestamp: '日期',
+                    followers: '关注者',
+                    following: '正在关注',
+                    statuses_count: '总推文数',
                   },
                   legendName: {},
+                  yAxisIndex: [0, 0, 1],
+                  yAxis: [{type: 'value', scale: true, minInterval: 1}, {type: 'value', scale: true, minInterval: 1}],
+                  legendNotSelected: [1],
                 },
               //leftDomHeight: 0,
             };
@@ -439,6 +456,9 @@
             getLanguageList: function () {
                 return axios.get(this.basePath + (process.env.NODE_ENV !== "development" ? "/language_target.json" : "/proxy.php?filename=language_target"));
             },
+            autoLoadButtom: function () {
+              this.loading(1)
+            },
             loading: function (type = 0) {
                 if (this.tweetStatus.bottomTweetId && this.tweetStatus.topTweetId) {
                     //0 -> top, 1 -> bottom
@@ -482,15 +502,15 @@
                 }).then(response => {
                     this.info = response.data.data;
                     if (response.data.code === 200) {
-                      this.chart.legendName = {
-                        '关注者': '关注者 ' + this.info.followers,
-                        '正在关注': '正在关注 ' + this.info.following,
-                        '总推文数': '总推文数 ' + this.info.statuses_count
-                      };
+                      //this.chart.legendName = {
+                      //  '关注者': '关注者 ' + this.info.followers,
+                      //  '正在关注': '正在关注 ' + this.info.following,
+                      //  '总推文数': '总推文数 ' + this.info.statuses_count
+                      //};
                         this.createChart();
                     } else {
                       this.notice(response.data.message, "error");
-                      this.chart.legendName = {'关注者': '关注者', '正在关注': '正在关注', '总推文数': '总推文数'};
+                      //this.chart.legendName = {'关注者': '关注者', '正在关注': '正在关注', '总推文数': '总推文数'};
                       this.tweetStatus.userExist = false;
                     }
                   this.load.leftCard = false;
@@ -563,37 +583,47 @@
                         url += 'search/';
                         break;
                 }
+
+                //queryLink
+                let queryStringObject = new URLSearchParams()
                 //date
                 if (this.search.mode === 1 && this.search.keywords && (this.tweetStatus.displayType === 'search' || this.tweetStatus.displayType === 'timeline')) {
-                    url += '?name=' + this.name + '&date=' + Date.parse(this.search.keywords + ' GMT' + this.$root.userTimeZone) / 1000;
+                  queryStringObject.set('name', this.name)
+                  queryStringObject.set('date', (Date.parse(this.search.keywords + ' GMT' + this.$root.userTimeZone) / 1000))
                 } else if (this.tweetStatus.displayType === 'search' && this.search) {
                     if (this.search.mode === 2) {
-                      url += '?q=' + encodeURIComponent(this.search.advancedSearch.keywords.text) +
-                          '&text_or_mode=' + (this.search.advancedSearch.keywords.orMode ? '1' : '0') +
-                          '&text_not_mode=' + (this.search.advancedSearch.keywords.notMode ? '1' : '0') +
-                          '&user=' + this.search.advancedSearch.user.text +
-                          '&user_and_mode=' + (this.search.advancedSearch.user.andMode ? '1' : '0') +
-                          '&user_not_mode=' + (this.search.advancedSearch.user.notMode ? '1' : '0') +
-                          '&tweet_type=' + this.search.advancedSearch.tweetType.type.toString() +
-                          '&tweet_media=' + (this.search.advancedSearch.tweetType.media ? '1' : '0') +
-                          '&start=' + (this.search.advancedSearch.start === "" ? -1 : Date.parse(this.search.advancedSearch.start + ' GMT' + this.$root.userTimeZone) / 1000).toString() +
-                          '&end=' + (this.search.advancedSearch.end === "" ? -1 : Date.parse(this.search.advancedSearch.end + ' GMT' + this.$root.userTimeZone) / 1000).toString() +
-                          '&order=' + this.search.advancedSearch.order +
-                          '&advanced=1' + (this.$root.settings.adminStatus ? '&hidden=' + this.search.advancedSearch.hidden : '')
+                      queryStringObject.set('q', this.search.advancedSearch.keywords.text)
+                      queryStringObject.set('text_or_mode', (this.search.advancedSearch.keywords.orMode ? '1' : '0'))
+                      queryStringObject.set('text_not_mode', (this.search.advancedSearch.keywords.notMode ? '1' : '0'))
+                      queryStringObject.set('user', this.search.advancedSearch.user.text)
+                      queryStringObject.set('user_and_mode', (this.search.advancedSearch.user.andMode ? '1' : '0'))
+                      queryStringObject.set('user_not_mode', (this.search.advancedSearch.user.notMode ? '1' : '0'))
+                      queryStringObject.set('tweet_type', this.search.advancedSearch.tweetType.type.toString())
+                      queryStringObject.set('tweet_media', (this.search.advancedSearch.tweetType.media ? '1' : '0'))
+                      queryStringObject.set('start', (this.search.advancedSearch.start === "" ? -1 : Date.parse(this.search.advancedSearch.start + ' GMT' + this.$root.userTimeZone) / 1000).toString())
+                      queryStringObject.set('end', (this.search.advancedSearch.end === "" ? -1 : Date.parse(this.search.advancedSearch.end + ' GMT' + this.$root.userTimeZone) / 1000).toString())
+                      queryStringObject.set('order', this.search.advancedSearch.order)
+                      queryStringObject.set('advanced', 1)
+                      if (this.$root.settings.adminStatus) {
+                        queryStringObject.set('hidden', this.search.advancedSearch.hidden)
+                      }
                     } else if (this.search.keywords) {
-                      url += '?q=' + encodeURIComponent(this.search.keywords);
+                      queryStringObject.set('q', this.search.keywords)
                     }
-
                 }
                 //二层
                 else if (this.tweetStatus.displayType === 'timeline') {
-                    url += '?name=' + this.name + '&display=' + this.tweetStatus.display;
+                  queryStringObject.set('name', this.name)
+                  queryStringObject.set('display', this.tweetStatus.display)
                 }
                 //status
                 else if (this.tweetStatus.displayType === 'status') {
-                    url += '?name=' + this.name + '&is_status=1&tweet_id=' + this.tweetStatus.statusId;
+                  queryStringObject.set('name', this.name)
+                  queryStringObject.set('is_status', 1)
+                  queryStringObject.set('tweet_id', this.tweetStatus.statusId)
                 }
-                return url;
+                let queryString = queryStringObject.toString()
+                return url + (queryString ? ('?' + queryString) : '');
             },
             routeCase: function (to = this.$route) {
                 this.$root.home = false;

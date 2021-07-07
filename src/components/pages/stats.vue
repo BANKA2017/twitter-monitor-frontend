@@ -10,16 +10,13 @@
             <div class="row">
                 <div class="col-md-6">
                     <tmv2-chart :chart-rows="chartData('followers')" :colors="['#19d4ae']"
-                                :label-map="{'name': 'name', 'followers': '关注者'}" sort-key="followers" sort-limit="15"
-                                x-axis-rotate="45"/>
+                                :label-map="{name: 'name', followers: '关注者'}" sort-key="followers"/>
                     <div class="my-4"></div>
                   <tmv2-chart :chart-rows="chartData('following')" :colors="['#5ab1ef']"
-                              :label-map="{'name': 'name', 'following': '正在关注'}" sort-key="following" sort-limit="15"
-                              x-axis-rotate="45"/>
+                              :label-map="{name: 'name', following: '正在关注'}" sort-key="following"/>
                     <div class="my-4"></div>
                   <tmv2-chart :chart-rows="chartData('statuses_count')" :colors="['#fa6e86']"
-                              :label-map="{'name': 'name', 'statuses_count': '总推文数'}" sort-key="statuses_count"
-                              sort-limit="15" x-axis-rotate="45"/>
+                              :label-map="{name: 'name', statuses_count: '总推文数'}" sort-key="statuses_count"/>
                 </div>
               <div class="col-md-6">
                 <tmv2-table :table-data="tableData"/>

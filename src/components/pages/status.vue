@@ -10,7 +10,7 @@
         <div class="row">
           <div v-for="(row, order) in itemRows" :key="order" class="col-md-12">
             <tmv2-chart :chart-rows="row" :colors="color[order]" :label-map="labelMap[order]"
-                        chart-type="VeLineChart"></tmv2-chart>
+                        chart-type="line"></tmv2-chart>
           </div>
         </div>
         <div class="my-4"></div>

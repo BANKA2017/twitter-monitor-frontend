@@ -67,14 +67,14 @@
                   <candlestick-chart :data-array="trendsData.data[status.userOrder].followers.map(x => [x.start, x.end, x.lowest, x.highest])" :x-axis-data="['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六']" title="关注数K线图"/>
                 </div>
                 <div class="col-md-6 mb-4">
-                  <tmv2-chart :chart-rows="trendsData.data[status.userOrder].tweets.hour_count.map((count, time) => ({time: time, count: count}))" :label-map="{time: '发推时间', count: '数量'}" :y-axis="{type: 'value', name: '推文数量'}" chartHeight="260" class="col-md-12" title="发推时间段"/>
+                  <tmv2-chart :chart-rows="trendsData.data[status.userOrder].tweets.hour_count.map((count, time) => ({time: time, count: count}))" :label-map="{time: '发推时间', count: '数量'}" :y-axis="{type: 'value', name: '推文数量'}" chartHeight="260px" class="col-md-12" title="发推时间段"/>
                 </div>
               </div>
             </div>
           </template>
           <template v-else>
             <template v-if="status.value === 'overview'" >
-              <tmv2-chart :chart-rows="userData.data" :colors="userData.color" :label-map="userData.label" chart-type="VeLineChart" chartHeight="500" title="关注数变动"/>
+              <tmv2-chart :chart-rows="userData.data" :colors="userData.color" :label-map="userData.label" chart-type="line" chartHeight="500px" title="关注数变动"/>
               <el-table ref="accountData" v-loading="!trendsData.data.length" :data="tableData" :default-sort="{prop: 'followers_add', order: 'descending'}" style="width: 100%">
                 <el-table-column label="名称">
                   <template slot-scope="scope">
@@ -97,7 +97,7 @@
             </template>
             <template >
               <div class="row no-gutters my-4">
-                <tmv2-chart class="col-md-12" :chart-rows="timeCountRows" :label-map="{time: '发推时间', count: '数量'}" :y-axis="{type: 'value', name: '推文数量'}" chartHeight="260" title="发推时间段"/>
+                <tmv2-chart :chart-rows="timeCountRows" :label-map="{time: '发推时间', count: '数量'}" :y-axis="{type: 'value', name: '推文数量'}" chartHeight="260px" class="col-md-12" title="发推时间段"/>
               </div>
             </template>
           </template>
@@ -200,7 +200,7 @@ export default {
       return data
     },
     userData: function () {
-      let label = {}
+      let label = {day: "日期"}
       let color = []
       let data = [{day: "星期日"}, {day: "星期一"}, {day: "星期二"}, {day: "星期三"}, {day: "星期四"}, {day: "星期五"}, {day: "星期六"}]
       this.trendsData.data.map(x => {

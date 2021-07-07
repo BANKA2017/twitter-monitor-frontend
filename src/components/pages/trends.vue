@@ -8,7 +8,7 @@
     <div class="container">
       <div class="row">
         <div class="col-md-6 mb-2">
-          <el-skeleton :loading="hashTagsRank24.length === 0" :paragraph="{rows: 8}" active>
+          <el-skeleton :loading="hashTagsRank24.length === 0" :rows="7" animated>
             <ul class="list-group">
               <router-link v-for="(hashtagInfo, order) in hashTagsRank24" :key="order" :to="`/hashtag/` + hashtagInfo.text" class="col-md-12 text-muted text-decoration-none list-group-item list-group-item-action d-flex justify-content-between align-items-center">
                 #{{ hashtagInfo.text }}

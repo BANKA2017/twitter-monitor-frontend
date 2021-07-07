@@ -3,7 +3,7 @@
         <!--Load data-->
         <div class="my-4"></div>
         <template v-if="chart.chartData">
-            <el-skeleton v-if="uid === 0 || !chart.chartData.rows.length" :paragraph="{rows: 4}" :title="false" active/>
+            <el-skeleton v-if="uid === 0 || !chart.chartData.rows.length" animated/>
             <ve-line v-else :data="chart.chartData" :settings="chart.chartSettings" :extend="chart.chartOptions" :init-options="{renderer: 'svg'}" :height="chart.chartHeight"></ve-line>
         </template>
     </div>

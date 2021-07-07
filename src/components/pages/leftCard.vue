@@ -1,6 +1,6 @@
 <template>
     <div class="col-md-4" id="leftCard">
-        <el-skeleton avatar active :paragraph="{rows: 5}" v-if="load"/>
+        <el-skeleton v-if="load" animated/>
         <div class="card" v-else>
             <template>
                 <el-image v-if="info.banner !== 0 && displayType !== 'search' && displayType !== 'tag'" :preview-src-list="[mediaPath+(mediaPath === basePath ? `/api/v2/media/userinfo/` : '')+`pbs.twimg.com/profile_banners/`+info.uid+`/`+info.banner+`.banner`]" :src="mediaPath+(mediaPath === basePath ? `/api/v2/media/userinfo/` : '')+`pbs.twimg.com/profile_banners/`+info.uid+`/`+info.banner+`.banner`" alt="Banner" class="card-img-top" ></el-image>

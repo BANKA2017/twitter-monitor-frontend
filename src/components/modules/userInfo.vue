@@ -1,7 +1,7 @@
 <template>
     <div id="userInfo">
         <div class="my-4"/>
-        <el-skeleton avatar active :paragraph="{rows: 5}" v-if="load"/>
+        <el-skeleton v-if="load" animated/>
         <div v-else>
             <div class="card">
                 <template>

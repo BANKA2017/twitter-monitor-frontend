@@ -40,7 +40,7 @@
                     <el-button class="text-decoration-none mx-1" round size="mini">数据库备份</el-button>
                   </a>
                   <ul >
-                    <li>tmv1（2019-05-12 ~ 2020-02-28）</li>
+                    <li>tmv1（早于2019-05-12的约800条推文 ~ 2020-02-28）</li>
                     <li>tmv2（约2020年初 ~ 2021-05-12）</li>
                   </ul>
                   <hr class="my-4">
