@@ -47,7 +47,10 @@
                     return this.pollCount + ' 次投票 · 最终结果';
                 } else if (this.etaSeconds <= 0) {
                     return this.pollCount + ' 次投票 · 等待同步';
-                } else if (this.etaSeconds < 60) {
+                }
+
+                //TODO 能不能压缩一下?
+                else if (this.etaSeconds < 60) {
                     return this.pollCount + ' 次投票 · 剩下' + Math.ceil(this.etaSeconds) + '秒';
                 } else if (this.etaSeconds < 3600) {
                     return this.pollCount + ' 次投票 · 剩下' + Math.ceil(this.etaSeconds/60) + '分钟';

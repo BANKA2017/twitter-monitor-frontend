@@ -21,7 +21,7 @@
                                 </div>
                               </el-collapse-transition>
                               <div class="card-body">
-                                <h3 v-if="tweetStatus.displayType === 'search'">搜索</h3>
+                                <h3 v-if="tweetStatus.displayType === 'search'">{{ $t("public.search") }}</h3>
                                 <template v-else-if="tweetStatus.displayType === 'tag'">
                                   <h3>
                                     <router-link :to="tag.text">{{ (tag.type === 0 ? '#' : '1') + tag.text }}</router-link>
@@ -76,7 +76,7 @@
                                   </div>
                                   <el-collapse-transition>
                                     <div v-show="($root.width < 768 || $root.height < 700)">
-                                      <p class="transition-box" v-html="`<p class='card-text'>`+info.description+`</p>`"></p>
+                                      <html-text class="transition-box" :full_text_origin="info.description_origin" :entities="info.description_entities"></html-text>
                                       <translate :id="info.uid_str" :to="$root.settings.data.language" :type="1" class="transition-box"/>
                                     </div>
                                   </el-collapse-transition>
@@ -97,9 +97,9 @@
                           <el-table v-else
                                     :data="[{followers: info.followers, following: info.following, statuses_count: info.statuses_count}]"
                                     style="width: 100%">
-                            <el-table-column label="关注者" prop="followers"></el-table-column>
-                            <el-table-column label="正在关注" prop="following"></el-table-column>
-                            <el-table-column label="总推文数" prop="statuses_count"></el-table-column>
+                            <el-table-column :label="$t('public.followers')" prop="followers"></el-table-column>
+                            <el-table-column :label="$t('public.following')" prop="following"></el-table-column>
+                            <el-table-column :label="$t('public.statuses_count')" prop="statuses_count"></el-table-column>
                           </el-table>
                         </template>
                         <div class="my-4">
@@ -109,7 +109,7 @@
                 </div>
               <div :class="{'col-sm-12': true, 'col-md-6': tweetStatus.displayType !== 'search', 'col-md-7': tweetStatus.displayType === 'search'}">
                 <div v-if="!tweetStatus.userExist">
-                  <h5 class="mx-auto">@{{ name }} 不存在</h5>
+                  <h5 class="mx-auto">{{ $t("timeline.message.not_exist", [name]) }}</h5>
                   <div class="my-4"></div>
                 </div>
                 <template v-else>
@@ -130,26 +130,26 @@
                         <div
                             :class="{'nav-link': true, 'active': $root.settings.data.displayPicture, 'text-primary': !$root.settings.data.displayPicture}"
                             role="button"
-                            @click="$root.settings.data.displayPicture=!$root.settings.data.displayPicture">无图
+                            @click="$root.settings.data.displayPicture=!$root.settings.data.displayPicture">{{ $t("timeline.nav_bar.no_image") }}
                         </div>
                       </li>
                     </nav>
                   <hr class="my-4">
                   <!--user tweets-->
-                  <el-skeleton v-infinite-scroll="autoLoadButtom" :loading="load.timeline" :rows="5" animated style="overflow:auto">
+                  <el-skeleton :loading="load.timeline" :rows="5" animated>
                     <div >
                       <template
                           v-if="tweetStatus.displayType === 'timeline' && (info.deleted || info.locked)">
                         <div class="card card-border border-info" id="alertMsg">
                           <div class='card-body'>
-                            {{ '此账户已'+(info.deleted ? '删除' : '被保护')+'，我们将不再监控此账户' }}
+                            {{ info.deleted ? $t("timeline.message.no_longer_monitor_deleted") : $t("timeline.message.no_longer_monitor_protected") }}
                           </div>
                         </div>
                         <hr class="my-4">
                       </template>
                       <div class="text-center" v-if="tweetStatus.reload">
                         <el-button @click="() => {load.timeline=true;update()}" icon="el-icon-refresh-left"
-                                   round>重试
+                                   round>{{ $t("public.retry") }}
                         </el-button>
                       </div>
                       <div class="text-center" element-loading-background="rgba(255, 255, 0, 0)"
@@ -170,17 +170,17 @@
                         <template>
                           <button @click="loading(1)" class="btn btn-primary btn-lg btn-block"
                                   type="button" v-if="tweetStatus.moreTweets && !load.bottom">
-                            <span>加载更多</span>
+                            <span>{{ $t("timeline.message.load_more") }}</span>
                           </button>
                           <el-skeleton :rows="1" animated
                                        v-else-if="tweetStatus.moreTweets && load.bottom"/>
                           <div v-else-if="!(tweetStatus.displayType === 'status')">
-                            <h5 class="text-center">已经没有更多内容</h5>
+                            <h5 class="text-center">{{ $t("timeline.message.no_more") }}</h5>
                           </div>
                         </template>
                       </div>
                       <div v-else-if="!tweetStatus.reload">
-                        <h5 class="text-center">已经没有更多内容</h5>
+                        <h5 class="text-center">{{ $t("timeline.message.no_more") }}</h5>
                       </div>
                     </div>
                   </el-skeleton>
@@ -192,23 +192,23 @@
                   <project-list/>
                   <div class="mb-1 col-10" style="padding-left: 0;">
                     <span class="text-decoration-none badge badge-pill badge-primary mx-1"
-                          role="button" @click="$root.settings.panel = true">设置</span>
+                          role="button" @click="$root.settings.panel = true">{{ $t("timeline.side_tags.settings") }}</span>
                     <span is="router-link" class="text-decoration-none badge badge-pill badge-primary mx-1"
-                          to="/about">关于</span>
+                          to="/about">{{ $t("timeline.side_tags.about") }}</span>
                     <span is="router-link" class="text-decoration-none badge badge-pill badge-primary mx-1"
-                          to="/i/stats">统计</span>
+                          to="/i/stats">{{ $t("timeline.side_tags.stats") }}</span>
                     <span is="router-link" class="text-decoration-none badge badge-pill badge-primary mx-1"
-                          to="/i/status">状态</span>
+                          to="/i/status">{{ $t("timeline.side_tags.status") }}</span>
                     <span is="router-link" class="text-decoration-none badge badge-pill badge-primary mx-1"
-                          to="/api">API</span>
+                          to="/api">{{ $t("timeline.side_tags.api") }}</span>
                     <span is="router-link" class="text-decoration-none badge badge-pill badge-primary mx-1"
-                          to="/i/online">媒体下载</span>
+                          to="/i/online">{{ $t("timeline.side_tags.media_download_tool") }}</span>
                     <span is="a"
                           v-if="!hidden && (tweetStatus.displayType === 'timeline' || tweetStatus.displayType === 'status')" :href="basePath + `/api/v2/rss/` + info.name + `.xml`"
-                          class="text-decoration-none badge badge-pill badge-primary mx-1">RSS</span>
+                          class="text-decoration-none badge badge-pill badge-primary mx-1">{{ $t("timeline.side_tags.rss") }}</span>
                     <span is="router-link" v-if="$root.settings.adminStatus"
                           class="text-decoration-none badge badge-pill badge-dark mx-1"
-                          to="/i/admin">管理</span>
+                          to="/i/admin">{{ $t("timeline.side_tags.backstage") }}</span>
                   </div>
                   <hr class="my-4">
                   <link-list/>
@@ -242,12 +242,14 @@
     import LinkList from "../modules/linkList";
     import Tmv2Chart from "@/components/modules/tmv2Chart";
     import BoxArrowUpRight from "@/components/icons/boxArrowUpRight";
+    import HtmlText from "@/components/modules/htmlText";
 
     const CancelToken = axios.CancelToken;
     let cancel;
     export default {
         name: 'App',
         components: {
+          HtmlText,
           BoxArrowUpRight,
           Tmv2Chart,
           LinkList,
@@ -318,17 +320,17 @@
                 //lock: false,
                     //statusMode: false,
                 },
-                displayMode: [['全部', 'all', 0], ['原创', 'self', 0], ['转推', 'retweet', 0], ['媒体', 'media', 0]],
+                displayMode: [[this.$t("timeline.nav_bar.all"), 'all', 0], [this.$t("timeline.nav_bar.origin"), 'self', 0], [this.$t("timeline.nav_bar.retweet"), 'retweet', 0], [this.$t("timeline.nav_bar.media"), 'media', 0]],
                 chart: {
                   generate: true,
                   latestTimestamp: 0,
                   chartHeight: "250px",
                   rows: [],
                   labelMap: {
-                    timestamp: '日期',
-                    followers: '关注者',
-                    following: '正在关注',
-                    statuses_count: '总推文数',
+                    timestamp: this.$t("timeline.scripts.time"),
+                    followers: this.$t("public.followers"),
+                    following: this.$t("public.following"),
+                    statuses_count: this.$t("public.statuses_count"),
                   },
                   legendName: {},
                   yAxisIndex: [0, 0, 1],
@@ -437,7 +439,7 @@
               //处理网速
               if (Date.now() - startTime > 3000) {
                 this.$root.settings.data.displayPicture = true;
-                this.notice('当前网速较慢，已关闭图片显示', 'warning');
+                this.notice(this.$t("timeline.scripts.message.internet_speed_is_too_slow_now_image_display_has_been_turned_off"), 'warning');
               }
               //处理隐藏
               if (this.$root.userList.length !== 0 && !this.$root.userList.map(x => x.name).includes(this.info.name)) {
@@ -467,7 +469,7 @@
                     cancelToken: new CancelToken(c => cancel = c)
                   }).then(response => {
                         if (type === 0) {
-                          this.notice("已更新" + response.data.data.tweets.length + "条推文", "success");
+                          this.notice(this.$t("timeline.scripts.message.update_tweets", [response.data.data.tweets.length]), "success");
                           //this.getUserInfo();
                           if (response.data.data.top_tweet_id && response.data.data.top_tweet_id !== "0") {
                             this.tweetStatus.topTweetId = response.data.data.top_tweet_id;
@@ -492,7 +494,7 @@
                         this.load[(type === 0 ? 'top' : 'bottom')] = false;
                     });
                 } else {
-                    this.notice("缺少参数", "error");
+                    this.notice(this.$t("timeline.scripts.message.missing_parameter"), "error");
                 }
             },
             getUserInfo: function (name) {
@@ -537,7 +539,7 @@
               }
             }).catch(error => {
               if (this.tweetStatus.displayType === "timeline" && error.toString() !== 'Cancel') {
-                this.notice('图表加载失败 #' + error, 'error');
+                this.notice(this.$t("timeline.scripts.message.failed_to_generate_chart", [error]), 'error');
                 setTimeout(() => {
                   this.createChart(time, refresh)
                 }, 5000);

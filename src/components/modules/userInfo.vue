@@ -40,9 +40,9 @@
                 </template>
             </div>
             <div class="my-4"/>
-            <span id="followers_count"><b>关注者:</b> {{ info.followers_count }} </span><br>
-            <span id="friends_count"><b>正在关注:</b> {{ info.friends_count }}</span><br>
-            <span id="statuses_count"><b>总推文数:</b> {{ info.statuses_count }}</span><br>
+            <span id="followers_count"><b>{{ $t("public.followers") }}:</b> {{ info.followers_count }} </span><br>
+            <span id="friends_count"><b>{{ $t("public.following") }}:</b> {{ info.friends_count }}</span><br>
+            <span id="statuses_count"><b>{{ $t("public.statuses_count") }}:</b> {{ info.statuses_count }}</span><br>
         </div>
     </div>
 </template>
@@ -96,7 +96,7 @@
                         this.notice(this.info.errors[0].message + '#' + this.info.errors[0].code, "error");
                         this.$emit('update:user-exist', false);
                     } else {
-                        this.notice("成功加载 " + this.info.name + ' (@' + this.info.screen_name + ')', "success");
+                        this.notice( this.$t("userinfo.message.load_success", [this.info.name, this.info.screen_name]), "success");
                         this.$emit('update:protect', this.info.protected);
                         this.$emit('update:uid', this.info.id_str);
                     }

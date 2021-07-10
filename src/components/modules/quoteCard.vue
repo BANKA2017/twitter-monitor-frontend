@@ -12,7 +12,7 @@
                     </a>
                 </div>
                 <div class="my-4"></div>
-                <div v-html="`<p class='card-text'>`+quoteObject.full_text.replace(/<script>/, '')+`</p>`"></div>
+                <p class='card-text'>{{ quoteObject.full_text }}</p>
                 <div id="quotefoot">
                     <small class="text-muted">{{ timeGap(quoteObject.time, $root.now, language) }}</small>
                 </div>

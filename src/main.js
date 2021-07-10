@@ -124,9 +124,19 @@ router.afterEach(() => {
   Vue.prototype.scrollToTop()
 })
 
+export const i18n = new VueI18n({
+  locale: 'zh',
+  fallbackLocale: 'en',
+  messages: {
+    'zh': require('@/i18n/zh'),
+    'en': require('@/i18n/en'),
+  }
+})
+
 new Vue({
   render: h => h(App),
   router,
+  i18n,
   data() {
     return {
       now: new Date(),

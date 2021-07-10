@@ -5,14 +5,14 @@
             <span role="button" class="text-decoration-none"><small style="color:#1DA1F2" @click="translate(id, type)">{{ whatToTranslate }}</small></span>
         </div>
         <div v-else-if="status === 1" class="spinner-grow spinner-grow-sm" role="status" style="color:#1DA1F2">
-            <span class="sr-only">Loading...</span>
+            <span class="sr-only">{{ $t("public.loading") }}...</span>
         </div>
         <div v-else>
           <hr class="my-4">
-          <p class='card-text'><small class="text-muted">由 {{ translate_source }} 翻译</small></p>
+          <p class='card-text'><small class="text-muted">{{ $t("translate.message.translate_by", [translate_source]) }}</small></p>
           <p class='card-text' style="white-space: pre-line"> {{ text }}</p>
           <span class="text-decoration-none" role="button"><small style="color:#1DA1F2"
-                                                                  @click="status=0">取消翻译</small></span>
+                                                                  @click="status=0">{{ $t("translate.message.hide_translated") }}</small></span>
         </div>
     </div>
 </template>
@@ -35,7 +35,7 @@
           status: 0,
           text: "",
           translate_source: "",
-          whatToTranslate: this.type === 1 ? '翻译简介' : '翻译推文'
+          whatToTranslate: this.type === 1 ? this.$t("translate.message.translate_profile") : this.$t("translate.message.translate_tweet")
         }
       },
       watch: {
@@ -91,7 +91,7 @@
                         this.status = 0;
                     })
                 } else {
-                    this.notice("无输入", "error");
+                    this.notice(this.$t("public.error"), "error");
                 }
             },
         }

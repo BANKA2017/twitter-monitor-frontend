@@ -2,7 +2,12 @@
   <div id="htmlText">
     <p class='card-text'>
       <template v-for="(obj, order) in textObject">
-        <span v-html='obj.text.replace(/\n\n|\n/g,"<br>").replace(/<script>/, "")' :key="order + '_tweetsText'"></span>
+
+        <template v-for="(text, ord) in spreadText(obj.text)">
+          {{ text }}
+          <br :key="`ord_`+order+ord+text" v-if="text === `\n`">
+        </template>
+
         <router-link v-if="obj.type === 'hashtag' || obj.type === 'symbol'" :to="(obj.type === 'hashtag' ? `/hashtag/` : `/cashtag/`) + obj.tag_text" :key="order">#{{ obj.tag_text }}</router-link>
         <router-link
             v-else-if="obj.type === 'user_mention' && $root.userList.map(x => x.name).includes(obj.tag_text.substring(1))"
@@ -47,6 +52,30 @@ export default {
       }
       return tmpText;
     }
+  },
+  methods: {
+    spreadText: function (text) {
+      let textArray = []
+      let tmpText = ''
+      let latestWord = ''
+      text = [...text]
+      
+      text.map(x => {
+        if (latestWord === "\n" && x === "\n") {
+          return
+        }
+        if (x === "\n") {
+          textArray.push(tmpText)
+          textArray.push("\n")
+          tmpText = ''
+        } else {
+          tmpText += x
+        }
+        latestWord = x
+      })
+      textArray.push(tmpText)
+      return textArray
+    } 
   }
 }
 </script>
