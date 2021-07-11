@@ -2,7 +2,7 @@
   <div id="tmv2-chart">
     <el-skeleton :loading="!options.series.length" :rows="5" animated></el-skeleton>
     <span v-if="title !== '' && generateSeries.length" class="text-muted mb-1"><small>{{ title }}</small></span>
-    <v-chart v-if="options.series.length" :option="options" :style="{width: '100%', height: (typeof(chartHeight) === 'number' ? (chartHeight + 'px') : chartHeight)}" autoresize></v-chart>
+    <v-chart v-if="options.series.length" :option="options" :update-options="setOption" :style="{width: '100%', height: (typeof(chartHeight) === 'number' ? (chartHeight + 'px') : chartHeight)}" autoresize></v-chart>
   </div>
 </template>
 
@@ -101,6 +101,10 @@ export default {
         right: '15%',
         bottom: '15%',
       })
+    },
+    setOption: {
+      type: Object,
+      default: () => ({})
     }
   },
   data: () => ({

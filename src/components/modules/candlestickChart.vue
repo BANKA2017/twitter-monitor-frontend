@@ -68,8 +68,8 @@ export default {
           itemStyle: {
             color: '#ec0000',
             color0: '#00da3c',
-            borderColor: '#8a0000',
-            borderColor0: '#008f28'
+            borderColor: '#ec0000',//'#8a0000',
+            borderColor0: '#00da3c',//'#008f28'
           },
           markPoint: {
             label: {
