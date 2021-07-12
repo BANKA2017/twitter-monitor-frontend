@@ -46,6 +46,12 @@
             <div class="container-fluid">
               <div class="row">
                 <div class="col-md-6 mb-4">
+                  <candlestick-chart :set-option="{notMerge: true}" :data-array="trendsData.data[status.userOrder].followers.map(x => [x.start, x.end, x.lowest, x.highest])" :x-axis-data="['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六']" title="关注数K线图"/>
+                </div>
+                <div class="col-md-6 mb-4">
+                  <tmv2-chart :chart-rows="trendsData.data[status.userOrder].tweets.hour_count.map((count, time) => ({time: time, count: count}))" :label-map="{time: '发推时间', count: '数量'}" :y-axis="{type: 'value', name: '推文数量'}" chartHeight="260px" class="col-md-12" title="发推时间段"/>
+                </div>
+                <div class="col-md-6 mb-4">
                   <label class="text-muted" for="tag-list">Tag 统计</label>
                   <div id="tag-list" class="list-group">
                     <router-link v-for="(count, tagName) in trendsData.data[status.userOrder].tweets.tag" :key="tagName" :to="`/hashtag/` + tagName" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
@@ -62,12 +68,6 @@
                       <span class="badge badge-danger badge-pill">{{ count }}</span>
                     </div>
                   </div>
-                </div>
-                <div class="col-md-6 mb-4">
-                  <candlestick-chart :data-array="trendsData.data[status.userOrder].followers.map(x => [x.start, x.end, x.lowest, x.highest])" :x-axis-data="['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六']" title="关注数K线图"/>
-                </div>
-                <div class="col-md-6 mb-4">
-                  <tmv2-chart :chart-rows="trendsData.data[status.userOrder].tweets.hour_count.map((count, time) => ({time: time, count: count}))" :label-map="{time: '发推时间', count: '数量'}" :y-axis="{type: 'value', name: '推文数量'}" chartHeight="260px" class="col-md-12" title="发推时间段"/>
                 </div>
               </div>
             </div>

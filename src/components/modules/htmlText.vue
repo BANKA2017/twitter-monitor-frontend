@@ -1,8 +1,7 @@
 <template>
-  <div id="htmlText">
+  <div id="htmlText" ref="html_text">
     <p class='card-text'>
       <template v-for="(obj, order) in textObject">
-
         <template v-for="(text, ord) in spreadText(obj.text)">
           {{ text }}
           <br :key="`ord_`+order+ord+text" v-if="text === `\n`">
@@ -20,6 +19,7 @@
 </template>
 
 <script>
+import twemoji from 'twemoji'
 export default {
   name: 'htmlText',
   props: {
@@ -52,6 +52,14 @@ export default {
       }
       return tmpText;
     }
+  },
+  mounted: function () {
+    twemoji.parse(this.$refs.html_text, {
+      ext: '.svg',
+      folder: 'svg',
+      base: this.twemojiBasePath,
+      attributes: () => ({style: "height: 1em;",})
+    })
   },
   methods: {
     spreadText: function (text) {

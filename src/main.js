@@ -42,17 +42,22 @@ import VueI18n from 'vue-i18n'
 
 //import VueHighlightJS from 'vue-highlightjs'
 //Vue.use(VueHighlightJS)
+
+/* 先填写此项 */
 Vue.prototype.devmode = process.env.NODE_ENV === "development"
 Vue.prototype.basePath = !Vue.prototype.devmode ? "https://tm.bangdream.fun" : "https://tm.bangdream.fun/tmv2"
 Vue.prototype.mediaPath = "https://tmv2media.bangdream.fun/api/v2/media/"//如果不使用特殊图片代理则填写 this.basePath
+Vue.prototype.twemojiBasePath = "https://tm.bangdream.fun/static/twemoji/"//twemoji
 Vue.prototype.onlinePath = ""
+Vue.prototype.GA_ID = "UA-90617066-8";
+
 
 //gtag
 //骚玩法不要学, 老老实实写代码
 import VueGtag from "vue-gtag";
 
 Vue.prototype.ready = false;
-Vue.prototype.GA_ID = "UA-90617066-8";
+
 if (!Vue.prototype.devmode) {
   Vue.use(VueGtag, {
     config: {id: Vue.prototype.GA_ID},

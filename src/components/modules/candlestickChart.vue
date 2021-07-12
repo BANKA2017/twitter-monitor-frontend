@@ -1,14 +1,38 @@
 <template>
   <div id="candlestick-chart">
-    <span v-if="title !== '' && dataArray.length" class="text-muted mb-1"><small>{{ title }}</small></span>
-    <div ref="candlestick" :style="{width: '100%',height: height}"></div>
+    <el-skeleton :loading="!options.series[0].data.length" :rows="5" animated></el-skeleton>
+    <span v-if="title !== '' && options.series[0].data.length" class="text-muted mb-1"><small>{{ title }}</small></span>
+    <v-chart v-if="options.series[0].data.length" :option="options" :update-options="setOption" :style="{width: '100%', height: (typeof(height) === 'number' ? (height + 'px') : height)}" autoresize></v-chart>
   </div>
 </template>
 
 <script>
-let candle
+import { use } from "echarts/core";
+import { CanvasRenderer } from "echarts/renderers";
+import { CandlestickChart } from "echarts/charts";
+import {
+  TooltipComponent,
+  LegendComponent,
+  GridComponent,
+  MarkPointComponent,
+  MarkLineComponent,
+} from "echarts/components";
+import VChart from "vue-echarts";
+
+use([
+  CanvasRenderer,
+  TooltipComponent,
+  LegendComponent,
+  GridComponent,
+  CandlestickChart,
+  MarkPointComponent,
+  MarkLineComponent,
+]);
 export default {
   name: "candlestickChart",
+  components: {
+    VChart
+  },
   props: {
     height: {
       type: [String, Number],
@@ -26,6 +50,10 @@ export default {
       type: Array,
       default: () => ([])
     },
+    setOption: {
+      type: Object,
+      default: () => ({})
+    }
   },
   data: () => ({
     options: {
@@ -159,26 +187,15 @@ export default {
     },
   },
   mounted: function () {
-    this.initChart();
+    this.draw();
   },
   methods: {
-    initChart: function () {
-      let echarts = require('echarts')
-      //require('echarts/lib/component/toolbox')
-      //require('echarts/lib/component/grid')
-      //require('echarts/lib/component/markLine')
-      //require('echarts/lib/export/candlestick')
-      candle = echarts.init(this.$refs.candlestick)
-      this.draw()
-      window.addEventListener("resize",function(){
-        candle.resize();
-      });
-    },
     draw: function () {
       if (this.dataArray.length > 0) {
-        this.options.xAxis.data = this.xAxisData
-        this.options.series[0].data = this.dataArray
-        candle.setOption(this.options)
+        let tmpOptions = this.options
+        tmpOptions.xAxis.data = this.xAxisData
+        tmpOptions.series[0].data = this.dataArray
+        this.options = tmpOptions
       }
     }
   }
