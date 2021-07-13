@@ -245,7 +245,7 @@
     import HtmlText from "@/components/modules/htmlText";
 
     const CancelToken = axios.CancelToken;
-    let cancel;
+    let cancel = function () {};
     export default {
         name: 'App',
         components: {
@@ -456,7 +456,7 @@
               return axios.get(this.basePath + "/api/v2/data/accounts/");
             },
             getLanguageList: function () {
-                return axios.get("./language_target.json");
+                return axios.get("/language_target.json");
             },
             autoLoadButtom: function () {
               this.loading(1)

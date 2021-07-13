@@ -61,7 +61,7 @@
     import Navigation from "@/components/modules/Navigation";
     //import Tweet from "@/components/modules/tweet";
     const CancelToken = axios.CancelToken;
-    let cancel;
+    let cancel = function () {};
     export default {
       name: "online",
       components: {Navigation, ImageList},
