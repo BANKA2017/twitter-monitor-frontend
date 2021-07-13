@@ -456,7 +456,7 @@
               return axios.get(this.basePath + "/api/v2/data/accounts/");
             },
             getLanguageList: function () {
-                return axios.get(this.basePath + (process.env.NODE_ENV !== "development" ? "/language_target.json" : "/proxy.php?filename=language_target"));
+                return axios.get("./language_target.json");
             },
             autoLoadButtom: function () {
               this.loading(1)

@@ -102,7 +102,7 @@
               return axios.get(this.basePath + "/api/v2/data/accounts/");
             },
             getLanguageList: function () {
-                return axios.get(this.basePath + (process.env.NODE_ENV !== "development" ? "/language_target.json" : "/proxy.php?filename=language_target"));
+                return axios.get(this.basePath + ("/.language_target.json"));
             },
             routeCase: function (to = this.$route) {
               if (to.path === '/') {
