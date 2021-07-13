@@ -1,10 +1,10 @@
 {
+  "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }],
   "headers": [{
     "source": "/(.*)",
     "headers": [{
       "key": "Permissions-Policy",
       "value": "interest-cohort=()"
     }]
-  }],
-  "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }]
+  }]
 }
