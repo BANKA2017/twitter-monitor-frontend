@@ -112,7 +112,7 @@
             timeGap: function (timestamp, now, language) {
                 let gap = (now - (timestamp * 1000)) / 1000;
                 if (gap < 60) {
-                    return gap + '秒';
+                    return Math.floor(gap) + '秒';
                 } else if (gap < 3600) {
                     return Math.floor(gap / 60) + '分钟';
                 } else if (gap < 86400) {

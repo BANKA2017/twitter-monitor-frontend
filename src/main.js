@@ -158,7 +158,19 @@ new Vue({
       altitudeDifference: 0,
       settings: {
         data: {
-          language: /zh/.test(window.navigator.language.toLowerCase()) ? window.navigator.language.toLowerCase() : 'en',
+          language: ((lang) => {
+            if (/^(?:zh|zh-cn|zh-sg)$/.test(lang)) {
+              return 'zh-cn'
+            } else if (/^(?:zh-tw|zh-hk|zh-mo)$/.test(lang)) {
+              return 'zh-tw'
+            } else if (/^(?:ja|ja-jp)$/.test(lang)) {
+              return 'ja'
+            } else if (/^(?:ko|ko-kp)$/.test(lang)) {
+              return 'ko'
+            } else {
+              return 'en'
+            }
+          })(window.navigator.language.toLowerCase()),
           cookie_accept: false,
           displayPicture: false,
         },
