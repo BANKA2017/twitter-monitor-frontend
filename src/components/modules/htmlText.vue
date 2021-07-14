@@ -19,7 +19,7 @@
 </template>
 
 <script>
-import twemoji from 'twemoji'
+//import twemoji from 'twemoji'
 export default {
   name: 'htmlText',
   props: {
@@ -53,21 +53,24 @@ export default {
       return tmpText;
     }
   },
-  mounted: function () {
-    twemoji.parse(this.$refs.html_text, {
-      ext: '.svg',
-      folder: 'svg',
-      base: this.twemojiBasePath,
-      attributes: () => ({style: "height: 1em;",})
-    })
-  },
+  //watch: {
+  //  "textObject": {
+  //    deep: true,
+  //    handle: function () {
+  //      this.emojiParse()
+  //    }
+  //  }
+  //},
+  //mounted: function () {
+  //  this.emojiParse()
+  //},
   methods: {
     spreadText: function (text) {
       let textArray = []
       let tmpText = ''
       let latestWord = ''
       text = [...text]
-      
+
       text.map(x => {
         if (latestWord === "\n" && x === "\n") {
           return
@@ -83,7 +86,15 @@ export default {
       })
       textArray.push(tmpText)
       return textArray
-    } 
+    },
+    //emojiParse: function () {
+    //  twemoji.parse(this.$refs.html_text, {
+    //    ext: '.svg',
+    //    folder: 'svg',
+    //    base: this.twemojiBasePath,
+    //    attributes: () => ({style: "height: 1em;",})
+    //  })
+    //}
   }
 }
 </script>
