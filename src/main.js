@@ -45,12 +45,12 @@ import VueI18n from 'vue-i18n'
 
 /* 先填写此项 */
 Vue.prototype.devmode = process.env.NODE_ENV === "development"
-Vue.prototype.basePath = !Vue.prototype.devmode ? "https://tm.bangdream.fun" : "https://tm.bangdream.fun/tmv2"
-Vue.prototype.mediaPath = "https://tmv2media.bangdream.fun/api/v2/media/"//如果不使用特殊图片代理则填写 this.basePath
-Vue.prototype.twemojiBasePath = "https://tm.bangdream.fun/static/twemoji/"//twemoji
-Vue.prototype.onlinePath = ""
-Vue.prototype.GA_ID = "UA-90617066-8";
-
+Vue.prototype.basePath = !Vue.prototype.devmode ? process.env.VUE_APP_PRO_BASE_PATH : process.env.VUE_APP_DEV_BASE_PATH
+Vue.prototype.mediaPath = process.env.VUE_APP_MEDIA_PATH
+Vue.prototype.twemojiBasePath = process.env.VUE_APP_TW_EMOJI_PATH//twemoji
+Vue.prototype.onlinePath = process.env.VUE_APP_ONLINE_PATH
+Vue.prototype.GA_ID = process.env.VUE_APP_GA_ID
+Vue.prototype.adminModePassword = process.env.VUE_APP_ADMIN_MODE_PW
 
 //gtag
 //骚玩法不要学, 老老实实写代码
@@ -108,7 +108,6 @@ Vue.component(CollapseTransition.name, CollapseTransition);
 //Vue.use(ElementUI);
 
 Vue.config.productionTip = false;
-Vue.prototype.adminModePassword = 'UmZwKeqrJq4nxS6UXQ4xOgDRex430PCwPvy65CvdZHw=';
 
 //public functions
 Vue.prototype.scrollToTop = function (top = 0) {
