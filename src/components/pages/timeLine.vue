@@ -591,7 +591,7 @@
                 //date
                 if (this.search.mode === 1 && this.search.keywords && (this.tweetStatus.displayType === 'search' || this.tweetStatus.displayType === 'timeline')) {
                   queryStringObject.set('name', this.name)
-                  queryStringObject.set('date', (Date.parse(this.search.keywords + ' GMT' + this.$root.userTimeZone) / 1000))
+                  queryStringObject.set('date', (Date.parse(this.search.keywords + ' GMT' + this.$root.userTimeZone) / 1000).toString())
                 } else if (this.tweetStatus.displayType === 'search' && this.search) {
                     if (this.search.mode === 2) {
                       queryStringObject.set('q', this.search.advancedSearch.keywords.text)
@@ -604,10 +604,10 @@
                       queryStringObject.set('tweet_media', (this.search.advancedSearch.tweetType.media ? '1' : '0'))
                       queryStringObject.set('start', (this.search.advancedSearch.start === "" ? -1 : Date.parse(this.search.advancedSearch.start + ' GMT' + this.$root.userTimeZone) / 1000).toString())
                       queryStringObject.set('end', (this.search.advancedSearch.end === "" ? -1 : Date.parse(this.search.advancedSearch.end + ' GMT' + this.$root.userTimeZone) / 1000).toString())
-                      queryStringObject.set('order', this.search.advancedSearch.order)
+                      queryStringObject.set('order', this.search.advancedSearch.order ? '1' : '0')
                       queryStringObject.set('advanced', 1)
                       if (this.$root.settings.adminStatus) {
-                        queryStringObject.set('hidden', this.search.advancedSearch.hidden)
+                        queryStringObject.set('hidden', this.search.advancedSearch.hidden ? '1' : '0')
                       }
                     } else if (this.search.keywords) {
                       queryStringObject.set('q', this.search.keywords)
@@ -684,12 +684,12 @@
                         },
                         tweetType: {
                           type: (to.query.text_or_mode && to.query.text_or_mode > -1 && to.query.text_or_mode < 3) ? Number(to.query.tweet_type) : 0,//0-> all, 1-> origin, 2-> retweet
-                          media: to.query.text_or_mode !== '0',//media
+                          media: to.query.tweet_media !== '0',//media
                         },
                         start: to.query.start,
                         end: to.query.end,
-                        order: to.query.order,//正序0, 倒序1
-                        hidden: to.query.hidden ? '1' : '0',
+                        order: to.query.order === '1',//正序0, 倒序1
+                        hidden: to.query.hidden === '1',
                       }
                     }
                     this.load.leftCard = false;

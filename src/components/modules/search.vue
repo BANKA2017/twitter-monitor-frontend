@@ -81,8 +81,8 @@
             <button type="button" :class="{'btn': true, 'btn-outline-primary': true, 'btn-sm': true, 'active': search.advancedSearch.tweetType.type === 0}" @click="search.advancedSearch.tweetType.type = 0">全部</button>
             <button type="button" :class="{'btn': true, 'btn-outline-primary': true, 'btn-sm': true, 'active': search.advancedSearch.tweetType.type === 1}" @click="search.advancedSearch.tweetType.type = 1">原创</button>
             <button type="button" :class="{'btn': true, 'btn-outline-primary': true, 'btn-sm': true, 'active': search.advancedSearch.tweetType.type === 2}" @click="search.advancedSearch.tweetType.type = 2">转推</button>
-            <button :class="{'btn': true, 'btn-outline-primary': true, 'btn-sm': true, 'active': search.advancedSearch.tweetType.media !== 0}" type="button" @click="search.advancedSearch.tweetType.media = ((search.advancedSearch.tweetType.media === 0) ? 1 : 0)">仅媒体</button>
-            <button role="button" :class="{'btn': true, 'btn-outline-primary': true, 'btn-sm': true, 'active': search.advancedSearch.order === 1}" @click="search.advancedSearch.order = ((search.advancedSearch.order === 0) ? 1 : 0)" >反序</button>
+            <button :class="{'btn': true, 'btn-outline-primary': true, 'btn-sm': true, 'active': search.advancedSearch.tweetType.media}" type="button" @click="search.advancedSearch.tweetType.media = !search.advancedSearch.tweetType.media">仅媒体</button>
+            <button role="button" :class="{'btn': true, 'btn-outline-primary': true, 'btn-sm': true, 'active': search.advancedSearch.order}" @click="search.advancedSearch.order = !search.advancedSearch.order" >反序</button>
           </div>
           <!--<div class="btn-group btn-block" role="group">
             <button type="button" :class="{'btn': true, 'btn-outline-primary': true, 'btn-sm': true, 'active': search.advancedSearch.tweetType.media !== 0}" @click="search.advancedSearch.tweetType.media = ((search.advancedSearch.tweetType.media === 0) ? 1 : 0)">视频</button>
@@ -90,14 +90,14 @@
             <button type="button" :class="{'btn': true, 'btn-outline-primary': true, 'btn-sm': true, 'active': search.advancedSearch.tweetType.media !== 0}" @click="search.advancedSearch.tweetType.media = ((search.advancedSearch.tweetType.media === 0) ? 1 : 0)">含有链接</button>
             <button type="button" :class="{'btn': true, 'btn-outline-primary': true, 'btn-sm': true, 'active': search.advancedSearch.tweetType.media !== 0}" @click="search.advancedSearch.tweetType.media = ((search.advancedSearch.tweetType.media === 0) ? 1 : 0)">含有引用</button>
           </div>-->
-          <button role="button" :class="{'btn': true, 'btn-outline-dark': true, 'btn-sm': true, 'btn-block': true, 'active': search.advancedSearch.hidden}" @click="search.advancedSearch.hidden = ((search.advancedSearch.hidden === 0) ? 1 : 0)" v-if="$root.settings.adminStatus">显示隐藏</button>
+          <button role="button" :class="{'btn': true, 'btn-outline-dark': true, 'btn-sm': true, 'btn-block': true, 'active': search.advancedSearch.hidden}" @click="search.advancedSearch.hidden = !search.advancedSearch.hidden" v-if="$root.settings.adminStatus">显示隐藏</button>
           <div class="my-1"></div>
           <label class="text-muted">* <code>OR模式</code>为“或”，<code>AND模式</code>为“且”，<code>NOT模式</code>会根据前者出现“或非”或“且非”</label>
           <label class="text-muted">* 输入框使用空格分隔词语</label>
           <div class="my-1"></div>
           <router-link :to="{path: '/search/', query: queryObject}" type="button" class="btn btn-primary text-right">搜索</router-link>
         </template>
-        <div class="list-group my-2" v-if="search.keywords && (!search.mode === 2 || displayType !== 'search') && search.mode === 0 && search.keywords.slice(0, 1) !== '!'">
+        <div class="list-group my-2" v-if="search.keywords && search.mode === 0 && search.keywords.slice(0, 1) !== '!'">
             <template v-if="search.keywords && search.keywords.slice(0, 1) !== '!' && search.mode === 0">
               <!--user-->
                 <template v-if="search.keywords.slice(0, 1) === '@'">
@@ -144,22 +144,22 @@
                   advancedSearch: {
                     user: {
                       "text": "",
-                      "andMode": 0,
-                      "notMode": 0,
+                      "andMode": false,
+                      "notMode": false,
                     },
                     keywords: {
                       "text": "",
-                      "orMode": 0,
-                      "notMode": 0,
+                      "orMode": false,
+                      "notMode": false,
                     },
                     tweetType: {
                       type: 0,//0-> all, 1-> origin, 2-> retweet
-                      media: 0,//media
+                      media: false,//media
                     },
                     start: "",
                     end: "",
-                    order: 0,//正序0, 倒序1
-                    hidden: 0,
+                    order: false,//正序0, 倒序1
+                    hidden: false,
                   }
                 })
             },
@@ -217,7 +217,7 @@
                     tweet_media: this.search.advancedSearch.tweetType.media ? 1 : 0,
                     start: this.search.advancedSearch.start,
                     end: this.search.advancedSearch.end,
-                    order: this.search.advancedSearch.order,
+                    order: this.search.advancedSearch.order ? 1 : 0,
                     advanced: 1,
                   }
                   if (this.$root.settings.adminStatus) {

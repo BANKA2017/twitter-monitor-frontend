@@ -4,7 +4,7 @@
 
 module.exports = {
     assetsDir: 'static',
-    productionSourceMap: true,
+    productionSourceMap: false,
 
     publicPath: '/',
     //outputDir: 'dist/twitter/',
