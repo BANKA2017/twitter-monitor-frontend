@@ -84,8 +84,8 @@
                 </el-table-column>
                 <el-table-column label="关注者数" prop="followers" show-overflow-tooltip sortable></el-table-column>
                 <el-table-column label="关注变化量" prop="followers_add" show-overflow-tooltip sortable></el-table-column>
+                <el-table-column label="关注增长率" prop="followers_growth_rate" show-overflow-tooltip sortable></el-table-column>
                 <el-table-column label="发推数" prop="tweets_count" show-overflow-tooltip sortable></el-table-column>
-                <el-table-column label="原创占比" prop="origin_ratio" show-overflow-tooltip sortable></el-table-column>
                 <el-table-column label="组" prop="team">
                   <template slot-scope="scope">
                     <el-tag :color="color[scope.row.team]" class="text-white" disable-transitions>
@@ -176,6 +176,7 @@ export default {
             display_name: x.display_name,
             followers: x.followers[6].end,
             followers_add: x.followers[6].end - x.followers[0].start,
+            followers_growth_rate: Math.floor(((x.followers[6].end - x.followers[0].start) / x.followers[0].start) * 10000) / 100 + '%',
             tweets_count: x.tweets.count,
             origin_ratio: Math.floor(x.tweets.origin / x.tweets.count * 100) + '%',
             team: x.team
