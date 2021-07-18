@@ -12,7 +12,7 @@ module.exports = {
         error: "出错",
         translate: "翻译",
         loading: "加载中",
-        timestamp: "时间戳"
+        timestamp: "时间戳",
     },
     timeline: {
         message: {
@@ -61,6 +61,55 @@ module.exports = {
     userinfo: {
         message: {
             load_success: "成功加载 {0} (@{1})"
+        }
+    },
+    candlestick_chart: {
+        chart: {
+            candle_sticks: "日K"
+        }
+    },
+    project_list: {
+        button: {
+            select_project: "选择企划"
+        }
+    },
+    quote_card: {
+        card: {
+            this_tweet_is_not_available: "这条推文不可用。"
+        },
+        time: {
+            second: "秒 | 秒",
+            minute: "分钟 | 分钟",
+            hour: "小时 | 小时"//其他语言可能会出现单复数
+        }
+    },
+    search :{
+        normal_search: {
+            input_text_here: "请输入内容",
+            select: "请选择",
+            search_by_text: "文字搜索",
+            search_by_date: "日期搜索",
+            advanced_search: "高级搜索",
+        },
+        advanced_search: {
+            all_of_these_words: "所有这些词语",
+            example_text_include: "例如：什么 新鲜事 · 既包含“什么”，也包含“新鲜事”",
+            from_this_accounts: "来自这些用户",
+            example_from_this_accounts: "例如：@Twitter · 来自 @Twitter",
+            clean: "清空",
+            example_search_time: "例如：2021-01-01 -> 2021-01-02",
+            nav_bar: {
+                all: '全部',
+                origin: '原创',
+                retweet: '转推',
+                media_only: '仅媒体',
+                reverse: "反序",
+                hidden: "显示隐藏",
+            },
+            tips: {
+                line1: "* <code>OR模式</code>为“或”，<code>AND模式</code>为“且”，<code>NOT模式</code>会根据前者出现“或非”或“且非”",
+                line2: "* 输入框使用空格分隔词语",
+            }
         }
     }
 }

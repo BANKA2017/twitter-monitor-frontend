@@ -193,6 +193,8 @@ export default {
     draw: function () {
       if (this.dataArray.length > 0) {
         let tmpOptions = this.options
+        tmpOptions.legend.data[0] = this.$t("candlestick_chart.chart.candle_sticks")
+        tmpOptions.series[0].name = this.$t("candlestick_chart.chart.candle_sticks")
         tmpOptions.xAxis.data = this.xAxisData
         tmpOptions.series[0].data = this.dataArray
         this.options = tmpOptions

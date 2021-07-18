@@ -8,7 +8,7 @@
         </template>
         <!--未确定project-->
         <template v-else>
-            <router-link class="btn btn-outline-primary btn-block btn-sm" to="/">选择企划</router-link>
+            <router-link class="btn btn-outline-primary btn-block btn-sm" to="/">{{ $t("project_list.button.select_project") }}</router-link>
             <div class="my-4"></div>
         </template>
         <template v-if="projectS">

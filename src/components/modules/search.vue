@@ -3,11 +3,11 @@
         <div class="my-2" v-if="!(displayType === 'search' && search.mode === 2)" id="searchTweets">
             <el-input :clearable="search.mode === 0"
                       :type="(search.mode === 1 && displayType === 'timeline') ? 'date' : 'text'" class="input-with-select"
-                      placeholder="请输入内容" v-model="search.keywords" :max="$root.now.getFullYear() + '-' + ($root.now.getMonth() < 9 ? '0' : '') + ($root.now.getMonth() + 1) + '-' + ($root.now.getDate() < 10 ? '0' : '') + $root.now.getDate()">
-                <el-select v-model="search.mode" slot="prepend" placeholder="请选择" v-if="displayType === 'timeline'">
-                    <el-option label="文字搜索" :value="0"></el-option>
-                    <el-option label="日期搜索" :value="1"></el-option>
-                    <el-option label="高级搜索" :value="2"></el-option>
+                      :placeholder="$t('search.normal_search.input_text_here')" v-model="search.keywords" :max="$root.now.getFullYear() + '-' + ($root.now.getMonth() < 9 ? '0' : '') + ($root.now.getMonth() + 1) + '-' + ($root.now.getDate() < 10 ? '0' : '') + $root.now.getDate()">
+                <el-select v-model="search.mode" slot="prepend" :placeholder="$t('search.normal_search.select')" v-if="displayType === 'timeline'">
+                    <el-option :label="$t('search.normal_search.search_by_text')" :value="0"></el-option>
+                    <el-option :label="$t('search.normal_search.search_by_date')" :value="1"></el-option>
+                    <el-option :label="$t('search.normal_search.advanced_search')" :value="2"></el-option>
                 </el-select>
             </el-input>
             <template v-if="search.keywords === 'help' || search.keywords === '帮助'">
@@ -18,7 +18,7 @@
         <button v-if="displayType === 'search'"
                 :class="{'btn': true, 'btn-sm': true, 'btn-block': true, 'btn-outline-primary': true, 'mb-4': search.mode === 2, 'my-4': search.mode !== 2, 'active': search.mode === 2,}"
                 @click="search.mode = ((search.mode === 2) ? 0 : 2)"
-                role="button">高级搜索
+                role="button">{{ $t('search.normal_search.advanced_search') }}
         </button>
         <template v-if="displayType === 'search' && search.mode === 2">
           <!-- advancedSearch -->
@@ -40,9 +40,9 @@
                 </div>
               </div>
             </div>
-            <input type="text" class="form-control" aria-label="Text input with checkbox" placeholder="所有这些词语" v-model="search.advancedSearch.keywords.text">
+            <input type="text" class="form-control" aria-label="Text input with checkbox" :placeholder="$t('search.advanced_search.all_of_these_words')" v-model="search.advancedSearch.keywords.text">
           </div>
-          <label for="searchInclude" class="text-muted my-2 mb-4">例如：什么 新鲜事 · 既包含“什么”，也包含“新鲜事”</label>
+          <label for="searchInclude" class="text-muted my-2 mb-4">{{ $t('search.advanced_search.example_text_include') }}</label>
           <!--user include-->
           <div class="input-group mb-1" id="searchUserInclude">
             <div class="input-group-prepend">
@@ -61,9 +61,9 @@
                 </div>
               </div>
             </div>
-            <input type="text" class="form-control" aria-label="Text input with checkbox" placeholder="来自这些用户" v-model="search.advancedSearch.user.text">
+            <input type="text" class="form-control" aria-label="Text input with checkbox" :placeholder="$t('search.advanced_search.from_this_accounts')" v-model="search.advancedSearch.user.text">
           </div>
-          <label for="searchUserInclude" class="text-muted my-2 mb-4">例如：@Twitter · 来自 @Twitter</label>
+          <label for="searchUserInclude" class="text-muted my-2 mb-4">{{ $t('search.advanced_search.example_from_this_accounts') }}</label>
           <!-- time -->
           <div class="input-group" id="searchTime">
             <input class="form-control" placeholder="from" type="date" :max="$root.now.getFullYear() + '-' + ($root.now.getMonth() < 9 ? '0' : '') + ($root.now.getMonth() + 1) + '-' + ($root.now.getDate() < 10 ? '0' : '') + $root.now.getDate()" v-model="search.advancedSearch.start">
@@ -71,18 +71,18 @@
             <input class="form-control input-group-append" :min="search.advancedSearch.start" :max="$root.now.getFullYear() + '-' + ($root.now.getMonth() < 9 ? '0' : '') + ($root.now.getMonth() + 1) + '-' + ($root.now.getDate() < 10 ? '0' : '') + $root.now.getDate()" placeholder="to" type="date" v-model="search.advancedSearch.end">
             <div id="searchTimeDel" class="input-group-append">
               <button class="btn btn-outline-danger" type="button" @click="() => {search.advancedSearch.start = ''; search.advancedSearch.end = ''}">
-                清空
+                {{ $t('search.advanced_search.clean') }}
               </button>
             </div>
           </div>
-          <label for="searchTime" class="text-muted my-2">例如：2021-01-01 -> 2021-01-02</label>
+          <label for="searchTime" class="text-muted my-2">{{ $t('search.advanced_search.example_search_time') }}</label>
 
           <div class="btn-group btn-block" role="group">
-            <button type="button" :class="{'btn': true, 'btn-outline-primary': true, 'btn-sm': true, 'active': search.advancedSearch.tweetType.type === 0}" @click="search.advancedSearch.tweetType.type = 0">全部</button>
-            <button type="button" :class="{'btn': true, 'btn-outline-primary': true, 'btn-sm': true, 'active': search.advancedSearch.tweetType.type === 1}" @click="search.advancedSearch.tweetType.type = 1">原创</button>
-            <button type="button" :class="{'btn': true, 'btn-outline-primary': true, 'btn-sm': true, 'active': search.advancedSearch.tweetType.type === 2}" @click="search.advancedSearch.tweetType.type = 2">转推</button>
-            <button :class="{'btn': true, 'btn-outline-primary': true, 'btn-sm': true, 'active': search.advancedSearch.tweetType.media}" type="button" @click="search.advancedSearch.tweetType.media = !search.advancedSearch.tweetType.media">仅媒体</button>
-            <button role="button" :class="{'btn': true, 'btn-outline-primary': true, 'btn-sm': true, 'active': search.advancedSearch.order}" @click="search.advancedSearch.order = !search.advancedSearch.order" >反序</button>
+            <button type="button" :class="{'btn': true, 'btn-outline-primary': true, 'btn-sm': true, 'active': search.advancedSearch.tweetType.type === 0}" @click="search.advancedSearch.tweetType.type = 0">{{ $t('search.advanced_search.nav_bar.all') }}</button>
+            <button type="button" :class="{'btn': true, 'btn-outline-primary': true, 'btn-sm': true, 'active': search.advancedSearch.tweetType.type === 1}" @click="search.advancedSearch.tweetType.type = 1">{{ $t('search.advanced_search.nav_bar.origin') }}</button>
+            <button type="button" :class="{'btn': true, 'btn-outline-primary': true, 'btn-sm': true, 'active': search.advancedSearch.tweetType.type === 2}" @click="search.advancedSearch.tweetType.type = 2">{{ $t('search.advanced_search.nav_bar.retweet') }}</button>
+            <button :class="{'btn': true, 'btn-outline-primary': true, 'btn-sm': true, 'active': search.advancedSearch.tweetType.media}" type="button" @click="search.advancedSearch.tweetType.media = !search.advancedSearch.tweetType.media">{{ $t('search.advanced_search.nav_bar.media_only') }}</button>
+            <button role="button" :class="{'btn': true, 'btn-outline-primary': true, 'btn-sm': true, 'active': search.advancedSearch.order}" @click="search.advancedSearch.order = !search.advancedSearch.order" >{{ $t('search.advanced_search.nav_bar.reverse') }}</button>
           </div>
           <!--<div class="btn-group btn-block" role="group">
             <button type="button" :class="{'btn': true, 'btn-outline-primary': true, 'btn-sm': true, 'active': search.advancedSearch.tweetType.media !== 0}" @click="search.advancedSearch.tweetType.media = ((search.advancedSearch.tweetType.media === 0) ? 1 : 0)">视频</button>
@@ -90,7 +90,7 @@
             <button type="button" :class="{'btn': true, 'btn-outline-primary': true, 'btn-sm': true, 'active': search.advancedSearch.tweetType.media !== 0}" @click="search.advancedSearch.tweetType.media = ((search.advancedSearch.tweetType.media === 0) ? 1 : 0)">含有链接</button>
             <button type="button" :class="{'btn': true, 'btn-outline-primary': true, 'btn-sm': true, 'active': search.advancedSearch.tweetType.media !== 0}" @click="search.advancedSearch.tweetType.media = ((search.advancedSearch.tweetType.media === 0) ? 1 : 0)">含有引用</button>
           </div>-->
-          <button role="button" :class="{'btn': true, 'btn-outline-dark': true, 'btn-sm': true, 'btn-block': true, 'active': search.advancedSearch.hidden}" @click="search.advancedSearch.hidden = !search.advancedSearch.hidden" v-if="$root.settings.adminStatus">显示隐藏</button>
+          <button role="button" :class="{'btn': true, 'btn-outline-dark': true, 'btn-sm': true, 'btn-block': true, 'active': search.advancedSearch.hidden}" @click="search.advancedSearch.hidden = !search.advancedSearch.hidden" v-if="$root.settings.adminStatus">{{ $t('search.advanced_search.nav_bar.hidden') }}</button>
           <div class="my-1"></div>
           <label class="text-muted">* <code>OR模式</code>为“或”，<code>AND模式</code>为“且”，<code>NOT模式</code>会根据前者出现“或非”或“且非”</label>
           <label class="text-muted">* 输入框使用空格分隔词语</label>
