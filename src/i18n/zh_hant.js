@@ -53,7 +53,7 @@ module.exports = {
         scripts: {
             time: "時間",
             message: {
-                update_tweets: "已更新 {0} 條推文",//外语需要考虑单复数问题
+                update_tweets: "已加載 {0} 條推文 | 已加載 {0} 條推文",//外语需要考虑单复数问题
                 missing_parameter: "缺少參數",
                 failed_to_generate_chart: "圖表生成失敗 #{0}",
             }
@@ -148,7 +148,7 @@ module.exports = {
         vote: "{0} 次投票 | {0} 次投票",//单复数
         final_results: "最終結果",
         wait_for_sync: "等待同步",
-        eta: "剩下",
+        eta: "剩下 {0}",
     },
     notice: {
         nothing_here: "這裏什麽都沒有哦~",

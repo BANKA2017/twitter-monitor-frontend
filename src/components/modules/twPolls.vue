@@ -44,20 +44,20 @@
             },
             eta: function () {
                 if (this.etaSeconds <= 0 && this.polls[0].checked === 1) {
-                    return this.$tc("polls.vote", this.pollCount > 1 ? 1 : 0, [this.pollCount]) + ' · ' + this.$t("polls.final_results");
+                    return this.$tc("polls.vote", this.pollCount > 1 ? 2 : 1, [this.pollCount]) + ' · ' + this.$t("polls.final_results");
                 } else if (this.etaSeconds <= 0) {
-                    return this.$tc("polls.vote", this.pollCount > 1 ? 1 : 0, [this.pollCount]) + ' · ' + this.$t("polls.wait_for_sync");
+                    return this.$tc("polls.vote", this.pollCount > 1 ? 2 : 1, [this.pollCount]) + ' · ' + this.$t("polls.wait_for_sync");
                 }
 
                 //TODO 能不能压缩一下?
                 else if (this.etaSeconds < 60) {
-                    return this.$tc("polls.vote", this.pollCount > 1 ? 1 : 0, [this.pollCount]) + ' · ' + this.$t("polls.eta") + this.$tc("public.time.second", Math.ceil(this.etaSeconds) === 1 ? 0 : 1);
+                    return this.$tc("polls.vote", this.pollCount > 1 ? 2 : 1, [this.pollCount]) + ' · ' + this.$t("polls.eta", [this.$tc("public.time.second", Math.ceil(this.etaSeconds) === 1 ? 1 : 2)])
                 } else if (this.etaSeconds < 3600) {
-                    return this.$tc("polls.vote", this.pollCount > 1 ? 1 : 0, [this.pollCount]) + ' · ' + this.$t("polls.eta") + this.$tc("public.time.minute", Math.ceil(this.etaSeconds/60) === 1 ? 0 : 1)
+                    return this.$tc("polls.vote", this.pollCount > 1 ? 2 : 1, [this.pollCount]) + ' · ' + this.$t("polls.eta", [this.$tc("public.time.minute", Math.ceil(this.etaSeconds/60) === 1 ? 1 : 2)])
                 } else if (this.etaSeconds < 86400) {
-                    return this.$tc("polls.vote", this.pollCount > 1 ? 1 : 0, [this.pollCount]) + ' · ' + this.$t("polls.eta") + this.$tc("public.time.hour", Math.ceil(this.etaSeconds/3600) === 1 ? 0 : 1)
+                    return this.$tc("polls.vote", this.pollCount > 1 ? 2 : 1, [this.pollCount]) + ' · ' + this.$t("polls.eta", [this.$tc("public.time.hour", Math.ceil(this.etaSeconds/3600) === 1 ? 1 : 2)])
                 } else {
-                    return this.$tc("polls.vote", this.pollCount > 1 ? 1 : 0, [this.pollCount]) + ' · ' + this.$t("polls.eta") + this.$tc("public.time.day", Math.ceil(this.etaSeconds/86400) === 1 ? 0 : 1)
+                    return this.$tc("polls.vote", this.pollCount > 1 ? 2 : 1, [this.pollCount]) + ' · ' + this.$t("polls.eta", [this.$tc("public.time.day", Math.ceil(this.etaSeconds/86400) === 1 ? 1 : 2)])
                 }
             }
         }

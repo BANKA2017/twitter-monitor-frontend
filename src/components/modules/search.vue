@@ -93,9 +93,15 @@
           <button role="button" :class="{'btn': true, 'btn-outline-dark': true, 'btn-sm': true, 'btn-block': true, 'active': search.advancedSearch.hidden}" @click="search.advancedSearch.hidden = !search.advancedSearch.hidden" v-if="$root.settings.adminStatus">{{ $t('search.advanced_search.nav_bar.hidden') }}</button>
           <div class="my-1"></div>
           <i18n path="search.advanced_search.tips.line1.text" tag="label" class="text-muted">
-            <code place="or_mode">{{ $t('search.advanced_search.tips.line1.or_mode') }}</code>
-            <code place="and_mode">{{ $t('search.advanced_search.tips.line1.and_mode') }}</code>
-            <code place="not_mode">{{ $t('search.advanced_search.tips.line1.not_mode') }}</code>
+            <template v-slot:or_mode>
+              <code>{{ $t('search.advanced_search.tips.line1.or_mode') }}</code>
+            </template>
+            <template v-slot:and_mode>
+              <code>{{ $t('search.advanced_search.tips.line1.and_mode') }}</code>
+            </template>
+            <template v-slot:not_mode>
+              <code>{{ $t('search.advanced_search.tips.line1.not_mode') }}</code>
+            </template>
           </i18n>
           <label class="text-muted">{{ $t('search.advanced_search.tips.line2') }}</label>
           <div class="my-1"></div>

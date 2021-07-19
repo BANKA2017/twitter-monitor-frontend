@@ -469,7 +469,7 @@
                     cancelToken: new CancelToken(c => cancel = c)
                   }).then(response => {
                         if (type === 0) {
-                          this.notice(this.$t("timeline.scripts.message.update_tweets", [response.data.data.tweets.length]), "success");
+                          this.notice(this.$tc("timeline.scripts.message.update_tweets", (response.data.data.tweets.length > 1 ? 2 : 1), [response.data.data.tweets.length]), "success");
                           //this.getUserInfo();
                           if (response.data.data.top_tweet_id && response.data.data.top_tweet_id !== "0") {
                             this.tweetStatus.topTweetId = response.data.data.top_tweet_id;
