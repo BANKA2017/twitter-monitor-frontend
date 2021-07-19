@@ -38,6 +38,7 @@
         //updateHeightStatus
         //this.isUp();
         this.updateHeight()
+        this.konamiCode()
       },
       updateNow: function () {
         this.$root.now = new Date();
@@ -51,6 +52,19 @@
           this.updateHeight();
         }, 500);
       },
+      konamiCode: function () {
+        if ( window.addEventListener ) {
+          let tmpKeys = []
+          const konamiCodeArray = "ArrowUp,ArrowUp,ArrowDown,ArrowDown,ArrowLeft,ArrowRight,ArrowLeft,ArrowRight,KeyB,KeyA";
+          window.addEventListener("keydown", (e) => {
+            tmpKeys.push( e.code );
+            if ( tmpKeys.toString() === konamiCodeArray ) {
+              this.$root.settings.adminStatus = true
+              tmpKeys = [];
+            }
+          }, true);
+        }
+      }
     }
   }
 </script>

@@ -213,6 +213,12 @@ new Vue({
       handler: function () {
         this.$i18n.locale = this.settings.data.language
       }
+    },
+    "settings.data": {
+      deep: true,
+      handler: function () {
+        localStorage.setItem('tm_settings', JSON.stringify(this.settings.data))
+      }
     }
   }
 }).$mount('#app');

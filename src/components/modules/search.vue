@@ -133,8 +133,6 @@
 </template>
 
 <script>
-    import CryptoJS from "crypto-js";
-
     import SearchTips from "./searchTips";
     export default {
         name: "search",
@@ -188,14 +186,6 @@
             },
             deep: true
           },
-          "search.keywords": {
-            handler: function () {
-              if (!this.$root.settings.adminStatus && CryptoJS.enc.Base64.stringify(CryptoJS.SHA256(this.search.keywords)) === this.adminModePassword) {
-                this.$root.settings.adminStatus = true
-              }
-            },
-            deep: true
-          }
         },
         computed: {
             correctUserList: function () {

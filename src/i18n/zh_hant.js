@@ -118,7 +118,7 @@ module.exports = {
                     and_mode: "AND模式",
                     not_mode: "NOT模式"
                 },
-                line2: "* 輸入框使用空格鍵分割詞語",
+                line2: "* 輸入框使用空格分割詞語",
             },
             search: "搜索",
         },
