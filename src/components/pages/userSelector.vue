@@ -89,7 +89,7 @@
                   //处理网速
                   if (Date.now() - startTime > 3000) {
                     this.$root.settings.data.displayPicture = true;
-                    this.notice('当前网速较慢，已关闭图片显示', 'warning');
+                    this.notice(this.$t("notice.internet_speed_is_too_slow_now_image_display_has_been_turned_off"), 'warning');
                   }
                 })).catch(error => {
                     this.notice(error, 'error');

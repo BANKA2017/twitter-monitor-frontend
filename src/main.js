@@ -129,10 +129,11 @@ router.afterEach(() => {
 })
 
 export const i18n = new VueI18n({
-  locale: 'zh',
-  fallbackLocale: 'en',
+  locale: 'zh-cn',
+  fallbackLocale: 'zh-cn',
   messages: {
-    'zh': require('@/i18n/zh'),
+    'zh-cn': require('@/i18n/zh_hans'),
+    'zh-tw': require('@/i18n/zh_hant'),
     'en': require('@/i18n/en'),
   }
 })
@@ -158,15 +159,20 @@ new Vue({
       settings: {
         data: {
           language: ((lang) => {
-            if (/^(?:zh|zh-cn|zh-sg)$/.test(lang)) {
+            if (/^(?:zh|zh-cn|zh-sg|zh-hans)$/.test(lang)) {
+              i18n.locale = 'zh-cn'
               return 'zh-cn'
-            } else if (/^(?:zh-tw|zh-hk|zh-mo)$/.test(lang)) {
+            } else if (/^(?:zh-tw|zh-hk|zh-mo|zh-hant)$/.test(lang)) {
+              i18n.locale = 'zh-tw'
               return 'zh-tw'
             } else if (/^(?:ja|ja-jp)$/.test(lang)) {
+              i18n.locale = 'en'
               return 'ja'
             } else if (/^(?:ko|ko-kp)$/.test(lang)) {
+              i18n.locale = 'en'
               return 'ko'
             } else {
+              i18n.locale = 'en'
               return 'en'
             }
           })(window.navigator.language.toLowerCase()),
@@ -200,5 +206,13 @@ new Vue({
       });
       return users;
     },
+  },
+  watch: {
+    "settings.data.language": {
+      deep: true,
+      handler: function () {
+        this.$i18n.locale = this.settings.data.language
+      }
+    }
   }
 }).$mount('#app');

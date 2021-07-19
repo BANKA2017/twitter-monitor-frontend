@@ -13,6 +13,17 @@ module.exports = {
         translate: "翻译",
         loading: "加载中",
         timestamp: "时间戳",
+        origin: '原创',
+        retweet: '转推',
+        media: '媒体',
+        username: "用户名",
+        group: "组",
+        time: {
+            second: "秒 | 秒",
+            minute: "分钟 | 分钟",
+            hour: "小时 | 小时",//其他语言可能会出现单复数
+            day: "天 | 天",
+        }
     },
     timeline: {
         message: {
@@ -42,7 +53,6 @@ module.exports = {
         scripts: {
             time: "时间",
             message: {
-                internet_speed_is_too_slow_now_image_display_has_been_turned_off: "当前网速较慢，已关闭图片显示",
                 update_tweets: "已更新 {0} 条推文",//外语需要考虑单复数问题
                 missing_parameter: "缺少参数",
                 failed_to_generate_chart: "图表生成失败 #{0}",
@@ -76,11 +86,6 @@ module.exports = {
     quote_card: {
         card: {
             this_tweet_is_not_available: "这条推文不可用。"
-        },
-        time: {
-            second: "秒 | 秒",
-            minute: "分钟 | 分钟",
-            hour: "小时 | 小时"//其他语言可能会出现单复数
         }
     },
     search :{
@@ -107,9 +112,46 @@ module.exports = {
                 hidden: "显示隐藏",
             },
             tips: {
-                line1: "* <code>OR模式</code>为“或”，<code>AND模式</code>为“且”，<code>NOT模式</code>会根据前者出现“或非”或“且非”",
+                line1: {
+                    text: "* {or_mode}为“或”，{and_mode}为“且”，{not_mode}会根据前者出现“或非”或“且非”",
+                    or_mode: "OR模式",
+                    and_mode: "AND模式",
+                    not_mode: "NOT模式"
+                },
                 line2: "* 输入框使用空格分隔词语",
-            }
+            },
+            search: "搜索",
+        },
+        nav_list: {
+            search_by_tag: "查找标签 {0}",
+            search_by_tweet_id: "查找推文 {0}",
+            search_by_text: "搜索 {0}"
+        },
+        tips: {
+            tips: "帮助",
+            tips_sub_title: "快速搜索入门",
         }
+    },
+    tw_card: {
+        text: {
+            not_supported_type: "不支持的类型",
+        }
+    },
+    tweet: {
+        text: {
+            pinned_tweet: "置顶推文",
+            this_is_a_dispute_tweet: "这是一条有争议的推文",
+            learn_more: "了解更多"
+        }
+    },
+    polls: {
+        vote: "{0} 次投票 | {0} 次投票",//单复数
+        final_results: "最终结果",
+        wait_for_sync: "等待同步",
+        eta: "剩下",
+    },
+    notice: {
+        nothing_here: "这里什么都没有啦~",
+        internet_speed_is_too_slow_now_image_display_has_been_turned_off: "当前网速较慢，已关闭图片显示",
     }
 }

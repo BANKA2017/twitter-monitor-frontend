@@ -56,13 +56,20 @@
           deep: true
         },
       },
+      computed: {
+          toLanguage: function () {
+            if (this.to === 'zh_hans') { return 'zh-cn'}
+            if (this.to === 'zh_hant') { return 'zh-tw'}
+            return this.to
+          }
+      },
       methods: {
         translate: function (id = 0, type = 0) {
           //type为0即推文, 为1即用户信息
           this.status = 1;
           if (type === 0) {
             if (!this.$root.tweets[this.order].translate) {
-              axios.get(this.basePath + '/api/v2/data/translate/?tr_type=tweets&tweet_id=' + id + '&to=' + this.to).then(response => {
+              axios.get(this.basePath + '/api/v2/data/translate/?tr_type=tweets&tweet_id=' + id + '&to=' + this.toLanguage).then(response => {
                 if (this.order > -1) {
                   this.$root.tweets[this.order].translate = {
                     text: response.data.data.translate,
@@ -82,7 +89,7 @@
               this.status = 2
             }
                 } else if (type === 1) {
-                    axios.get(this.basePath + '/api/v2/data/translate/?tr_type=profile&uid=' + id + '&to=' + this.to).then(response => {
+                    axios.get(this.basePath + '/api/v2/data/translate/?tr_type=profile&uid=' + id + '&to=' + this.toLanguage).then(response => {
                         this.text = response.data.data.translate;
                         this.translate_source = response.data.data.translate_source;
                         this.status = 2;

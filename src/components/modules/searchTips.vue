@@ -2,8 +2,9 @@
     <div id="searchTips" v-once>
         <div class="card">
             <div class="card-body">
-                <h5 class="card-title">帮助</h5>
-                <h6 class="card-subtitle mb-2 text-muted">搜索快速入门</h6>
+                <h5 class="card-title">{{ $t("search.tips.tips") }}</h5>
+                <h6 class="card-subtitle mb-2 text-muted">{{ $t("search.tips.tips_sub_title") }}</h6>
+                <!--TODO TRANSLATE IT-->
                 <ul class="card-body">
                     <li>首字符为<code>@</code>可以快速定位到全站任何用户，支持twitter用户名及本地别名，支持正则表达式，此功能适用于全站</li>
                     <li>首字符为<code>#</code>可定位hashtag，此功能适用于全站</li>

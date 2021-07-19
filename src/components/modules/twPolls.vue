@@ -44,20 +44,20 @@
             },
             eta: function () {
                 if (this.etaSeconds <= 0 && this.polls[0].checked === 1) {
-                    return this.pollCount + ' 次投票 · 最终结果';
+                    return this.$tc("polls.vote", this.pollCount > 1 ? 1 : 0, [this.pollCount]) + ' · ' + this.$t("polls.final_results");
                 } else if (this.etaSeconds <= 0) {
-                    return this.pollCount + ' 次投票 · 等待同步';
+                    return this.$tc("polls.vote", this.pollCount > 1 ? 1 : 0, [this.pollCount]) + ' · ' + this.$t("polls.wait_for_sync");
                 }
 
                 //TODO 能不能压缩一下?
                 else if (this.etaSeconds < 60) {
-                    return this.pollCount + ' 次投票 · 剩下' + Math.ceil(this.etaSeconds) + '秒';
+                    return this.$tc("polls.vote", this.pollCount > 1 ? 1 : 0, [this.pollCount]) + ' · ' + this.$t("polls.eta") + this.$tc("public.time.second", Math.ceil(this.etaSeconds) === 1 ? 0 : 1);
                 } else if (this.etaSeconds < 3600) {
-                    return this.pollCount + ' 次投票 · 剩下' + Math.ceil(this.etaSeconds/60) + '分钟';
+                    return this.$tc("polls.vote", this.pollCount > 1 ? 1 : 0, [this.pollCount]) + ' · ' + this.$t("polls.eta") + this.$tc("public.time.minute", Math.ceil(this.etaSeconds/60) === 1 ? 0 : 1)
                 } else if (this.etaSeconds < 86400) {
-                    return this.pollCount + ' 次投票 · 剩下' + Math.ceil(this.etaSeconds/3600) + '小时';
+                    return this.$tc("polls.vote", this.pollCount > 1 ? 1 : 0, [this.pollCount]) + ' · ' + this.$t("polls.eta") + this.$tc("public.time.hour", Math.ceil(this.etaSeconds/3600) === 1 ? 0 : 1)
                 } else {
-                    return this.pollCount + ' 次投票 · 剩下' + Math.ceil(this.etaSeconds/86400) + '天';
+                    return this.$tc("polls.vote", this.pollCount > 1 ? 1 : 0, [this.pollCount]) + ' · ' + this.$t("polls.eta") + this.$tc("public.time.day", Math.ceil(this.etaSeconds/86400) === 1 ? 0 : 1)
                 }
             }
         }

@@ -92,10 +92,14 @@
           </div>-->
           <button role="button" :class="{'btn': true, 'btn-outline-dark': true, 'btn-sm': true, 'btn-block': true, 'active': search.advancedSearch.hidden}" @click="search.advancedSearch.hidden = !search.advancedSearch.hidden" v-if="$root.settings.adminStatus">{{ $t('search.advanced_search.nav_bar.hidden') }}</button>
           <div class="my-1"></div>
-          <label class="text-muted">* <code>OR模式</code>为“或”，<code>AND模式</code>为“且”，<code>NOT模式</code>会根据前者出现“或非”或“且非”</label>
-          <label class="text-muted">* 输入框使用空格分隔词语</label>
+          <i18n path="search.advanced_search.tips.line1.text" tag="label" class="text-muted">
+            <code place="or_mode">{{ $t('search.advanced_search.tips.line1.or_mode') }}</code>
+            <code place="and_mode">{{ $t('search.advanced_search.tips.line1.and_mode') }}</code>
+            <code place="not_mode">{{ $t('search.advanced_search.tips.line1.not_mode') }}</code>
+          </i18n>
+          <label class="text-muted">{{ $t('search.advanced_search.tips.line2') }}</label>
           <div class="my-1"></div>
-          <router-link :to="{path: '/search/', query: queryObject}" type="button" class="btn btn-primary text-right">搜索</router-link>
+          <router-link :to="{path: '/search/', query: queryObject}" type="button" class="btn btn-primary text-right">{{ $t('search.advanced_search.search') }}</router-link>
         </template>
         <div class="list-group my-2" v-if="search.keywords && search.mode === 0 && search.keywords.slice(0, 1) !== '!'">
             <template v-if="search.keywords && search.keywords.slice(0, 1) !== '!' && search.mode === 0">
@@ -109,19 +113,19 @@
                 </template>
               <!--hashtag && cashtag-->
                 <router-link :to="`/hashtag/`+search.keywords.slice(1)" class="list-group-item list-group-item-action"
-                             v-if="search.keywords.slice(0, 1) === '#'">查找标签 {{ search.keywords }}
+                             v-if="search.keywords.slice(0, 1) === '#'">{{ $t('search.nav_list.search_by_tag', [search.keywords]) }}
                 </router-link>
                 <router-link :to="`/cashtag/`+search.keywords.slice(1)" class="list-group-item list-group-item-action"
-                             v-if="search.keywords.slice(0, 1) === '$'">查找标签 {{ search.keywords }}
+                             v-if="search.keywords.slice(0, 1) === '$'">{{ $t('search.nav_list.search_by_tag', [search.keywords]) }}
                 </router-link>
               <!--status (user only)-->
                 <router-link :to="`/`+name+`/status/`+search.keywords" class="list-group-item list-group-item-action"
-                             v-if="name.length && search.keywords > 0 && search.keywords.match(/[0-9]+/g)[0] === search.keywords">
-                    查找推文 {{ search.keywords }}
+                             v-if="name.length && search.keywords > 0 && search.keywords.match(/\d+/g)[0] === search.keywords">
+                  {{ $t('search.nav_list.search_by_tweet_id', [search.keywords]) }}
                 </router-link>
                 <router-link :to="{path: '/search/', query: queryObject}"
                              class="list-group-item list-group-item-action" v-if="search.mode === 0"><span
-                        class="d-inline-block text-truncate" style="max-width: 250px;">搜索 {{ search.keywords }}</span>
+                        class="d-inline-block text-truncate" style="max-width: 250px;">{{ $t('search.nav_list.search_by_text', [search.keywords]) }}</span>
                 </router-link>
             </template>
         </div>

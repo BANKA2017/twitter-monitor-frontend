@@ -12,7 +12,7 @@
                     </a>
                 </div>
                 <div class="my-4"></div>
-                <p class='card-text'>{{ quoteObject.full_text }}</p>
+                <p class='card-text' ref="quote_text">{{ quoteObject.full_text }}</p>
                 <div id="quotefoot">
                     <small class="text-muted">{{ timeGap(quoteObject.time, $root.now, language) }}</small>
                 </div>
@@ -29,6 +29,7 @@
 <script>
     import BoxArrowUpRight from "../icons/boxArrowUpRight";
     import ImageList from "./imageList";
+    //import twemoji from "twemoji";
     export default {
         name: "quoteCard",
         components: {ImageList, BoxArrowUpRight},
@@ -38,19 +39,38 @@
             displayPicture: Boolean,
             language: String,
         },
+        //watch: {
+        //  "quoteObject.full_text": {
+        //    deep: true,
+        //    handler: function () {
+        //      this.emojiParse()
+        //    }
+        //  }
+        //},
+        //mounted: function () {
+        //  this.emojiParse()
+        //},
         methods: {
             timeGap: function (timestamp, now, language) {
                 let gap = (now - (timestamp * 1000))/1000;
                 if (gap < 60) {
-                    return Math.floor(gap) + this.$tc("quote_card.time.second", Math.floor(gap) === 1 ? 0 : 1);
+                    return Math.floor(gap) + this.$tc("public.time.second", Math.floor(gap) === 1 ? 0 : 1);
                 } else if (gap < 3600) {
-                    return Math.floor(gap/60) + this.$tc("quote_card.time.minute", Math.floor(gap/60) === 1 ? 0 : 1);
+                    return Math.floor(gap/60) + this.$tc("public.time.minute", Math.floor(gap/60) === 1 ? 0 : 1);
                 } else if (gap < 86400) {
-                    return Math.floor(gap/3600)  + this.$tc("quote_card.time.hour", Math.floor(gap/3600) === 1 ? 0 : 1);
+                    return Math.floor(gap/3600)  + this.$tc("public.time.hour", Math.floor(gap/3600) === 1 ? 0 : 1);
                 } else {
                     return (new Date(timestamp * 1000)).toLocaleString(language);
                 }
             },
+            //emojiParse: function () {
+            //  twemoji.parse(this.$refs.quote_text, {
+            //    ext: '.svg',
+            //    folder: 'svg',
+            //    base: this.twemojiBasePath,
+            //    attributes: () => ({style: "height: 1em;width: 1em;margin: 0.05em 0.1em;vertical-align: -0.1em;",})
+            //  })
+            //}
         }
     }
 </script>

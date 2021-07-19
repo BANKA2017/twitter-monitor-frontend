@@ -3,9 +3,9 @@
         <div :id="tweet.tweet_id_str"
              :class="{'card': true, 'card-border': true, 'border-danger': tweet.dispute === 1, 'border-primary': tweet.tweet_id_str === top}">
           <div class='card-body'>
-            <p v-if="displayType === 'timeline' && tweet.tweet_id_str === top"><small class="text-muted">置顶推文</small></p>
-            <p v-if="tweet.dispute === 1"><small class="text-muted"><i class="el-icon-warning"></i> 这是一条有争议的推文
-              <router-link to="/about">了解更多</router-link>
+            <p v-if="displayType === 'timeline' && tweet.tweet_id_str === top"><small class="text-muted">{{ $t("tweet.text.pinned_tweet") }}</small></p>
+            <p v-if="tweet.dispute === 1"><small class="text-muted"><i class="el-icon-warning"></i> {{ $t("tweet.text.this_is_a_dispute_tweet") }}
+              <router-link to="/about">{{ $t("tweet.text.learn_more") }}</router-link>
             </small></p>
             <div>
               <small class="text-muted" v-if="tweet.retweet_from">
@@ -109,18 +109,18 @@
           },
         },
         methods: {
-            timeGap: function (timestamp, now, language) {
-                let gap = (now - (timestamp * 1000)) / 1000;
-                if (gap < 60) {
-                    return Math.floor(gap) + '秒';
-                } else if (gap < 3600) {
-                    return Math.floor(gap / 60) + '分钟';
-                } else if (gap < 86400) {
-                    return Math.floor(gap / 3600) + '小时';
-                } else {
-                    return (new Date(timestamp * 1000)).toLocaleString(language);
-                }
-            },
+          timeGap: function (timestamp, now, language) {
+            let gap = (now - (timestamp * 1000))/1000;
+            if (gap < 60) {
+              return Math.floor(gap) + this.$tc("public.time.second", Math.floor(gap) === 1 ? 0 : 1);
+            } else if (gap < 3600) {
+              return Math.floor(gap/60) + this.$tc("public.time.minute", Math.floor(gap/60) === 1 ? 0 : 1);
+            } else if (gap < 86400) {
+              return Math.floor(gap/3600)  + this.$tc("public.time.hour", Math.floor(gap/3600) === 1 ? 0 : 1);
+            } else {
+              return (new Date(timestamp * 1000)).toLocaleString(language);
+            }
+          },
         }
     }
 </script>

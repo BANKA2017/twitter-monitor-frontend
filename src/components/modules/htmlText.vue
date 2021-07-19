@@ -53,17 +53,6 @@ export default {
       return tmpText;
     }
   },
-  //watch: {
-  //  "textObject": {
-  //    deep: true,
-  //    handle: function () {
-  //      this.emojiParse()
-  //    }
-  //  }
-  //},
-  //mounted: function () {
-  //  this.emojiParse()
-  //},
   methods: {
     spreadText: function (text) {
       let textArray = []

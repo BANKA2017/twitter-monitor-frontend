@@ -1,11 +1,11 @@
 <template>
     <div id="tmv2Table">
         <el-table v-loading="!tableData.length" ref="accountData" :data="tableData" style="width: 100%" :default-sort = "{prop: 'followers', order: 'descending'}">
-            <el-table-column label="用户名" prop="name"></el-table-column>
-            <el-table-column show-overflow-tooltip sortable prop="followers" label="关注者"></el-table-column>
-            <el-table-column show-overflow-tooltip sortable prop="following" label="正在关注"></el-table-column>
-            <el-table-column sortable prop="statuses_count" label="总推文数"></el-table-column>
-            <el-table-column prop="group" label="组" :filters="filters" :filter-method="filterTag" header-align="center" filter-placement="bottom-end">
+            <el-table-column :label="$t('public.username')" prop="name"></el-table-column>
+            <el-table-column show-overflow-tooltip sortable prop="followers" :label="$t('public.followers')"></el-table-column>
+            <el-table-column show-overflow-tooltip sortable prop="following" :label="$t('public.following')"></el-table-column>
+            <el-table-column sortable prop="statuses_count" :label="$t('public.statuses_count')"></el-table-column>
+            <el-table-column prop="group" :label="$t('public.group')" :filters="filters" :filter-method="filterTag" header-align="center" filter-placement="bottom-end">
                 <template slot-scope="scope">
                     <el-tag :type="colorForGroup[group]" disable-transitions v-for="group in scope.row.group" :key="group">{{ group }}</el-tag>
                 </template>

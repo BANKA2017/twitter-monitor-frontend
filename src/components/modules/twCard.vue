@@ -61,7 +61,7 @@
                   </el-carousel>
                 </div>
 
-                <span v-else class="text-center">不支持的卡片类型</span>
+                <span v-else class="text-center">{{ $t("tw_card.text.not_supported_type") }}</span>
                 <div class="card-body position-relative">
                   <a v-if="object.url.length && !object.app" :href="object.url" class="stretched-link text-decoration-none" target="_blank"></a>
                   <p class="card-title" style="color: black">{{ object.title }}</p>

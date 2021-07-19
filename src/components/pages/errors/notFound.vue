@@ -3,7 +3,7 @@
     <div class="jumbotron jumbotron-fluid" style="background-color: #1da1f2">
       <div class="container">
         <h1 class="display-1" style="color: white">404</h1>
-        <p class="lead" style="color: white">这里什么都没有啦~</p>
+        <p class="lead" style="color: white">{{ $t("notice.nothing_here") }}</p>
       </div>
     </div>
   </div>
