@@ -35,7 +35,7 @@
               </div>
             </div>
             <div class="col-md-12">
-              <tmv2-chart :chart-rows="timeCount" :label-map="{time: '发推时间', count: '数量'}" :y-axis="{type: 'value', name: '推文数量'}" chartHeight="220" title="发推时间段 (GMT+9)"/>
+              <tmv2-chart :chart-rows="timeCount" :label-map="{time: '发推时间', count: '数量'}" :y-axis="{type: 'value', name: '推文数量'}" chartHeight="220px" title="发推时间段 (GMT+9)"/>
             </div>
           </div>
         </div>
