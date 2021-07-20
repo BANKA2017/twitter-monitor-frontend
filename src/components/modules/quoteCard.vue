@@ -54,11 +54,11 @@
             timeGap: function (timestamp, now, language) {
                 let gap = (now - (timestamp * 1000))/1000;
                 if (gap < 60) {
-                    return Math.floor(gap) + this.$tc("public.time.second", Math.floor(gap) === 1 ? 1 : 2);
+                    return Math.floor(gap) + ' ' + this.$tc("public.time.second", Math.floor(gap) === 1 ? 1 : 2);
                 } else if (gap < 3600) {
-                    return Math.floor(gap/60) + this.$tc("public.time.minute", Math.floor(gap/60) === 1 ? 1 : 2);
+                    return Math.floor(gap/60) + ' ' + this.$tc("public.time.minute", Math.floor(gap/60) === 1 ? 1 : 2);
                 } else if (gap < 86400) {
-                    return Math.floor(gap/3600)  + this.$tc("public.time.hour", Math.floor(gap/3600) === 1 ? 1 : 2);
+                    return Math.floor(gap/3600) + ' ' + this.$tc("public.time.hour", Math.floor(gap/3600) === 1 ? 1 : 2);
                 } else {
                     return (new Date(timestamp * 1000)).toLocaleString(language);
                 }

@@ -167,6 +167,12 @@ module.exports = {
         tips: {
             tips: "Tips",
             tips_sub_title: "How to use search mode",
+            line1: "First char is {at} can search user, supported twitter username or label name, also supported regex",
+            line2: "First char is {hashtag} can search hashtag",
+            line3: "First char is {cashtag} can search cashtag, cashtag is used for Stock (Like: $TWTR) or Cryptocurrency (Like: $BTC)",
+            line4: "Input text can search it, add {at_username} can filter",
+            line5: "Input text or tweet id in user's page can search current user's tweet",
+            line6: "input {help_en} can show this tips",
         }
     },
     tw_card: {

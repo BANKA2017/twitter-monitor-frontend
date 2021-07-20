@@ -130,6 +130,12 @@ module.exports = {
         tips: {
             tips: "提示",
             tips_sub_title: "快速搜索入門",
+            line1: "首字符為{at}可以快速定位到全站任何用戶，支持twitter用戶名及本地別名，支持正則表達式，此功能適用於全站",
+            line2: "首字符為{hashtag}可定位hashtag，此功能適用於全站",
+            line3: "首字符為{cashtag}可定位cashtag，此功能適用於全站",
+            line4: "在輸入框輸入任何内容可進行對推文内容的搜索，此功能適用於全站，加限制符{at_username}可定位到對應用戶",
+            line5: "用戶頁中輸入數字或文字可檢索當前用戶推文",
+            line6: "任何時候在輸入框鍵入{help_en}可彈出此教程",
         }
     },
     tw_card: {

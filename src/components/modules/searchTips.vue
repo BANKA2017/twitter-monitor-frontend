@@ -6,12 +6,22 @@
                 <h6 class="card-subtitle mb-2 text-muted">{{ $t("search.tips.tips_sub_title") }}</h6>
                 <!--TODO TRANSLATE IT-->
                 <ul class="card-body">
-                    <li>首字符为<code>@</code>可以快速定位到全站任何用户，支持twitter用户名及本地别名，支持正则表达式，此功能适用于全站</li>
-                    <li>首字符为<code>#</code>可定位hashtag，此功能适用于全站</li>
-                    <li>首字符为<code>$</code>可定位cashtag，此功能适用于全站</li>
-                    <li>在输入框输入任何内容可进行对推文的搜索，此功能适用于全站，加限制符<code>@</code>可定位到特定用户</li>
-                    <li>用户页中输入数字或文字可搜索当前用户推文</li>
-                    <li>任何时候在输入框输入<code>help</code>、<code>帮助</code>可弹出此教程</li>
+                  <i18n path="search.tips.line1" tag="li">
+                    <template v-slot:at ><code>@</code></template>
+                  </i18n>
+                  <i18n path="search.tips.line2" tag="li">
+                    <template v-slot:hashtag ><code>#</code></template>
+                  </i18n>
+                  <i18n path="search.tips.line3" tag="li">
+                    <template v-slot:cashtag ><code>$</code></template>
+                  </i18n>
+                  <i18n path="search.tips.line4" tag="li">
+                    <template v-slot:at_username ><code>@username</code></template>
+                  </i18n>
+                  <i18n path="search.tips.line5" tag="li"></i18n>
+                  <i18n path="search.tips.line6" tag="li">
+                    <template v-slot:help_en ><code>help</code></template>
+                  </i18n>
                 </ul>
             </div>
         </div>
