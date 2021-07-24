@@ -53,9 +53,10 @@
                   <el-carousel v-if="mediaState" :style="`border-radius: 14px 14px 0 0`" class="card-img-top"
                                indicator-position="outside" trigger="click">
                     <el-carousel-item v-for="(mediaInfo, key) in media" :key="key" :name="key.toString()">
+                      <!--TODO fix lazy image in el-carousel-->
                       <el-image :preview-src-list="[mediaPath+(mediaPath === basePath ? `/api/v2/media/tweets/` : '')+mediaInfo.cover]"
                                 :src="mediaPath+(mediaPath === basePath ? `/api/v2/media/tweets/` : '')+mediaInfo.url" alt="cardImage"
-                                class="card-img-top" fit="cover" lazy
+                                class="card-img-top" fit="cover"
                                 @load="load = true"></el-image>
                     </el-carousel-item>
                   </el-carousel>
