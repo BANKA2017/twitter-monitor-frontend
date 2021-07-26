@@ -79,11 +79,10 @@
           <el-table ref="accountData" v-loading="!userData.length" :data="userData"
                     :default-sort="{prop: 'followers_add', order: 'descending'}" style="width: 100%">
             <el-table-column label="用户名" prop="display_name"></el-table-column>
-            <el-table-column label="关注者" prop="followers" show-overflow-tooltip sortable></el-table-column>
+            <el-table-column label="关注数" prop="followers" show-overflow-tooltip sortable></el-table-column>
             <el-table-column label="关注变化量" prop="followers_add" show-overflow-tooltip sortable></el-table-column>
             <el-table-column label="总推文数" prop="statuses_count" show-overflow-tooltip sortable></el-table-column>
             <el-table-column label="推文变化量" prop="statuses_count_add" show-overflow-tooltip sortable></el-table-column>
-            <el-table-column label="总推文数" prop="statuses_count" sortable></el-table-column>
             <el-table-column label="监听天数" prop="time" sortable></el-table-column>
             <el-table-column :filter-method="filterTag" :filters="projects" filter-placement="bottom-end"
                              header-align="center" label="组" prop="group">
