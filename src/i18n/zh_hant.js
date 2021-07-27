@@ -159,5 +159,10 @@ module.exports = {
     notice: {
         nothing_here: "這裏什麽都沒有哦~",
         internet_speed_is_too_slow_now_image_display_has_been_turned_off: "網路鏈接速率過低，已關閉圖像顯示",
-    }
+    },
+    settings: {
+        language: "語言",
+        api_path: "API目錄",
+        media_path: "媒體目錄",
+    },
 }

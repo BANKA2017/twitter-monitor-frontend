@@ -191,8 +191,8 @@
                 <div :style="{'position': 'sticky', 'top': '1.5rem'}">
                   <project-list/>
                   <div class="mb-1 col-10" style="padding-left: 0;">
-                    <span class="text-decoration-none badge badge-pill badge-primary mx-1"
-                          role="button" @click="$root.settings.panel = true">{{ $t("timeline.side_tags.settings") }}</span>
+                    <span is="router-link" class="text-decoration-none badge badge-pill badge-primary mx-1"
+                          to="/settings" >{{ $t("timeline.side_tags.settings") }}</span>
                     <span is="router-link" class="text-decoration-none badge badge-pill badge-primary mx-1"
                           to="/about">{{ $t("timeline.side_tags.about") }}</span>
                     <span is="router-link" class="text-decoration-none badge badge-pill badge-primary mx-1"
@@ -215,8 +215,8 @@
                 </div>
               </div>
             </div>
-          <!--setting-->
-          <settings/>
+          <!--settings become a single page-->
+          <!--<settings/>-->
           <transition name="el-fade-in">
             <div v-if="tweetStatus.displayType !== 'status'" class="el-backtop" style="right: 40px; bottom: 90px"
                  @click="()=>{scrollToTop();loading(0)}">
@@ -237,7 +237,6 @@
     import Search from "../modules/search";
     import Tweet from "../modules/tweet";
     import Navigation from "../modules/Navigation";
-    import Settings from "../modules/settings";
     import ProjectList from "../modules/projectList";
     import LinkList from "../modules/linkList";
     import Tmv2Chart from "@/components/modules/tmv2Chart";
@@ -254,7 +253,6 @@
           Tmv2Chart,
           LinkList,
           ProjectList,
-          Settings,
           Navigation,
           Tweet,
           Search,
@@ -453,7 +451,7 @@
         },
         methods: {
             getAccountList: function () {
-              return axios.get(this.basePath + "/api/v2/data/accounts/");
+              return axios.get(this.$root.basePath + "/api/v2/data/accounts/");
             },
             getLanguageList: function () {
                 return axios.get("/language_target.json");
@@ -499,7 +497,7 @@
             },
             getUserInfo: function (name) {
                 this.load.leftCard = true;
-                axios.get(this.basePath + '/api/v2/data/userinfo/?name=' + name, {
+                axios.get(this.$root.basePath + '/api/v2/data/userinfo/?name=' + name, {
                     cancelToken: new CancelToken(c => cancel = c)
                 }).then(response => {
                     this.info = response.data.data;
@@ -524,7 +522,7 @@
                 });
             },
           createChart: function (time = 0, refresh = false) {
-            axios.get(this.basePath + '/api/v2/data/chart/?uid=' + this.info.uid_str + (time > 0 ? '&end=' + time : '') + (refresh ? '&refresh=1' : '')).then(response => {
+            axios.get(this.$root.basePath + '/api/v2/data/chart/?uid=' + this.info.uid_str + (time > 0 ? '&end=' + time : '') + (refresh ? '&refresh=1' : '')).then(response => {
               if (response.data.data.length) {
                 this.chart.latestTimestamp = response.data.data.slice(-1)[0].timestamp
               }
@@ -570,7 +568,7 @@
             },
             mergeUrl: function () {
                 //拼装url
-                let url = this.basePath + '/api/v2/data/';
+                let url = this.$root.basePath + '/api/v2/data/';
                 //一层
                 switch (this.tweetStatus.displayType) {
                     case "timeline":

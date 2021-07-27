@@ -159,5 +159,10 @@ module.exports = {
     notice: {
         nothing_here: "这里什么都没有啦~",
         internet_speed_is_too_slow_now_image_display_has_been_turned_off: "当前网速较慢，已关闭图片显示",
-    }
+    },
+    settings: {
+        language: "语言",
+        api_path: "API目录",
+        media_path: "媒体目录",
+    },
 }

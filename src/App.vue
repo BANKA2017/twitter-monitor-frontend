@@ -28,11 +28,12 @@
     methods: {
       localrun: function () {
         //localStorage
-        if (!localStorage.getItem('tm_settings')) {
+        if (!localStorage.getItem('tm_settings') || Object.keys(JSON.parse(localStorage.getItem('tm_settings'))) !== Object.keys(this.$root.settings.data)) {
           localStorage.setItem('tm_settings', JSON.stringify(this.$root.settings.data));//提前写入
         } else {
           this.$root.settings.data = JSON.parse(localStorage.getItem('tm_settings'));
         }
+        this.$root.hasBeenSyncFromLocalStorage = true
         //time
         this.updateNow();
         //updateHeightStatus

@@ -69,7 +69,7 @@
           this.status = 1;
           if (type === 0) {
             if (!this.$root.tweets[this.order].translate) {
-              axios.get(this.basePath + '/api/v2/data/translate/?tr_type=tweets&tweet_id=' + id + '&to=' + this.toLanguage).then(response => {
+              axios.get(this.$root.basePath + '/api/v2/data/translate/?tr_type=tweets&tweet_id=' + id + '&to=' + this.toLanguage).then(response => {
                 if (this.order > -1) {
                   this.$root.tweets[this.order].translate = {
                     text: response.data.data.translate,
@@ -89,7 +89,7 @@
               this.status = 2
             }
                 } else if (type === 1) {
-                    axios.get(this.basePath + '/api/v2/data/translate/?tr_type=profile&uid=' + id + '&to=' + this.toLanguage).then(response => {
+                    axios.get(this.$root.basePath + '/api/v2/data/translate/?tr_type=profile&uid=' + id + '&to=' + this.toLanguage).then(response => {
                         this.text = response.data.data.translate;
                         this.translate_source = response.data.data.translate_source;
                         this.status = 2;

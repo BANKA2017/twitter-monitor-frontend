@@ -96,7 +96,7 @@
             },
             getUserInfo: function (name) {
                 this.$emit('update:load', true);
-                axios.get(this.basePath + '/api/v2/data/userinfo/?name=' + name).then(response => {
+                axios.get(this.$root.basePath + '/api/v2/data/userinfo/?name=' + name).then(response => {
                     this.info = response.data.data;
                     if (response.data.code === 200) {
                         this.baseData = {'关注者': '关注者 ' + this.info.followers, '正在关注': '正在关注 ' + this.info.following, '总推文数': '总推文数 ' + this.info.statuses_count};

@@ -87,7 +87,7 @@
                 return obj.map(media => {return {uid: this.uid, tweet_id: tweet_id, url: media.media_url_https.substr(8)}});
             },
             update: function () {
-                axios.get(this.basePath + "/api/v2/online/timeline/?uid=" + this.uid).then(response => {
+                axios.get(this.$root.basePath + "/api/v2/online/timeline/?uid=" + this.uid).then(response => {
                     this.tweets = response.data.data.globalObjects.tweets;
                     //this.moreTweets = response.data.data.hasmore;
                     //this.topTweetId = response.data.data.top_tweet_id;

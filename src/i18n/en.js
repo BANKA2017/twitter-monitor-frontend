@@ -196,5 +196,10 @@ module.exports = {
     notice: {
         nothing_here: "Nothing here",
         internet_speed_is_too_slow_now_image_display_has_been_turned_off: "The current network speed is slow, has turned off the picture display",
-    }
+    },
+    settings: {
+        language: "Language",
+        api_path: "API path",
+        media_path: "Media path",
+    },
 }

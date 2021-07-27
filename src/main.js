@@ -43,7 +43,7 @@ import VueI18n from 'vue-i18n'
 //import VueHighlightJS from 'vue-highlightjs'
 //Vue.use(VueHighlightJS)
 
-/* 先填写此项 */
+/* 先填写 .env */
 Vue.prototype.devmode = process.env.NODE_ENV === "development"
 Vue.prototype.basePath = !Vue.prototype.devmode ? process.env.VUE_APP_PRO_BASE_PATH : process.env.VUE_APP_DEV_BASE_PATH
 Vue.prototype.mediaPath = process.env.VUE_APP_MEDIA_PATH
@@ -147,7 +147,38 @@ new Vue({
       now: new Date(),
       projects: [],
       names: [],
-      languageList: [],
+      languageList: [
+        {
+          "code": "en",
+          "name": "\u82f1\u8bed",
+          "local_name": "English",
+          "status": "production"
+        },
+        {
+          "code": "ja",
+          "name": "\u65e5\u8bed",
+          "local_name": "\u65e5\u672c\u8a9e",
+          "status": "production"
+        },
+        {
+          "code": "ko",
+          "name": "\u97e9\u8bed",
+          "local_name": "\ud55c\uad6d\uc5b4",
+          "status": "production"
+        },
+        {
+          "code": "zh-tw",
+          "name": "\u7e41\u4f53\u4e2d\u6587",
+          "local_name": "\u7e41\u9ad4\u4e2d\u6587",
+          "status": "production"
+        },
+        {
+          "code": "zh-cn",
+          "name": "\u7b80\u4f53\u4e2d\u6587",
+          "local_name": "\u7b80\u4f53\u4e2d\u6587",
+          "status": "production"
+        }
+      ],
       links: [],
       home: true,
       project: "",
@@ -156,6 +187,7 @@ new Vue({
       height: 0,
       width: 0,
       altitudeDifference: 0,
+      hasBeenSyncFromLocalStorage: false,
       settings: {
         data: {
           language: ((lang) => {
@@ -178,6 +210,8 @@ new Vue({
           })(window.navigator.language.toLowerCase()),
           cookie_accept: false,
           displayPicture: false,
+          basePath: Vue.prototype.basePath,
+          mediaPath: Vue.prototype.mediaPath,
         },
         panel: false,
         adminStatus: false,
@@ -217,7 +251,9 @@ new Vue({
     "settings.data": {
       deep: true,
       handler: function () {
-        localStorage.setItem('tm_settings', JSON.stringify(this.settings.data))
+        if (this.hasBeenSyncFromLocalStorage) {
+          localStorage.setItem('tm_settings', JSON.stringify(this.settings.data))
+        }
       }
     }
   }

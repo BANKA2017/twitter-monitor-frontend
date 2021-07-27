@@ -82,7 +82,7 @@ export default {
   },
   methods: {
     getData: function () {
-      axios.get(this.basePath + '/api/v2/data/trends').then(response => {
+      axios.get(this.$root.basePath + '/api/v2/data/trends').then(response => {
         this.hashTagsRank24 = response.data.data.hashtag_list
         this.timeCountOrigin = response.data.data.tweet_time_list
         response.data.data.following.push(response.data.data.statuses)

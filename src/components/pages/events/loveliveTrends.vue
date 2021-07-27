@@ -218,7 +218,7 @@ export default {
   },
   methods: {
     getDateInfo: function () {
-      axios.get(this.basePath + (process.env.NODE_ENV === "development" ? '/proxy.php?filename=lovelive_date' : '/static/lovelive_trends/date.json?' + Math.random())).then(response => {
+      axios.get(this.$root.basePath + (process.env.NODE_ENV === "development" ? '/proxy.php?filename=lovelive_date' : '/static/lovelive_trends/date.json?' + Math.random())).then(response => {
         this.dateList = response.data
         if (this.dateList.length > 0) {
           this.getData()
@@ -228,7 +228,7 @@ export default {
       }).catch(e => this.notice(e, 'error'))
     },
     getData: function () {
-      axios.get(this.basePath + (process.env.NODE_ENV === "development" ? '/proxy.php?filename=lovelive_data&date=' + this.dateList[this.status.dateOrder] : '/static/lovelive_trends/' + this.dateList[this.status.dateOrder] + '.json')).then(response => {
+      axios.get(this.$root.basePath + (process.env.NODE_ENV === "development" ? '/proxy.php?filename=lovelive_data&date=' + this.dateList[this.status.dateOrder] : '/static/lovelive_trends/' + this.dateList[this.status.dateOrder] + '.json')).then(response => {
         //status.userOrder = -1
         this.trendsData = response.data
       }).catch(e => this.notice(e, 'error'))

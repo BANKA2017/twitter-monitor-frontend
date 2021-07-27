@@ -104,7 +104,7 @@ export default {
     },
   },
   mounted: function () {
-    axios.get(this.basePath + '/api/v2/data/status').then(response => {
+    axios.get(this.$root.basePath + '/api/v2/data/status').then(response => {
       this.rows = response.data.data;
       if (!this.rows.length) {
         this.notice("chart: " + response.data.message, "warning");

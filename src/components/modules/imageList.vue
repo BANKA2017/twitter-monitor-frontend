@@ -83,7 +83,7 @@ export default {
   }),
         computed: {
             previewList: function () {
-                return this.realList.map(s => this.mediaPath+(this.mediaPath === this.basePath ? `/api/v2/media/tweets/` : '') + s.url + ':' + this.size);
+                return this.realList.map(s => this.$root.mediaPath+(this.$root.mediaPath === this.$root.basePath ? `/api/v2/media/tweets/` : '') + s.url + ':' + this.size);
             },
             ratio: function () {
               return this.realList[0].origin_info_width / this.realList[0].origin_info_height;

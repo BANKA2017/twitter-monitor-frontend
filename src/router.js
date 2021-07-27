@@ -17,6 +17,7 @@ const Annual2019 = () => import(/* webpackChunkName: "events" */ "./components/p
 const Annual2020 = () => import(/* webpackChunkName: "events" */ "./components/pages/events/annual2020");
 const loveliveTrends = () => import(/* webpackChunkName: "events" */ "./components/pages/events/loveliveTrends");
 const notFound = () => import("./components/pages/errors/notFound");
+const Settings = () => import("./components/pages/settings")
 
 Vue.use(VueRouter);
 export default new VueRouter({
@@ -72,6 +73,10 @@ export default new VueRouter({
             children: [{
                 path: ':tweet_id'
             }]
+        },
+        {
+            path: '/settings',
+            component: Settings
         },
         {
             path: '/i/dev/config',

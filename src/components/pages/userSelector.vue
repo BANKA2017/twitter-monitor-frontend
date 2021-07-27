@@ -99,7 +99,7 @@
         },
         methods: {
             getAccountList: function () {
-              return axios.get(this.basePath + "/api/v2/data/accounts/");
+              return axios.get(this.$root.basePath + "/api/v2/data/accounts/");
             },
             getLanguageList: function () {
                 return axios.get("/language_target.json");

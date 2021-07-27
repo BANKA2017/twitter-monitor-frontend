@@ -90,7 +90,7 @@
             getUserInfo: function (name) {
                 this.load = true;
                 this.$emit('update:userExist', true);
-                axios.get(this.basePath + '/api/v2/online/userinfo/?name=' + name).then(response => {
+                axios.get(this.$root.basePath + '/api/v2/online/userinfo/?name=' + name).then(response => {
                     this.info = response.data.data;
                     if (this.info.errors) {
                         this.notice(this.info.errors[0].message + '#' + this.info.errors[0].code, "error");

@@ -143,7 +143,7 @@
           paddingBottom: function (link, height = 0, width = 0) {
             if (this.load) {
               let img = new Image();
-              img.src = this.mediaPath + (this.mediaPath === this.basePath ? `/api/v2/media/tweets/` : '') + link;
+              img.src = this.$root.mediaPath + (this.$root.mediaPath === this.$root.basePath ? `/api/v2/media/tweets/` : '') + link;
               return (img.height / img.width) * 100
             } else {
               let getScale = /name=([0-9]+)x([0-9]+)/.exec(link);

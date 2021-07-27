@@ -71,7 +71,7 @@
         mounted: function () {
             //document.title = 'Stats/统计';
             if (this.$root.names.length === 0) {
-              axios.get(this.basePath + "/api/v2/data/accounts/").then(response => {
+              axios.get(this.$root.basePath + "/api/v2/data/accounts/").then(response => {
                 this.$root.names = response.data.data.account_info;
                 this.$root.projects = response.data.data.projects;
                 this.$root.links = response.data.data.links;
@@ -80,7 +80,7 @@
                 this.notice(error, 'error');
               });
             }
-            axios.get(this.basePath + '/api/v2/data/stats').then(response => {
+            axios.get(this.$root.basePath + '/api/v2/data/stats').then(response => {
                 this.rawData = response.data.data;
             }).catch(error => {
                 this.$message({
