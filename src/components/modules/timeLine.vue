@@ -19,21 +19,21 @@
                     <!--media-->
                     <template v-if="tweet.entities.media">
                         <div class="my-4"></div>
-                        <image-list :list="tweetsMedia(tweet_id, tweet.entities.media)" :is_video="'0'" :basePath="basePath" :online="true" />
+                        <image-list :list="tweetsMedia(tweet_id, tweet.entities.media)" :is_video="'0'" :basePath="$root.settings.data.basePath" :online="true" />
                     </template>
                     <!--quote-->
                     <!--<template v-if="tweet.quote_status !== 0">
                         <div class="my-4"></div>
-                        <quote-card :quote-object="tweet.quoteObject" :quote-media="tweet.mediaObject.quoteMedia" :base-path="basePath" :display-picture="settings.data.displayPicture" :language="settings.data.language" />
+                        <quote-card :quote-object="tweet.quoteObject" :quote-media="tweet.mediaObject.quoteMedia" :base-path="$root.settings.data.basePath" :display-picture="settings.data.displayPicture" :language="settings.data.language" />
                     </template>-->
                     <!--polls-->
                     <!--<template v-if="tweet.poll === 1">
-                        <tw-polls :polls="tweet.pollObject" :tweet_id="tweet.tweet_id" :language="settings.data.language" :media="tweet.mediaObject.cardMedia" :basePath="basePath" />
+                        <tw-polls :polls="tweet.pollObject" :tweet_id="tweet.tweet_id" :language="settings.data.language" :media="tweet.mediaObject.cardMedia" :basePath="$root.settings.data.basePath" />
                     </template>-->
                     <!--card-->
                     <!--<template v-else-if="tweet.card !== ''">
                         <div class="my-4"></div>
-                        <tw-card :object="tweet.cardObject" :media="tweet.mediaObject.cardMedia" :mediaState="!settings.data.displayPicture" :basePath="basePath"></tw-card>
+                        <tw-card :object="tweet.cardObject" :media="tweet.mediaObject.cardMedia" :mediaState="!settings.data.displayPicture" :basePath="$root.settings.data.basePath"></tw-card>
                     </template>-->
                     <!--time && source-->
                     <div id="foot">
@@ -87,7 +87,7 @@
                 return obj.map(media => {return {uid: this.uid, tweet_id: tweet_id, url: media.media_url_https.substr(8)}});
             },
             update: function () {
-                axios.get(this.$root.basePath + "/api/v2/online/timeline/?uid=" + this.uid).then(response => {
+                axios.get(this.$root.settings.data.basePath + "/api/v2/online/timeline/?uid=" + this.uid).then(response => {
                     this.tweets = response.data.data.globalObjects.tweets;
                     //this.moreTweets = response.data.data.hasmore;
                     //this.topTweetId = response.data.data.top_tweet_id;

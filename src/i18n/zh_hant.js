@@ -163,6 +163,8 @@ module.exports = {
     settings: {
         language: "語言",
         api_path: "API目錄",
+        default_api_path: "默認API目錄: {0}",
         media_path: "媒體目錄",
+        default_media_path: "默認媒體目錄: {0}",
     },
 }

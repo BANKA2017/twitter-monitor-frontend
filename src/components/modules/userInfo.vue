@@ -5,7 +5,7 @@
         <div v-else>
             <div class="card">
                 <template>
-                    <el-image v-if="info.profile_banner_url" class="card-img-top" :src="basePath+`/api/v2/online/media/?url=` + info.profile_banner_url.substr(8)" alt="Banner" :preview-src-list="[basePath+`/api/v2/online/media/?url=` + info.profile_banner_url.substr(8)]" >
+                    <el-image v-if="info.profile_banner_url" class="card-img-top" :src="$root.settings.data.basePath+`/api/v2/online/media/?url=` + info.profile_banner_url.substr(8)" alt="Banner" :preview-src-list="[$root.settings.data.basePath+`/api/v2/online/media/?url=` + info.profile_banner_url.substr(8)]" >
                         <div slot="placeholder" class="image-slot" >
                             <div v-loading="true" style="height: 100px" />
                         </div>
@@ -14,7 +14,7 @@
                         <div class="container">
                             <div class="row">
                                 <div class="col-4" style="max-height: 100px; max-width: 100px">
-                                    <el-image class="rounded-circle img-fluid" :src="basePath+`/api/v2/online/media/?url=`+info.profile_image_url_https.substr(8, info.profile_image_url_https.length - 19) + info.profile_image_url_https.substr(-4)" v-if="info.profile_image_url_https" lazy :preview-src-list="[basePath+`/api/v2/online/media/?url=`+info.profile_image_url_https.substr(8, info.profile_image_url_https.length - 19) + info.profile_image_url_https.substr(-4)]">
+                                    <el-image class="rounded-circle img-fluid" :src="$root.settings.data.basePath+`/api/v2/online/media/?url=`+info.profile_image_url_https.substr(8, info.profile_image_url_https.length - 19) + info.profile_image_url_https.substr(-4)" v-if="info.profile_image_url_https" lazy :preview-src-list="[$root.settings.data.basePath+`/api/v2/online/media/?url=`+info.profile_image_url_https.substr(8, info.profile_image_url_https.length - 19) + info.profile_image_url_https.substr(-4)]">
                                         <div slot="error" class="image-slot">
                                             <i class="el-icon-user-solid"></i>
                                         </div>
@@ -90,7 +90,7 @@
             getUserInfo: function (name) {
                 this.load = true;
                 this.$emit('update:userExist', true);
-                axios.get(this.$root.basePath + '/api/v2/online/userinfo/?name=' + name).then(response => {
+                axios.get(this.$root.settings.data.basePath + '/api/v2/online/userinfo/?name=' + name).then(response => {
                     this.info = response.data.data;
                     if (this.info.errors) {
                         this.notice(this.info.errors[0].message + '#' + this.info.errors[0].code, "error");

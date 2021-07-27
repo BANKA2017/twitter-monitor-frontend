@@ -11,12 +11,14 @@
             </div>
             <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="api_path" v-model="$root.settings.data.basePath">
           </div>
+          <label class="mb-3 text-muted" for="api_path">{{ $t("settings.default_api_path", [basePath])}}</label>
           <div class="input-group mb-3">
             <div class="input-group-prepend">
               <span class="input-group-text" id="media_path">{{ $t("settings.media_path") }}</span>
             </div>
             <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="media_path" v-model="$root.settings.data.mediaPath">
           </div>
+          <label class="mb-3 text-muted" for="media_path">{{ $t("settings.default_media_path", [mediaPath])}}</label>
           <div class="input-group mb-3">
             <div class="input-group-prepend">
               <label class="input-group-text" for="selectLaguage">{{ $t("settings.language") }}</label>

@@ -149,7 +149,7 @@
             this.video = false
             this.rawData = {}
             //https://tm.bangdream.fun/tmv2/api/v2/online/info/?tweet_id=1355686950640836609
-            axios.get(this.$root.basePath + '/api/v2/online/media/?tweet_id=' + this.tweet_id, {
+            axios.get(this.$root.settings.data.basePath + '/api/v2/online/media/?tweet_id=' + this.tweet_id, {
               cancelToken: new CancelToken(c => cancel = c)
             }).then(response => {
               if (response.data.code === 200) {
@@ -177,7 +177,7 @@
               this.tweets = {}
               this.users = {}
               //https://tm.bangdream.fun/tmv2/api/v2/online/info/?tweet_id=1355686950640836609
-              axios.get(this.$root.basePath + '/api/v2/online/info/?tweet_id=' + this.tweet_id, {
+              axios.get(this.$root.settings.data.basePath + '/api/v2/online/info/?tweet_id=' + this.tweet_id, {
                 cancelToken: new CancelToken(c => cancel = c)
               }).then(response => {
                 if (response.data.code === 200) {

@@ -130,7 +130,7 @@ router.afterEach(() => {
 
 export const i18n = new VueI18n({
   locale: 'zh-cn',
-  fallbackLocale: 'zh-cn',
+  fallbackLocale: 'en',
   messages: {
     'zh-cn': require('@/i18n/zh_hans'),
     'zh-tw': require('@/i18n/zh_hant'),

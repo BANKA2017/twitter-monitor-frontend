@@ -5,7 +5,7 @@
                 <a v-if="object.url.length && object.type !== 'unified_card'" :href="(object.type === 'audiospace' ? 'https://twitter.com/i/spaces/' : '') + object.url" class="stretched-link text-decoration-none" target="_blank"></a>
                 <template v-if="object.type === 'summary' || object.type === 'audio' || object.type === 'app' || object.type === 'moment'">
                     <div class="row no-gutters">
-                        <el-image v-if="object.media === 1 && mediaState" :preview-src-list="[mediaPath+(mediaPath === basePath ? `/api/v2/media/tweets/` : '')+latestMedia.cover]" :src="mediaPath+(mediaPath === basePath ? `/api/v2/media/tweets/` : '')+latestMedia.cover" alt="cardImage" class="col-4 card-img border-right" fit="cover" lazy style="border-radius: 14px 0 0 14px"></el-image>
+                        <el-image v-if="object.media === 1 && mediaState" :preview-src-list="[$root.settings.data.mediaPath+($root.settings.data.mediaPath === $root.settings.data.basePath ? `/api/v2/media/tweets/` : '')+latestMedia.cover]" :src="$root.settings.data.mediaPath+($root.settings.data.mediaPath === $root.settings.data.basePath ? `/api/v2/media/tweets/` : '')+latestMedia.cover" alt="cardImage" class="col-4 card-img border-right" fit="cover" lazy style="border-radius: 14px 0 0 14px"></el-image>
                       <div class="col-8">
                         <div class="card-body">
                           <div class="row no-gutters">
@@ -32,8 +32,8 @@
                   <div v-if="mediaState"
                        :style="`width: 100%; padding-bottom: ` +  paddingBottom( latestMedia.cover, latestMedia.origin_info_height, latestMedia.origin_info_width) +  `%; height: 0; border-radius: 14px 14px 0 0`"
                        class="no-gutters">
-                    <el-image :preview-src-list="[mediaPath+(mediaPath === basePath ? `/api/v2/media/tweets/` : '')+latestMedia.cover]"
-                              :src="mediaPath+(mediaPath === basePath ? `/api/v2/media/tweets/` : '')+latestMedia.cover" alt="cardImage"
+                    <el-image :preview-src-list="[$root.settings.data.mediaPath+($root.settings.data.mediaPath === $root.settings.data.basePath ? `/api/v2/media/tweets/` : '')+latestMedia.cover]"
+                              :src="$root.settings.data.mediaPath+($root.settings.data.mediaPath === $root.settings.data.basePath ? `/api/v2/media/tweets/` : '')+latestMedia.cover" alt="cardImage"
                               class="card-img-top" fit="cover" lazy
                               style="width: 100%; position: absolute; border-radius: 14px 14px 0 0"
                               @load="load = true"></el-image>
@@ -43,8 +43,8 @@
                 <template v-else-if="object.secondly_type === 'video_website' || object.secondly_type === 'video_app'" >
                   <div v-if="mediaState" :class="`no-gutters embed-responsive embed-responsive-` + (ratio < 16 / 9 ? (ratio < 4 / 3 ? '1by1' : '4by3') :ratio > 16 / 9 ? '21by9' : '16by9')">
                     <video id="videoPlayer"
-                         :poster="mediaPath+(mediaPath === basePath ? `/api/v2/media/tweets/` : '') +media[0].cover"
-                         :src="mediaPath+(mediaPath === basePath ? `/api/v2/media/tweets/` : '') +media[0].url" :type="media[0].content_type" class="border" controls loop playsinline
+                         :poster="$root.settings.data.mediaPath+($root.settings.data.mediaPath === $root.settings.data.basePath ? `/api/v2/media/tweets/` : '') +media[0].cover"
+                         :src="$root.settings.data.mediaPath+($root.settings.data.mediaPath === $root.settings.data.basePath ? `/api/v2/media/tweets/` : '') +media[0].url" :type="media[0].content_type" class="border" controls loop playsinline
                          preload="none"
                          style="width: 100%; height: 100%; border-radius: 14px 14px 0 0; background-color: black"></video>
                   </div>
@@ -54,8 +54,8 @@
                                indicator-position="outside" trigger="click">
                     <el-carousel-item v-for="(mediaInfo, key) in media" :key="key" :name="key.toString()">
                       <!--TODO fix lazy image in el-carousel-->
-                      <el-image :preview-src-list="[mediaPath+(mediaPath === basePath ? `/api/v2/media/tweets/` : '')+mediaInfo.cover]"
-                                :src="mediaPath+(mediaPath === basePath ? `/api/v2/media/tweets/` : '')+mediaInfo.url" alt="cardImage"
+                      <el-image :preview-src-list="[$root.settings.data.mediaPath+($root.settings.data.mediaPath === $root.settings.data.basePath ? `/api/v2/media/tweets/` : '')+mediaInfo.cover]"
+                                :src="$root.settings.data.mediaPath+($root.settings.data.mediaPath === $root.settings.data.basePath ? `/api/v2/media/tweets/` : '')+mediaInfo.url" alt="cardImage"
                                 class="card-img-top" fit="cover"
                                 @load="load = true"></el-image>
                     </el-carousel-item>
@@ -80,8 +80,8 @@
                   <div
                       :style="`width: 100%; padding-bottom: ` +  paddingBottom( latestMedia.cover, latestMedia.origin_info_height, latestMedia.origin_info_width) +  `%; height: 0; border-radius: 14px 14px 0 0`"
                       class="no-gutters">
-                    <el-image :preview-src-list="[mediaPath+(mediaPath === basePath ? `/api/v2/media/tweets/` : '')+latestMedia.cover]"
-                              :src="mediaPath+(mediaPath === basePath ? `/api/v2/media/tweets/` : '')+latestMedia.cover" alt="cardImage"
+                    <el-image :preview-src-list="[$root.settings.data.mediaPath+($root.settings.data.mediaPath === $root.settings.data.basePath ? `/api/v2/media/tweets/` : '')+latestMedia.cover]"
+                              :src="$root.settings.data.mediaPath+($root.settings.data.mediaPath === $root.settings.data.basePath ? `/api/v2/media/tweets/` : '')+latestMedia.cover" alt="cardImage"
                               class="card-img-top" fit="cover" lazy
                                   style="width: 100%; position: absolute; border-radius: 14px 14px 0 0"
                                   @load="load = true"></el-image>
@@ -143,7 +143,7 @@
           paddingBottom: function (link, height = 0, width = 0) {
             if (this.load) {
               let img = new Image();
-              img.src = this.$root.mediaPath + (this.$root.mediaPath === this.$root.basePath ? `/api/v2/media/tweets/` : '') + link;
+              img.src = this.$root.settings.data.mediaPath + (this.$root.settings.data.mediaPath === this.$root.settings.data.basePath ? `/api/v2/media/tweets/` : '') + link;
               return (img.height / img.width) * 100
             } else {
               let getScale = /name=([0-9]+)x([0-9]+)/.exec(link);

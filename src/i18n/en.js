@@ -200,6 +200,8 @@ module.exports = {
     settings: {
         language: "Language",
         api_path: "API path",
+        default_api_path: "Default API path: {0}",
         media_path: "Media path",
+        default_media_path: "Default media path: {0}",
     },
 }

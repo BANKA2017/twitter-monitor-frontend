@@ -3,7 +3,7 @@
         <el-skeleton v-if="load" animated/>
         <div class="card" v-else>
             <template>
-                <el-image v-if="info.banner !== 0 && displayType !== 'search' && displayType !== 'tag'" :preview-src-list="[mediaPath+(mediaPath === basePath ? `/api/v2/media/userinfo/` : '')+`pbs.twimg.com/profile_banners/`+info.uid+`/`+info.banner+`.banner`]" :src="mediaPath+(mediaPath === basePath ? `/api/v2/media/userinfo/` : '')+`pbs.twimg.com/profile_banners/`+info.uid+`/`+info.banner+`.banner`" alt="Banner" class="card-img-top" ></el-image>
+                <el-image v-if="info.banner !== 0 && displayType !== 'search' && displayType !== 'tag'" :preview-src-list="[$root.settings.data.mediaPath+($root.settings.data.mediaPath === $root.settings.data.basePath ? `/api/v2/media/userinfo/` : '')+`pbs.twimg.com/profile_banners/`+info.uid+`/`+info.banner+`.banner`]" :src="$root.settings.data.mediaPath+($root.settings.data.mediaPath === $root.settings.data.basePath ? `/api/v2/media/userinfo/` : '')+`pbs.twimg.com/profile_banners/`+info.uid+`/`+info.banner+`.banner`" alt="Banner" class="card-img-top" ></el-image>
                 <div class="card-body">
                     <h3 v-if="displayType === 'search'">搜索</h3>
                     <router-link :to="`/hashtag/`+tag.text" v-else-if="displayType === 'tag' && tag.type === 0"><h3>#{{ tag.text }}</h3></router-link>
@@ -11,7 +11,7 @@
                     <div class="container" v-else>
                         <div class="row">
                             <div class="col-4" style="max-height: 100px; max-width: 100px">
-                                <el-image v-if="info.header" :preview-src-list="[mediaPath+(mediaPath === basePath ? `/api/v2/media/userinfo/` : '')+info.header]" :src="mediaPath + (mediaPath === basePath ? `/api/v2/media/userinfo/` : '')+info.header" class="rounded-circle img-fluid" lazy>
+                                <el-image v-if="info.header" :preview-src-list="[$root.settings.data.mediaPath+($root.settings.data.mediaPath === $root.settings.data.basePath ? `/api/v2/media/userinfo/` : '')+info.header]" :src="$root.settings.data.mediaPath + ($root.settings.data.mediaPath === $root.settings.data.basePath ? `/api/v2/media/userinfo/` : '')+info.header" class="rounded-circle img-fluid" lazy>
                                     <div slot="error" class="image-slot">
                                         <i class="el-icon-user-solid"></i>
                                     </div>
@@ -33,12 +33,12 @@
                             </div>
                         </div>
                         <div v-html="`<p class='card-text'>`+info.description+`</p>`"></div>
-                        <translate :basePath="basePath" :type="1" :id="info.uid" :to="settings.data.language" />
+                        <translate :basePath="$root.settings.data.basePath" :type="1" :id="info.uid" :to="settings.data.language" />
                     </div>
                 </div>
             </template>
         </div>
-        <data-chart v-if="displayType === 'timeline'" :base-path="basePath" :uid="uid" :base-data="baseData" />
+        <data-chart v-if="displayType === 'timeline'" :base-path="$root.settings.data.basePath" :uid="uid" :base-data="baseData" />
         <div class="my-4"></div>
     </div>
 </template>
@@ -96,7 +96,7 @@
             },
             getUserInfo: function (name) {
                 this.$emit('update:load', true);
-                axios.get(this.$root.basePath + '/api/v2/data/userinfo/?name=' + name).then(response => {
+                axios.get(this.$root.settings.data.basePath + '/api/v2/data/userinfo/?name=' + name).then(response => {
                     this.info = response.data.data;
                     if (response.data.code === 200) {
                         this.baseData = {'关注者': '关注者 ' + this.info.followers, '正在关注': '正在关注 ' + this.info.following, '总推文数': '总推文数 ' + this.info.statuses_count};

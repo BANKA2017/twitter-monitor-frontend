@@ -24,7 +24,7 @@
               <div :id="`list`+k" class="list-group">
                 <template v-for="(data, key) in v">
                   <router-link v-if="!(k === 2 && data.count < 0)" :key="key" :class="{'list-group-item': true, 'list-group-item-action': true, 'd-flex': false, 'justify-content-between': true, 'align-items-center': true}" :to="`/` + data.name + `/all`">
-                    <el-image :src="mediaPath+(mediaPath === basePath ? `/api/v2/media/userinfo/` : '') + (data.header.replace(/https:\/\/|http:\/\//, ''))" class="rounded-circle img-fluid" lazy style="max-height: 50px; max-width: 50px"></el-image>
+                    <el-image :src="$root.settings.data.mediaPath+($root.settings.data.mediaPath === $root.settings.data.basePath ? `/api/v2/media/userinfo/` : '') + (data.header.replace(/https:\/\/|http:\/\//, ''))" class="rounded-circle img-fluid" lazy style="max-height: 50px; max-width: 50px"></el-image>
                     <div class="d-flex w-100 justify-content-between">
                       <h5 class="mb-1 d-inline-block text-truncate">{{ data.display_name }}</h5>
                       <small><span class="badge badge-primary badge-pill">{{ data.count }}</span></small>
@@ -82,7 +82,7 @@ export default {
   },
   methods: {
     getData: function () {
-      axios.get(this.$root.basePath + '/api/v2/data/trends').then(response => {
+      axios.get(this.$root.settings.data.basePath + '/api/v2/data/trends').then(response => {
         this.hashTagsRank24 = response.data.data.hashtag_list
         this.timeCountOrigin = response.data.data.tweet_time_list
         response.data.data.following.push(response.data.data.statuses)

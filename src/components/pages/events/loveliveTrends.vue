@@ -13,7 +13,7 @@
             {{ name }}
           </el-tag>
           <button :class="{'btn': true, 'btn-block': true, 'btn-outline-primary': true, 'active': status.displayTips}" @click="status.displayTips = !status.displayTips">说明 <i class="el-icon-info"></i></button>
-          <a class="btn btn-block btn-outline-primary" :href="basePath + '/static/lovelive_trends/' + dateList[status.dateOrder] + '.json'" target="_blank">下载数据 <i class="el-icon-download"></i></a>
+          <a class="btn btn-block btn-outline-primary" :href="$root.settings.data.basePath + '/static/lovelive_trends/' + dateList[status.dateOrder] + '.json'" target="_blank">下载数据 <i class="el-icon-download"></i></a>
         </div>
         <div class="col-lg-8 mb-4">
           <div class="card" v-show="status.displayTips">
@@ -218,7 +218,7 @@ export default {
   },
   methods: {
     getDateInfo: function () {
-      axios.get(this.$root.basePath + (process.env.NODE_ENV === "development" ? '/proxy.php?filename=lovelive_date' : '/static/lovelive_trends/date.json?' + Math.random())).then(response => {
+      axios.get(this.$root.settings.data.basePath + (process.env.NODE_ENV === "development" ? '/proxy.php?filename=lovelive_date' : '/static/lovelive_trends/date.json?' + Math.random())).then(response => {
         this.dateList = response.data
         if (this.dateList.length > 0) {
           this.getData()
@@ -228,7 +228,7 @@ export default {
       }).catch(e => this.notice(e, 'error'))
     },
     getData: function () {
-      axios.get(this.$root.basePath + (process.env.NODE_ENV === "development" ? '/proxy.php?filename=lovelive_data&date=' + this.dateList[this.status.dateOrder] : '/static/lovelive_trends/' + this.dateList[this.status.dateOrder] + '.json')).then(response => {
+      axios.get(this.$root.settings.data.basePath + (process.env.NODE_ENV === "development" ? '/proxy.php?filename=lovelive_data&date=' + this.dateList[this.status.dateOrder] : '/static/lovelive_trends/' + this.dateList[this.status.dateOrder] + '.json')).then(response => {
         //status.userOrder = -1
         this.trendsData = response.data
       }).catch(e => this.notice(e, 'error'))

@@ -57,7 +57,7 @@
                 this.$parent.notice(text, status);
             },
             createChart: function(){
-                axios.get(this.$root.basePath + '/api/v2/data/chart/?uid=' + this.uid).then(response => {
+                axios.get(this.$root.settings.data.basePath + '/api/v2/data/chart/?uid=' + this.uid).then(response => {
                     this.chart.chartData.rows = response.data.data;
                     if (!this.chart.chartData.rows.length) {
                         this.notice("chart: " + response.data.message, "warning");

@@ -14,8 +14,8 @@
                                 <div v-show="($root.width < 768 || $root.height === 0)" class="row no-gutters">
                                   <el-image
                                         v-if="!$root.settings.data.displayPicture && info.banner !== 0 && tweetStatus.displayType !== 'search' && tweetStatus.displayType !== 'tag'"
-                                        :preview-src-list="[mediaPath+(mediaPath === basePath ? `/api/v2/media/userinfo/` : '')+`pbs.twimg.com/profile_banners/`+info.uid_str+`/`+info.banner+`.banner`]"
-                                        :src="mediaPath+(mediaPath === basePath ? `/api/v2/media/userinfo/` : '')+`pbs.twimg.com/profile_banners/`+info.uid_str+`/`+info.banner+`.banner`" alt="Banner" class="col-12 card-img-top"
+                                        :preview-src-list="[$root.settings.data.mediaPath+($root.settings.data.mediaPath === $root.settings.data.basePath ? `/api/v2/media/userinfo/` : '')+`pbs.twimg.com/profile_banners/`+info.uid_str+`/`+info.banner+`.banner`]"
+                                        :src="$root.settings.data.mediaPath+($root.settings.data.mediaPath === $root.settings.data.basePath ? `/api/v2/media/userinfo/` : '')+`pbs.twimg.com/profile_banners/`+info.uid_str+`/`+info.banner+`.banner`" alt="Banner" class="col-12 card-img-top"
                                         fit="cover"
                                         style="max-height: 20vh"></el-image>
                                 </div>
@@ -43,8 +43,8 @@
                                     <div :class="{'col-4': !$root.settings.data.displayPicture}" style="max-height: 100px; max-width: 100px">
                                       <el-image
                                           v-if="!$root.settings.data.displayPicture && info.header"
-                                          :preview-src-list="[mediaPath+(mediaPath === basePath ? `/api/v2/media/userinfo/` : '')+info.header]"
-                                          :src="mediaPath+(mediaPath === basePath ? `/api/v2/media/userinfo/` : '')+info.header.replace(/([\w]+)\.([\w]+)$/gm, `$1_bigger.$2`)" class="rounded-circle img-fluid" lazy>
+                                          :preview-src-list="[$root.settings.data.mediaPath+($root.settings.data.mediaPath === $root.settings.data.basePath ? `/api/v2/media/userinfo/` : '')+info.header]"
+                                          :src="$root.settings.data.mediaPath+($root.settings.data.mediaPath === $root.settings.data.basePath ? `/api/v2/media/userinfo/` : '')+info.header.replace(/([\w]+)\.([\w]+)$/gm, `$1_bigger.$2`)" class="rounded-circle img-fluid" lazy>
                                         <div slot="error" class="image-slot">
                                           <el-skeleton :paragraph="false" :title="false" animated >
                                             <template slot="template">
@@ -204,7 +204,7 @@
                     <span is="router-link" class="text-decoration-none badge badge-pill badge-primary mx-1"
                           to="/i/online">{{ $t("timeline.side_tags.media_download_tool") }}</span>
                     <span is="a"
-                          v-if="!hidden && (tweetStatus.displayType === 'timeline' || tweetStatus.displayType === 'status')" :href="basePath + `/api/v2/rss/` + info.name + `.xml`"
+                          v-if="!hidden && (tweetStatus.displayType === 'timeline' || tweetStatus.displayType === 'status')" :href="$root.settings.data.basePath + `/api/v2/rss/` + info.name + `.xml`"
                           class="text-decoration-none badge badge-pill badge-primary mx-1">{{ $t("timeline.side_tags.rss") }}</span>
                     <span is="router-link" v-if="$root.settings.adminStatus"
                           class="text-decoration-none badge badge-pill badge-dark mx-1"
@@ -451,7 +451,7 @@
         },
         methods: {
             getAccountList: function () {
-              return axios.get(this.$root.basePath + "/api/v2/data/accounts/");
+              return axios.get(this.$root.settings.data.basePath + "/api/v2/data/accounts/");
             },
             getLanguageList: function () {
                 return axios.get("/language_target.json");
@@ -497,7 +497,7 @@
             },
             getUserInfo: function (name) {
                 this.load.leftCard = true;
-                axios.get(this.$root.basePath + '/api/v2/data/userinfo/?name=' + name, {
+                axios.get(this.$root.settings.data.basePath + '/api/v2/data/userinfo/?name=' + name, {
                     cancelToken: new CancelToken(c => cancel = c)
                 }).then(response => {
                     this.info = response.data.data;
@@ -522,7 +522,7 @@
                 });
             },
           createChart: function (time = 0, refresh = false) {
-            axios.get(this.$root.basePath + '/api/v2/data/chart/?uid=' + this.info.uid_str + (time > 0 ? '&end=' + time : '') + (refresh ? '&refresh=1' : '')).then(response => {
+            axios.get(this.$root.settings.data.basePath + '/api/v2/data/chart/?uid=' + this.info.uid_str + (time > 0 ? '&end=' + time : '') + (refresh ? '&refresh=1' : '')).then(response => {
               if (response.data.data.length) {
                 this.chart.latestTimestamp = response.data.data.slice(-1)[0].timestamp
               }
@@ -568,7 +568,7 @@
             },
             mergeUrl: function () {
                 //拼装url
-                let url = this.$root.basePath + '/api/v2/data/';
+                let url = this.$root.settings.data.basePath + '/api/v2/data/';
                 //一层
                 switch (this.tweetStatus.displayType) {
                     case "timeline":

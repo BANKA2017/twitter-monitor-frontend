@@ -5,7 +5,7 @@
             <div class="row no-gutters">
                 <div class="card mx-auto" v-if="media.length">
                     <div class="row no-gutters">
-                        <el-image :alt="pollImage" :preview-src-list="[mediaPath+(mediaPath === basePath ? `/api/v2/media/tweets/` : '')+media[0].url+'']" :src="mediaPath+(mediaPath === basePath ? `/api/v2/media/tweets/` : '')+media[0].url+''" class="col-12 card-img-top" fit="cover" lazy style="height: 300px"></el-image>
+                        <el-image :alt="pollImage" :preview-src-list="[$root.settings.data.mediaPath+($root.settings.data.mediaPath === $root.settings.data.basePath ? `/api/v2/media/tweets/` : '')+media[0].url+'']" :src="$root.settings.data.mediaPath+($root.settings.data.mediaPath === $root.settings.data.basePath ? `/api/v2/media/tweets/` : '')+media[0].url+''" class="col-12 card-img-top" fit="cover" lazy style="height: 300px"></el-image>
                     </div>
                 </div>
                 <div v-if="etaSeconds <= 0 && polls[0].checked === 1" class="col-12">
