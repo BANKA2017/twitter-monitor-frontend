@@ -507,6 +507,7 @@
                       //  '正在关注': '正在关注 ' + this.info.following,
                       //  '总推文数': '总推文数 ' + this.info.statuses_count
                       //};
+                        this.tweetStatus.userExist = true;
                         this.createChart();
                     } else {
                       this.notice(response.data.message, "error");
