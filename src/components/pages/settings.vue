@@ -29,6 +29,9 @@
               </option>
             </select>
           </div>
+          <div class="text-center my-4">
+            <el-button icon="el-icon-back" circle @click="$router.go(-1)"></el-button>
+          </div>
         </div>
       </div>
     </main>
