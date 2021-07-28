@@ -4,7 +4,7 @@
     <div class="my-4"></div>
     <main class="container" id="main" role="main">
       <div class="row">
-        <div class="col-md-8 offset-2">
+        <div class="col-md-8 offset-md-2">
           <div class="input-group mb-3">
             <div class="input-group-prepend">
               <span class="input-group-text" id="api_path">{{ $t("settings.api_path") }}</span>
