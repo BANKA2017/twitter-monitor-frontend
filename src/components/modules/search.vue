@@ -66,9 +66,9 @@
           <label for="searchUserInclude" class="text-muted my-2 mb-4">{{ $t('search.advanced_search.example_from_this_accounts') }}</label>
           <!-- time -->
           <div class="input-group" id="searchTime">
-            <input class="form-control" placeholder="from" type="date" :max="$root.now.getFullYear() + '-' + ($root.now.getMonth() < 9 ? '0' : '') + ($root.now.getMonth() + 1) + '-' + ($root.now.getDate() < 10 ? '0' : '') + $root.now.getDate()" v-model="search.advancedSearch.start">
+            <input class="form-control" placeholder="since" type="date" :max="$root.now.getFullYear() + '-' + ($root.now.getMonth() < 9 ? '0' : '') + ($root.now.getMonth() + 1) + '-' + ($root.now.getDate() < 10 ? '0' : '') + $root.now.getDate()" v-model="search.advancedSearch.start">
             <div id="searchTimeTo" class="input-group-append"><span class="input-group-text">-></span></div>
-            <input class="form-control input-group-append" :min="search.advancedSearch.start" :max="$root.now.getFullYear() + '-' + ($root.now.getMonth() < 9 ? '0' : '') + ($root.now.getMonth() + 1) + '-' + ($root.now.getDate() < 10 ? '0' : '') + $root.now.getDate()" placeholder="to" type="date" v-model="search.advancedSearch.end">
+            <input class="form-control input-group-append" placeholder="to" :min="search.advancedSearch.start" :max="$root.now.getFullYear() + '-' + ($root.now.getMonth() < 9 ? '0' : '') + ($root.now.getMonth() + 1) + '-' + ($root.now.getDate() < 10 ? '0' : '') + $root.now.getDate()" type="date" v-model="search.advancedSearch.end">
             <div id="searchTimeDel" class="input-group-append">
               <button class="btn btn-outline-danger" type="button" @click="() => {search.advancedSearch.start = ''; search.advancedSearch.end = ''}">
                 {{ $t('search.advanced_search.clean') }}

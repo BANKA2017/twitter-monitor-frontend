@@ -51,13 +51,13 @@
 
                 //TODO 能不能压缩一下?
                 else if (this.etaSeconds < 60) {
-                    return this.$tc("polls.vote", this.pollCount > 1 ? 2 : 1, [this.pollCount]) + ' · ' + this.$t("polls.eta", [this.$tc("public.time.second", Math.ceil(this.etaSeconds) === 1 ? 1 : 2)])
+                    return this.$tc("polls.vote", this.pollCount > 1 ? 2 : 1, [this.pollCount]) + ' · ' + this.$t("polls.eta", [Math.ceil(this.etaSeconds) +' '+ this.$tc("public.time.second", Math.ceil(this.etaSeconds) === 1 ? 1 : 2)])
                 } else if (this.etaSeconds < 3600) {
-                    return this.$tc("polls.vote", this.pollCount > 1 ? 2 : 1, [this.pollCount]) + ' · ' + this.$t("polls.eta", [this.$tc("public.time.minute", Math.ceil(this.etaSeconds/60) === 1 ? 1 : 2)])
+                    return this.$tc("polls.vote", this.pollCount > 1 ? 2 : 1, [this.pollCount]) + ' · ' + this.$t("polls.eta", [Math.ceil(this.etaSeconds/60) +' '+ this.$tc("public.time.minute", Math.ceil(this.etaSeconds/60) === 1 ? 1 : 2)])
                 } else if (this.etaSeconds < 86400) {
-                    return this.$tc("polls.vote", this.pollCount > 1 ? 2 : 1, [this.pollCount]) + ' · ' + this.$t("polls.eta", [this.$tc("public.time.hour", Math.ceil(this.etaSeconds/3600) === 1 ? 1 : 2)])
+                    return this.$tc("polls.vote", this.pollCount > 1 ? 2 : 1, [this.pollCount]) + ' · ' + this.$t("polls.eta", [Math.ceil(this.etaSeconds/3600) +' '+ this.$tc("public.time.hour", Math.ceil(this.etaSeconds/3600) === 1 ? 1 : 2)])
                 } else {
-                    return this.$tc("polls.vote", this.pollCount > 1 ? 2 : 1, [this.pollCount]) + ' · ' + this.$t("polls.eta", [this.$tc("public.time.day", Math.ceil(this.etaSeconds/86400) === 1 ? 1 : 2)])
+                    return this.$tc("polls.vote", this.pollCount > 1 ? 2 : 1, [this.pollCount]) + ' · ' + this.$t("polls.eta", [Math.ceil(this.etaSeconds/86400) +' '+ this.$tc("public.time.day", Math.ceil(this.etaSeconds/86400) === 1 ? 1 : 2)])
                 }
             }
         }

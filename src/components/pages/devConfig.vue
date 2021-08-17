@@ -7,12 +7,9 @@
           <h4>创建配置文件 Config.json</h4>
           <nav>
             <div class="nav nav-tabs" id="nav-tab" role="list">
-              <div is="a" v-for="(list, key) in {user: '帐户', url: '链接', nsfwList: 'NSFW列表'}" :id="`config-`+key+`-tab`"
-                   :key="key" :aria-controls="`config-`+key"
-                   :class="{'nav-item': true, 'nav-link': true, 'active': type === key}" aria-selected="true"
-                   data-toggle="tab"
-                   role="button" @click="type=key">{{ list }}
-              </div>
+              <div :class="{'nav-item': true, 'nav-link': true, 'active': type === 'user'}" @click="type='user'" id="config-user-tab" data-toggle="tab" href="#config-user" role="button" aria-controls="config-user" aria-selected="true">帐号 <span class="badge badge-light">{{ realUserListLength + '/' + config.users.length }}</span></div>
+              <div :class="{'nav-item': true, 'nav-link': true, 'active': type === 'url'}" @click="type='url'" id="config-url-tab" data-toggle="tab" href="#config-url" role="button" aria-controls="config-url" aria-selected="false">链接 <span class="badge badge-light">{{ config.links.length }}</span></div>
+              <div :class="{'nav-item': true, 'nav-link': true, 'active': type === 'nsfwList'}" @click="type='nsfwList'" id="config-nsfwList-tab" data-toggle="tab" href="#config-nsfwList" role="button" aria-controls="config-nsfwList" aria-selected="false">NSFW列表 <span class="badge badge-light">{{ config.nsfwList.length }}</span></div>
             </div>
           </nav>
           <div class="tab-content" id="nav-tabContent">
@@ -147,11 +144,11 @@
         </div>
         <div class="col-md-4">
           <!--生成的数据-->
-          <label for="uploadFile">导入配置文件</label>
+          <label for="upload-file">导入配置文件</label>
           <div class="custom-file">
-            <input @change="jsonFileChange" accept="application/json" class="custom-file-input" id="uploadFile"
+            <input @change="jsonFileChange" accept="application/json" class="custom-file-input" id="upload-file"
                    lang="zh" type="file">
-            <label class="custom-file-label" for="uploadFile">config.json</label>
+            <label class="custom-file-label" for="upload-file">config.json</label>
           </div>
           <div class="my-4"></div>
           <button @click="download('config.json', JSON.stringify(config))" class="btn btn-primary btn-block">下载配置
@@ -230,6 +227,15 @@ export default {
         return {name: x.name, display_name: x.display_name, organization: x.organization}
       })
     },
+    realUserListLength: function () {
+      let realUsersLength = 0;
+      this.config.users.map(x => {
+        if (x.name !== "" && !x.deleted && !x.locked) {
+          realUsersLength++
+        }
+      })
+      return realUsersLength
+    },
   },
   watch: {
     "config": {
@@ -288,7 +294,7 @@ export default {
     },
     jsonFileChange: function () {
       let oFReader = new FileReader();
-      let oFile = document.getElementById("uploadFile").files[0];
+      let oFile = document.getElementById("upload-file").files[0];
       oFReader.readAsText(oFile);
       oFReader.onload = () => {
         try {
