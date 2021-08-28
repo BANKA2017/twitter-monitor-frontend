@@ -41,7 +41,7 @@
                 <!--<div v-html="`<p class='card-text'>`+tweet.full_text+`</p>`"></div>-->
                 <!--excited!-->
                 <html-text :entities="tweet.entities" :full_text_origin="tweet.full_text_origin"/>
-              <translate v-if="order !== -1" :id="tweet.tweet_id_str" :order="order" :to="$root.settings.data.language"
+                <translate v-if="order !== -1 && tweet.full_text_origin" :id="tweet.tweet_id_str" :order="order" :to="$root.settings.data.language"
                          :type="0"/>
                 <!--media-->
                 <template v-if="tweet.media === 1&&!$root.settings.data.displayPicture">

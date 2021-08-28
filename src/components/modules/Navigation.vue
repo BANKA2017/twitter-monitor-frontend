@@ -41,6 +41,7 @@
 
 <script>
     import ChevronLeft from "../icons/chevronLeft";
+    //import Vue from "vue";
 
     export default {
         name: "Navigation",
@@ -48,7 +49,7 @@
         props: {
             displayName: {
                 type: String,
-                default: "Twitter Monitor",
+                default: "Twitter Monitor"// + (Vue.prototype.onlinePath ? ' Online': ''),
             },
             displayType: String,
         }

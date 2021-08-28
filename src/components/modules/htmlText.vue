@@ -1,10 +1,13 @@
 <template>
   <div id="htmlText" ref="html_text">
     <p class='card-text'>
-      <template v-for="(obj, order) in textObject">
-        <template v-for="(text, ord) in spreadText(obj.text)">
-          {{ text }}
-          <br :key="`ord_`+order+ord+text" v-if="text === `\n`">
+      <template v-for="(obj, order) in textObject(full_text_origin, entities, true)">
+        <template v-for="(text, ord) in x = spreadText(obj.text)">
+          <template v-for="(textData, textOrder) in textObject(text, emojiObject(text))">
+            <span v-if="textData.text" :key="'span'+ord+order+textOrder+text">{{ textData.text }}</span>
+            <img v-if="textData.tag_text" :src="textData.url" style="height: 1em;" :alt="textData.tag_text" :key="'img'+ord+order+textOrder+text">
+          </template>
+          <br v-if="ord !== x.length -1" :key="`ord_`+order+ord">
         </template>
 
         <router-link v-if="obj.type === 'hashtag' || obj.type === 'symbol'" :to="(obj.type === 'hashtag' ? `/hashtag/` : `/cashtag/`) + obj.tag_text" :key="order">#{{ obj.tag_text }}</router-link>
@@ -19,71 +22,76 @@
 </template>
 
 <script>
-//import twemoji from 'twemoji'
+import { parse } from 'twemoji-parser';
+import Vue from "vue";
+const buildUrl = (codepoints, assetType) => Vue.prototype.twemojiBasePath + `svg/${codepoints}.${assetType}`
 export default {
   name: 'htmlText',
   props: {
     full_text_origin: String,
     entities: Array,
   },
-  computed: {
-    textObject: function () {
+  methods: {
+    emojiObject: function (text = '') {
+      return parse(text, {buildUrl, assetType: 'svg'}).map(x => ({
+        expanded_url: x.url,
+        indices_end: x.indices[1],
+        indices_start: x.indices[0],
+        text: x.text,
+        type: "emoji"
+      })).sort((a, b) => a.indices_start - b.indices_start)
+    },
+    textObject: function (text = "", entities = [], arrayMode = false) {
       let lastEnd = 0;
       let tmpText = [];
-      let full_text_origin_array = [...this.full_text_origin];
-      this.entities.map(entity => {
-        tmpText.push({
-          text: full_text_origin_array.slice(lastEnd, entity.indices_start).join(''),
-          type: entity.type,
-          tag_text: entity.text,
-          url: entity.expanded_url,
-        });
-        lastEnd = entity.indices_end;
-      })
-      //处理最后一段
-      let tmpLastText = full_text_origin_array.slice(lastEnd).join('').replace(/ https:\/\/t.co\/[\w]+/, '');
-      if (tmpLastText.length) {
-        tmpText.push({
-          text: tmpLastText,
-          type: "",
-          tag_text: "",
-          url: "",
-        });
+
+      if (arrayMode) {
+        let full_text_origin_array = [...this.full_text_origin];
+        this.entities.map(entity => {
+          tmpText.push({
+            text: full_text_origin_array.slice(lastEnd, entity.indices_start).join(''),
+            type: entity.type,
+            tag_text: entity.text,
+            url: entity.expanded_url,
+          });
+          lastEnd = entity.indices_end;
+        })
+        //处理最后一段
+        let tmpLastText = full_text_origin_array.slice(lastEnd).join('').replace(/ https:\/\/t.co\/[\w]+/, '');
+        if (tmpLastText.length) {
+          tmpText.push({
+            text: tmpLastText,
+            type: "",
+            tag_text: "",
+            url: "",
+          });
+        }
+      } else {
+        entities.map(entity => {
+          tmpText.push({
+            text: text.substring(lastEnd, entity.indices_start),
+            type: entity.type,
+            tag_text: entity.text,
+            url: entity.expanded_url,
+          });
+          lastEnd = entity.indices_end;
+        })
+        //处理最后一段
+        let tmpLastText = text.substring(lastEnd);
+        if (tmpLastText.length) {
+          tmpText.push({
+            text: tmpLastText,
+            type: "",
+            tag_text: "",
+            url: "",
+          });
+        }
       }
       return tmpText;
-    }
-  },
-  methods: {
-    spreadText: function (text) {
-      let textArray = []
-      let tmpText = ''
-      let latestWord = ''
-      text = [...text]
-
-      text.map(x => {
-        if (latestWord === "\n" && x === "\n") {
-          return
-        }
-        if (x === "\n") {
-          textArray.push(tmpText)
-          textArray.push("\n")
-          tmpText = ''
-        } else {
-          tmpText += x
-        }
-        latestWord = x
-      })
-      textArray.push(tmpText)
-      return textArray
     },
-    //emojiParse: function () {
-    //  twemoji.parse(this.$refs.html_text, {
-    //    ext: '.svg',
-    //    folder: 'svg',
-    //    base: this.twemojiBasePath,
-    //    attributes: () => ({style: "height: 1em;",})
-    //  })
-    //}
+    spreadText: function (text) {
+      return text.split("\n")
+    },
   }
 }
 </script>

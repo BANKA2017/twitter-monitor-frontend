@@ -210,12 +210,11 @@ new Vue({
           })(window.navigator.language.toLowerCase()),
           cookie_accept: false,
           displayPicture: false,
-          basePath: Vue.prototype.basePath,
+          basePath: Vue.prototype.basePath,//Vue.prototype.onlinePath !== '' ? Vue.prototype.onlinePath : ,
           mediaPath: Vue.prototype.mediaPath,
         },
         panel: false,
         adminStatus: false,
-        kdPassToken: localStorage.getItem('kdPassToken') ? localStorage.getItem('kdPassToken') : "",
       },
     }
   },

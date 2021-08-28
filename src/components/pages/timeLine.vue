@@ -77,7 +77,7 @@
                                   <el-collapse-transition>
                                     <div v-show="($root.width < 768 || $root.height < 700)">
                                       <html-text class="transition-box" :full_text_origin="info.description_origin" :entities="info.description_entities"></html-text>
-                                      <translate :id="info.uid_str" :to="$root.settings.data.language" :type="1" class="transition-box"/>
+                                      <translate :id="info.uid_str" :to="$root.settings.data.language" :type="1" class="transition-box" v-if="info.description_origin"/>
                                     </div>
                                   </el-collapse-transition>
                                 </div>

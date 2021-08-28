@@ -18,7 +18,7 @@
               <template id="nameList">
                 <div class="my-4"></div>
                 <template v-for="(info, index) in userList">
-                  <a :class="{'mb-1': true, 'text-decoration-none': true, 'badge': true, 'badge-pill': true, 'badge-success': info.organization, 'badge-primary': !info.organization}"
+                  <a :class="{'mx-1': true, 'text-decoration-none': true, 'badge': true, 'badge-pill': true, 'badge-success': info.organization, 'badge-primary': !info.organization}"
                      :href="`#item` + index" :key="index" role="button">{{ info.display_name }}</a>
                 </template>
                 <div class="my-4"></div>
