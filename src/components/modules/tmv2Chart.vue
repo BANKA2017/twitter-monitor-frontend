@@ -15,6 +15,10 @@ import {
   TooltipComponent,
   LegendComponent,
   GridComponent,
+  //ToolboxComponent,
+  //DataZoomComponent,
+  //DataZoomInsideComponent,
+  //DataZoomSliderComponent,
 } from "echarts/components";
 import VChart from "vue-echarts";
 
@@ -24,7 +28,11 @@ use([
   LegendComponent,
   GridComponent,
   LineChart,
-  BarChart
+  BarChart,
+  //ToolboxComponent,
+  //DataZoomComponent,
+  //DataZoomInsideComponent,
+  //DataZoomSliderComponent,
 ]);
 //import { VeLineChart, VeBarChart } from 've-charts'  // 引入单个图表
 
@@ -120,6 +128,24 @@ export default {
         data: [],
         selected: {},
       },
+      //toolbox: {
+      //  feature: {
+      //    dataZoom: {
+      //      yAxisIndex: false
+      //    },
+      //    brush: {
+      //      type: ['lineX', 'clear']
+      //    }
+      //  }
+      //},
+      //dataZoom: [
+      //  {
+      //    type: 'slider',
+      //    start: 80,
+      //    end: 100,
+      //    xAxisIndex: [0],
+      //  },
+      //],
       grid: {},
       color: [],
       xAxis: {

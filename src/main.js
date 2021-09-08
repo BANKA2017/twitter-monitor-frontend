@@ -46,7 +46,7 @@ import VueI18n from 'vue-i18n'
 /* 先填写 .env */
 Vue.prototype.devmode = process.env.NODE_ENV === "development"
 Vue.prototype.basePath = !Vue.prototype.devmode ? process.env.VUE_APP_PRO_BASE_PATH : process.env.VUE_APP_DEV_BASE_PATH
-Vue.prototype.mediaPath = process.env.VUE_APP_MEDIA_PATH
+Vue.prototype.mediaPath = process.env.VUE_APP_MEDIA_PATH ? process.env.VUE_APP_MEDIA_PATH : Vue.prototype.basePath + '/api/v2/media/'
 Vue.prototype.twemojiBasePath = process.env.VUE_APP_TW_EMOJI_PATH//twemoji
 Vue.prototype.onlinePath = process.env.VUE_APP_ONLINE_PATH
 Vue.prototype.GA_ID = process.env.VUE_APP_GA_ID

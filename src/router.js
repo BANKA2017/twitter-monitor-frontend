@@ -16,6 +16,7 @@ const Event = () => import(/* webpackChunkName: "events" */ "./components/pages/
 const Annual2019 = () => import(/* webpackChunkName: "events" */ "./components/pages/events/annual2019");
 const Annual2020 = () => import(/* webpackChunkName: "events" */ "./components/pages/events/annual2020");
 const loveliveTrends = () => import(/* webpackChunkName: "events" */ "./components/pages/events/loveliveTrends");
+const staffCandleStickPage = () => import(/* webpackChunkName: "events" */ "./components/pages/events/staffCandleStickPage");
 const notFound = () => import("./components/pages/errors/notFound");
 const Settings = () => import("./components/pages/settings")
 
@@ -45,6 +46,10 @@ export default new VueRouter({
                     path: 'lovelive_trends',//lovelive趨勢
                     component: loveliveTrends,
                 },
+                {
+                    path: 'staff_data_page',
+                    component: staffCandleStickPage
+                }
             ]
         },
         {

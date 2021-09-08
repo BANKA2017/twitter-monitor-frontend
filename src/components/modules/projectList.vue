@@ -14,9 +14,9 @@
         <template v-if="projectS">
             <div class="list-group">
                 <router-link
-                        :class="`list-group-item list-group-item-action`+(project_.toLowerCase() === $root.project.toLowerCase() ? ' active' : '')"
-                        :key="project_" :to="`/i/project/`+project_" @click="projectS = !projectS"
-                        v-for="project_ in $root.projects">{{ project_ }}
+                    :class="`list-group-item list-group-item-action`+(project_.toLowerCase() === $root.project.toLowerCase() ? ' active' : '')"
+                    :key="project_" :to="`/i/project/`+project_" @click="projectS = !projectS"
+                    v-for="project_ in $root.projects">{{ project_ }}
                 </router-link>
             </div>
             <div class="my-4"></div>

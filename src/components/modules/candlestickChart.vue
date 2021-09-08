@@ -9,13 +9,17 @@
 <script>
 import { use } from "echarts/core";
 import { CanvasRenderer } from "echarts/renderers";
-import { CandlestickChart } from "echarts/charts";
+import { CandlestickChart, LineChart, } from "echarts/charts";
 import {
   TooltipComponent,
   LegendComponent,
   GridComponent,
   MarkPointComponent,
   MarkLineComponent,
+  ToolboxComponent,
+  DataZoomComponent,
+  DataZoomInsideComponent,
+  DataZoomSliderComponent,
 } from "echarts/components";
 import VChart from "vue-echarts";
 
@@ -25,8 +29,13 @@ use([
   LegendComponent,
   GridComponent,
   CandlestickChart,
+  LineChart,
   MarkPointComponent,
   MarkLineComponent,
+  ToolboxComponent,
+  DataZoomComponent,
+  DataZoomInsideComponent,
+  DataZoomSliderComponent,
 ]);
 export default {
   name: "candlestickChart",
@@ -53,6 +62,14 @@ export default {
     setOption: {
       type: Object,
       default: () => ({})
+    },
+    zoom: {
+      type: Boolean,
+      default: false
+    },
+    ma_line: {
+      type: Boolean,
+      default: false
     }
   },
   data: () => ({
@@ -197,8 +214,62 @@ export default {
         tmpOptions.series[0].name = this.$t("candlestick_chart.chart.candle_sticks")
         tmpOptions.xAxis.data = this.xAxisData
         tmpOptions.series[0].data = this.dataArray
+        if (this.zoom) {
+          tmpOptions.toolbox = {
+            feature: {
+              dataZoom: {
+                yAxisIndex: false
+              },
+              brush: {
+                type: ['lineX', 'clear']
+              }
+            }
+          }
+          tmpOptions.dataZoom = [
+            {
+              type: 'slider',
+              start: 80,
+              end: 100,
+              xAxisIndex: [0],
+            },
+          ]
+        }
+        if (this.ma_line) {
+          //ma
+          JSON.parse('[5, 10, 20, 30]').forEach((x, order) => {
+                if (tmpOptions.series[order + 1] ) {
+                  tmpOptions.series[order + 1].data = this.calculateMA(x, this.dataArray)
+                } else {
+                  tmpOptions.legend.data.push('MA' + x)
+                  tmpOptions.series.push({
+                    name: 'MA' + x,
+                    type: 'line',
+                    data: this.calculateMA(x, this.dataArray),
+                    smooth: true,
+                    lineStyle: {
+                      opacity: 0.5
+                    }}
+                  )}
+              }
+          )
+        }
         this.options = tmpOptions
       }
+    },
+    calculateMA: function (dayCount, data) {
+      let result = [];
+      for (let i = 0, len = data.length; i < len; i++) {
+        if (i < dayCount) {
+          result.push('-');
+          continue;
+        }
+        let sum = 0;
+        for (let j = 0; j < dayCount; j++) {
+          sum += data[i - j][1];
+        }
+        result.push(+(sum / dayCount).toFixed(3));
+      }
+      return result;
     }
   }
 }

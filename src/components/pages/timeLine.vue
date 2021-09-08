@@ -318,7 +318,12 @@
                 //lock: false,
                     //statusMode: false,
                 },
-                displayMode: [[this.$t("timeline.nav_bar.all"), 'all', 0], [this.$t("timeline.nav_bar.origin"), 'self', 0], [this.$t("timeline.nav_bar.retweet"), 'retweet', 0], [this.$t("timeline.nav_bar.media"), 'media', 0]],
+                displayMode: [
+                  [this.$t("timeline.nav_bar.all"), 'all', 0],
+                  [this.$t("timeline.nav_bar.origin"), 'self', 0],
+                  [this.$t("timeline.nav_bar.retweet"), 'retweet', 0],
+                  [this.$t("timeline.nav_bar.media"), 'media', 0]
+                ],
                 chart: {
                   generate: true,
                   latestTimestamp: 0,
