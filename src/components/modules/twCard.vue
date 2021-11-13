@@ -49,9 +49,9 @@
                          style="width: 100%; height: 100%; border-radius: 14px 14px 0 0; background-color: black"></video>
                   </div>
                 </template>
-                <div v-else-if="object.secondly_type === 'image_carousel_website' || object.secondly_type === 'image_carousel_app' || object.secondly_type === 'video_carousel_website'">
+                <div v-else-if="object.secondly_type === 'image_carousel_website' || object.secondly_type === 'image_carousel_app' || object.secondly_type === 'video_carousel_website' || object.secondly_type === 'image_multi_dest_carousel_website' || object.secondly_type === 'video_multi_dest_carousel_website'">
                   <el-carousel v-if="mediaState" :style="`border-radius: 14px 14px 0 0`" class="card-img-top"
-                               indicator-position="outside" trigger="click">
+                               indicator-position="outside" trigger="click" @change="changeMultiDestCarouselOrder">
                     <el-carousel-item v-for="(mediaInfo, key) in media" :key="key" :name="key.toString()">
                       <!--TODO fix lazy image in el-carousel-->
                       <el-image :preview-src-list="[$root.settings.data.mediaPath+($root.settings.data.mediaPath === $root.settings.data.basePath ? `/api/v2/media/tweets/` : '')+mediaInfo.cover]"
@@ -63,7 +63,22 @@
                 </div>
 
                 <span v-else class="text-center">{{ $t("tw_card.text.not_supported_type") }}</span>
-                <div class="card-body position-relative">
+                <div v-if="object.secondly_type === 'image_multi_dest_carousel_website' || object.secondly_type === 'video_multi_dest_carousel_website'" class="card-body position-relative">
+                  <a v-if="multiDestCarouselData.length && !object.app"
+                       :href="multiDestCarouselData[multiDestCarouselOrder].url"
+                       class="stretched-link text-decoration-none" target="_blank"></a>
+                  <template v-if="multiDestCarouselData[multiDestCarouselOrder].description !== ''"><small
+                      class="text-muted">{{ multiDestCarouselData[multiDestCarouselOrder].description }}</small><br>
+                  </template>
+                  <!--<div v-if="object.app" class="mx-auto mt-2" >
+                    <a v-for="app in object.app" :key="app.type" :href="app.type === 'android_app' ? 'https://play.google.com/store/apps/details?id=' + app.appid : 'https://apps.apple.com/' + app.country_code.toLowerCase() + '/app/id' + app.appid" class="text-decoration-none" target="_blank">
+                      <el-button class="mx-1 mb-1" plain round size="small" type="primary">{{ device[app.type] }}</el-button>
+                    </a>
+                  </div>-->
+                  <small class="text-muted"><i
+                      class="el-icon-link"></i>{{ multiDestCarouselData[multiDestCarouselOrder].vanity_url }}</small>
+                </div>
+                <div v-else class="card-body position-relative">
                   <a v-if="object.url.length && !object.app" :href="object.url" class="stretched-link text-decoration-none" target="_blank"></a>
                   <p class="card-title" style="color: black">{{ object.title }}</p>
                   <template v-if="object.description !== ''"><small class="text-muted">{{ object.description }}</small><br></template>
@@ -124,7 +139,8 @@
             android_app: "Android",
             iphone_app: "iPhone",
             ipad_app: "iPad",
-          }
+          },
+          multiDestCarouselOrder: 0
         }
       },
       computed: {
@@ -137,6 +153,24 @@
         },
         ratio: function () {
           return this.media[0].origin_info_width / this.media[0].origin_info_height;
+        },
+        multiDestCarouselData: function () {
+          if (this.object.secondly_type === 'image_multi_dest_carousel_website' || this.object.secondly_type === 'video_multi_dest_carousel_website') {
+            let tmpData = []
+            let tmpDescription = this.object.description.split('\\t')
+            let tmpVanityUrl = this.object.vanity_url.split('\\t')
+            let tmpUrl = this.object.url.split('\\t')
+            let tmpOffset = 0
+            for (; tmpOffset < tmpDescription.length; tmpOffset++) {
+              tmpData.push({
+                description: tmpDescription[tmpOffset],
+                vanity_url: tmpVanityUrl[tmpOffset],
+                url: tmpUrl[tmpOffset]
+              })
+            }
+            return tmpData
+          }
+          return []
         }
       },
         methods: {
@@ -153,8 +187,10 @@
                 return (height / width) * 100;
               }
             }
-
           },
+          changeMultiDestCarouselOrder: function (callback) {
+            this.multiDestCarouselOrder = callback
+          }
         }
     }
 </script>

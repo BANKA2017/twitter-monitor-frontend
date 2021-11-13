@@ -37,6 +37,8 @@
                 <a :href="`//twitter.com/i/status/`+tweet.tweet_id_str" target="_blank">
                     <box-arrow-up-right height="2em" status="text-primary" width="2em"/>
                 </a>
+                <!--save for image-->
+                <!--<span role="button" @click="h2c">gggg</span>-->
                 <div class="my-4"></div>
                 <!--<div v-html="`<p class='card-text'>`+tweet.full_text+`</p>`"></div>-->
                 <!--excited!-->
@@ -88,6 +90,7 @@
     import TwPolls from "./twPolls";
     import TwCard from "./twCard";
     import Retweet from "../icons/retweet";
+    //import html2canvas from 'html2canvas';
 
     export default {
         name: "tweet",
@@ -121,6 +124,11 @@
               return (new Date(timestamp * 1000)).toLocaleString(language);
             }
           },
+          //h2c: function () {
+          //  html2canvas(document.getElementById(this.tweet.tweet_id_str), {useCORS: true}).then(function(canvas) {
+          //    document.body.appendChild(canvas);
+          //  });
+          //}
         }
     }
 </script>
