@@ -53,7 +53,7 @@
                   <h3>交流</h3>
                   <p>有何意见，有何建议，畅所欲言，但请不要发出您认为不应该在群组作出的发言，<abbr title="Safe For Work">SFW</abbr>，谢绝色图，谢绝键政，谢绝梯子</p>
                   <ul>
-                    <li>Twitter Monitor计划 qq 群：<a href="https://jq.qq.com/?_wv=1027&k=oRfJSsNF" target="_blank">959374432</a></li>
+                    <!--<li>Twitter Monitor计划 qq 群：<a href="https://jq.qq.com/?_wv=1027&k=oRfJSsNF" target="_blank">959374432</a></li>-->
                     <li>Telegram群：<a href="https://t.me/tmtg_cn" target="_blank">https://t.me/tmtg_cn</a></li>
                   </ul>
                   <hr class="my-4">

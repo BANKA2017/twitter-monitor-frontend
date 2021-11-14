@@ -129,10 +129,10 @@ router.afterEach(() => {
 })
 
 export const i18n = new VueI18n({
-  locale: 'zh-cn',
+  locale: 'zh-tw',
   fallbackLocale: 'en',
   messages: {
-    'zh-cn': require('@/i18n/zh_hans'),
+    //'zh-cn': require('@/i18n/zh_hans'),
     'zh-tw': require('@/i18n/zh_hant'),
     'en': require('@/i18n/en'),
   }
@@ -172,12 +172,12 @@ new Vue({
           "local_name": "\u7e41\u9ad4\u4e2d\u6587",
           "status": "production"
         },
-        {
-          "code": "zh-cn",
-          "name": "\u7b80\u4f53\u4e2d\u6587",
-          "local_name": "\u7b80\u4f53\u4e2d\u6587",
-          "status": "production"
-        }
+        //{
+        //  "code": "zh-cn",
+        //  "name": "\u7b80\u4f53\u4e2d\u6587",
+        //  "local_name": "\u7b80\u4f53\u4e2d\u6587",
+        //  "status": "production"
+        //}
       ],
       links: [],
       home: true,
@@ -191,13 +191,18 @@ new Vue({
       settings: {
         data: {
           language: ((lang) => {
-            if (/^(?:zh|zh-cn|zh-sg|zh-hans)$/.test(lang)) {
-              i18n.locale = 'zh-cn'
-              return 'zh-cn'
-            } else if (/^(?:zh-tw|zh-hk|zh-mo|zh-hant)$/.test(lang)) {
+            //if (/^(?:zh|zh-cn|zh-sg|zh-hans)$/.test(lang)) {
+            //  i18n.locale = 'zh-cn'
+            //  return 'zh-cn'
+            //} else if (/^(?:zh-tw|zh-hk|zh-mo|zh-hant)$/.test(lang)) {
+            //  i18n.locale = 'zh-tw'
+            //  return 'zh-tw'
+            //}
+            if (/^zh/.test(lang)) {
               i18n.locale = 'zh-tw'
               return 'zh-tw'
-            } else if (/^(?:ja|ja-jp)$/.test(lang)) {
+            }
+            else if (/^(?:ja|ja-jp)$/.test(lang)) {
               i18n.locale = 'en'
               return 'ja'
             } else if (/^(?:ko|ko-kp)$/.test(lang)) {
