@@ -28,7 +28,7 @@
                 </div>
               </template>
               <template v-else-if="object.type === 'unified_card'">
-                <template v-if="object.secondly_type === 'image_website' || object.secondly_type === 'image_app'" >
+                <template v-if="object.secondly_type === 'image_website' || object.secondly_type === 'image_app' || object.secondly_type === 'twitter_list_details'" >
                   <div v-if="mediaState"
                        :style="`width: 100%; padding-bottom: ` +  paddingBottom( latestMedia.cover, latestMedia.origin_info_height, latestMedia.origin_info_width) +  `%; height: 0; border-radius: 14px 14px 0 0`"
                        class="no-gutters">
@@ -61,7 +61,6 @@
                     </el-carousel-item>
                   </el-carousel>
                 </div>
-
                 <span v-else class="text-center">{{ $t("tw_card.text.not_supported_type") }}</span>
                 <div v-if="object.secondly_type === 'image_multi_dest_carousel_website' || object.secondly_type === 'video_multi_dest_carousel_website'" class="card-body position-relative">
                   <a v-if="multiDestCarouselData.length && !object.app"
@@ -77,6 +76,18 @@
                   </div>-->
                   <small class="text-muted"><i
                       class="el-icon-link"></i>{{ multiDestCarouselData[multiDestCarouselOrder].vanity_url }}</small>
+                </div>
+                <div v-else-if="object.secondly_type === 'twitter_list_details'">
+                  <a v-if="userListData.url" :href="userListData.url" class="stretched-link text-decoration-none" target="_blank"></a>
+                  <div class="card-title text-muted ">
+                    <List class="ml-1" height="1em" status="text-dark" width="1em" /> <small>{{ $t("tw_card.text.list") }} · {{ $tc("tw_card.text.members_count", userListData.membersCount > 1 ? 2 : 1, [userListData.membersCount]) }}</small>
+                  </div>
+                  <div class="mb-1">
+                    <span class="font-weight-bolder ml-1">{{ userListData.content }}</span><br>
+                    <small class="font-weight-bold ml-1">{{ userListData.displayName }}</small>
+                    <Verified height="1em" status="text-primary" width="1em" />
+                    <small class="ml-1 mb-1">@{{ userListData.name }}</small>
+                  </div>
                 </div>
                 <div v-else class="card-body position-relative">
                   <a v-if="object.url.length && !object.app" :href="object.url" class="stretched-link text-decoration-none" target="_blank"></a>
@@ -115,9 +126,11 @@
 
 <script>
     import BoxArrowUpRight from "@/components/icons/boxArrowUpRight";
+    import List from "@/components/icons/list";
+    import Verified from "@/components/icons/verified";
     export default {
       name: "twCard",
-      components: {BoxArrowUpRight},
+      components: {Verified, List, BoxArrowUpRight},
       props: {
         object: Object,
         media: Array,
@@ -171,6 +184,28 @@
             return tmpData
           }
           return []
+        },
+        userListData: function () {
+          let tmpData = {
+            membersCount: 0,
+            content: "",
+            displayName: "",
+            name: "",
+            verified: 0,
+            url: ""
+          }
+          let tmp
+          if (this.object.secondly_type === 'twitter_list_details') {
+            tmp = this.object.description.split('\t')
+            tmpData.membersCount = Number(tmp[0])
+            tmpData.content = tmp[1]
+            tmp = this.object.vanity_url.split('\t')
+            tmpData.displayName = tmp[0]
+            tmpData.name = tmp[1]
+            tmpData.verified = tmp[2]
+            tmpData.url = this.object.url
+          }
+          return tmpData
         }
       },
         methods: {

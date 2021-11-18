@@ -178,6 +178,8 @@ module.exports = {
     tw_card: {
         text: {
             not_supported_type: "Not supported type",
+            list: "List",
+            members_count: "{0} member | {0} members"
         }
     },
     tweet: {

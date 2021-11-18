@@ -141,6 +141,8 @@ module.exports = {
     tw_card: {
         text: {
             not_supported_type: "不支持的类型",
+            list: "列表",
+            members_count: "{0} 成员 | {0} 成员"
         }
     },
     tweet: {
