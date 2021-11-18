@@ -196,10 +196,10 @@
           }
           let tmp
           if (this.object.secondly_type === 'twitter_list_details') {
-            tmp = this.object.description.split('\t')
+            tmp = this.object.description.split('\\t')
             tmpData.membersCount = Number(tmp[0])
             tmpData.content = tmp[1]
-            tmp = this.object.vanity_url.split('\t')
+            tmp = this.object.vanity_url.split('\\t')
             tmpData.displayName = tmp[0]
             tmpData.name = tmp[1]
             tmpData.verified = tmp[2]
