@@ -29,7 +29,7 @@
       </div>
       <div class="my-4"></div>
       <div class="text-center" style="height: 30px">
-        >_ KDNETWORK
+        NEST.MOE
       </div>
     </div>
 </template>

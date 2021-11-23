@@ -30,7 +30,7 @@
         </div>
         <div class="text-center" style="height: 30px">
           <link-list v-if="$root.links.length !== 0"/>
-          <span v-else>>_ KDNETWORK</span>
+          <span v-else>NEST.MOE</span>
           <!--<template  v-if="$root.settings.adminStatus">
             <router-link class="text-decoration-none badge badge-pill badge-dark" to="/i/admin">管理</router-link>
           </template>-->
