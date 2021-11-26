@@ -6,7 +6,9 @@
 - Edit file `.env.local`
 
   ```dotenv
+  #deploy https://github.com/BANKA2017/twitter-monitor in local
   VUE_APP_DEV_BASE_PATH="http://192.168.123.101/dev/bangdreamfunv2"
+  
   VUE_APP_PRO_BASE_PATH="https://example.com"
   
   #tw_emoji
@@ -28,6 +30,10 @@
 - English (en) (Need help)
 - 日本語 (ja) (Need help)
 - 한국어 (ko) (Need help)
+
+## Backend
+
+[Twitter Monitor](https://github.com/BANKA2017/twitter-monitor)
 
 ## More
 
