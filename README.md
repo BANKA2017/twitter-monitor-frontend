@@ -2,14 +2,30 @@
 
 ## How to
 
-- Edit file named `.env`
+- Create file `.env.local`
+- Edit file `.env.local`
+
+  ```dotenv
+  VUE_APP_DEV_BASE_PATH="http://192.168.123.101/dev/bangdreamfunv2"
+  VUE_APP_PRO_BASE_PATH="https://example.com"
+  
+  #tw_emoji
+  VUE_APP_TW_EMOJI_PATH="https://twemoji.maxcdn.com/v/latest/"
+  
+  #keep empty if not deployed media proxy
+  VUE_APP_MEDIA_PATH="https://example.com/api/v2/media/"
+  VUE_APP_GA_ID=""//Google analytics
+
+  ```
+
 - `npm install`
 - `npm serve`
 
 ## Translation
 
+- 简体中文 (zh-hans)
 - 繁體中文/正體中文 (zh-hant)
-- English (en)
+- English (en) (Need help)
 - 日本語 (ja) (Need help)
 - 한국어 (ko) (Need help)
 
@@ -23,30 +39,6 @@
 
 - setup  <https://router.vuejs.org/guide/essentials/history-mode.html>
 
-## Project setup
+## 中文介绍 (Chinese version)
 
-```shell
-npm install
-```
-
-## Compiles and hot-reloads for development
-
-```shell
-npx vue-cli-service serve
-```
-
-## Compiles and minifies for production
-
-```shell
-npx vue-cli-service build
-```
-
-## Lints and fixes files
-
-```shell
-npx vue-cli-service lint
-```
-
-### Customize configuration
-
-See [Configuration Reference](https://cli.vuejs.org/config/).
+以后还是写中文好了，英语渣写得好难受

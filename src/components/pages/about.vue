@@ -50,10 +50,12 @@
                   <h3>可信来源</h3>
                   <p>尽管我们会尽我们所能确保数据的真实性，但用户不应该将 Twitter Monitor 的内容视为可信来源</p>
                   <hr class="my-4">
+                  <h3>GDPR</h3>
+                  <p>根据相关法律法规，本站不对欧盟用户提供服务。</p>
+                  <hr class="my-4">
                   <h3>交流</h3>
                   <p>有何意见，有何建议，畅所欲言，但请不要发出您认为不应该在群组作出的发言，<abbr title="Safe For Work">SFW</abbr>，谢绝色图，谢绝键政，谢绝梯子</p>
                   <ul>
-                    <!--<li>Twitter Monitor计划 qq 群：<a href="https://jq.qq.com/?_wv=1027&k=oRfJSsNF" target="_blank">959374432</a></li>-->
                     <li>Telegram群：<a href="https://t.me/tmtg_cn" target="_blank">https://t.me/tmtg_cn</a></li>
                   </ul>
                   <hr class="my-4">

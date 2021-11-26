@@ -43,14 +43,14 @@ import VueI18n from 'vue-i18n'
 //import VueHighlightJS from 'vue-highlightjs'
 //Vue.use(VueHighlightJS)
 
-/* 先填写 .env */
+/* 先填写 .env.local */
 Vue.prototype.devmode = process.env.NODE_ENV === "development"
 Vue.prototype.basePath = !Vue.prototype.devmode ? process.env.VUE_APP_PRO_BASE_PATH : process.env.VUE_APP_DEV_BASE_PATH
 Vue.prototype.mediaPath = process.env.VUE_APP_MEDIA_PATH ? process.env.VUE_APP_MEDIA_PATH : Vue.prototype.basePath + '/api/v2/media/'
 Vue.prototype.twemojiBasePath = process.env.VUE_APP_TW_EMOJI_PATH//twemoji
 Vue.prototype.onlinePath = process.env.VUE_APP_ONLINE_PATH
 Vue.prototype.GA_ID = process.env.VUE_APP_GA_ID
-Vue.prototype.adminModePassword = process.env.VUE_APP_ADMIN_MODE_PW
+//Vue.prototype.adminModePassword = process.env.VUE_APP_ADMIN_MODE_PW
 
 //gtag
 //骚玩法不要学, 老老实实写代码
@@ -129,10 +129,10 @@ router.afterEach(() => {
 })
 
 export const i18n = new VueI18n({
-  locale: 'zh-tw',
+  locale: 'zh-cn',
   fallbackLocale: 'en',
   messages: {
-    //'zh-cn': require('@/i18n/zh_hans'),
+    'zh-cn': require('@/i18n/zh_hans'),
     'zh-tw': require('@/i18n/zh_hant'),
     'en': require('@/i18n/en'),
   }
@@ -152,19 +152,19 @@ new Vue({
           "code": "en",
           "name": "\u82f1\u8bed",
           "local_name": "English",
-          "status": "production"
+          "status": "test"
         },
         {
           "code": "ja",
           "name": "\u65e5\u8bed",
           "local_name": "\u65e5\u672c\u8a9e",
-          "status": "production"
+          "status": "zero"
         },
         {
           "code": "ko",
           "name": "\u97e9\u8bed",
           "local_name": "\ud55c\uad6d\uc5b4",
-          "status": "production"
+          "status": "zero"
         },
         {
           "code": "zh-tw",
@@ -172,12 +172,12 @@ new Vue({
           "local_name": "\u7e41\u9ad4\u4e2d\u6587",
           "status": "production"
         },
-        //{
-        //  "code": "zh-cn",
-        //  "name": "\u7b80\u4f53\u4e2d\u6587",
-        //  "local_name": "\u7b80\u4f53\u4e2d\u6587",
-        //  "status": "production"
-        //}
+        {
+          "code": "zh-cn",
+          "name": "\u7b80\u4f53\u4e2d\u6587",
+          "local_name": "\u7b80\u4f53\u4e2d\u6587",
+          "status": "production"
+        }
       ],
       links: [],
       home: true,
@@ -191,17 +191,17 @@ new Vue({
       settings: {
         data: {
           language: ((lang) => {
-            //if (/^(?:zh|zh-cn|zh-sg|zh-hans)$/.test(lang)) {
-            //  i18n.locale = 'zh-cn'
-            //  return 'zh-cn'
-            //} else if (/^(?:zh-tw|zh-hk|zh-mo|zh-hant)$/.test(lang)) {
-            //  i18n.locale = 'zh-tw'
-            //  return 'zh-tw'
-            //}
-            if (/^zh/.test(lang)) {
+            if (/^(?:zh|zh-cn|zh-sg|zh-hans)$/.test(lang)) {
+              i18n.locale = 'zh-cn'
+              return 'zh-cn'
+            } else if (/^(?:zh-tw|zh-hk|zh-mo|zh-hant)$/.test(lang)) {
               i18n.locale = 'zh-tw'
               return 'zh-tw'
             }
+            //if (/^zh/.test(lang)) {
+            //  i18n.locale = 'zh-tw'
+            //  return 'zh-tw'
+            //}
             else if (/^(?:ja|ja-jp)$/.test(lang)) {
               i18n.locale = 'en'
               return 'ja'
