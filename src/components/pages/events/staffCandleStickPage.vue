@@ -9,9 +9,9 @@
     <div class="container">
       <div class="row">
         <div class="col-md-3 order-md-0 order-1">
-          <template v-for="(userList, groupName) in staffList">
-            <p class="lead" :key="groupName">{{ groupName }}</p>
-            <div class="list-group mb-3" :key="groupName+'list'">
+          <template v-for="(userList, groupName) in staffList" :key="groupName">
+            <p class="lead">{{ groupName }}</p>
+            <div class="list-group mb-3">
               <div role="button" :class="{'list-group-item': true, 'active': user === activeStaff}" v-for="user in userList" :key="user" @click="activeStaff = user">
                 {{ user }}
               </div>
@@ -33,18 +33,25 @@
 <script>
 import CandlestickChart from "@/components/modules/candlestickChart";
 import axios from "axios";
+import {mapState} from "vuex";
+import {inject} from "vue";
+import {useHead} from "@vueuse/head";
 export default {
   name: "staffCandleStickPage",
-  components: {CandlestickChart},
-  metaInfo () {
-    return {
+  setup () {
+    useHead({
       title: "部分官推数据",
       meta: [{
         name: "theme-color",
         content: "#1da1f2"
       }]
+    })
+    const notice = inject('notice')
+    return {
+      notice
     }
   },
+  components: {CandlestickChart},
   data: () => ({
     staffList: {
       "BanG Dream!": [
@@ -67,7 +74,8 @@ export default {
     activeData: {},
     lock: true,
   }),
-  computed: {
+  computed: mapState({
+    settings: 'settings',
     candleData: function () {
       let tmpCandleData = {
         date: [],
@@ -90,7 +98,7 @@ export default {
       }
       return tmpCandleData
     }
-  },
+  }),
   watch: {
     "activeStaff": function () {
       this.fetchData()
@@ -98,7 +106,7 @@ export default {
   },
   methods: {
     fetchData: function () {
-      axios.get(this.$root.settings.data.basePath + (process.env.NODE_ENV === "development" ? '/proxy.php?filename=staff_data&name=' + this.activeStaff : '/static/trends/' + this.activeStaff + '.json')).then(response => {
+      axios.get(this.settings.data.basePath + (process.env.NODE_ENV === "development" ? '/proxy.php?filename=staff_data&name=' + this.activeStaff : '/static/trends/' + this.activeStaff + '.json')).then(response => {
         //status.userOrder = -1
         this.activeData = response.data.data
         this.lock = false

@@ -15,7 +15,7 @@
         </div>
         <div class="my-4"></div>
         <div class="text-center">
-          <el-button @click="$router.go(-1)" circle icon="el-icon-back"></el-button>
+          <el-button circle @click="$router.go(-1)"><arrow-left height="1em" status="" width="1em"/></el-button>
         </div>
         <div class="my-4"></div>
       </div>
@@ -28,10 +28,27 @@
 <script>
 import axios from "axios";
 import Tmv2Chart from "@/components/modules/tmv2Chart";
+import {mapState} from "vuex";
+import {inject} from "vue";
+import {useHead} from "@vueuse/head";
+import ArrowLeft from "@/components/icons/arrowLeft";
 
 export default {
   name: "status",
-  components: {Tmv2Chart},
+  setup () {
+    useHead({
+      title: '状态',
+      meta: [{
+        name: "theme-color",
+        content: "#1da1f2"
+      }]
+    })
+    const notice = inject('notice')
+    return {
+      notice
+    }
+  },
+  components: {ArrowLeft, Tmv2Chart},
   data() {
     return {
       rows: [],
@@ -72,15 +89,9 @@ export default {
       }
     }
   },
-  metaInfo() {
-    return {
-      title: "状态",
-      meta: [{
-        name: "theme-color",
-        content: "#1da1f2"
-      }]
-    }
-  },
+  computed: mapState({
+    settings: 'settings',
+  }),
   watch: {
     "rows": function () {
       this.rows.map(x => {
@@ -104,7 +115,7 @@ export default {
     },
   },
   mounted: function () {
-    axios.get(this.$root.settings.data.basePath + '/api/v2/data/status').then(response => {
+    axios.get(this.settings.data.basePath + '/api/v2/data/status').then(response => {
       this.rows = response.data.data;
       if (!this.rows.length) {
         this.notice("chart: " + response.data.message, "warning");

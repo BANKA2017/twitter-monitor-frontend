@@ -17,9 +17,9 @@
                  :class="{'tab-pane': true, 'fade': true, 'show': type==='user', 'active': type==='user'}" role="panel">
               <template id="nameList">
                 <div class="my-4"></div>
-                <template v-for="(info, index) in userList">
+                <template v-for="(info, index) in userList" :key="index">
                   <a :class="{'mx-1': true, 'text-decoration-none': true, 'badge': true, 'badge-pill': true, 'badge-success': info.organization, 'badge-primary': !info.organization}"
-                     :href="`#item` + index" :key="index" role="button">{{ info.display_name }}</a>
+                     :href="`#item` + index" role="button">{{ info.display_name }}</a>
                 </template>
                 <div class="my-4"></div>
               </template>
@@ -43,8 +43,8 @@
                   <small id="uidHelp" class="form-text text-muted">Twitter帐号uid，无需理会</small>
                 </div>
                 <div v-if="user.projects.length">
-                  <template v-for="(project, ss) in user.projects">
-                    <div :key="ss">
+                  <template v-for="(project, ss) in user.projects" :key="ss">
+                    <div>
                       <div class="input-group">
                         <input class="form-control" placeholder="一级目录" type="text"
                                v-model="config.users[s].projects[ss][0]">
@@ -66,8 +66,8 @@
                   <small class="form-text text-muted" id="projectHelp">两格从左到右分别是<code>一级目录|二级目录</code></small>
                 </div>
                 <template
-                    v-for="(checkInfo, checkType) in {hidden: '隐藏此帐号', deleted: '帐号已删除', locked: '推文已被保护', organization: '机构帐号', not_analytics: '不统计数据'}">
-                  <div :key="checkType" class="form-group form-check">
+                    v-for="(checkInfo, checkType) in {hidden: '隐藏此帐号', deleted: '帐号已删除', locked: '推文已被保护', organization: '机构帐号', not_analytics: '不统计数据'}" :key="checkType">
+                  <div class="form-group form-check">
                     <input :id="`user`+s+checkType" class="form-check-input" type="checkbox"
                            v-model="config.users[s][checkType]">
                     <label :for="`user`+s+checkType" class="form-check-label">{{ checkInfo }}</label>
@@ -167,8 +167,16 @@
 </template>
 
 <script>
+import {inject} from "vue";
+
 export default {
   name: "devConfig",
+  setup () {
+    const notice = inject('notice')
+    return {
+      notice
+    }
+  },
   data() {
     return {
       type: "user",//user links

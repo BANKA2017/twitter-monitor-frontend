@@ -1,8 +1,8 @@
 <template>
   <div id="candlestick-chart">
-    <el-skeleton :loading="!options.series[0].data.length" :rows="5" animated></el-skeleton>
-    <span v-if="title !== '' && options.series[0].data.length" class="text-muted mb-1"><small>{{ title }}</small></span>
-    <v-chart v-if="options.series[0].data.length" :option="options" :update-options="setOption" :style="{width: '100%', height: (typeof(height) === 'number' ? (height + 'px') : height)}" autoresize></v-chart>
+    <el-skeleton :loading="!computedOptions.series[0].data.length" :rows="5" animated></el-skeleton>
+    <span v-if="title !== '' && computedOptions.series[0].data.length" class="text-muted mb-1"><small>{{ title }}</small></span>
+    <v-chart v-if="computedOptions.series[0].data.length" :option="computedOptions" :style="{width: '100%', height: (typeof(height) === 'number' ? (height + 'px') : height)}" :update-options="setOption" autoresize></v-chart>
   </div>
 </template>
 
@@ -198,64 +198,56 @@ export default {
       ]
     }
   }),
-  watch: {
-    "dataArray": function() {
-        this.draw()
-    },
-  },
-  mounted: function () {
-    this.draw();
-  },
-  methods: {
-    draw: function () {
-      if (this.dataArray.length > 0) {
-        let tmpOptions = this.options
-        tmpOptions.legend.data[0] = this.$t("candlestick_chart.chart.candle_sticks")
-        tmpOptions.series[0].name = this.$t("candlestick_chart.chart.candle_sticks")
-        tmpOptions.xAxis.data = this.xAxisData
-        tmpOptions.series[0].data = this.dataArray
-        if (this.zoom) {
-          tmpOptions.toolbox = {
-            feature: {
-              dataZoom: {
-                yAxisIndex: false
-              },
-              brush: {
-                type: ['lineX', 'clear']
-              }
+  computed: {
+    computedOptions: function () {
+      let tmpOptions = this.options
+      tmpOptions.legend.data[0] = this.$t("candlestick_chart.chart.candle_sticks")
+      tmpOptions.series[0].name = this.$t("candlestick_chart.chart.candle_sticks")
+      tmpOptions.xAxis.data = this.xAxisData
+      tmpOptions.series[0].data = this.dataArray
+      if (this.zoom) {
+        tmpOptions.toolbox = {
+          feature: {
+            dataZoom: {
+              yAxisIndex: false
+            },
+            brush: {
+              type: ['lineX', 'clear']
             }
           }
-          tmpOptions.dataZoom = [
-            {
-              type: 'slider',
-              start: 80,
-              end: 100,
-              xAxisIndex: [0],
-            },
-          ]
         }
-        if (this.ma_line) {
-          //ma
-          JSON.parse('[5, 10, 20, 30]').forEach((x, order) => {
-                if (tmpOptions.series[order + 1] ) {
-                  tmpOptions.series[order + 1].data = this.calculateMA(x, this.dataArray)
-                } else {
-                  tmpOptions.legend.data.push('MA' + x)
-                  tmpOptions.series.push({
-                    name: 'MA' + x,
-                    type: 'line',
-                    data: this.calculateMA(x, this.dataArray),
-                    smooth: true,
-                    lineStyle: {
-                      opacity: 0.5
-                    }}
-                  )}
-              }
-          )
-        }
-        this.options = tmpOptions
+        tmpOptions.dataZoom = [
+          {
+            type: 'slider',
+            start: 80,
+            end: 100,
+            xAxisIndex: [0],
+          },
+        ]
       }
-    },
+      if (this.ma_line) {
+        //ma
+        [5, 10, 20, 30].forEach((x, order) => {
+              if (tmpOptions.series[order + 1] ) {
+                tmpOptions.series[order + 1].data = this.calculateMA(x, this.dataArray)
+              } else {
+                tmpOptions.legend.data.push('MA' + x)
+                tmpOptions.series.push({
+                  name: 'MA' + x,
+                  type: 'line',
+                  data: this.calculateMA(x, this.dataArray),
+                  smooth: true,
+                  lineStyle: {
+                    opacity: 0.5
+                  }}
+                )}
+            }
+        )
+      }
+      return tmpOptions
+    }
+  },
+  methods: {
     calculateMA: function (dayCount, data) {
       let result = [];
       for (let i = 0, len = data.length; i < len; i++) {

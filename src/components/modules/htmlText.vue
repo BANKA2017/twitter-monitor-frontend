@@ -1,7 +1,7 @@
 <template>
   <div id="htmlText" ref="html_text">
     <p class='card-text'>
-      <template v-for="(obj, order) in textObject(full_text_origin, entities, true)">
+      <template v-for="(obj, order) in textObject(full_text_origin, entities, true)" :key="order">
         <template v-for="(text, ord) in x = spreadText(obj.text)">
           <template v-for="(textData, textOrder) in textObject(text, emojiObject(text))">
             <span v-if="textData.text" :key="'span'+ord+order+textOrder+text">{{ textData.text }}</span>
@@ -10,12 +10,12 @@
           <br v-if="ord !== x.length -1" :key="`ord_`+order+ord">
         </template>
 
-        <router-link v-if="obj.type === 'hashtag' || obj.type === 'symbol'" :to="(obj.type === 'hashtag' ? `/hashtag/` : `/cashtag/`) + obj.tag_text" :key="order">#{{ obj.tag_text }}</router-link>
+        <router-link v-if="obj.type === 'hashtag' || obj.type === 'symbol'" :to="(obj.type === 'hashtag' ? `/hashtag/` : `/cashtag/`) + obj.tag_text">#{{ obj.tag_text }}</router-link>
         <router-link
-            v-else-if="obj.type === 'user_mention' && $root.userList.map(x => x.name).includes(obj.tag_text.substring(1))"
-            :key="order" :to="`/`+obj.tag_text.substring(1)+`/all`">{{ obj.tag_text }}
+            v-else-if="obj.type === 'user_mention' && userList.map(x => x.name).includes(obj.tag_text.substring(1))"
+            :to="`/`+obj.tag_text.substring(1)+`/all`">{{ obj.tag_text }}
         </router-link>
-        <a v-else :href="obj.url" :key="order" target="_blank" id="url">{{ obj.tag_text }}</a>
+        <a v-else id="url" :href="obj.url" target="_blank">{{ obj.tag_text }}</a>
       </template>
     </p>
 </div>
@@ -23,17 +23,23 @@
 
 <script>
 import { parse } from 'twemoji-parser';
-import Vue from "vue";
-const buildUrl = (codepoints, assetType) => Vue.prototype.twemojiBasePath + `svg/${codepoints}.${assetType}`
+import { mapState } from "vuex";
 export default {
   name: 'htmlText',
   props: {
     full_text_origin: String,
     entities: Array,
   },
+  computed: mapState({
+    userList: 'userList',
+    twemojiBasePath: 'twemojiBasePath'
+  }),
   methods: {
+    buildUrl: function (codepoints, assetType) {
+      return this.twemojiBasePath + `svg/${codepoints}.${assetType}`
+    },
     emojiObject: function (text = '') {
-      return parse(text, {buildUrl, assetType: 'svg'}).map(x => ({
+      return parse(text, {buildUrl: this.buildUrl, assetType: 'svg'}).map(x => ({
         expanded_url: x.url,
         indices_end: x.indices[1],
         indices_start: x.indices[0],

@@ -25,8 +25,19 @@
 </template>
 
 <script>
+import {useHead} from "@vueuse/head";
+
 export default {
   name: "index",
+  setup() {
+    useHead({
+      title: '专题',
+      meta: [{
+        name: "theme-color",
+        content: "#1da1f2"
+      }]
+    })
+  },
   data: () => ({
     events: [{
       title: "2019年度统计",
@@ -50,15 +61,6 @@ export default {
       link: "/i/events/staff_data_page/"
     },].reverse()
   }),
-  metaInfo () {
-    return {
-      title: "专题",
-      meta: [{
-        name: "theme-color",
-        content: "#1da1f2"
-      }]
-    }
-  },
 }
 </script>
 

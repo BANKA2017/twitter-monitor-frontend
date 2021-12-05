@@ -12,8 +12,8 @@
           <el-tag role="button" :color="selectedTeams.indexOf(name) === -1 ? '#ffffff' : colorInfo" :class="{'text-white': selectedTeams.indexOf(name) !== -1,  'btn-block': true}" v-for="(colorInfo, name) in color" :key="name" @click="selectedTeams.indexOf(name) === -1 ? selectedTeams.push(name) : selectedTeams.splice(selectedTeams.indexOf(name), 1)">
             {{ name }}
           </el-tag>
-          <button :class="{'btn': true, 'btn-block': true, 'btn-outline-primary': true, 'active': status.displayTips}" @click="status.displayTips = !status.displayTips">说明 <i class="el-icon-info"></i></button>
-          <a class="btn btn-block btn-outline-primary" :href="$root.settings.data.basePath + '/static/lovelive_trends/' + dateList[status.dateOrder] + '.json'" target="_blank">下载数据 <i class="el-icon-download"></i></a>
+          <button :class="{'btn': true, 'btn-block': true, 'btn-outline-primary': true, 'active': status.displayTips}" @click="status.displayTips = !status.displayTips">说明 <info-circle-fill height="1em" status="" width="1em" /></button>
+          <a :href="settings.data.basePath + '/static/lovelive_trends/' + dateList[status.dateOrder] + '.json'" class="btn btn-block btn-outline-primary" target="_blank">下载数据 <download-icon height="1em" status="" width="1em" /></a>
         </div>
         <div class="col-lg-8 mb-4">
           <div class="card" v-show="status.displayTips">
@@ -77,7 +77,7 @@
               <tmv2-chart :chart-rows="userData.data" :colors="userData.color" :label-map="userData.label" chart-type="line" chartHeight="500px" title="关注数变动" :set-option="{notMerge: true}"/>
               <el-table ref="accountData" v-loading="!trendsData.data.length" :data="tableData" :default-sort="{prop: 'followers_add', order: 'descending'}" style="width: 100%">
                 <el-table-column label="名称">
-                  <template slot-scope="scope">
+                  <template #default="scope">
                     <!--<el-button @click="() => {status.name = scope.row.name; status.value = 'info'}" type="text" size="small">详情</el-button>-->
                     <el-button size="small" type="text" @click="() => {scrollToTop();status.userOrder = scope.row.order}">{{ scope.row.display_name[0] }}</el-button>
                   </template>
@@ -87,7 +87,7 @@
                 <el-table-column label="关注增长率" prop="followers_growth_rate" show-overflow-tooltip sortable></el-table-column>
                 <el-table-column label="发推数" prop="tweets_count" show-overflow-tooltip sortable></el-table-column>
                 <el-table-column label="组" prop="team">
-                  <template slot-scope="scope">
+                  <template #default="scope">
                     <el-tag :color="color[scope.row.team]" class="text-white" disable-transitions>
                       {{ scope.row.team }}
                     </el-tag>
@@ -95,11 +95,9 @@
                 </el-table-column>
               </el-table>
             </template>
-            <template >
-              <div class="row no-gutters my-4">
-                <tmv2-chart :chart-rows="timeCountRows" :label-map="{time: '发推时间', count: '数量'}" :y-axis="{type: 'value', name: '推文数量'}" chartHeight="260px" class="col-md-12" title="发推时间段"/>
-              </div>
-            </template>
+            <div class="row no-gutters my-4">
+              <tmv2-chart :chart-rows="timeCountRows" :label-map="{time: '发推时间', count: '数量'}" :y-axis="{type: 'value', name: '推文数量'}" chartHeight="260px" class="col-md-12" title="发推时间段"/>
+            </div>
           </template>
         </div>
         <div class="col-lg-2">
@@ -115,7 +113,7 @@
     <transition name="el-fade-in">
       <div v-if="status.userOrder !== -1" class="el-backtop" style="right: 40px; bottom: 90px"
            @click="()=>{scrollToTop();status.userOrder = -1}">
-        <i class="el-icon-back"></i>
+        <arrow-left height="1em" status="" width="1em"/>
       </div>
     </transition>
   </div>
@@ -125,9 +123,31 @@
 import Tmv2Chart from "@/components/modules/tmv2Chart";
 import axios from 'axios'
 import CandlestickChart from "@/components/modules/candlestickChart";
+import {mapState} from "vuex";
+import {inject} from "vue";
+import {useHead} from "@vueuse/head";
+import ArrowLeft from "@/components/icons/arrowLeft";
+import InfoCircleFill from "@/components/icons/infoCircleFill";
+import DownloadIcon from "@/components/icons/downloadIcon";
 export default {
   name: "loveliveTrends",
-  components: {CandlestickChart, Tmv2Chart},
+  setup () {
+    useHead({
+      title: 'LoveLive! Trends',
+      meta: [{
+        name: "theme-color",
+        content: "#1da1f2"
+      }]
+    })
+    const scrollToTop = inject('scrollToTop')
+    const notice = inject('notice')
+    return {
+      scrollToTop,
+      notice
+    }
+  },
+
+  components: {DownloadIcon, InfoCircleFill, ArrowLeft, CandlestickChart, Tmv2Chart},
   data: () => ({
     trendsData: {data: [], range: {}},
     color: {
@@ -145,15 +165,6 @@ export default {
     },
     dateList: [],
   }),
-  metaInfo () {
-    return {
-      title: "LoveLive! Trends",
-      meta: [{
-        name: "theme-color",
-        content: "#1da1f2"
-      }]
-    }
-  },
   watch: {
     "status.dateOrder": {
       handler: function () {
@@ -165,7 +176,8 @@ export default {
   mounted: function () {
     this.getDateInfo()
   },
-  computed: {
+  computed: mapState({
+    settings: 'settings',
     tableData: function () {
       let data = []
       this.trendsData.data.map((x, order) => {
@@ -215,10 +227,10 @@ export default {
       })
       return {label: label, color: color, data: data}
     },
-  },
+  }),
   methods: {
     getDateInfo: function () {
-      axios.get(this.$root.settings.data.basePath + (process.env.NODE_ENV === "development" ? '/proxy.php?filename=lovelive_date' : '/static/lovelive_trends/date.json?' + Math.random())).then(response => {
+      axios.get(this.settings.data.basePath + (process.env.NODE_ENV === "development" ? '/proxy.php?filename=lovelive_date' : '/static/lovelive_trends/date.json?' + Math.random())).then(response => {
         this.dateList = response.data
         if (this.dateList.length > 0) {
           this.getData()
@@ -228,7 +240,7 @@ export default {
       }).catch(e => this.notice(e, 'error'))
     },
     getData: function () {
-      axios.get(this.$root.settings.data.basePath + (process.env.NODE_ENV === "development" ? '/proxy.php?filename=lovelive_data&date=' + this.dateList[this.status.dateOrder] : '/static/lovelive_trends/' + this.dateList[this.status.dateOrder] + '.json')).then(response => {
+      axios.get(this.settings.data.basePath + (process.env.NODE_ENV === "development" ? '/proxy.php?filename=lovelive_data&date=' + this.dateList[this.status.dateOrder] : '/static/lovelive_trends/' + this.dateList[this.status.dateOrder] + '.json')).then(response => {
         //status.userOrder = -1
         this.trendsData = response.data
       }).catch(e => this.notice(e, 'error'))

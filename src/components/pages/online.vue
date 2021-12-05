@@ -23,18 +23,22 @@
                       </div>
                     <div class="my-4" />
                     <el-input v-model="tweet_id" clearable placeholder="tweet id" @change="inputChange">
-                      <router-link is="el-button" slot="append" :to="`/i/online/` + tweet_id" icon="el-icon-search"></router-link>
+                      <template #append>
+                        <router-link is="el-button" :to="`/i/online/` + tweet_id"><search-icon height="1em" status="" width="1em" /></router-link>
+                      </template>
                     </el-input>
                 </div>
                 <div v-else class="col-md-8 offset-md-2">
                   <el-input v-model="tweet_id" class="mt-4" clearable placeholder="tweet id" @change="inputChange">
-                    <router-link is="el-button" slot="append" :to="`/i/online/` + tweet_id" icon="el-icon-search"></router-link>
+                    <template #append>
+                      <router-link is="el-button" :to="`/i/online/` + tweet_id"><search-icon height="1em" status="" width="1em" /></router-link>
+                    </template>
                   </el-input>
                   <image-list :is_video="Number(video)" :list="media" class="my-4" preload="metadata" size="orig" style="width:100%" unlimited/>
                     <span class="lead">Download</span>
                     <div class="list-group my-2">
-                      <template v-for="(mediaInfo, order) in (video ? rawData.video_info.variants : media)">
-                        <a :key="order" :href="(video ? '' : `https://`) + mediaInfo.url + (video ? '' : `:orig`)" class="text-muted text-decoration-none list-group-item list-group-item-action d-flex justify-content-between align-items-center" target="_blank">
+                      <template v-for="(mediaInfo, order) in (video ? rawData.video_info.variants : media)" :key="order">
+                        <a :href="(video ? '' : `https://`) + mediaInfo.url + (video ? '' : `:orig`)" class="text-muted text-decoration-none list-group-item list-group-item-action d-flex justify-content-between align-items-center" target="_blank">
                           {{ video ? mediaInfo.content_type === 'video/mp4' ? mediaInfo.url.replace(/.*vid\/([0-9]+x[0-9]+).*/, `$1`) : 'm3u8' : mediaInfo.basename}}
                           <span v-if="!video || mediaInfo.content_type === 'video/mp4'" class="badge badge-primary badge-pill">{{ video ? mediaInfo.bitrate / 1000 + 'kbps' : mediaInfo.origin_info_height + 'x' +mediaInfo.origin_info_width }}</span>
                         </a>
@@ -54,17 +58,29 @@
 </template>
 
 <script>
-    //TODO tmol真的烦
     //import UserInfo from "../modules/userInfo";
     import axios from "axios";
     import ImageList from "@/components/modules/imageList";
     import Navigation from "@/components/modules/Navigation";
+    import {mapState} from "vuex";
+    import {inject} from "vue";
+    import {useHead} from "@vueuse/head";
+    import SearchIcon from "@/components/icons/searchIcon";
     //import Tweet from "@/components/modules/tweet";
     const CancelToken = axios.CancelToken;
     let cancel = function () {};
     export default {
       name: "online",
-      components: {Navigation, ImageList},
+      setup () {
+        useHead({
+          title: '媒体加载器',
+        })
+        const notice = inject('notice')
+        return {
+          notice
+        }
+      },
+      components: {SearchIcon, Navigation, ImageList},
       //components: {Tweet, UserInfo},
         data() {
             return {
@@ -80,7 +96,8 @@
                 video: false,
             }
         },
-      computed: {
+      computed: mapState({
+        settings: 'settings',
           //tweet: function () {
           //  let tmpTweet = {}
           //  let tmpTweetOutput = {
@@ -121,23 +138,16 @@
           //  }
           //    return tmpTweetOutput
           //}
-      },
+      }),
       beforeRouteEnter(to, from, next) {
         //none
         next(vm => {
           cancel();
           vm.routeCase(to)
-          next()
         })
       },
-      beforeRouteUpdate(to, from, next) {
+      beforeRouteUpdate(to) {
         this.routeCase(to)
-        next()
-      },
-      metaInfo () {
-        return {
-          title: "媒体加载器",
-        }
       },
       mounted: function () {
         this.routeCase(this.$route)
@@ -149,7 +159,7 @@
             this.video = false
             this.rawData = {}
             //https://tm.bangdream.fun/tmv2/api/v2/online/info/?tweet_id=1355686950640836609
-            axios.get(this.$root.settings.data.basePath + '/api/v2/online/media/?tweet_id=' + this.tweet_id, {
+            axios.get(this.settings.data.basePath + '/api/v2/online/media/?tweet_id=' + this.tweet_id, {
               cancelToken: new CancelToken(c => cancel = c)
             }).then(response => {
               if (response.data.code === 200) {
@@ -177,7 +187,7 @@
               this.tweets = {}
               this.users = {}
               //https://tm.bangdream.fun/tmv2/api/v2/online/info/?tweet_id=1355686950640836609
-              axios.get(this.$root.settings.data.basePath + '/api/v2/online/info/?tweet_id=' + this.tweet_id, {
+              axios.get(this.settings.data.basePath + '/api/v2/online/info/?tweet_id=' + this.tweet_id, {
                 cancelToken: new CancelToken(c => cancel = c)
               }).then(response => {
                 if (response.data.code === 200) {
@@ -206,9 +216,6 @@
               } else {
                 this.load = false
               }
-            },
-            notice: function (text, status) {
-                this.$parent.notice(text, status);
             },
             updateProtect: function (val) {
                 this.protect = val;

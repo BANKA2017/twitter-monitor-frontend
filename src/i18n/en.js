@@ -64,7 +64,7 @@ module.exports = {
     },
     timeline: {
         message: {
-            not_exist: "@{0} is not exist",
+            not_exist: "{'@'}{0} is not exist",
             no_longer_monitor_deleted: "This account has been deleted, we will no longer monitor it",
             no_longer_monitor_protected: "This account has been protected, we will no longer monitor it",
             load_more: "Load more",
@@ -107,7 +107,7 @@ module.exports = {
     },
     userinfo: {
         message: {
-            load_success: "Load {0} (@{1}) success"
+            load_success: "Load {0} ({'@'}{1}) success"
         }
     },
     candlestick_chart: {
@@ -137,7 +137,7 @@ module.exports = {
             all_of_these_words: "All of these words",
             example_text_include: "Example: what’s happening · contains both “what’s” and “happening”",
             from_this_accounts: "From these accounts",
-            example_from_this_accounts: "Example: @Twitter · From @Twitter",
+            example_from_this_accounts: "Example: {'@'}Twitter · From {'@'}Twitter",
             clean: "Clean",
             example_search_time: "Example: 2021-01-01 -> 2021-01-02",
             nav_bar: {

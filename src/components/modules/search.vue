@@ -1,15 +1,7 @@
 <template>
     <div id="search" @keyup.enter="$router.push({path: '/search/', query: queryObject})">
         <div class="my-2" v-if="!(displayType === 'search' && search.mode === 2)" id="searchTweets">
-            <el-input :clearable="search.mode === 0"
-                      :type="(search.mode === 1 && displayType === 'timeline') ? 'date' : 'text'" class="input-with-select"
-                      :placeholder="$t('search.normal_search.input_text_here')" v-model="search.keywords" :max="$root.now.getFullYear() + '-' + ($root.now.getMonth() < 9 ? '0' : '') + ($root.now.getMonth() + 1) + '-' + ($root.now.getDate() < 10 ? '0' : '') + $root.now.getDate()">
-                <el-select v-model="search.mode" slot="prepend" :placeholder="$t('search.normal_search.select')" v-if="displayType === 'timeline'">
-                    <el-option :label="$t('search.normal_search.search_by_text')" :value="0"></el-option>
-                    <el-option :label="$t('search.normal_search.search_by_date')" :value="1"></el-option>
-                    <el-option :label="$t('search.normal_search.advanced_search')" :value="2"></el-option>
-                </el-select>
-            </el-input>
+            <el-input v-model="search.keywords" :placeholder="$t('search.normal_search.input_text_here')" clearable type="text" />
             <template v-if="search.keywords === 'help' || search.keywords === '帮助'">
                 <search-tips/>
                 <div class="my-4"></div>
@@ -63,12 +55,12 @@
             </div>
             <input type="text" class="form-control" aria-label="Text input with checkbox" :placeholder="$t('search.advanced_search.from_this_accounts')" v-model="search.advancedSearch.user.text">
           </div>
-          <label for="searchUserInclude" class="text-muted my-2 mb-4">{{ $t('search.advanced_search.example_from_this_accounts') }}</label>
+          <label class="text-muted my-2 mb-4" for="searchUserInclude">{{ $t("search.advanced_search.example_from_this_accounts") }}</label>
           <!-- time -->
           <div class="input-group" id="searchTime">
-            <input class="form-control" placeholder="since" type="date" :max="$root.now.getFullYear() + '-' + ($root.now.getMonth() < 9 ? '0' : '') + ($root.now.getMonth() + 1) + '-' + ($root.now.getDate() < 10 ? '0' : '') + $root.now.getDate()" v-model="search.advancedSearch.start">
+            <input v-model="search.advancedSearch.start" :max="now.getFullYear() + '-' + (now.getMonth() < 9 ? '0' : '') + (now.getMonth() + 1) + '-' + (now.getDate() < 10 ? '0' : '') + now.getDate()" class="form-control" placeholder="since" type="date">
             <div id="searchTimeTo" class="input-group-append"><span class="input-group-text">-></span></div>
-            <input class="form-control input-group-append" placeholder="to" :min="search.advancedSearch.start" :max="$root.now.getFullYear() + '-' + ($root.now.getMonth() < 9 ? '0' : '') + ($root.now.getMonth() + 1) + '-' + ($root.now.getDate() < 10 ? '0' : '') + $root.now.getDate()" type="date" v-model="search.advancedSearch.end">
+            <input v-model="search.advancedSearch.end" :max="now.getFullYear() + '-' + (now.getMonth() < 9 ? '0' : '') + (now.getMonth() + 1) + '-' + (now.getDate() < 10 ? '0' : '') + now.getDate()" :min="search.advancedSearch.start" class="form-control input-group-append" placeholder="to" type="date">
             <div id="searchTimeDel" class="input-group-append">
               <button class="btn btn-outline-danger" type="button" @click="() => {search.advancedSearch.start = ''; search.advancedSearch.end = ''}">
                 {{ $t('search.advanced_search.clean') }}
@@ -90,9 +82,9 @@
             <button type="button" :class="{'btn': true, 'btn-outline-primary': true, 'btn-sm': true, 'active': search.advancedSearch.tweetType.media !== 0}" @click="search.advancedSearch.tweetType.media = ((search.advancedSearch.tweetType.media === 0) ? 1 : 0)">含有链接</button>
             <button type="button" :class="{'btn': true, 'btn-outline-primary': true, 'btn-sm': true, 'active': search.advancedSearch.tweetType.media !== 0}" @click="search.advancedSearch.tweetType.media = ((search.advancedSearch.tweetType.media === 0) ? 1 : 0)">含有引用</button>
           </div>-->
-          <button role="button" :class="{'btn': true, 'btn-outline-dark': true, 'btn-sm': true, 'btn-block': true, 'active': search.advancedSearch.hidden}" @click="search.advancedSearch.hidden = !search.advancedSearch.hidden" v-if="$root.settings.adminStatus">{{ $t('search.advanced_search.nav_bar.hidden') }}</button>
+          <button v-if="settings.adminStatus" :class="{'btn': true, 'btn-outline-dark': true, 'btn-sm': true, 'btn-block': true, 'active': search.advancedSearch.hidden}" role="button" @click="search.advancedSearch.hidden = !search.advancedSearch.hidden">{{ $t('search.advanced_search.nav_bar.hidden') }}</button>
           <div class="my-1"></div>
-          <i18n path="search.advanced_search.tips.line1.text" tag="label" class="text-muted">
+          <i18n-t class="text-muted" keypath="search.advanced_search.tips.line1.text" tag="label">
             <template v-slot:or_mode>
               <code>{{ $t('search.advanced_search.tips.line1.or_mode') }}</code>
             </template>
@@ -102,7 +94,7 @@
             <template v-slot:not_mode>
               <code>{{ $t('search.advanced_search.tips.line1.not_mode') }}</code>
             </template>
-          </i18n>
+          </i18n-t>
           <label class="text-muted">{{ $t('search.advanced_search.tips.line2') }}</label>
           <div class="my-1"></div>
           <router-link :to="{path: '/search/', query: queryObject}" type="button" class="btn btn-primary text-right">{{ $t('search.advanced_search.search') }}</router-link>
@@ -113,7 +105,7 @@
                 <template v-if="search.keywords.slice(0, 1) === '@'">
                     <router-link :key="s" :to="`/i/project/`+user.project+`/`+user.name+`/all`"
                                  class="list-group-item list-group-item-action" v-for="(user, s) in correctUserList"><b>{{
-                        user.display_name }}</b> | <small>@{{ user.name }}</small> > <small>{{ $root.project + ' (' +
+                        user.display_name }}</b> | <small>@{{ user.name }}</small> > <small>{{ project + ' (' +
                         user.tag + ')' }}</small></router-link>
                     <!--<div class="my-3" v-if="search.keywords.slice(1).length > 0"></div>-->
                 </template>
@@ -140,11 +132,15 @@
 
 <script>
     import SearchTips from "./searchTips";
+    import {mapState} from "vuex";
     export default {
         name: "search",
         components: {SearchTips},
+        data: () => ({
+          search: {}
+        }),
         props: {
-            search: {
+            searchProps: {
                 type: Object,
                 default: () => ({
                   keywords: '',
@@ -171,7 +167,10 @@
                   }
                 })
             },
-            displayType: String,
+            displayType: {
+              type: String,
+              default: "search"
+            },
             name: {
               type: String,
               default: ''
@@ -193,10 +192,14 @@
             deep: true
           },
         },
-        computed: {
+        computed: mapState({
+            now: 'now',
+            settings: 'settings',
+            userList: 'userList',
+            project: 'project',
             correctUserList: function () {
                 let tmpList = [];
-                this.$root.userList.map(x => {
+                this.userList.map(x => {
                     if (this.search.keywords.slice(1).length > 0 && (RegExp(this.search.keywords.slice(1), 'i').test(x.name) || RegExp(this.search.keywords.slice(1)).test(x.display_name))) {
                         tmpList.push(x)
                     }
@@ -220,7 +223,7 @@
                     order: this.search.advancedSearch.order ? 1 : 0,
                     advanced: 1,
                   }
-                  if (this.$root.settings.adminStatus) {
+                  if (this.settings.adminStatus) {
                     returnObject['hidden'] = this.search.advancedSearch.hidden ? 1 : 0
                   }
                   return returnObject
@@ -228,10 +231,18 @@
                   return {q: this.search.keywords.trim()}// + ((this.name.length && !RegExp('@' + this.name).test(this.search.keywords)) ? ' @' + this.name : '')
                 }
             }
-        },
+        }),
+        mounted: function () {
+          this.search = this.searchProps
+        }
     }
 </script>
 
-<style scoped>
-
+<style lang="scss" scoped>
+.el-select .el-input {
+  width: 120px;
+}
+.el-input-group__prepend {
+  background-color: #fff;
+}
 </style>

@@ -27,7 +27,7 @@ module.exports = {
     },
     timeline: {
         message: {
-            not_exist: "@{0} 不存在",
+            not_exist: "{'@'}{0} 不存在",
             no_longer_monitor_deleted: "此账户已删除，我们将不再监控此账户",
             no_longer_monitor_protected: "此账户已被保护，我们将不再监控此账户",
             load_more: "加载更多",
@@ -70,7 +70,7 @@ module.exports = {
     },
     userinfo: {
         message: {
-            load_success: "成功加载 {0} (@{1})"
+            load_success: "成功加载 {0} ({'@'}{1})"
         }
     },
     candlestick_chart: {
@@ -100,7 +100,7 @@ module.exports = {
             all_of_these_words: "所有这些词语",
             example_text_include: "例如：什么 新鲜事 · 既包含“什么”，也包含“新鲜事”",
             from_this_accounts: "来自这些用户",
-            example_from_this_accounts: "例如：@Twitter · 来自 @Twitter",
+            example_from_this_accounts: "例如：{'@'}Twitter · 来自 {'@'}Twitter",
             clean: "清空",
             example_search_time: "例如：2021-01-01 -> 2021-01-02",
             nav_bar: {

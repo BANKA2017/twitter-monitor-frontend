@@ -5,7 +5,7 @@
             <div class="row no-gutters">
                 <div class="card mx-auto" v-if="media.length">
                     <div class="row no-gutters">
-                        <el-image :alt="pollImage" :preview-src-list="[$root.settings.data.mediaPath+($root.settings.data.mediaPath === $root.settings.data.basePath ? `/api/v2/media/tweets/` : '')+media[0].url+'']" :src="$root.settings.data.mediaPath+($root.settings.data.mediaPath === $root.settings.data.basePath ? `/api/v2/media/tweets/` : '')+media[0].url+''" class="col-12 card-img-top" fit="cover" lazy style="height: 300px"></el-image>
+                        <el-image :alt="pollImage" :preview-src-list="[createRealMediaPath('tweets')+media[0].url+'']" :src="createRealMediaPath('tweets')+media[0].url+''" class="col-12 card-img-top" fit="cover" lazy style="height: 300px"></el-image>
                     </div>
                 </div>
                 <div v-if="etaSeconds <= 0 && polls[0].checked === 1" class="col-12">
@@ -22,6 +22,8 @@
 </template>
 
 <script>
+    import {mapState} from "vuex";
+
     export default {
         name: "twPolls",
         props: {
@@ -30,7 +32,11 @@
             language: String,
             media: Array,
         },
-        computed: {
+        computed: mapState({
+            now: 'now',
+            settings: 'settings',
+            realMediaPath: 'realMediaPath',
+            samePath: 'samePath',
             pollCount: function () {
                 let count = 0;
                 this.polls.forEach(poll => {
@@ -40,7 +46,7 @@
             },
             etaSeconds: function () {
                 //对比当前时间
-                return (parseInt(this.polls[0].end_datetime) * 1000 - this.$root.now) / 1000;
+                return (parseInt(this.polls[0].end_datetime) * 1000 - this.now) / 1000;
             },
             eta: function () {
                 if (this.etaSeconds <= 0 && this.polls[0].checked === 1) {
@@ -60,7 +66,12 @@
                     return this.$tc("polls.vote", this.pollCount > 1 ? 2 : 1, [this.pollCount]) + ' · ' + this.$t("polls.eta", [Math.ceil(this.etaSeconds/86400) +' '+ this.$tc("public.time.day", Math.ceil(this.etaSeconds/86400) === 1 ? 1 : 2)])
                 }
             }
+        }),
+      methods: {
+        createRealMediaPath: function (type = 'tweets') {
+          return this.realMediaPath + (this.samePath ? type + '/' : '')
         }
+      }
     }
 </script>
 

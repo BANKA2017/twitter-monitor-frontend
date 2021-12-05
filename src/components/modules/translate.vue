@@ -19,8 +19,16 @@
 
 <script>
     import axios from 'axios'
+    import {mapState} from "vuex";
+    import {inject} from "vue";
     export default {
         name: "translate",
+      setup () {
+        const notice = inject('notice')
+        return {
+          notice
+        }
+      },
         props: {
           type: Number,
           id: [String, Number],//tweet_id or uid
@@ -39,12 +47,12 @@
         }
       },
       watch: {
-        "$root.tweets": {
+        "tweets": {
           handler: function () {
             if (this.type === 0 && this.order > -1) {
-              if (this.$root.tweets[this.order].translate) {
-                this.text = this.$root.tweets[this.order].translate.text
-                this.translate_source = this.$root.tweets[this.order].translate.translate_source
+              if (this.tweets[this.order].translate) {
+                this.text = this.tweets[this.order].translate.text
+                this.translate_source = this.tweets[this.order].translate.translate_source
                 this.status = 2
               } else {
                 this.text = ''
@@ -56,22 +64,24 @@
           deep: true
         },
       },
-      computed: {
+      computed: mapState({
+          settings: 'settings',
+          tweets: 'tweets',
           toLanguage: function () {
             if (this.to === 'zh_hans') { return 'zh-cn'}
             if (this.to === 'zh_hant') { return 'zh-tw'}
             return this.to
           }
-      },
+      }),
       methods: {
         translate: function (id = 0, type = 0) {
           //type为0即推文, 为1即用户信息
           this.status = 1;
           if (type === 0) {
-            if (!this.$root.tweets[this.order].translate) {
-              axios.get(this.$root.settings.data.basePath + '/api/v2/data/translate/?tr_type=tweets&tweet_id=' + id + '&to=' + this.toLanguage).then(response => {
+            if (!this.tweets[this.order].translate) {
+              axios.get(this.settings.data.basePath + '/api/v2/data/translate/?tr_type=tweets&tweet_id=' + id + '&to=' + this.toLanguage).then(response => {
                 if (this.order > -1) {
-                  this.$root.tweets[this.order].translate = {
+                  this.tweets[this.order].translate = {
                     text: response.data.data.translate,
                     translate_source: response.data.data.translate_source
                   }
@@ -84,12 +94,12 @@
                 this.status = 0;
               })
             } else {
-              this.text = this.$root.tweets[this.order].translate.text
-              this.translate_source = this.$root.tweets[this.order].translate.translate_source
+              this.text = this.tweets[this.order].translate.text
+              this.translate_source = this.tweets[this.order].translate.translate_source
               this.status = 2
             }
                 } else if (type === 1) {
-                    axios.get(this.$root.settings.data.basePath + '/api/v2/data/translate/?tr_type=profile&uid=' + id + '&to=' + this.toLanguage).then(response => {
+                    axios.get(this.settings.data.basePath + '/api/v2/data/translate/?tr_type=profile&uid=' + id + '&to=' + this.toLanguage).then(response => {
                         this.text = response.data.data.translate;
                         this.translate_source = response.data.data.translate_source;
                         this.status = 2;

@@ -24,7 +24,7 @@
               <div :id="`list`+k" class="list-group">
                 <template v-for="(data, key) in v">
                   <router-link v-if="!(k === 2 && data.count < 0)" :key="key" :class="{'list-group-item': true, 'list-group-item-action': true, 'd-flex': false, 'justify-content-between': true, 'align-items-center': true}" :to="`/` + data.name + `/all`">
-                    <el-image :src="$root.settings.data.mediaPath+($root.settings.data.mediaPath === $root.settings.data.basePath ? `/api/v2/media/userinfo/` : '') + (data.header.replace(/https:\/\/|http:\/\//, ''))" class="rounded-circle img-fluid" lazy style="max-height: 50px; max-width: 50px"></el-image>
+                    <el-image :src="createRealMediaPath('userinfo') + (data.header.replace(/https:\/\/|http:\/\//, ''))" class="rounded-circle img-fluid" lazy style="max-height: 50px; max-width: 50px"></el-image>
                     <div class="d-flex w-100 justify-content-between">
                       <h5 class="mb-1 d-inline-block text-truncate">{{ data.display_name }}</h5>
                       <small><span class="badge badge-primary badge-pill">{{ data.count }}</span></small>
@@ -44,7 +44,7 @@
     <transition name="el-fade-in">
       <div class="el-backtop" style="right: 40px; bottom: 90px"
            @click="()=>{getData()}">
-        <i class="el-icon-refresh-right"></i>
+        <arrow-clockwise height="1em" status="" width="1em" />
       </div>
     </transition>
   </div>
@@ -53,9 +53,26 @@
 <script>
 import Tmv2Chart from "@/components/modules/tmv2Chart";
 import axios from "axios";
+import {mapState} from "vuex";
+import {inject} from "vue";
+import {useHead} from "@vueuse/head";
+import ArrowClockwise from "@/components/icons/arrowClockwise";
 export default {
   name: "trends",
-  components: {Tmv2Chart},
+  setup () {
+    useHead({
+      title: '趋势',
+      meta: [{
+        name: "theme-color",
+        content: "#1da1f2"
+      }]
+    })
+    const notice = inject('notice')
+    return {
+      notice
+    }
+  },
+  components: {ArrowClockwise, Tmv2Chart},
   data: () => ({
     //24小时榜
     hashTagsRank24: [],
@@ -63,26 +80,20 @@ export default {
     userData: [],
     listType: [['增粉榜', '#fa6e86'], ['掉粉榜', '#19d4ae'], ['发推榜', '#fa6e86']],
   }),
-  computed: {
+  computed: mapState({
+    settings: 'settings',
+    realMediaPath: 'realMediaPath',
+    samePath: 'samePath',
     timeCount: function () {
       return this.timeCountOrigin.map((count, time) => ({time: time, count: count}))
     }
-  },
-  metaInfo () {
-    return {
-      title: "趋势",
-      meta: [{
-        name: "theme-color",
-        content: "#1da1f2"
-      }]
-    }
-  },
+  }),
   mounted: function () {
     this.getData()
   },
   methods: {
     getData: function () {
-      axios.get(this.$root.settings.data.basePath + '/api/v2/data/trends').then(response => {
+      axios.get(this.settings.data.basePath + '/api/v2/data/trends').then(response => {
         this.hashTagsRank24 = response.data.data.hashtag_list
         this.timeCountOrigin = response.data.data.tweet_time_list
         response.data.data.following.push(response.data.data.statuses)
@@ -97,6 +108,9 @@ export default {
         //  }, 5000);
         //}
       });
+    },
+    createRealMediaPath: function (type = 'tweets') {
+      return this.realMediaPath + (this.samePath ? type + '/' : '')
     }
   }
 }

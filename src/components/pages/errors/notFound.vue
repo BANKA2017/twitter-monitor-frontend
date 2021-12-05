@@ -10,16 +10,18 @@
 </template>
 
 <script>
+import {useHead} from "@vueuse/head";
+
 export default {
   name: "notFound",
-  metaInfo () {
-    return {
-      title: "404",
+  setup() {
+    useHead({
+      title: '404',
       meta: [{
         name: "theme-color",
         content: "#1da1f2"
       }]
-    }
+    })
   },
 }
 </script>

@@ -37,16 +37,18 @@
 </template>
 
 <script>
+import {useHead} from "@vueuse/head";
+
 export default {
   name: "annual2019",
-  metaInfo () {
-    return {
-      title: "2019统计",
+  setup() {
+    useHead({
+      title: '2019统计',
       meta: [{
         name: "theme-color",
         content: "#1da1f2"
       }]
-    }
+    })
   },
 }
 </script>

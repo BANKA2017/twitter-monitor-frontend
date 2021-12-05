@@ -2,18 +2,17 @@
     <div id="twCard">
         <div class="card mb-3" style="border-radius: 14px 14px 14px 14px">
             <div>
-                <a v-if="object.url.length && object.type !== 'unified_card'" :href="(object.type === 'audiospace' ? 'https://twitter.com/i/spaces/' : '') + object.url" class="stretched-link text-decoration-none" target="_blank"></a>
+                <a v-if="object?.url && object.type !== 'unified_card'" :href="(object.type === 'audiospace' ? 'https://twitter.com/i/spaces/' : '') + object.url" class="stretched-link text-decoration-none" target="_blank"></a>
                 <template v-if="object.type === 'summary' || object.type === 'audio' || object.type === 'app' || object.type === 'moment'">
                     <div class="row no-gutters">
-                        <el-image v-if="object.media === 1 && mediaState" :preview-src-list="[$root.settings.data.mediaPath+($root.settings.data.mediaPath === $root.settings.data.basePath ? `/api/v2/media/tweets/` : '')+latestMedia.cover]" :src="$root.settings.data.mediaPath+($root.settings.data.mediaPath === $root.settings.data.basePath ? `/api/v2/media/tweets/` : '')+latestMedia.cover" alt="cardImage" class="col-4 card-img border-right" fit="cover" lazy style="border-radius: 14px 0 0 14px"></el-image>
+                        <el-image v-if="object.media === 1 && mediaState" :preview-src-list="[createRealMediaPath('tweets')+latestMedia.cover]" :src="createRealMediaPath('tweets')+latestMedia.cover" alt="cardImage" class="col-4 card-img border-right" fit="cover" lazy style="border-radius: 14px 0 0 14px"></el-image>
                       <div class="col-8">
                         <div class="card-body">
                           <div class="row no-gutters">
                             <p class="col-12 text-truncate card-title" style="color: black">{{ object.title }}</p>
                             <template v-if="object.description !== ''"><small
                                 class="text-muted text-truncate col-12">{{ object.description }}</small><br></template>
-                            <small class="text-muted col-12" v-if="object.vanity_url !== ''"><i
-                                class="el-icon-link"></i>{{ object.vanity_url }}</small>
+                            <small v-if="object.vanity_url !== ''" class="text-muted col-12"><link45deg height="1em" status="" width="1em" />{{ object.vanity_url }}</small>
                           </div>
                         </div>
                       </div>
@@ -28,23 +27,21 @@
                 </div>
               </template>
               <template v-else-if="object.type === 'unified_card'">
-                <template v-if="object.secondly_type === 'image_website' || object.secondly_type === 'image_app' || object.secondly_type === 'twitter_list_details'" >
-                  <div v-if="mediaState"
-                       :style="`width: 100%; padding-bottom: ` +  paddingBottom( latestMedia.cover, latestMedia.origin_info_height, latestMedia.origin_info_width) +  `%; height: 0; border-radius: 14px 14px 0 0`"
-                       class="no-gutters">
-                    <el-image :preview-src-list="[$root.settings.data.mediaPath+($root.settings.data.mediaPath === $root.settings.data.basePath ? `/api/v2/media/tweets/` : '')+latestMedia.cover]"
-                              :src="$root.settings.data.mediaPath+($root.settings.data.mediaPath === $root.settings.data.basePath ? `/api/v2/media/tweets/` : '')+latestMedia.cover" alt="cardImage"
-                              class="card-img-top" fit="cover" lazy
-                              style="width: 100%; position: absolute; border-radius: 14px 14px 0 0"
-                              @load="load = true"></el-image>
+                <div v-if="mediaState && object.secondly_type === 'image_website' || object.secondly_type === 'image_app' || object.secondly_type === 'twitter_list_details'"
+                     :style="{width: '100%', height: 0, 'padding-bottom': paddingBottom( latestMedia.cover, latestMedia.origin_info_height, latestMedia.origin_info_width) + '%', 'border-radius': '14px 14px 0 0'}"
+                     class="no-gutters">
+                  <el-image :preview-src-list="[createRealMediaPath('tweets')+latestMedia.cover]"
+                            :src="createRealMediaPath('tweets')+latestMedia.cover" :style="{width: '100%', position: 'absolute', 'border-radius': '14px 14px 0 0'}"
+                            alt="cardImage" class="card-img-top" fit="cover"
+                            lazy
+                            @load="load = true"></el-image>
 
-                  </div>
-                </template>
+                </div>
                 <template v-else-if="object.secondly_type === 'video_website' || object.secondly_type === 'video_app'" >
                   <div v-if="mediaState" :class="`no-gutters embed-responsive embed-responsive-` + (ratio < 16 / 9 ? (ratio < 4 / 3 ? '1by1' : '4by3') :ratio > 16 / 9 ? '21by9' : '16by9')">
                     <video id="videoPlayer"
-                         :poster="$root.settings.data.mediaPath+($root.settings.data.mediaPath === $root.settings.data.basePath ? `/api/v2/media/tweets/` : '') +media[0].cover"
-                         :src="$root.settings.data.mediaPath+($root.settings.data.mediaPath === $root.settings.data.basePath ? `/api/v2/media/tweets/` : '') +media[0].url" :type="media[0].content_type" class="border" controls loop playsinline
+                         :poster="createRealMediaPath('tweets') +media[0].cover"
+                         :src="createRealMediaPath('tweets') +media[0].url" :type="media[0].content_type" class="border" controls loop playsinline
                          preload="none"
                          style="width: 100%; height: 100%; border-radius: 14px 14px 0 0; background-color: black"></video>
                   </div>
@@ -54,8 +51,8 @@
                                indicator-position="outside" trigger="click" @change="changeMultiDestCarouselOrder">
                     <el-carousel-item v-for="(mediaInfo, key) in media" :key="key" :name="key.toString()">
                       <!--TODO fix lazy image in el-carousel-->
-                      <el-image :preview-src-list="[$root.settings.data.mediaPath+($root.settings.data.mediaPath === $root.settings.data.basePath ? `/api/v2/media/tweets/` : '')+mediaInfo.cover]"
-                                :src="$root.settings.data.mediaPath+($root.settings.data.mediaPath === $root.settings.data.basePath ? `/api/v2/media/tweets/` : '')+mediaInfo.url" alt="cardImage"
+                      <el-image :preview-src-list="[createRealMediaPath('tweets')+mediaInfo.cover]"
+                                :src="createRealMediaPath('tweets')+mediaInfo.url" alt="cardImage"
                                 class="card-img-top" fit="cover"
                                 @load="load = true"></el-image>
                     </el-carousel-item>
@@ -63,7 +60,7 @@
                 </div>
                 <span v-else class="text-center">{{ $t("tw_card.text.not_supported_type") }}</span>
                 <div v-if="object.secondly_type === 'image_multi_dest_carousel_website' || object.secondly_type === 'video_multi_dest_carousel_website'" class="card-body position-relative">
-                  <a v-if="multiDestCarouselData.length && !object.app"
+                  <a v-if="multiDestCarouselData && !object.app"
                        :href="multiDestCarouselData[multiDestCarouselOrder].url"
                        class="stretched-link text-decoration-none" target="_blank"></a>
                   <template v-if="multiDestCarouselData[multiDestCarouselOrder].description !== ''"><small
@@ -74,8 +71,7 @@
                       <el-button class="mx-1 mb-1" plain round size="small" type="primary">{{ device[app.type] }}</el-button>
                     </a>
                   </div>-->
-                  <small class="text-muted"><i
-                      class="el-icon-link"></i>{{ multiDestCarouselData[multiDestCarouselOrder].vanity_url }}</small>
+                  <small class="text-muted"><link45deg height="1em" status="" width="1em" /> {{ multiDestCarouselData[multiDestCarouselOrder].vanity_url }}</small>
                 </div>
                 <div v-else-if="object.secondly_type === 'twitter_list_details'">
                   <a v-if="userListData.url" :href="userListData.url" class="stretched-link text-decoration-none" target="_blank"></a>
@@ -90,7 +86,7 @@
                   </div>
                 </div>
                 <div v-else class="card-body position-relative">
-                  <a v-if="object.url.length && !object.app" :href="object.url" class="stretched-link text-decoration-none" target="_blank"></a>
+                  <a v-if="object?.url && !object.app" :href="object.url" class="stretched-link text-decoration-none" target="_blank"></a>
                   <p class="card-title" style="color: black">{{ object.title }}</p>
                   <template v-if="object.description !== ''"><small class="text-muted">{{ object.description }}</small><br></template>
                   <div v-if="object.app" class="mx-auto mt-2" >
@@ -98,25 +94,25 @@
                       <el-button class="mx-1 mb-1" plain round size="small" type="primary">{{ device[app.type] }}</el-button>
                     </a>
                   </div>
-                  <small v-else-if="object.vanity_url.length" class="text-muted"><i class="el-icon-link"></i>{{ object.vanity_url }}</small>
+                  <small v-else-if="object?.vanity_url" class="text-muted"><link45deg height="1em" status="" width="1em" />{{ object.vanity_url }}</small>
                 </div>
               </template>
               <template v-else>
                 <div v-if="object.media === 1 && mediaState" class="border-bottom">
                   <div
-                      :style="`width: 100%; padding-bottom: ` +  paddingBottom( latestMedia.cover, latestMedia.origin_info_height, latestMedia.origin_info_width) +  `%; height: 0; border-radius: 14px 14px 0 0`"
+                      :style="{width: '100%', height: 0, 'padding-bottom': paddingBottom( latestMedia.cover, latestMedia.origin_info_height, latestMedia.origin_info_width) + '%', 'border-radius': '14px 14px 0 0'}"
                       class="no-gutters">
-                    <el-image :preview-src-list="[$root.settings.data.mediaPath+($root.settings.data.mediaPath === $root.settings.data.basePath ? `/api/v2/media/tweets/` : '')+latestMedia.cover]"
-                              :src="$root.settings.data.mediaPath+($root.settings.data.mediaPath === $root.settings.data.basePath ? `/api/v2/media/tweets/` : '')+latestMedia.cover" alt="cardImage"
+                    <el-image :preview-src-list="[createRealMediaPath('tweets')+latestMedia.cover]"
+                              :src="createRealMediaPath('tweets')+latestMedia.cover" :style="{width: '100%', position: 'absolute', 'border-radius': '14px 14px 0 0'}"
                               class="card-img-top" fit="cover" lazy
-                                  style="width: 100%; position: absolute; border-radius: 14px 14px 0 0"
+                              alt="cardImage"
                                   @load="load = true"></el-image>
                       </div>
                     </div>
                     <div class="card-body position-static">
                         <p class="card-title" style="color: black">{{ object.title }}</p>
                         <template v-if="object.description !== ''"><small class="text-muted">{{ object.description }}</small><br></template>
-                        <small class="text-muted" v-if="object.vanity_url.length"><i class="el-icon-link"></i>{{ object.vanity_url }}</small>
+                        <small v-if="object?.vanity_url" class="text-muted"><link45deg height="1em" status="" width="1em" />{{ object.vanity_url }}</small>
                     </div>
                 </template>
             </div>
@@ -125,16 +121,27 @@
 </template>
 
 <script>
-    import BoxArrowUpRight from "@/components/icons/boxArrowUpRight";
     import List from "@/components/icons/list";
     import Verified from "@/components/icons/verified";
+    import {mapState} from "vuex";
+    import BoxArrowUpRight from "@/components/icons/boxArrowUpRight";
+    import Link45deg from "@/components/icons/link45deg";
     export default {
       name: "twCard",
-      components: {Verified, List, BoxArrowUpRight},
+      components: {Link45deg, BoxArrowUpRight, Verified, List, },
       props: {
-        object: Object,
-        media: Array,
-        mediaState: Boolean,
+        object: {
+          type: Object,
+          default: () => ({})
+        },
+        media: {
+          type: Array,
+          default: () => ([])
+        },
+        mediaState: {
+          type: Boolean,
+          default: false
+        },
         //only for audiospace
         userName: {
           type: String,
@@ -148,6 +155,8 @@
       data() {
         return {
           load: false,
+          //height: '0',
+          //position: 'absolute',
           device: {
             android_app: "Android",
             iphone_app: "iPhone",
@@ -156,9 +165,12 @@
           multiDestCarouselOrder: 0
         }
       },
-      computed: {
+      computed: mapState({
+        settings: 'settings',
+        realMediaPath: 'realMediaPath',
+        samePath: 'samePath',
         latestMedia: function () {
-          if (this.media.length) {
+          if (this.media) {
             return this.media[this.media.length - 1];
           } else {
             return []
@@ -207,12 +219,12 @@
           }
           return tmpData
         }
-      },
+      }),
         methods: {
           paddingBottom: function (link, height = 0, width = 0) {
             if (this.load) {
               let img = new Image();
-              img.src = this.$root.settings.data.mediaPath + (this.$root.settings.data.mediaPath === this.$root.settings.data.basePath ? `/api/v2/media/tweets/` : '') + link;
+              img.src = this.createRealMediaPath('tweets') + link;
               return (img.height / img.width) * 100
             } else {
               let getScale = /name=([0-9]+)x([0-9]+)/.exec(link);
@@ -225,7 +237,15 @@
           },
           changeMultiDestCarouselOrder: function (callback) {
             this.multiDestCarouselOrder = callback
-          }
+          },
+          createRealMediaPath: function (type = 'tweets') {
+            return this.realMediaPath + (this.samePath ? type + '/' : '')
+          },
+          //loadEvent: function () {
+          //  this.load = true
+          //  this.height = '100%'
+          //  this.position = 'reali'
+          //},
         }
     }
 </script>

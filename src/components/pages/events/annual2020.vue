@@ -86,7 +86,7 @@
             <el-table-column label="监听天数" prop="time" sortable></el-table-column>
             <el-table-column :filter-method="filterTag" :filters="projects" filter-placement="bottom-end"
                              header-align="center" label="组" prop="group">
-              <template slot-scope="scope">
+              <template #scope>
                 <el-tag v-for="group in scope.row.group" :key="group" :type="colorForGroup[group]" disable-transitions>
                   {{ group }}
                 </el-tag>
@@ -129,9 +129,19 @@
 <script>
 import Tweet from "@/components/modules/tweet";
 import Tmv2Chart from "@/components/modules/tmv2Chart";
+import {useHead} from "@vueuse/head";
 
 export default {
   name: "annual2020",
+  setup() {
+    useHead({
+      title: '2020统计',
+      meta: [{
+        name: "theme-color",
+        content: "#1da1f2"
+      }]
+    })
+  },
   components: {Tmv2Chart, Tweet},
   data: () => ({
     userAddList: [{"name": "AAside_INFO", "display_name": "AAside日服", "add": true}, {
@@ -4102,15 +4112,6 @@ export default {
       serverStatusTotalSuccessRate: ['#0067a6'],
     }
   }),
-  metaInfo () {
-    return {
-      title: "2020统计",
-      meta: [{
-        name: "theme-color",
-        content: "#1da1f2"
-      }]
-    }
-  },
   methods: {
     filterTag(value, row) {
       let r = false

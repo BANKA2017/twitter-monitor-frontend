@@ -14,12 +14,12 @@
                 <div class="my-4"></div>
                 <p class='card-text' ref="quote_text">{{ quoteObject.full_text }}</p>
                 <div id="quotefoot">
-                    <small class="text-muted">{{ timeGap(quoteObject.time, $root.now, language) }}</small>
+                    <small class="text-muted">{{ timeGap(quoteObject.time, now, language) }}</small>
                 </div>
                 <!--media-->
                 <template v-if="quoteObject.media === 1&&!displayPicture">
                     <div class="my-4"></div>
-                    <image-list :list="quoteMedia" :is_video="quoteObject.video" :basePath="$root.settings.data.basePath" :bottom="true"/>
+                    <image-list :basePath="settings.data.basePath" :bottom="true" :is_video="quoteObject.video" :list="quoteMedia"/>
                 </template>
             </template>
         </div>
@@ -27,18 +27,23 @@
 </template>
 
 <script>
-    import BoxArrowUpRight from "../icons/boxArrowUpRight";
     import ImageList from "./imageList";
+    import {mapState} from "vuex";
+    import BoxArrowUpRight from "@/components/icons/boxArrowUpRight";
     //import twemoji from "twemoji";
     export default {
         name: "quoteCard",
-        components: {ImageList, BoxArrowUpRight},
+        components: {BoxArrowUpRight, ImageList},
         props: {
             quoteObject: Object,
             quoteMedia: Array,
             displayPicture: Boolean,
             language: String,
         },
+      computed: mapState({
+        now: 'now',
+        settings: 'settings',
+      }),
         //watch: {
         //  "quoteObject.full_text": {
         //    deep: true,

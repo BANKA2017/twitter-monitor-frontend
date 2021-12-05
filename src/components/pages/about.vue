@@ -35,7 +35,7 @@
                   </a>
                   <hr class="my-4">
                   <h3>数据公开</h3>
-                  <a href="https://5my-my.sharepoint.com/:f:/g/personal/chika_aqours_in/En34oC5-535Eng8isHx5XqwB5-Di45HavsLVUEMCLUBC0w?e=LrBJjY"
+                  <a href="https://5my-my.sharepoint.com/:f:/g/personal/chika_aqours_in/En34oC5-535Eng8isHx5XqwB5-Di45HavsLVUEMCLUBC0w"
                      target="_blank">
                     <el-button class="text-decoration-none mx-1" round size="mini">数据库备份</el-button>
                   </a>
@@ -60,7 +60,7 @@
                   </ul>
                   <hr class="my-4">
                   <div class="text-center">
-                    <el-button icon="el-icon-back" circle @click="$router.go(-1)"></el-button>
+                    <el-button circle @click="$router.go(-1)"><arrow-left height="1em" status="" width="1em"/></el-button>
                   </div>
                   <div class="my-4"></div>
                   <div class="text-center"> >_ Twitter Monitor</div>
@@ -72,17 +72,21 @@
 </template>
 
 <script>
+    import {useHead} from "@vueuse/head";
+    import ArrowLeft from "@/components/icons/arrowLeft";
+
     export default {
         name: "about",
-        metaInfo () {
-            return {
-                title: "关于",
-                meta: [{
-                    name: "theme-color",
-                    content: "#1da1f2"
-                }]
-            }
-        },
+      components: {ArrowLeft},
+      setup() {
+          useHead({
+            title: '关于',
+            meta: [{
+              name: "theme-color",
+              content: "#1da1f2"
+            }]
+          })
+        }
     }
 </script>
 

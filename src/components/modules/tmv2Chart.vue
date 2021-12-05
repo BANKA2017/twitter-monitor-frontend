@@ -1,8 +1,8 @@
 <template>
   <div id="tmv2-chart">
-    <el-skeleton :loading="!options.series.length" :rows="5" animated></el-skeleton>
+    <el-skeleton :loading="!computedOptions.series.length" :rows="5" animated></el-skeleton>
     <span v-if="title !== '' && generateSeries.length" class="text-muted mb-1"><small>{{ title }}</small></span>
-    <v-chart v-if="options.series.length" :option="options" :update-options="setOption" :style="{width: '100%', height: (typeof(chartHeight) === 'number' ? (chartHeight + 'px') : chartHeight)}" autoresize></v-chart>
+    <v-chart v-if="computedOptions.series.length" :option="computedOptions" :style="{width: '100%', height: (typeof(chartHeight) === 'number' ? (chartHeight + 'px') : chartHeight)}" :update-options="setOption" autoresize></v-chart>
   </div>
 </template>
 
@@ -38,6 +38,7 @@ use([
 
 //Vue.component('VeLineChart', VeLineChart)
 //Vue.component('VeBarChart', VeBarChart)
+
 export default {
   name: "tmv2Chart",
   components: {
@@ -46,9 +47,7 @@ export default {
   props: {
     chartRows: {
       type: Array,
-      default: () => {
-        return []
-      }
+      default: () => ([])
     },
     sortLimit: {
       type: [Number, String],
@@ -158,11 +157,6 @@ export default {
       series: []
     }
   }),
-  watch: {
-    "chartRows": function() {
-      this.draw()
-    },
-  },
   computed: {
     axisKeys: function () {
       if (this.chartRows.length === 0) {
@@ -225,28 +219,21 @@ export default {
         tmpNotSelectList[this.legendName[x]] = false
       })
       return tmpNotSelectList
+    },
+    computedOptions: function () {
+      let tmpOptions = this.options
+      tmpOptions.legend.data = this.legendName
+      tmpOptions.legend.selected = this.legendSelected
+      tmpOptions.xAxis.data = this.axisData[0]
+      tmpOptions.yAxis = this.yAxis
+      tmpOptions.series = this.generateSeries
+      tmpOptions.color = this.colors
+      tmpOptions.grid = this.grid
+      //console.log(this.options)
+      //chart.setOption(this.options)
+      return tmpOptions
     }
   },
-  mounted: function () {
-    this.draw();
-  },
-  methods: {
-    draw: function () {
-      if (this.chartRows.length > 0) {
-        let tmpOptions = this.options
-        tmpOptions.legend.data = this.legendName
-        tmpOptions.legend.selected = this.legendSelected
-        tmpOptions.xAxis.data = this.axisData[0]
-        tmpOptions.yAxis = this.yAxis
-        tmpOptions.series = this.generateSeries
-        tmpOptions.color = this.colors
-        tmpOptions.grid = this.grid
-        this.options = tmpOptions
-        //console.log(this.options)
-        //chart.setOption(this.options)
-      }
-    },
-  }
 }
 </script>
 

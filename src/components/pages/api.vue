@@ -20,9 +20,9 @@
                     </li>
                   </ul>
                   <hr class="my-4">
-                  <p>api基础链接 {{ this.$root.settings.data.basePath + "/api/v2" }}</p>
-                  <template v-for="doc in docs">
-                    <pre :key="doc">{{ doc }}</pre>
+                  <p>api基础链接 {{ this.settings.data.basePath + "/api/v2" }}</p>
+                  <template v-for="doc in docs" :key="doc">
+                    <pre>{{ doc }}</pre>
                     <!--<div :key="index">
                         <h3>{{ doc.title }}</h3>
                         <p v-if="doc.description">{{ doc.description }}</p>
@@ -63,6 +63,8 @@
 </template>
 
 <script>
+    import {mapState} from "vuex";
+
     export default {
         name: "api",
         data() {
@@ -82,7 +84,7 @@
             //docs: [{
             //    title: "帐号信息",
             //    description: "获得帐号的基本信息",
-            //    url: this.$root.settings.data.basePath + '/data/userinfo/',
+            //    url: this.settings.data.basePath + '/data/userinfo/',
             //    method: "GET",
             //    format: "JSON",
             //    parameter: {
@@ -103,12 +105,15 @@
             //        ]
             //    },
           //    example: {
-          //        request: this.$root.settings.data.basePath + '/api/v2/data/userinfo/?uid=3009772568',
+          //        request: this.settings.data.basePath + '/api/v2/data/userinfo/?uid=3009772568',
           //        response: '{"code":200,"message":"OK","data":{"uid":"3009772568","name":"bang_dream_info","display_name":"バンドリ！ BanG Dream! 公式","header":"\\/pbs.twimg.com\\/profile_images\\/1253564760978681856\\/jzIKkJJS.jpg","banner":"1587708104","following":"94","followers":"614802","description":"キャラクター×リアルライブがリンクする次世代ガールズバンドプロジェクト「バンドリ！」公式ツイッターです。 #バンドリ ｜ミニアニメ「BanG Dream! ガルパ☆ピコ ～大盛り～」2020年5月7日(木)放送開始！","statuses_count":"12464","top":"1253331182344744961","locked":0,"deleted":0,"verified":1},"query":"mode=data&type=userinfo&name=bang_dream_info","version":"v2"}',
             //    }
           //}]
           //}
-        }
+        },
+        computed: mapState({
+          settings: 'settings',
+        })
     }
 </script>
 

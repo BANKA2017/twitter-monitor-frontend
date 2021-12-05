@@ -1,25 +1,57 @@
 <template>
   <div id="app">
     <div style="position: absolute"></div>
-    <el-backtop></el-backtop>
+    <el-backtop />
     <router-view/>
     <div v-if="this.devmode" class="bg-dark text-white" style="left: 0; bottom: 0; position: fixed">开发测试版本</div>
   </div>
 </template>
 
 <script>
+  import {mapState} from 'vuex'
+  import {useHead} from "@vueuse/head";
   export default {
     name: 'App',
-    metaInfo () {
-      return {
+    setup() {
+      useHead({
+        title: 'Twitter Monitor',
         meta: [{
           name: "description",
-          content: "Twitter Monitor with bangdream.fun"
+          content: "Collection, processing and analysis"
         },
-        {
-          name: "keywords",
-          content: "bangdream, LoveLive!, 少女乐团派对twitter, Twitter Monitor, twitter监控"
-        }]
+          {
+            name: "keywords",
+            content: "bangdream, LoveLive!, 少女乐团派对twitter, Twitter Monitor, twitter监控"
+          }]
+      })
+    },
+    computed: mapState({
+      settings: 'settings',
+      hasBeenSyncFromLocalStorage: 'hasBeenSyncFromLocalStorage',
+      names: 'names',
+      devmode: 'devmode',
+      //browser
+      height: 'height',
+    }),
+    watch: {
+      "settings.data.language": {
+        deep: true,
+        handler: function () {
+          this.$i18n.locale = this.settings.data.language
+        }
+      },
+      "settings.data": {
+        deep: true,
+        handler: function () {
+          if (this.hasBeenSyncFromLocalStorage) {
+            localStorage.setItem('tm_settings', JSON.stringify(this.settings.data))
+          }
+        }
+      },
+      "names": function () {
+        if (this.names) {
+          this.$store.dispatch('updateUserList')
+        }
       }
     },
     mounted: function () {
@@ -28,30 +60,47 @@
     methods: {
       localrun: function () {
         //localStorage
-        if (!localStorage.getItem('tm_settings') || Object.keys(JSON.parse(localStorage.getItem('tm_settings'))) !== Object.keys(this.$root.settings.data)) {
-          localStorage.setItem('tm_settings', JSON.stringify(this.$root.settings.data));//提前写入
+        if (!localStorage.getItem('tm_settings') || JSON.stringify(Object.keys(JSON.parse(localStorage.getItem('tm_settings')))) !== JSON.stringify(Object.keys(this.settings.data))) {
+          localStorage.setItem('tm_settings', JSON.stringify(this.settings.data))//提前写入
+          this.setLanguage()
         } else {
-          this.$root.settings.data = JSON.parse(localStorage.getItem('tm_settings'));
+          this.$store.dispatch({
+            type: 'setSettings',
+            node: 'data',
+            data: JSON.parse(localStorage.getItem('tm_settings'))
+          })
         }
-        this.$root.hasBeenSyncFromLocalStorage = true
+        this.$store.dispatch('setTrueToHasBeenSyncFromLocalStorage')
+        this.$store.dispatch('setUserTimeZone')
+        this.$store.dispatch('checkSamePath')
+        this.$store.dispatch('updateRealMediaPath')
         //time
-        this.updateNow();
+        this.updateNow()
+        this.updateHeight()
         //updateHeightStatus
         //this.isUp();
-        this.updateHeight()
         this.konamiCode()
       },
       updateNow: function () {
-        this.$root.now = new Date();
-        setTimeout(this.updateNow, 1000);
+        this.$store.dispatch('updateNow')
+        setTimeout(this.updateNow, 500);
       },
       updateHeight: function () {
-        this.$root.altitudeDifference = this.$root.height - document.documentElement.scrollTop;
-        this.$root.height = document.documentElement.scrollTop
-        this.$root.width = window.innerWidth
+        this.$store.dispatch({
+          type: 'updateBrowserSize',
+          altitudeDifference: this.height - document.documentElement.scrollTop,
+          height: document.documentElement.scrollTop,
+          width: window.innerWidth,
+        })
         setTimeout(() => {
           this.updateHeight();
         }, 500);
+      },
+      setLanguage: function () {
+        this.$store.dispatch({
+          type: 'setLanguage',
+          lang: window.navigator.language.toLowerCase()
+        })
       },
       konamiCode: function () {
         if ( window.addEventListener ) {
@@ -60,7 +109,11 @@
           window.addEventListener("keydown", (e) => {
             tmpKeys.push( e.code );
             if ( tmpKeys.toString() === konamiCodeArray ) {
-              this.$root.settings.adminStatus = true
+              this.$store.dispatch({
+                type: 'setSettings',
+                node: 'adminStatus',
+                data: true
+              })
               tmpKeys = [];
             }
           }, true);
