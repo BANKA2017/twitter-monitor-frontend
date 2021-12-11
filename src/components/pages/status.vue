@@ -26,7 +26,6 @@
 </template>
 
 <script>
-import axios from "axios";
 import Tmv2Chart from "@/components/modules/tmv2Chart";
 import {mapState} from "vuex";
 import {inject} from "vue";
@@ -115,10 +114,11 @@ export default {
     },
   },
   mounted: function () {
-    axios.get(this.settings.data.basePath + '/api/v2/data/status').then(response => {
-      this.rows = response.data.data;
+    fetch(this.settings.data.basePath + '/api/v2/data/status').then(async response => {
+      response = await response.json()
+      this.rows = response.data;
       if (!this.rows.length) {
-        this.notice("chart: " + response.data.message, "warning");
+        this.notice("chart: " + response.message, "warning");
       }
     }).catch(error => {
       this.notice(error, "error")

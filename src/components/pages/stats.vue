@@ -35,7 +35,6 @@
 </template>
 
 <script>
-    import axios from 'axios';
     import Tmv2Table from "../modules/tmv2Table";
     import Tmv2Chart from "../modules/tmv2Chart";
     import {mapState} from "vuex/dist/vuex.esm-browser.prod";
@@ -52,6 +51,10 @@
             content: "#1da1f2"
           }]
         })
+        const notice = inject('notice')
+        return {
+          notice
+        }
       },
       components: {ArrowLeft, Tmv2Chart, Tmv2Table},
       data() {
@@ -61,69 +64,60 @@
       },
       computed: mapState({
         names: 'names',
-        setup () {
-          const notice = inject('notice')
-          return {
-            notice
-          }
-        },
         settings: 'settings',
         tableData: function () {
-          return this.rawData.map(x => {
-            return {
-              name: x.display_name,
-              following: x.following,
-              followers: x.followers,
-              statuses_count: x.statuses_count,
-              group: x.group
-            }
-          })
-            },
+          if (!this.rawData) {
+            return []
+          }
+          return this.rawData.map(x => ({
+            name: x.display_name,
+            following: x.following,
+            followers: x.followers,
+            statuses_count: x.statuses_count,
+            group: x.group
+          }))
+        },
         }),
         mounted: function () {
             //document.title = 'Stats/统计';
             if (this.names.length === 0) {
-              axios.get(this.settings.data.basePath + "/api/v2/data/accounts/").then(response => {
+              fetch(this.settings.data.basePath + "/api/v2/data/accounts/").then(async response => {
+                response = await response.json()
                 this.$store.dispatch({
                   type: 'setCoreValue',
                   key: 'names',
-                  value: response.data.data.account_info
+                  value: response.data.account_info
                 })
                 this.$store.dispatch({
                   type: 'setCoreValue',
                   key: 'projects',
-                  value: response.data.data.projects
+                  value: response.data.projects
                 })
                 this.$store.dispatch({
                   type: 'setCoreValue',
                   key: 'links',
-                  value: response.data.data.links
-                })
-                this.$store.dispatch({
-                  type: 'setSettings',
-                  node: 'adminStatus',
-                  data: !!response.data.whiteIP
+                  value: response.data.links
                 })
               }).catch(error => {
                 this.notice(error, 'error');
               });
             }
-            axios.get(this.settings.data.basePath + '/api/v2/data/stats').then(response => {
-                this.rawData = response.data.data;
+            fetch(this.settings.data.basePath + '/api/v2/data/stats').then(async response => {
+                this.rawData = (await response.json()).data
             }).catch(error => {
-                this.$message({
-                    message: error,
-                    type: 'error'
-                });
+                this.notice(error, 'error')
             })
         },
         methods: {
-            chartData: function (type) {
-                return this.rawData.map(x => ({
-                        name: x.display_name,
-                        [type]: x[type],
-                    }))
-            },
+          chartData: function (type) {
+            if (!this.rawData) {
+              return []
+            }
+            return this.rawData.map(x => ({
+              name: x.display_name,
+              [type]: x[type],
+            }))
+          },
         }
     }
 </script>

@@ -49,7 +49,6 @@
 
 <script>
 import Search from "../modules/search";
-import axios from "axios";
 import LinkList from "@/components/modules/linkList";
 import {mapState, useStore} from "vuex";
 import {computed, inject} from "vue";
@@ -109,28 +108,23 @@ export default {
     //check $route
     if (this.names.length === 0) {
       let startTime = this.now;
-      axios
-        .get(this.settings.data.basePath + "/api/v2/data/accounts/")
-        .then((accountList) => {
+      fetch(this.settings.data.basePath + "/api/v2/data/accounts/")
+        .then(async accountList => {
+          accountList = await accountList.json()
           this.$store.dispatch({
             type: "setCoreValue",
             key: "names",
-            value: accountList.data.data.account_info,
+            value: accountList.data.account_info,
           });
           this.$store.dispatch({
             type: "setCoreValue",
             key: "projects",
-            value: accountList.data.data.projects,
+            value: accountList.data.projects,
           });
           this.$store.dispatch({
             type: "setCoreValue",
             key: "links",
-            value: accountList.data.data.links,
-          });
-          this.$store.dispatch({
-            type: "setSettings",
-            node: "adminStatus",
-            data: !!accountList.data.whiteIP,
+            value: accountList.data.links,
           });
           //处理网速
           if (this.now - startTime > 3000) {

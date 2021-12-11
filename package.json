@@ -11,7 +11,6 @@
   "dependencies": {
     "@vueuse/head": "^0.7.2",
     "autoprefixer": "^9.8.6",
-    "axios": "^0.24.0",
     "babel-plugin-component": "^1.1.1",
     "blurhash": "^1.1.4",
     "bootstrap": "^4.6.0",

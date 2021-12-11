@@ -59,7 +59,6 @@
 
 <script>
     //import UserInfo from "../modules/userInfo";
-    import axios from "axios";
     import ImageList from "@/components/modules/imageList";
     import Navigation from "@/components/modules/Navigation";
     import {mapState} from "vuex";
@@ -67,8 +66,6 @@
     import {useHead} from "@vueuse/head";
     import SearchIcon from "@/components/icons/searchIcon";
     //import Tweet from "@/components/modules/tweet";
-    const CancelToken = axios.CancelToken;
-    let cancel = function () {};
     export default {
       name: "online",
       setup () {
@@ -76,26 +73,29 @@
           title: '媒体加载器',
         })
         const notice = inject('notice')
+        let controller = {
+          infoSignal: new AbortController(),
+          mediaSignal: new AbortController(),
+        }
         return {
-          notice
+          notice,
+          controller
         }
       },
       components: {SearchIcon, Navigation, ImageList},
       //components: {Tweet, UserInfo},
-        data() {
-            return {
-                //独立运营
-                //basePath: process.env.NODE_ENV !== "development" ? "https://bangdream.fun/twitter" : "https://bangdream.fun/dev/tmv2",
-                tweet_id: "",
-                //tweets: {},
-                //users: {},
-                rawData: {},
-                media: [],
-                debug: true,
-                load: true,
-                video: false,
-            }
-        },
+        data: () => ({
+          //独立运营
+          //basePath: process.env.NODE_ENV !== "development" ? "https://bangdream.fun/twitter" : "https://bangdream.fun/dev/tmv2",
+          tweet_id: "",
+          //tweets: {},
+          //users: {},
+          rawData: {},
+          media: [],
+          debug: true,
+          load: true,
+          video: false,
+        }),
       computed: mapState({
         settings: 'settings',
           //tweet: function () {
@@ -142,103 +142,118 @@
       beforeRouteEnter(to, from, next) {
         //none
         next(vm => {
-          cancel();
+          vm.cancelAll();
           vm.routeCase(to)
         })
       },
       beforeRouteUpdate(to) {
         this.routeCase(to)
       },
-      mounted: function () {
-        this.routeCase(this.$route)
-      },
-        methods: {
-          fetchMedia: function () {
-            this.load = true
-            this.media = []
-            this.video = false
-            this.rawData = {}
-            //https://tm.bangdream.fun/tmv2/api/v2/online/info/?tweet_id=1355686950640836609
-            axios.get(this.settings.data.basePath + '/api/v2/online/media/?tweet_id=' + this.tweet_id, {
-              cancelToken: new CancelToken(c => cancel = c)
-            }).then(response => {
-              if (response.data.code === 200) {
-                //this.getUserInfo();
-                this.rawData = response.data.data
-                this.media = response.data.data.media_info
-                this.video = response.data.data.video
-                if (this.media.length > 0) {
-                  this.notice("加载成功", "success");
-                } else {
-                  this.notice("没有数据", "warning");
-                }
+      //mounted: function () {
+      //  this.routeCase(this.$route)
+      //},
+      methods: {
+        cancelAll: function () {
+          Object.keys(this.controller).map(cancel => {
+            this.controller[cancel].abort()
+            this.controller[cancel] = new AbortController()
+          })
+        },
+        fetchMedia: function () {
+          this.load = true
+          this.media = []
+          this.video = false
+          this.rawData = {}
+          //https://tm.bangdream.fun/tmv2/api/v2/online/info/?tweet_id=1355686950640836609
+          this.controller.mediaSignal.abort()
+          this.controller.mediaSignal = new AbortController()
+          fetch(this.settings.data.basePath + '/api/v2/online/media/?tweet_id=' + this.tweet_id, {
+            signal: this.controller.mediaSignal.signal
+          }).then(async response => {
+            response = await response.json()
+            if (response.code === 200) {
+              //this.getUserInfo();
+              this.rawData = response.data
+              this.media = response.data.media_info
+              this.video = response.data.video
+              if (this.media.length > 0) {
+                this.notice("加载成功", "success");
               } else {
-                this.notice(response.data.message, "error");
+                this.notice("没有数据", "warning");
+              }
+            } else {
+              this.notice(response.message, "error");
+            }
+            this.load = false
+          }).catch(error => {
+            if (error.toString() !== 'AbortError: The user aborted a request.') {
+              this.notice(error, "error")
+              this.load = false
+            }
+          });
+        },
+          fetchInfo: function () {
+            this.tweets = {}
+            this.users = {}
+            //https://tm.bangdream.fun/tmv2/api/v2/online/info/?tweet_id=1355686950640836609
+            this.controller.infoSignal.abort()
+            this.controller.infoSignal = new AbortController()
+            fetch(this.settings.data.basePath + '/api/v2/online/info/?tweet_id=' + this.tweet_id, {
+              signal: this.controller.infoSignal.signal
+            }).then(async response => {
+              response = await response.json()
+              if (response.code === 200) {
+                this.notice("加载成功", "success");
+                //this.getUserInfo();
+                this.tweets = response.tweets
+                this.users = response.data.users
+              } else {
+                this.notice(response.message, "error");
               }
               this.load = false
             }).catch(error => {
-              if (error.toString() !== 'Cancel') {
+              if (error.toString() !== 'AbortError: The user aborted a request.') {
                 this.notice(error, "error")
                 this.load = false
               }
             });
           },
-            fetchInfo: function () {
-              this.tweets = {}
-              this.users = {}
-              //https://tm.bangdream.fun/tmv2/api/v2/online/info/?tweet_id=1355686950640836609
-              axios.get(this.settings.data.basePath + '/api/v2/online/info/?tweet_id=' + this.tweet_id, {
-                cancelToken: new CancelToken(c => cancel = c)
-              }).then(response => {
-                if (response.data.code === 200) {
-                  this.notice("加载成功", "success");
-                  //this.getUserInfo();
-                  this.tweets = response.data.data.tweets
-                  this.users = response.data.data.users
-                } else {
-                  this.notice(response.data.message, "error");
-                }
-                this.load = false
-              }).catch(error => {
-                if (error.toString() !== 'Cancel') {
-                  this.notice(error, "error")
-                  this.load = false
-                }
-              });
-            },
-            routeCase: function (to = this.$route) {
-              this.rawData = {}
-              this.media = []
-              this.video = false
-              if (to.params.tweet_id) {
-                this.tweet_id = to.params.tweet_id
-                this.fetchMedia()
+          routeCase: function (to = this.$route) {
+            this.rawData = {}
+            this.media = []
+            this.video = false
+            if (to.params.tweet_id) {
+              this.tweet_id = to.params.tweet_id
+              this.fetchMedia()
+            } else {
+              this.load = false
+            }
+          },
+          updateProtect: function (val) {
+              this.protect = val;
+          },
+          updateUserExist: function (val) {
+              this.userExist = val;
+          },
+          updateUid: function (val) {
+              this.uid = val;
+          },
+          inputChange: function () {
+            if (isNaN(Number(this.tweet_id))) {
+              //非数字
+              let tmpTweetId = this.tweet_id.replace(/.*\/status\/([0-9]+).*/gm, `$1`)
+              if (isNaN(Number(tmpTweetId))) {
+                this.tweet_id = ""
               } else {
-                this.load = false
+                this.tweet_id = tmpTweetId
               }
-            },
-            updateProtect: function (val) {
-                this.protect = val;
-            },
-            updateUserExist: function (val) {
-                this.userExist = val;
-            },
-            updateUid: function (val) {
-                this.uid = val;
-            },
-            inputChange: function () {
-              if (isNaN(Number(this.tweet_id))) {
-                //非数字
-                let tmpTweetId = this.tweet_id.replace(/.*\/status\/([0-9]+).*/gm, `$1`)
-                if (isNaN(Number(tmpTweetId))) {
-                  this.tweet_id = ""
-                } else {
-                  this.tweet_id = tmpTweetId
-                }
-              }
+            }
+
+            if (this.tweet_id) {
               this.$router.push('/i/online/' + this.tweet_id)
             }
-        }
+          }
+      }
     }
 </script>
 

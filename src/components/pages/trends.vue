@@ -52,7 +52,6 @@
 
 <script>
 import Tmv2Chart from "@/components/modules/tmv2Chart";
-import axios from "axios";
 import {mapState} from "vuex";
 import {inject} from "vue";
 import {useHead} from "@vueuse/head";
@@ -93,11 +92,12 @@ export default {
   },
   methods: {
     getData: function () {
-      axios.get(this.settings.data.basePath + '/api/v2/data/trends').then(response => {
-        this.hashTagsRank24 = response.data.data.hashtag_list
-        this.timeCountOrigin = response.data.data.tweet_time_list
-        response.data.data.following.push(response.data.data.statuses)
-        this.userData = response.data.data.following
+      fetch(this.settings.data.basePath + '/api/v2/data/trends').then(async response => {
+        response = await response.json()
+        this.hashTagsRank24 = response.data.hashtag_list
+        this.timeCountOrigin = response.data.tweet_time_list
+        response.data.following.push(response.data.statuses)
+        this.userData = response.data.following
         this.userData[1] = this.userData[1].reverse()
       }).catch(error => {
         this.notice(error, "error")

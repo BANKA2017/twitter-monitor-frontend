@@ -5,7 +5,7 @@
         <main class="container" id="main" role="main">
             <div class="row">
                 <div id="left-card" :class="{'col-sm-12': true, 'col-md-4': tweetStatus.displayType !== 'search', 'col-md-3': tweetStatus.displayType === 'search'}">
-                  <el-affix :offset="22" style="width: 100%" target="#left-card">
+                  <div :style="{'position': 'sticky', 'top': '1.5rem', 'z-index': 1000}">
                       <template v-if="tweetStatus.userExist">
                         <el-skeleton :loading="load.leftCard" animated>
                           <div class="card">
@@ -107,7 +107,7 @@
                         <div class="my-4">
                         </div>
                       </template>
-                    </el-affix>
+                    </div>
                 </div>
               <div :class="{'col-sm-12': true, 'col-md-6': tweetStatus.displayType !== 'search', 'col-md-7': tweetStatus.displayType === 'search'}">
                 <div v-if="!tweetStatus.userExist">
@@ -229,7 +229,6 @@
 </template>
 
 <script>
-    import axios from 'axios'
     import translate from "../modules/translate";
     import Verified from "../icons/verified";
     import Deleted from "../icons/deleted";
@@ -247,8 +246,6 @@
     import BoxArrowUpRight from "@/components/icons/boxArrowUpRight";
     import ArrowClockwise from "@/components/icons/arrowClockwise";
 
-    const CancelToken = axios.CancelToken;
-    let cancel = function () {};
     export default {
         name: 'App',
         setup () {
@@ -261,9 +258,15 @@
           })
           const scrollToTop = inject('scrollToTop')
           const notice = inject('notice')
+          let controller = {
+            infoSignal: new AbortController(),
+            updateTweetsSignal: new AbortController(),
+            refreshTweetsSignal: new AbortController(),
+          }
           return {
             scrollToTop,
-            notice
+            notice,
+            controller,
           }
         },
         components: {
@@ -365,13 +368,13 @@
         beforeRouteEnter(to, from, next) {
             //none
             next(vm => {
-                cancel();
+                vm.cancelAll()
                 vm.routeCase(to)
                 vm.update()
             })
         },
         beforeRouteUpdate(to) {
-          cancel();
+          this.cancelAll()
           this.load.timeline = true
           this.routeCase(to)
           this.update()
@@ -425,7 +428,7 @@
                     if (this.search.mode === 1 && this.tweetStatus.displayType !== 'userSelector') {
                         this.tweetStatus.displayType = 'timeline'
                         //this.$router.replace('../../all')
-                        cancel()
+                        this.cancelAll()
                         this.load.timeline = true;
                         this.update();
                     }
@@ -447,31 +450,26 @@
           }
         },
         mounted: function () {
-          new CancelToken(c => cancel = c);//提前生成
           //处理路由
           //check $route
           if (this.names.length === 0) {
             let startTime = this.now;
-            axios.get(this.settings.data.basePath + "/api/v2/data/accounts/").then((accountList) => {
+            fetch(this.settings.data.basePath + "/api/v2/data/accounts/").then(async accountList => {
+              accountList = await accountList.json()
               this.$store.dispatch({
                 type: 'setCoreValue',
                 key: 'names',
-                value: accountList.data.data.account_info
+                value: accountList.data.account_info
               })
               this.$store.dispatch({
                 type: 'setCoreValue',
                 key: 'projects',
-                value: accountList.data.data.projects
+                value: accountList.data.projects
               })
               this.$store.dispatch({
                 type: 'setCoreValue',
                 key: 'links',
-                value: accountList.data.data.links
-              })
-              this.$store.dispatch({
-                type: 'setSettings',
-                node: 'adminStatus',
-                data: !!accountList.data.whiteIP
+                value: accountList.data.links
               })
               //处理网速
               if (this.now - startTime > 3000) {
@@ -495,18 +493,27 @@
             autoLoadButtom: function () {
               this.loading(1)
             },
+            cancelAll: function () {
+                Object.keys(this.controller).map(cancel => {
+                  this.controller[cancel].abort()
+                  this.controller[cancel] = new AbortController()
+                })
+            },
             loading: function (type = 0) {
                 if (this.tweetStatus.bottomTweetId && this.tweetStatus.topTweetId) {
                     //0 -> top, 1 -> bottom
                     this.load[(type === 0 ? 'top' : 'bottom')] = true;
-                  axios.get(this.mergeUrl() + (type === 0 ? '&refresh=1&tweet_id=' + this.tweetStatus.topTweetId.toString() : '&refresh=0&tweet_id=' + this.tweetStatus.bottomTweetId.toString() + (this.hidden ? '&hidden=1' : '')), {
-                    cancelToken: new CancelToken(c => cancel = c)
-                  }).then(response => {
+                  this.controller.refreshTweetsSignal.abort()
+                  this.controller.refreshTweetsSignal = new AbortController()
+                  fetch(this.mergeUrl() + (type === 0 ? '&refresh=1&tweet_id=' + this.tweetStatus.topTweetId.toString() : '&refresh=0&tweet_id=' + this.tweetStatus.bottomTweetId.toString() + (this.hidden ? '&hidden=1' : '')), {
+                    signal: this.controller.refreshTweetsSignal.signal
+                  }).then(async response => {
+                        response = await response.json()
                         if (type === 0) {
-                          this.notice(this.$tc("timeline.scripts.message.update_tweets", (response.data.data.tweets.length > 1 ? 2 : 1), [response.data.data.tweets.length]), "success");
+                          this.notice(this.$tc("timeline.scripts.message.update_tweets", (response.data.tweets.length > 1 ? 2 : 1), [response.data.tweets.length]), "success");
                           //this.getUserInfo();
-                          if (response.data.data.top_tweet_id && response.data.data.top_tweet_id !== "0") {
-                            this.tweetStatus.topTweetId = response.data.data.top_tweet_id;
+                          if (response.data.top_tweet_id && response.data.top_tweet_id !== "0") {
+                            this.tweetStatus.topTweetId = response.data.top_tweet_id;
                           }
                           if (this.chart.generate && this.tweetStatus.displayType === 'timeline') {
                             this.createChart(this.chart.latestTimestamp, true)
@@ -514,24 +521,26 @@
                           this.$store.dispatch({
                             type: 'setCoreValue',
                             key: 'tweets',
-                            value: [...response.data.data.tweets, ...this.tweets]
+                            value: [...response.data.tweets, ...this.tweets]
                           })
                           this.load.top = false;
                         } else {
-                            this.tweetStatus.moreTweets = response.data.data.hasmore;
-                            if (response.data.data.bottom_tweet_id) {
-                                this.tweetStatus.bottomTweetId = response.data.data.bottom_tweet_id;
+                            this.tweetStatus.moreTweets = response.data.hasmore;
+                            if (response.data.bottom_tweet_id) {
+                                this.tweetStatus.bottomTweetId = response.data.bottom_tweet_id;
                             }
                           this.$store.dispatch({
                             type: 'pushCoreValue',
                             key: 'tweets',
-                            value: [...response.data.data.tweets]
+                            value: [...response.data.tweets]
                           })
                           this.load.bottom = false;
                         }
                     }).catch(error => {
-                        if (error.toString() !== 'Cancel') {
-                            this.notice(error, "error")
+                        if (error.toString() === 'AbortError: The user aborted a request.') {
+                          this.notice(this.$t("public.loading"), "warning")
+                        } else {
+                          this.notice(error, "error")
                         }
                         this.load[(type === 0 ? 'top' : 'bottom')] = false;
                     });
@@ -541,11 +550,14 @@
             },
             getUserInfo: function (name) {
                 this.load.leftCard = true;
-                axios.get(this.settings.data.basePath + '/api/v2/data/userinfo/?name=' + name, {
-                    cancelToken: new CancelToken(c => cancel = c)
-                }).then(response => {
-                    this.info = response.data.data;
-                    if (response.data.code === 200) {
+                this.controller.infoSignal.abort()
+                this.controller.infoSignal = new AbortController()
+                fetch(this.settings.data.basePath + '/api/v2/data/userinfo/?name=' + name, {
+                    signal: this.controller.infoSignal.signal
+                }).then(async response => {
+                  response = await response.json()
+                    this.info = response.data;
+                    if (response.code === 200) {
                       //this.chart.legendName = {
                       //  '关注者': '关注者 ' + this.info.followers,
                       //  '正在关注': '正在关注 ' + this.info.following,
@@ -554,34 +566,37 @@
                         this.tweetStatus.userExist = true;
                         this.createChart();
                     } else {
-                      this.notice(response.data.message, "error");
+                      this.notice(response.message, "error");
                       //this.chart.legendName = {'关注者': '关注者', '正在关注': '正在关注', '总推文数': '总推文数'};
                       this.tweetStatus.userExist = false;
                     }
                   this.load.leftCard = false;
                 }).catch(error => {
-                  if (error.toString() !== 'Cancel') {
+                  if (error.toString() === 'AbortError: The user aborted a request.') {
+                    this.notice(this.$t("public.loading"), "warning")
+                  } else {
                     this.notice(error, "error")
                   }
                   //this.load.leftCard = false;
                 });
             },
           createChart: function (time = 0, refresh = false) {
-            axios.get(this.settings.data.basePath + '/api/v2/data/chart/?uid=' + this.info.uid_str + (time > 0 ? '&end=' + time : '') + (refresh ? '&refresh=1' : '')).then(response => {
-              if (response.data.data.length) {
-                this.chart.latestTimestamp = response.data.data.slice(-1)[0].timestamp
+            fetch(this.settings.data.basePath + '/api/v2/data/chart/?uid=' + this.info.uid_str + (time > 0 ? '&end=' + time : '') + (refresh ? '&refresh=1' : '')).then(async response => {
+              response = await response.json()
+              if (response.data.length) {
+                this.chart.latestTimestamp = response.data.slice(-1)[0].timestamp
               }
-              let tmpRows = response.data.data.map(x => {
+              let tmpRows = response.data.map(x => {
                 x.timestamp = (new Date(x.timestamp * 1000)).toLocaleString(this.settings.data.language)
                 return x
               })
               this.chart.rows = refresh ? [...this.chart.rows, ...tmpRows] : tmpRows
               if (!this.chart.rows.length && !refresh) {
                 this.chart.generate = false
-                //this.notice("chart: " + response.data.message, "warning");
+                //this.notice("chart: " + response.message, "warning");
               }
             }).catch(error => {
-              if (this.tweetStatus.displayType === "timeline" && error.toString() !== 'Cancel') {
+              if (this.tweetStatus.displayType === "timeline" && error.toString() !== 'AbortError: The user aborted a request.') {
                 this.notice(this.$t("timeline.scripts.message.failed_to_generate_chart", [error]), 'error');
                 setTimeout(() => {
                   this.createChart(time, refresh)
@@ -590,28 +605,33 @@
             });
             },
             update: function () {
-              axios.get(this.mergeUrl() + (this.hidden ? '&hidden=1' : ''), {
-                cancelToken: new CancelToken(c => cancel = c)
-              }).then(response => {
+              this.controller.updateTweetsSignal.abort()
+              this.controller.updateTweetsSignal = new AbortController()
+              fetch(this.mergeUrl() + (this.hidden ? '&hidden=1' : ''), {
+                signal: this.controller.updateTweetsSignal.signal
+              }).then(async response => {
+                  response = await response.json()
                   this.$store.dispatch({
                     type: 'setCoreValue',
                     key: 'tweets',
-                    value: response.data.data.tweets ? response.data.data.tweets : []//404时无任何数据
+                    value: response.data.tweets ? response.data.tweets : []//404时无任何数据
                   })
-                  this.tweetStatus.moreTweets = response.data.data.hasmore;
-                  if (response.data.data.top_tweet_id !== "0") {
-                    this.tweetStatus.topTweetId = response.data.data.top_tweet_id;
+                  this.tweetStatus.moreTweets = response.data.hasmore;
+                  if (response.data.top_tweet_id !== "0") {
+                    this.tweetStatus.topTweetId = response.data.top_tweet_id;
                   }
-                  if (response.data.data.bottom_tweet_id !== "0") {
-                    this.tweetStatus.bottomTweetId = response.data.data.bottom_tweet_id;
+                  if (response.data.bottom_tweet_id !== "0") {
+                    this.tweetStatus.bottomTweetId = response.data.bottom_tweet_id;
                   }
                   this.load.timeline = false;
-                  this.tweetStatus.reload = (response.data.code !== 200 && response.data.code !== 404 && response.data.code !== 403);
+                  this.tweetStatus.reload = (response.code !== 200 && response.code !== 404 && response.code !== 403);
               }).catch(error => {
-                    if (error.toString() !== 'Cancel') {
-                        this.notice(error, "error");
-                        this.tweetStatus.reload = true;
-                        this.load.timeline = false;
+                    if (error.toString() === 'AbortError: The user aborted a request.') {
+                      this.notice(this.$t("public.loading"), "warning")
+                    } else {
+                      this.notice(error, "error")
+                      this.tweetStatus.reload = true;
+                      this.load.timeline = false;
                     }
                 })
             },

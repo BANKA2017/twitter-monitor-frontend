@@ -32,7 +32,6 @@ import {
     ElCarouselItem,
     ElNotification,
     ElTag,
-    ElAffix,
     ElRow,
     ElSelect,
     ElOption,
@@ -103,7 +102,6 @@ app.use(ElCarousel)
 app.use(ElCarouselItem)
 app.use(ElNotification)
 app.use(ElTag)
-app.use(ElAffix)
 app.use(ElRow)
 app.use(ElSelect)
 app.use(ElOption)

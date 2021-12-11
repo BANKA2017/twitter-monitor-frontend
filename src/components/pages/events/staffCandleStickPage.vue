@@ -32,7 +32,6 @@
 
 <script>
 import CandlestickChart from "@/components/modules/candlestickChart";
-import axios from "axios";
 import {mapState} from "vuex";
 import {inject} from "vue";
 import {useHead} from "@vueuse/head";
@@ -106,9 +105,9 @@ export default {
   },
   methods: {
     fetchData: function () {
-      axios.get(this.settings.data.basePath + (process.env.NODE_ENV === "development" ? '/proxy.php?filename=staff_data&name=' + this.activeStaff : '/static/trends/' + this.activeStaff + '.json')).then(response => {
+      fetch(this.settings.data.basePath + (process.env.NODE_ENV === "development" ? '/proxy.php?filename=staff_data&name=' + this.activeStaff : '/static/trends/' + this.activeStaff + '.json')).then(async response => {
         //status.userOrder = -1
-        this.activeData = response.data.data
+        this.activeData = (await response.json()).data
         this.lock = false
       }).catch(e => this.notice(e, 'error'))
     }

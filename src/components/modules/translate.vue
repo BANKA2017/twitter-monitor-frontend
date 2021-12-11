@@ -18,17 +18,16 @@
 </template>
 
 <script>
-    import axios from 'axios'
     import {mapState} from "vuex";
     import {inject} from "vue";
     export default {
         name: "translate",
-      setup () {
-        const notice = inject('notice')
-        return {
-          notice
-        }
-      },
+        setup () {
+          const notice = inject('notice')
+          return {
+            notice
+          }
+        },
         props: {
           type: Number,
           id: [String, Number],//tweet_id or uid
@@ -79,15 +78,16 @@
           this.status = 1;
           if (type === 0) {
             if (!this.tweets[this.order].translate) {
-              axios.get(this.settings.data.basePath + '/api/v2/data/translate/?tr_type=tweets&tweet_id=' + id + '&to=' + this.toLanguage).then(response => {
+              fetch(this.settings.data.basePath + '/api/v2/data/translate/?tr_type=tweets&tweet_id=' + id + '&to=' + this.toLanguage).then(async response => {
+                response = await response.json()
                 if (this.order > -1) {
                   this.tweets[this.order].translate = {
-                    text: response.data.data.translate,
-                    translate_source: response.data.data.translate_source
+                    text: response.data.translate,
+                    translate_source: response.data.translate_source
                   }
                 }
-                this.text = response.data.data.translate;
-                this.translate_source = response.data.data.translate_source;
+                this.text = response.data.translate;
+                this.translate_source = response.data.translate_source;
                 this.status = 2;
               }).catch(error => {
                 this.notice(error, "error");
@@ -99,9 +99,10 @@
               this.status = 2
             }
                 } else if (type === 1) {
-                    axios.get(this.settings.data.basePath + '/api/v2/data/translate/?tr_type=profile&uid=' + id + '&to=' + this.toLanguage).then(response => {
-                        this.text = response.data.data.translate;
-                        this.translate_source = response.data.data.translate_source;
+                    fetch(this.settings.data.basePath + '/api/v2/data/translate/?tr_type=profile&uid=' + id + '&to=' + this.toLanguage).then(async response => {
+                        response = await response.json()
+                        this.text = response.data.translate;
+                        this.translate_source = response.data.translate_source;
                         this.status = 2;
                     }).catch(error => {
                         this.notice(error, "error");

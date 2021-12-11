@@ -47,7 +47,7 @@
                 <translate v-if="order !== -1 && tweet.full_text_origin" :id="tweet.tweet_id_str" :order="order" :to="settings.data.language"
                          :type="0"/>
                 <!--media-->
-                <template v-if="tweet.media === 1&&!settings.data.displayPicture">
+                <template v-if="tweet.media === 1&&!settings.data.displayPicture && tweet.mediaObject.tweetsMedia.length">
                     <div class="my-4"></div>
                     <image-list :is_video="tweet.video" :list="tweet.mediaObject.tweetsMedia"
                                 :unlimited="displayType === 'status'"/>

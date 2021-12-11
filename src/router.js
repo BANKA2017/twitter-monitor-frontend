@@ -12,6 +12,7 @@ const Trends = () => import("./components/pages/trends");
 const Event = () => import(/* webpackChunkName: "events" */ "./components/pages/events/index");
 const Annual2019 = () => import(/* webpackChunkName: "events" */ "./components/pages/events/annual2019");
 const Annual2020 = () => import(/* webpackChunkName: "events" */ "./components/pages/events/annual2020");
+//const Annual2021 = () => import(/* webpackChunkName: "events" */ "./components/pages/events/annual2021");
 const loveliveTrends = () => import(/* webpackChunkName: "events" */ "./components/pages/events/loveliveTrends");
 const staffCandleStickPage = () => import(/* webpackChunkName: "events" */ "./components/pages/events/staffCandleStickPage");
 const notFound = () => import("./components/pages/errors/notFound");
@@ -37,6 +38,10 @@ export default createRouter({
                     path: '2020',//2020年度总结
                     component: Annual2020,
                 },
+                //{
+                //    path: '2021',//2021年度总结
+                //    component: Annual2021,
+                //},
                 {
                     path: 'lovelive_trends',//lovelive趨勢
                     component: loveliveTrends,
@@ -67,7 +72,8 @@ export default createRouter({
             path: '/i/online',
             component: Online,
             children: [{
-                path: ':tweet_id'
+                path: ':tweet_id',
+                component: Online,
             }]
         },
         {

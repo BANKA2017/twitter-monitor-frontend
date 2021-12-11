@@ -121,7 +121,6 @@
 
 <script>
 import Tmv2Chart from "@/components/modules/tmv2Chart";
-import axios from 'axios'
 import CandlestickChart from "@/components/modules/candlestickChart";
 import {mapState} from "vuex";
 import {inject} from "vue";
@@ -230,8 +229,8 @@ export default {
   }),
   methods: {
     getDateInfo: function () {
-      axios.get(this.settings.data.basePath + (process.env.NODE_ENV === "development" ? '/proxy.php?filename=lovelive_date' : '/static/lovelive_trends/date.json?' + Math.random())).then(response => {
-        this.dateList = response.data
+      fetch(this.settings.data.basePath + (process.env.NODE_ENV === "development" ? '/proxy.php?filename=lovelive_date' : '/static/lovelive_trends/date.json?' + Math.random())).then(async response => {
+        this.dateList = await response.json()
         if (this.dateList.length > 0) {
           this.getData()
         } else {
@@ -240,9 +239,9 @@ export default {
       }).catch(e => this.notice(e, 'error'))
     },
     getData: function () {
-      axios.get(this.settings.data.basePath + (process.env.NODE_ENV === "development" ? '/proxy.php?filename=lovelive_data&date=' + this.dateList[this.status.dateOrder] : '/static/lovelive_trends/' + this.dateList[this.status.dateOrder] + '.json')).then(response => {
+      fetch(this.settings.data.basePath + (process.env.NODE_ENV === "development" ? '/proxy.php?filename=lovelive_data&date=' + this.dateList[this.status.dateOrder] : '/static/lovelive_trends/' + this.dateList[this.status.dateOrder] + '.json')).then(async response => {
         //status.userOrder = -1
-        this.trendsData = response.data
+        this.trendsData = await response.json()
       }).catch(e => this.notice(e, 'error'))
     },
     createDate: function (timestamp) {
