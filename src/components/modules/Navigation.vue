@@ -1,5 +1,5 @@
 <template>
-    <nav id="Navigation" class="navbar navbar-expand-lg navbar-light text-center bg-light">
+    <nav id="Navigation" class="navbar navbar-expand-lg navbar-light text-center bg-light" style="z-index: 1001">
         <span class="navbar-brand mb-0 h1 d-inline-block text-truncate" style="max-width: 250px;">
           {{ displayName }}
         </span>
