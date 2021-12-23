@@ -29,7 +29,7 @@
             。总而言之，帐号的增减请参阅下表</p>
           <div class="row">
             <div class="col-md-6">
-              <p class="text-muted text-center">增加账号 (<span class="text-success">15</span>)</p>
+              <p class="text-muted text-center">增加账号 (<span class="text-success">{{ userAddList.length }}</span>)</p>
               <div class="table-responsive">
                 <table class="table">
                   <thead>
@@ -53,7 +53,7 @@
               </div>
             </div>
             <div class="col-md-6">
-              <p class="text-muted text-center">删除账号 (<span class="text-danger">9</span>)</p>
+              <p class="text-muted text-center">删除账号 (<span class="text-danger">{{ userDeleteList.length }}</span>)</p>
               <table class="table">
                 <thead>
                 <tr>
@@ -993,9 +993,9 @@ export default {
     serverStatusLabel: {
       totalTweets: {
         "date": "日期",
-        "total_tweets": "每日推文数",
-        "tweets_count": "总推文数",
-        "avg_tweets": "平均处理条数"
+        "total_tweets": "每日处理推文数",
+        "tweets_count": "总处理推文数",
+        "avg_tweets": "平均每次处理条数"
       },
       totalTime: {
         "date": "日期",

@@ -6,8 +6,8 @@
             <el-table-column show-overflow-tooltip sortable prop="following" :label="$t('public.following')"></el-table-column>
             <el-table-column sortable prop="statuses_count" :label="$t('public.statuses_count')"></el-table-column>
             <el-table-column prop="group" :label="$t('public.group')" :filters="filters" :filter-method="filterTag" header-align="center" filter-placement="bottom-end">
-                <template #scope>
-                    <el-tag :type="colorForGroup[group]" disable-transitions v-for="group in scope.row.group" :key="group">{{ group }}</el-tag>
+                <template #default="scope">
+                  <el-tag :type="colorForGroup[group]" disable-transitions v-for="group in scope.row.group" :key="group">{{ group }}</el-tag>
                 </template>
             </el-table-column>
         </el-table>

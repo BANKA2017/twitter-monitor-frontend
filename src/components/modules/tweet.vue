@@ -65,7 +65,7 @@
                               :polls="tweet.pollObject" :tweet_id="tweet.tweet_id_str"/>
                 </template>
                 <!--card-->
-                <template v-else-if="tweet.card !== ''">
+                <template v-else-if="tweet.card !== '' && Object.keys(tweet.cardObject).length">
                     <div class="my-4"></div>
                     <tw-card :media="tweet.mediaObject.cardMedia" :mediaState="!settings.data.displayPicture"
                              :object="tweet.cardObject" :tweet-text="tweet.full_text_origin.split(`\n`)[0]" :user-name="tweet.retweet_from ? tweet.retweet_from : tweet.display_name"></tw-card>

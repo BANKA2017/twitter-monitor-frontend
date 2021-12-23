@@ -218,7 +218,7 @@
           <!--settings become a single page-->
           <!--<settings/>-->
           <transition name="el-fade-in">
-            <div v-if="tweetStatus.displayType !== 'status'" class="el-backtop" style="right: 40px; bottom: 90px"
+            <div v-if="tweetStatus.displayType !== 'status'" class="el-backtop" style="right: 40px; bottom: 90px; z-index: 1500"
                  @click="()=>{scrollToTop();loading(0)}">
               <arrow-clockwise height="1em" status="" width="1em" />
             </div>
@@ -259,9 +259,9 @@
           const scrollToTop = inject('scrollToTop')
           const notice = inject('notice')
           let controller = {
-            infoSignal: new AbortController(),
-            updateTweetsSignal: new AbortController(),
-            refreshTweetsSignal: new AbortController(),
+            infoSignal: [new AbortController()],
+            updateTweetsSignal: [new AbortController()],
+            refreshTweetsSignal: [new AbortController()],
           }
           return {
             scrollToTop,
@@ -495,18 +495,18 @@
             },
             cancelAll: function () {
                 Object.keys(this.controller).map(cancel => {
-                  this.controller[cancel].abort()
-                  this.controller[cancel] = new AbortController()
+                  this.controller[cancel][this.controller[cancel].length - 1].abort()
+                  this.controller[cancel].push(new AbortController())
                 })
             },
             loading: function (type = 0) {
                 if (this.tweetStatus.bottomTweetId && this.tweetStatus.topTweetId) {
                     //0 -> top, 1 -> bottom
                     this.load[(type === 0 ? 'top' : 'bottom')] = true;
-                  this.controller.refreshTweetsSignal.abort()
-                  this.controller.refreshTweetsSignal = new AbortController()
+                    this.controller.refreshTweetsSignal[this.controller.refreshTweetsSignal.length - 1].abort()
+                    this.controller.refreshTweetsSignal.push(new AbortController())
                   fetch(this.mergeUrl() + (type === 0 ? '&refresh=1&tweet_id=' + this.tweetStatus.topTweetId.toString() : '&refresh=0&tweet_id=' + this.tweetStatus.bottomTweetId.toString() + (this.hidden ? '&hidden=1' : '')), {
-                    signal: this.controller.refreshTweetsSignal.signal
+                    signal: this.controller.refreshTweetsSignal[this.controller.refreshTweetsSignal.length - 1].signal
                   }).then(async response => {
                         response = await response.json()
                         if (type === 0) {
@@ -537,7 +537,7 @@
                           this.load.bottom = false;
                         }
                     }).catch(error => {
-                        if (error.toString() === 'AbortError: The user aborted a request.') {
+                        if (!this.controller.refreshTweetsSignal[this.controller.refreshTweetsSignal.length - 1].signal.aborted) {
                           this.notice(this.$t("public.loading"), "warning")
                         } else {
                           this.notice(error, "error")
@@ -550,10 +550,10 @@
             },
             getUserInfo: function (name) {
                 this.load.leftCard = true;
-                this.controller.infoSignal.abort()
-                this.controller.infoSignal = new AbortController()
+                this.controller.infoSignal[this.controller.infoSignal.length - 1].abort()
+                this.controller.infoSignal.push(new AbortController())
                 fetch(this.settings.data.basePath + '/api/v2/data/userinfo/?name=' + name, {
-                    signal: this.controller.infoSignal.signal
+                    signal: this.controller.infoSignal[this.controller.infoSignal.length - 1].signal
                 }).then(async response => {
                   response = await response.json()
                     this.info = response.data;
@@ -572,7 +572,7 @@
                     }
                   this.load.leftCard = false;
                 }).catch(error => {
-                  if (error.toString() === 'AbortError: The user aborted a request.') {
+                  if (this.controller.infoSignal[this.controller.infoSignal.length - 1].signal.aborted) {
                     this.notice(this.$t("public.loading"), "warning")
                   } else {
                     this.notice(error, "error")
@@ -596,7 +596,7 @@
                 //this.notice("chart: " + response.message, "warning");
               }
             }).catch(error => {
-              if (this.tweetStatus.displayType === "timeline" && error.toString() !== 'AbortError: The user aborted a request.') {
+              if (this.tweetStatus.displayType === "timeline" && !/^AbortError/.test(error.toString())) {
                 this.notice(this.$t("timeline.scripts.message.failed_to_generate_chart", [error]), 'error');
                 setTimeout(() => {
                   this.createChart(time, refresh)
@@ -605,10 +605,10 @@
             });
             },
             update: function () {
-              this.controller.updateTweetsSignal.abort()
-              this.controller.updateTweetsSignal = new AbortController()
+              this.controller.updateTweetsSignal[this.controller.updateTweetsSignal.length - 1].abort()
+              this.controller.updateTweetsSignal.push(new AbortController())
               fetch(this.mergeUrl() + (this.hidden ? '&hidden=1' : ''), {
-                signal: this.controller.updateTweetsSignal.signal
+                signal: this.controller.updateTweetsSignal[this.controller.updateTweetsSignal.length - 1].signal
               }).then(async response => {
                   response = await response.json()
                   this.$store.dispatch({
@@ -626,7 +626,7 @@
                   this.load.timeline = false;
                   this.tweetStatus.reload = (response.code !== 200 && response.code !== 404 && response.code !== 403);
               }).catch(error => {
-                    if (error.toString() === 'AbortError: The user aborted a request.') {
+                    if (this.controller.updateTweetsSignal[this.controller.updateTweetsSignal.length - 1].signal.aborted) {
                       this.notice(this.$t("public.loading"), "warning")
                     } else {
                       this.notice(error, "error")

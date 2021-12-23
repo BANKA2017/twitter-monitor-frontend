@@ -74,8 +74,8 @@
         })
         const notice = inject('notice')
         let controller = {
-          infoSignal: new AbortController(),
-          mediaSignal: new AbortController(),
+          infoSignal: [new AbortController()],
+          mediaSignal: [new AbortController()],
         }
         return {
           notice,
@@ -155,8 +155,8 @@
       methods: {
         cancelAll: function () {
           Object.keys(this.controller).map(cancel => {
-            this.controller[cancel].abort()
-            this.controller[cancel] = new AbortController()
+            this.controller[cancel][this.controller[cancel].length - 1].abort()
+            this.controller[cancel].push(new AbortController())
           })
         },
         fetchMedia: function () {
@@ -165,10 +165,10 @@
           this.video = false
           this.rawData = {}
           //https://tm.bangdream.fun/tmv2/api/v2/online/info/?tweet_id=1355686950640836609
-          this.controller.mediaSignal.abort()
-          this.controller.mediaSignal = new AbortController()
+          this.controller.mediaSignal[this.controller.mediaSignal.length - 1].abort()
+          this.controller.mediaSignal.push(new AbortController())
           fetch(this.settings.data.basePath + '/api/v2/online/media/?tweet_id=' + this.tweet_id, {
-            signal: this.controller.mediaSignal.signal
+            signal: this.controller.mediaSignal[this.controller.mediaSignal.length - 1].signal
           }).then(async response => {
             response = await response.json()
             if (response.code === 200) {
@@ -186,7 +186,7 @@
             }
             this.load = false
           }).catch(error => {
-            if (error.toString() !== 'AbortError: The user aborted a request.') {
+            if (!this.controller.mediaSignal[this.controller.mediaSignal.length - 1].signal.aborted) {
               this.notice(error, "error")
               this.load = false
             }
@@ -196,10 +196,10 @@
             this.tweets = {}
             this.users = {}
             //https://tm.bangdream.fun/tmv2/api/v2/online/info/?tweet_id=1355686950640836609
-            this.controller.infoSignal.abort()
-            this.controller.infoSignal = new AbortController()
+            this.controller.infoSignal[this.controller.infoSignal.length - 1].abort()
+            this.controller.infoSignal.push(new AbortController())
             fetch(this.settings.data.basePath + '/api/v2/online/info/?tweet_id=' + this.tweet_id, {
-              signal: this.controller.infoSignal.signal
+              signal: this.controller.infoSignal[this.controller.infoSignal.length - 1].signal
             }).then(async response => {
               response = await response.json()
               if (response.code === 200) {
@@ -212,7 +212,7 @@
               }
               this.load = false
             }).catch(error => {
-              if (error.toString() !== 'AbortError: The user aborted a request.') {
+              if (!this.controller.infoSignal[this.controller.infoSignal.length - 1].signal.aborted) {
                 this.notice(error, "error")
                 this.load = false
               }

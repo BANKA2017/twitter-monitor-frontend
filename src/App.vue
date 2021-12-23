@@ -1,9 +1,9 @@
 <template>
   <div id="app">
     <div style="position: absolute"></div>
-    <el-backtop />
+    <el-backtop style="z-index: 1500"/>
     <router-view/>
-    <div v-if="this.devmode" class="bg-dark text-white" style="left: 0; bottom: 0; position: fixed">开发测试版本</div>
+    <div v-if="this.devmode" class="bg-dark text-white" style="left: 0; bottom: 0; position: fixed; z-index: 9000">开发测试版本</div>
   </div>
 </template>
 
@@ -83,7 +83,7 @@
       },
       updateNow: function () {
         this.$store.dispatch('updateNow')
-        setTimeout(this.updateNow, 500);
+        setTimeout(this.updateNow, 500)
       },
       updateHeight: function () {
         this.$store.dispatch({
@@ -92,9 +92,7 @@
           height: document.documentElement.scrollTop,
           width: window.innerWidth,
         })
-        setTimeout(() => {
-          this.updateHeight();
-        }, 500);
+        setTimeout(this.updateHeight, 500)
       },
       setLanguage: function () {
         this.$store.dispatch({
