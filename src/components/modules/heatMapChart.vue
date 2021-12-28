@@ -1,0 +1,85 @@
+<template>
+  <div id="heat-map-chart">
+    <el-skeleton :loading="!computedOptions.series.data.length" :rows="4" animated></el-skeleton>
+    <v-chart v-if="computedOptions.series.data.length" :option="computedOptions" :style="{width: '100%', height: (typeof(height) === 'number' ? (height + 'px') : height)}" autoresize></v-chart>
+  </div>
+</template>
+
+<script>
+import * as echarts from 'echarts/core';
+import {
+  TitleComponent,
+  CalendarComponent,
+  TooltipComponent,
+  VisualMapComponent
+} from 'echarts/components';
+import { HeatmapChart } from 'echarts/charts';
+import { SVGRenderer } from 'echarts/renderers';
+
+echarts.use([
+  TitleComponent,
+  CalendarComponent,
+  TooltipComponent,
+  VisualMapComponent,
+  HeatmapChart,
+  SVGRenderer
+]);
+import VChart from "vue-echarts";
+export default {
+  name: "heatMapChart",
+  components: {
+    VChart
+  },
+  props: {
+    data: {
+      type: Array,
+      default: () => ([])
+    },
+    title: {
+      type: String,
+      default: ""
+    },
+    year: {
+      type: [Number, String],
+      default: (new Date()).getFullYear()
+    },
+    height: {
+      type: [String, Number],
+      default: "220px"
+    },
+  },
+  data: () => ({
+    option: {
+      title: {top: 30, left: 'center', text: ''},
+      tooltip: {},
+      visualMap: {min: 0, max: 10, calculable: true, orient: 'horizontal', left: 'center', top: 65},
+      calendar: {top: 120, left: 30, right: 30, cellSize: ['auto', 13], range: '0', itemStyle: {borderWidth: 0.5}, yearLabel: { show: false }},
+      series: {
+        type: 'heatmap',
+        coordinateSystem: 'calendar',
+        data: []
+      }
+    }
+  }),
+  computed: {
+    computedOptions: function () {
+      let tmpOption = this.option
+      let tmpMax = 0, tmpMin = 10000
+      this.data.map(singleData => {
+        tmpMax = singleData[1] > tmpMax ? singleData[1] : tmpMax
+        tmpMin = singleData[1] < tmpMin ? singleData[1] : tmpMin
+      })
+      tmpOption.visualMap.max = (tmpMax => tmpMax + 10 - tmpMax % 10)(tmpMax)
+      tmpOption.visualMap.min = (tmpMin => tmpMin - tmpMin % 10)(tmpMin)
+      tmpOption.calendar.range = this.year.toString()
+      tmpOption.title.text = this.title
+      tmpOption.series.data = this.data
+      return tmpOption
+    }
+  }
+}
+</script>
+
+<style scoped>
+
+</style>

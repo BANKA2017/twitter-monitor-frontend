@@ -53,7 +53,7 @@
                                 :unlimited="displayType === 'status'"/>
                 </template>
                 <!--quote-->
-                <template v-if="tweet.quote_status !== 0">
+                <template v-if="tweet.quote_status !== 0 && tweet.quote_status !== '0'">
                     <div class="my-4"></div>
                     <quote-card :base-path="settings.data.basePath" :display-picture="settings.data.displayPicture"
                                 :language="settings.data.language" :quote-media="tweet.mediaObject.quoteMedia"

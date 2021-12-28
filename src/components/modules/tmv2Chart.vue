@@ -1,7 +1,7 @@
 <template>
   <div id="tmv2-chart">
     <el-skeleton :loading="!computedOptions.series.length" :rows="5" animated></el-skeleton>
-    <span v-if="title !== '' && generateSeries.length" class="text-muted mb-1"><small>{{ title }}</small></span>
+    <!--<span v-if="title !== '' && generateSeries.length" class="text-muted mb-1"><small>{{ title }}</small></span>-->
     <v-chart v-if="computedOptions.series.length" :option="computedOptions" :style="{width: '100%', height: (typeof(chartHeight) === 'number' ? (chartHeight + 'px') : chartHeight)}" :update-options="setOption" autoresize></v-chart>
   </div>
 </template>
@@ -15,6 +15,7 @@ import {
   TooltipComponent,
   LegendComponent,
   GridComponent,
+  TitleComponent,
   //ToolboxComponent,
   //DataZoomComponent,
   //DataZoomInsideComponent,
@@ -27,6 +28,7 @@ use([
   TooltipComponent,
   LegendComponent,
   GridComponent,
+  TitleComponent,
   LineChart,
   BarChart,
   //ToolboxComponent,
@@ -116,6 +118,7 @@ export default {
   },
   data: () => ({
     options: {
+      title: {text: '', padding: [30, 5]},// subtext: '', subtextStyle: {align: 'center'},},
       tooltip: {
         trigger: 'axis',
         //十字准星定位
@@ -124,6 +127,7 @@ export default {
         //}
       },
       legend: {
+        type: 'scroll',
         data: [],
         selected: {},
       },
@@ -159,7 +163,10 @@ export default {
   }),
   computed: {
     axisKeys: function () {
-      if (this.chartRows.length === 0) {
+      if (Object.keys(this.labelMap).length > 0) {
+        let keys = Object.keys(this.labelMap)
+        return [keys.shift(), keys]
+      } else if (this.chartRows.length === 0) {
         return ['', []]
       }
       let keys = Object.keys(this.chartRows[0])
@@ -222,6 +229,9 @@ export default {
     },
     computedOptions: function () {
       let tmpOptions = this.options
+      if (this.title) {
+        tmpOptions.title.text = this.title
+      }
       tmpOptions.legend.data = this.legendName
       tmpOptions.legend.selected = this.legendSelected
       tmpOptions.xAxis.data = this.axisData[0]
@@ -229,7 +239,6 @@ export default {
       tmpOptions.series = this.generateSeries
       tmpOptions.color = this.colors
       tmpOptions.grid = this.grid
-      //console.log(this.options)
       //chart.setOption(this.options)
       return tmpOptions
     }

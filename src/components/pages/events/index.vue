@@ -59,6 +59,11 @@ export default {
       description: "这是以10分钟为更新周期、以天为最小单位自动生成的报告，报告仅供参考，Twitter monitor 不对其内容负责，未来将会合并到其他板块",
       update_time: "2021-09-07",
       link: "/i/events/staff_data_page/"
+    },{
+      title: "2021年度统计",
+      description: "Twitter monitor 2021年度统计，进度缓慢",
+      update_time: "2021-12-29",
+      link: "/i/events/2021/"
     },].reverse()
   }),
 }

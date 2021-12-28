@@ -16,7 +16,7 @@
                                       :preview-src-list="[createRealMediaPath('userinfo')+`pbs.twimg.com/profile_banners/`+info.uid_str+`/`+info.banner+`.banner`]"
                                       :src="createRealMediaPath('userinfo')+`pbs.twimg.com/profile_banners/`+info.uid_str+`/`+info.banner+`.banner`" alt="Banner" class="col-12 card-img-top"
                                       fit="cover"
-                                      lazy style="max-height: 20vh"></el-image>
+                                      lazy style="max-height: 20vh; z-index: 5000"></el-image>
                               </div>
                             </el-collapse-transition>
                             <div class="card-body">
@@ -43,6 +43,7 @@
                                     <el-image
                                         v-if="!settings.data.displayPicture && info.header"
                                         :preview-src-list="[createRealMediaPath('userinfo')+info.header]"
+                                        style="z-index: 5000"
                                         :src="createRealMediaPath('userinfo')+info.header.replace(/([\w]+)\.([\w]+)$/gm, `$1_bigger.$2`)" class="rounded-circle img-fluid" lazy>
                                       <template #error>
                                         <div class="image-slot">
@@ -247,7 +248,7 @@
     import ArrowClockwise from "@/components/icons/arrowClockwise";
 
     export default {
-        name: 'App',
+        name: 'timeLine',
         setup () {
           const store = useStore()
           useHead({

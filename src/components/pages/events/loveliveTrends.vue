@@ -74,6 +74,7 @@
           </template>
           <template v-else>
             <template v-if="status.value === 'overview'" >
+              <tmv2-chart :chart-rows="userData.count_data" :colors="userData.color" :label-map="userData.label" chart-type="line" chartHeight="500px" title="关注数" :set-option="{notMerge: true}"/>
               <tmv2-chart :chart-rows="userData.data" :colors="userData.color" :label-map="userData.label" chart-type="line" chartHeight="500px" title="关注数变动" :set-option="{notMerge: true}"/>
               <el-table ref="accountData" v-loading="!trendsData.data.length" :data="tableData" :default-sort="{prop: 'followers_add', order: 'descending'}" style="width: 100%">
                 <el-table-column label="名称">
@@ -215,16 +216,18 @@ export default {
       let label = {day: "日期"}
       let color = []
       let data = [{day: "星期日"}, {day: "星期一"}, {day: "星期二"}, {day: "星期三"}, {day: "星期四"}, {day: "星期五"}, {day: "星期六"}]
+      let count_data = [{day: "星期日"}, {day: "星期一"}, {day: "星期二"}, {day: "星期三"}, {day: "星期四"}, {day: "星期五"}, {day: "星期六"}]
       this.trendsData.data.map(x => {
         if (this.selectedTeams.indexOf(x.team) > -1) {
           label[x.name] = x.name_cn
           color.push(x.color)
           x.followers.map((y, order) => {
             data[order][x.name] = y.end - y.start
+            count_data[order][x.name] = y.end
           })
         }
       })
-      return {label: label, color: color, data: data}
+      return {label, color, data, count_data}
     },
   }),
   methods: {
@@ -255,10 +258,7 @@ export default {
         categoryData.push(rawData[i].splice(0, 1)[0]);
         values.push(rawData[i])
       }
-      return {
-        categoryData: categoryData,
-        values: values
-      };
+      return {categoryData, values};
     }
   },
 }

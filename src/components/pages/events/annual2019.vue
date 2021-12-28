@@ -3,7 +3,7 @@
     <div class="jumbotron jumbotron-fluid" style="background-color: #1da1f2">
       <div class="container">
         <h1 class="display-4" style="color: white">Twitter Monitor</h1>
-        <p class="lead" style="color: white">2019 年年度数据</p>
+        <p class="lead" style="color: white">2019 年度数据</p>
       </div>
     </div>
     <div class="container">

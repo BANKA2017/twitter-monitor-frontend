@@ -1,22 +1,22 @@
 import {createRouter, createWebHistory} from "vue-router";
 
-const About = () => import("./components/pages/about");
-const Api = () => import("./components/pages/api");
-const Stats = () => import("./components/pages/stats");
-const Status = () => import("./components/pages/status");
-const Online = () => import("./components/pages/online");
-const timeLine = () => import(/* webpackChunkName: "kernel" */ "./components/pages/timeLine");
-const UserSelector = () => import(/* webpackChunkName: "kernel" */ "./components/pages/userSelector");
-const devConfig = () => import("./components/pages/devConfig");
-const Trends = () => import("./components/pages/trends");
+const About = () => import(/* webpackChunkName: "pages" */ "./components/pages/about");
+const Api = () => import(/* webpackChunkName: "pages" */ "./components/pages/api");
+const Stats = () => import(/* webpackChunkName: "pages" */ "./components/pages/stats");
+const Status = () => import(/* webpackChunkName: "pages" */ "./components/pages/status");
+const Online = () => import(/* webpackChunkName: "pages" */ "./components/pages/online");
+const timeLine = () => import(/* webpackChunkName: "core" */ "./components/pages/timeLine");
+const UserSelector = () => import(/* webpackChunkName: "core" */ "./components/pages/userSelector");
+const devConfig = () => import(/* webpackChunkName: "pages" */ "./components/pages/devConfig");
+const Trends = () => import(/* webpackChunkName: "pages" */ "./components/pages/trends");
 const Event = () => import(/* webpackChunkName: "events" */ "./components/pages/events/index");
 const Annual2019 = () => import(/* webpackChunkName: "events" */ "./components/pages/events/annual2019");
 const Annual2020 = () => import(/* webpackChunkName: "events" */ "./components/pages/events/annual2020");
 const Annual2021 = () => import(/* webpackChunkName: "events" */ "./components/pages/events/annual2021");
 const loveliveTrends = () => import(/* webpackChunkName: "events" */ "./components/pages/events/loveliveTrends");
 const staffCandleStickPage = () => import(/* webpackChunkName: "events" */ "./components/pages/events/staffCandleStickPage");
-const notFound = () => import("./components/pages/errors/notFound");
-const Settings = () => import("./components/pages/settings")
+const notFound = () => import(/* webpackChunkName: "core" */"./components/pages/errors/notFound");
+const Settings = () => import(/* webpackChunkName: "core" */"./components/pages/settings")
 
 export default createRouter({
     history: createWebHistory('/'),
