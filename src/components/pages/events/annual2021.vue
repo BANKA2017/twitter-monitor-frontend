@@ -149,10 +149,12 @@
 
                 <word-cloud-chart-for-annual2021 :data="projectHashtagList.bangdream" title="标签云" subtitle="片假地狱" />
 
+                <bar-race-for-annual2021 :data="accountComputedData.bangdream.trendsData.followers" :colors="accountColor.member" title="关注增量排序" :label-map="accountComputedData.bangdream.trendsData.label" />
+
                 <tmv2-chart class="mb-2" :chart-rows="accountComputedData.bangdream.trendsData.followers" :label-map="accountComputedData.bangdream.trendsData.label"
-                            chart-type="line" chart-height="600px" :colors="accountComputedData.bangdream.trendsData.color" :set-option="{notMerge: true}" title="关注数"></tmv2-chart>
+                            chart-type="line" chart-height="600px" :colors="accountComputedData.bangdream.trendsData.color" :set-option="{notMerge: true}" title="关注增量"></tmv2-chart>
                 <tmv2-chart class="mb-2" :chart-rows="accountComputedData.bangdream.trendsData.statuses_count" :label-map="accountComputedData.bangdream.trendsData.label"
-                            chart-type="line" chart-height="600px" :colors="accountComputedData.bangdream.trendsData.color" :set-option="{notMerge: true}" title="推文数"></tmv2-chart>
+                            chart-type="line" chart-height="600px" :colors="accountComputedData.bangdream.trendsData.color" :set-option="{notMerge: true}" title="推文增量"></tmv2-chart>
               </div>
               <div id="annual2021lovelive" class="mb-4" >
                 <h4>Love Live!</h4>
@@ -170,10 +172,17 @@
 
                 <word-cloud-chart-for-annual2021 :data="projectHashtagList.lovelive" title="标签云" subtitle="片假地狱" />
 
+                <bar-race-for-annual2021 :data="accountComputedData.lovelive.trendsData.followers" :colors="accountColor.member" title="关注增量排序" :label-map="accountComputedData.lovelive.trendsData.label" />
+
                 <tmv2-chart class="mb-2" :chart-rows="accountComputedData.lovelive.trendsData.followers" :label-map="accountComputedData.lovelive.trendsData.label"
-                            chart-type="line" chart-height="600px" :colors="accountComputedData.lovelive.trendsData.color" :set-option="{notMerge: true}" title="关注数"></tmv2-chart>
+                            chart-type="line" chart-height="600px" :colors="accountComputedData.lovelive.trendsData.color" :set-option="{notMerge: true}" title="关注增量"></tmv2-chart>
                 <tmv2-chart class="mb-2" :chart-rows="accountComputedData.lovelive.trendsData.statuses_count" :label-map="accountComputedData.lovelive.trendsData.label"
-                            chart-type="line" chart-height="600px" :colors="accountComputedData.lovelive.trendsData.color" :set-option="{notMerge: true}" title="推文数"></tmv2-chart>
+                            chart-type="line" chart-height="600px" :colors="accountComputedData.lovelive.trendsData.color" :set-option="{notMerge: true}" title="推文增量"></tmv2-chart>
+                <h5>备注</h5>
+                <ul>
+                  <li>增量图表没有出现 <router-link to="/homoto_akina/all">法元明菜 (@homoto_akina)</router-link> 和 <router-link to="/uchida_shu0524/all">内田 秀 (@uchida_shu0524)</router-link> ，因为两者均为年中添加，没有初始数据</li>
+                  <li>全程都没有出现 <router-link to="/INFO_shikaco/all">久保由利香 (@INFO_shikaco)</router-link> ，这是我的失误，没有发现 Twitter Monitor 中添加的是 <router-link to="/shikaco_staff/all">久保由利香staff (@shikaco_staff)</router-link> ，我们会在明年的年度数据中使用 <router-link to="/INFO_shikaco/all">@INFO_shikaco</router-link> 的数据</li>
+                </ul>
               </div>
               <div id="annual2021official" class="mb-4" >
                 <h4>官推</h4>
@@ -189,16 +198,17 @@
                 </div>
                 <sun-burst-chart-for-annual2021 class="mb-2" title="改名部" subtitle="让我看看是谁在改名" :data="accountComputedData.official.renameDepartment" />
                 <tmv2-chart class="mb-2" :chart-rows="accountComputedData.official.trendsData.followers" :label-map="accountComputedData.official.trendsData.label"
-                            chart-type="line" chart-height="600px" :set-option="{notMerge: true}" title="关注数"></tmv2-chart>
+                            chart-type="line" chart-height="600px" :set-option="{notMerge: true}" title="关注增量"></tmv2-chart>
                 <tmv2-chart class="mb-2" :chart-rows="accountComputedData.official.trendsData.statuses_count" :label-map="accountComputedData.official.trendsData.label"
-                            chart-type="line" chart-height="600px" :set-option="{notMerge: true}" title="推文数"></tmv2-chart>
+                            chart-type="line" chart-height="600px" :set-option="{notMerge: true}" title="推文增量"></tmv2-chart>
               </div>
               <h3>一些别的话</h3>
               <p class="text-muted">我来作为一个长...</p>
               <p>
                 不要直接塞一个超大的文档进 <code>webpack</code>，会变得不幸<br>
                 提前一个月开始写并没有什么用，最后还是临近结束才搞出个雏形<br>
-                总之，<del>这个文档还没写完，</del>希望明年还能继续在这里见面
+                总之，<del>这个文档还没写完，</del>希望明年还能继续在这里见面<br>
+                为什么不分开做每个企划的表格？因为我懒，不想重复造；官号的图表也有<router-link to="/i/events/staff_data_page/">更详细的版本</router-link>，这里只是顺手做的
               </p>
               <ul>
                 <li><a :href="settings.data.basePath + '/static/db/annual2021.json'" target="_blank">本页数据</a></li>
@@ -223,11 +233,13 @@ import SunBurstChartForAnnual2021 from "@/components/pages/events/modules/sunBur
 import {inject} from "vue";
 import {mapState} from "vuex";
 import WordCloudChartForAnnual2021 from "@/components/pages/events/modules/wordCloudChartForAnnual2021";
+import BarRaceForAnnual2021 from "@/components/pages/events/modules/barRaceForAnnual2021";
 //import html2canvas from 'html2canvas';
 
 export default {
   name: "annual2021",
   components: {
+    BarRaceForAnnual2021,
     WordCloudChartForAnnual2021,
     SunBurstChartForAnnual2021, BarStackChartForAnnual2021, PieChart, HeatMapChart, Tmv2Chart},
   setup() {
@@ -286,7 +298,7 @@ export default {
       }
     }),
     projectHashtagList: {},
-
+    displayNameList: {},
   }),
   watch: {
     "accountListFilter": {
@@ -313,7 +325,7 @@ export default {
         }
         chunks.push(result.value)
         bytesReceived += result.value.length
-        that.progress = Math.floor((bytesReceived / 5239588) * 100)//不要想太多, 这个数字只是文件大小已知而已
+        that.progress = Math.floor((bytesReceived / 5242672) * 100)//不要想太多, 这个数字只是文件大小已知而已
         return reader.read().then(processResult)
       })
     })//.catch(e => this.notice("error", e))
@@ -344,6 +356,7 @@ export default {
         position += chunk.length;
       }
       let data = JSON.parse(new TextDecoder("utf-8").decode(chunksAll))
+      this.displayNameList = data.display_name_list
       this.userAddList = data.user_add_list
       this.userDeleteList = data.user_del_list
       this.hashTagList = data.hashtag_rank
@@ -434,24 +447,28 @@ export default {
             return
           }
           //label
-          tmpData[tmpProject].trendsData.label[account.name] = account.display_name_list[0]
+          tmpData[tmpProject].trendsData.label[account.name] = this.displayNameList[account.name]
           tmpData[tmpProject].trendsData.color.push(this.accountColor.member[account.name])
           //合并数据
           Object.keys(tmpPersonData.tweets).map(date => tmpData[tmpProject].tweets[date] ? tmpData[tmpProject].tweets[date] += tmpPersonData.tweets[date] : tmpData[tmpProject].tweets[date] = tmpPersonData.tweets[date])
           Object.keys(tmpPersonData.retweet).map(date => tmpData[tmpProject].retweet[date] ? tmpData[tmpProject].retweet[date] += tmpPersonData.retweet[date] : tmpData[tmpProject].retweet[date] = tmpPersonData.retweet[date])
           Object.keys(tmpPersonData.hourCount).map(time => tmpData[tmpProject].hourCount[time] += tmpPersonData.hourCount[time])
           Object.keys(tmpPersonData.mediaCount).map(time => tmpData[tmpProject].mediaCount[time] += tmpPersonData.mediaCount[time])
+
+          let baseFollowers = tmpPersonData.trendsData.followers["2021-01-01"]//only bangdream
           Object.keys(tmpPersonData.trendsData.followers).map(date => {
             if (!tmpData[tmpProject].trendsData.followers[date]) {
               tmpData[tmpProject].trendsData.followers[date] = {date}
             }
-            tmpData[tmpProject].trendsData.followers[date][account.name] = tmpPersonData.trendsData.followers[date]
+            tmpData[tmpProject].trendsData.followers[date][account.name] = tmpPersonData.trendsData.followers[date] - baseFollowers// (tmpProject === 'bangdream' ? baseFollowers : 0)
           })
+
+          let baseStatusesCount = tmpPersonData.trendsData.statuses_count["2021-01-01"]//only bangdream
           Object.keys(tmpPersonData.trendsData.statuses_count).map(date => {
             if (!tmpData[tmpProject].trendsData.statuses_count[date]) {
               tmpData[tmpProject].trendsData.statuses_count[date] = {date}
             }
-            tmpData[tmpProject].trendsData.statuses_count[date][account.name] = tmpPersonData.trendsData.statuses_count[date]
+            tmpData[tmpProject].trendsData.statuses_count[date][account.name] = tmpPersonData.trendsData.statuses_count[date] - baseStatusesCount// (tmpProject === 'bangdream' ? baseStatusesCount : 0)
           })
           //改名部
           let tmpChildren = {
