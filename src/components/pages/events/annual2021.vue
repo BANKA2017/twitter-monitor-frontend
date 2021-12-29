@@ -1,39 +1,62 @@
 <template>
   <div id="annual2021">
-    <div v-if="loading" style="background-color: #1da1f2; min-height: 100vh" class="text-center">
-      <p class="text-white" style="font-size: 14vh; padding: 20vh 0 0 0;">Twitter Monitor</p>
-      <p class="text-white" style="font-size: 8vh;">2021</p>
-      <div class="progress" style="height: 5px; max-width: 50vw; margin: auto">
-        <div class="progress-bar" role="progressbar" id="progress" :style="{'width': progress + '%', 'background-color': '#1da1f2'}" :aria-valuenow="progress" aria-valuemin="0" aria-valuemax="100"></div>
-      </div>
-    </div>
-    <div v-else >
-      <div class="jumbotron jumbotron-fluid" style="background-color: #1da1f2">
-        <div class="container">
-          <h1 class="display-4" style="color: white">Twitter Monitor</h1>
-          <p class="lead" style="color: white">2021 年度数据</p>
+    <el-collapse-transition >
+      <div v-if="loading" style="background-color: #1da1f2; min-height: 100vh" class="text-center">
+        <p class="text-white" style="font-size: 14vh; padding: 20vh 0 0 0;">Twitter Monitor</p>
+        <p class="text-white" style="font-size: 8vh;">2021</p>
+        <div class="progress" style="height: 5px; max-width: 50vw; margin: auto">
+          <div class="progress-bar" role="progressbar" id="progress" :style="{'width': progress + '%', 'background-color': '#1da1f2'}" :aria-valuenow="progress" aria-valuemin="0" aria-valuemax="100"></div>
         </div>
       </div>
+      <div v-else >
+        <div class="jumbotron jumbotron-fluid" style="background-color: #1da1f2">
+          <div class="container">
+            <h1 class="display-4" style="color: white">Twitter Monitor</h1>
+            <p class="lead" style="color: white">2021 年度数据</p>
+          </div>
+        </div>
 
-      <div class="container">
-        <div class="row">
-          <div class="col-md-10 offset-md-1">
-            <p class="text-muted"><small>* 如无特殊注明，统计所使用的时区为东九区(GMT+9)</small></p>
-            <p class="text-muted"><small>* 建议使用宽屏浏览，否则可能会出现图表显示不全</small></p>
-            <h3>前言</h3>
-            <p class="text-muted">在平淡无奇的日子里又过了一年</p>
-            <ul class="ml-3">
-              <li>升级了前端 Vue 版本(Vue2 -> Vue3)，至少能用了，并释出了<a href="https://github.com/BANKA2017/tmv2-frontend" target="_blank">源码</a>，至此，任何人都能够构建一个不完整但核心功能完全可用的Twitter Monitor</li>
-              <li>重构了爬虫，提高了效率</li>
-              <li>搬了个家，迁移到了位于法国的 <code>KS-LE</code></li>
-            </ul>
-            <h3>总概</h3>
-            <p class="text-muted">让我康康</p>
-            <p>2021年我们没在站内删过账号，今年净增加了{{ userAddList.length }}个账号，包括2名虹团新的正式成员，227企划的一部分账号以及2位重量级人士；虽然站内没删过号，但今年消失了几个账号包括一位前总统，以及几位从227跑路的成员（队长跑路早，根本没来得及加进来）</p>
-            <div class="row">
-              <div class="col-md-6">
-                <p class="text-muted text-center">增加账号 (<span class="text-success">{{ userAddList.length }}</span>)</p>
-                <div class="table-responsive">
+        <div class="container">
+          <div class="row">
+            <div class="col-12">
+              <p class="text-muted"><small>* 如无特殊注明，统计所使用的时区为东九区(GMT+9)</small></p>
+              <p class="text-muted"><small>* 建议使用宽屏浏览，否则可能会出现图表显示不全</small></p>
+              <h3>前言</h3>
+              <p class="text-muted">在平淡无奇的日子里又过了一年</p>
+              <ul class="ml-3">
+                <li>升级了前端 Vue 版本(Vue2 -> Vue3)，至少能用了，并释出了<a href="https://github.com/BANKA2017/tmv2-frontend" target="_blank">源码</a>，至此，任何人都能够构建一个不完整但核心功能完全可用的Twitter Monitor</li>
+                <li>重构了爬虫，提高了效率</li>
+                <li>搬了个家，迁移到了位于法国的 <code>KS-LE</code></li>
+              </ul>
+              <h3>总概</h3>
+              <p class="text-muted">让我康康</p>
+              <p>2021年我们没在站内删过账号，今年净增加了{{ userAddList.length }}个账号，包括2名虹团新的正式成员，227企划的一部分账号以及2位重量级人士；虽然站内没删过号，但今年消失了几个账号包括一位前总统，以及几位从227跑路的成员（队长跑路早，根本没来得及加进来）</p>
+              <div class="row">
+                <div class="col-md-6">
+                  <p class="text-muted text-center">增加账号 (<span class="text-success">{{ userAddList.length }}</span>)</p>
+                  <div class="table-responsive">
+                    <table class="table">
+                      <thead>
+                      <tr>
+                        <th scope="col">用户名</th>
+                        <th scope="col">id</th>
+                      </tr>
+                      </thead>
+                      <tbody>
+                      <tr v-for="(userInfo, order) in userAddList" :key="order" class="table-success">
+                        <th scope="row">{{ userInfo.display_name }}</th>
+                        <td>
+                          <router-link :to="`/` + userInfo.name + `/all`" class="text-decoration-none text-dark">
+                            @{{ userInfo.name }}
+                          </router-link>
+                        </td>
+                      </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <p class="text-muted text-center">消失账号 (<span class="text-danger">{{ userDeleteList.length }}</span>)</p>
                   <table class="table">
                     <thead>
                     <tr>
@@ -42,163 +65,151 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr v-for="(userInfo, order) in userAddList" :key="order" class="table-success">
+                    <tr v-for="(userInfo, order) in userDeleteList" :key="order" class="table-danger">
                       <th scope="row">{{ userInfo.display_name }}</th>
-                      <td>
-                        <router-link :to="`/` + userInfo.name + `/all`" class="text-decoration-none text-dark">
-                          @{{ userInfo.name }}
-                        </router-link>
-                      </td>
+                      <td><router-link :to="`/` + userInfo.name + `/all`" class="text-decoration-none text-dark">
+                        @{{ userInfo.name }}
+                      </router-link></td>
                     </tr>
                     </tbody>
                   </table>
+                  <p class="mt-2">这227跑路的还挺多啊……</p>
                 </div>
               </div>
-              <div class="col-md-6">
-                <p class="text-muted text-center">消失账号 (<span class="text-danger">{{ userDeleteList.length }}</span>)</p>
-                <table class="table">
-                  <thead>
-                  <tr>
-                    <th scope="col">用户名</th>
-                    <th scope="col">id</th>
-                  </tr>
-                  </thead>
-                  <tbody>
-                  <tr v-for="(userInfo, order) in userDeleteList" :key="order" class="table-danger">
-                    <th scope="row">{{ userInfo.display_name }}</th>
-                    <td><router-link :to="`/` + userInfo.name + `/all`" class="text-decoration-none text-dark">
-                      @{{ userInfo.name }}
-                    </router-link></td>
-                  </tr>
-                  </tbody>
-                </table>
-                <p class="mt-2">这227跑路的还挺多啊……</p>
+              <hr class="my-4">
+              <h3 class="my-3">数据变动</h3>
+              <el-table ref="accountData" v-loading="!userData.length" :data="userData"
+                        :default-sort="{prop: 'followers_add', order: 'descending'}" style="width: 100%">
+                <el-table-column label="用户名" prop="display_name"></el-table-column>
+                <el-table-column label="关注数" prop="followers" show-overflow-tooltip sortable></el-table-column>
+                <el-table-column label="关注变化量" prop="followers_add" show-overflow-tooltip sortable></el-table-column>
+                <el-table-column label="总推文数" prop="statuses_count" show-overflow-tooltip sortable></el-table-column>
+                <el-table-column label="推文变化量" prop="statuses_count_add" show-overflow-tooltip sortable></el-table-column>
+                <el-table-column label="监听天数" prop="time" sortable></el-table-column>
+                <el-table-column :filter-method="filterTag" :filters="projects" filter-placement="bottom-end"
+                                 header-align="center" label="组" prop="group">
+                  <template #default="scope">
+                    <el-tag v-for="group in scope.row.group" :key="group" :type="colorForGroup[group]" disable-transitions>
+                      {{ group }}
+                    </el-tag>
+                  </template>
+                </el-table-column>
+              </el-table>
+              <hr class="my-4">
+              <h3>标签排行</h3>
+              <p class="text-muted">没有任何悬念，这玩意有什么存在的必要吗</p>
+              <el-table ref="accountData" v-loading="!hashTagList.length" :data="hashTagList"
+                        :default-sort="{prop: 'count', order: 'descending'}" style="width: 100%">
+                <el-table-column label="名称" prop="text"></el-table-column>
+                <el-table-column label="统计" prop="count" show-overflow-tooltip sortable></el-table-column>
+              </el-table>
+              <hr class="my-4">
+              <h3>质量</h3>
+              <p class="text-muted">例行公事，去年玩过了今年就不再重复介绍了</p>
+              <p>我们优化了整个流程，使用异步获取图片的<a href="https://blurha.sh/" target="_blank">blurhash</a>，使绝大多数的爬取都能压缩到<code>20s</code>左右（注意 <code>08-14</code> 的那个下折）</p>
+              <ul>
+                <li>最严重的是一次配置错误导致直接自动跳过所有任务（检查账号信息除外，所以我们还是正常记录下了所有关注数、发推数变化），由于错误推送系统并未恢复（*注：即使后来恢复了此事仍不会推送，因为推送系统运作的前提是代码可运行），我们无从得知问题的出现，直到数天后进行的例行检查中修复（2021-11-02 ~ 2021-11-14）</li>
+                <li>次之的是5月12日的那次强制启用 GraphQL api 事件导致在线率到了<code><abbr title="0.4898">50%</abbr></code>以下，关于这件事，我写了<a href="https://blog.nest.moe/2021/05/12/how-to-crawl-twitter-with-graphql/" target="_blank">一篇文章</a>作为记录</li>
+              </ul>
+              <tmv2-chart :chart-rows="serverStatusChartMeta.serverStatusTotalTweets"
+                          :colors="serverStatusColor.serverStatusTotalTweets" :label-map="serverStatusLabel.totalTweets"
+                          chart-type="line"></tmv2-chart>
+              <tmv2-chart :chart-rows="serverStatusChartMeta.serverStatusTotalTime"
+                          :colors="serverStatusColor.serverStatusTotalTime" :label-map="serverStatusLabel.totalTime"
+                          :y-axis="{type: 'log', name: '秒', scale: true}" chart-type="line"></tmv2-chart>
+              <tmv2-chart :chart-rows="serverStatusChartMeta.serverStatusTotalSuccessRate"
+                          :colors="serverStatusColor.serverStatusTotalSuccessRate"
+                          :label-map="serverStatusLabel.successRate" chart-type="line"></tmv2-chart>
+              <tmv2-chart :chart-rows="serverStatusChartMeta.serverStatusTotalOnline"
+                          :label-map="serverStatusLabel.onlineRate" chart-type="line" :y-axis-index="[0, 1]" :y-axis="[{type: 'value', scale: true, minInterval: 1}, {type: 'value', scale: true, minInterval: 1}]"></tmv2-chart>
+              <hr class="my-4">
+              <h3>独立数据</h3>
+              <p class="text-muted">川普篇和马斯克篇待定</p>
+              <!--<h4>川普 <small class="text-muted">@realdonaldtrump</small> </h4>
+              <p class="text-muted">一上来就是重量级人物啊（笑）</p>
+              <p>Twitter Monitor 因川普而生（请仔细阅读<router-link to="/about">关于页面</router-link>的内容），年初大选期间 Twitter Monitor 终究还是下手爬川普的 Twitter，虽然没过几天他的号就没了，遗留下来的东西也不知有什么用，毕竟有比 Twitter Monitor 更早干这玩意的<a href="https://www.thetrumparchive.com/" target="_blank">有心人士</a>记录得更完整，既然没什么好说的，我们来看看2021年短短几天里面川普的词云罢</p>
+              <div class="my-4" ></div>
+              <h4>马斯克 <small class="text-muted">@elonmusk</small> </h4>
+              <p class="text-muted">今年不对劲，这不是我熟悉的 Twitter Monitor（再笑）</p>
+              <p>众所周知，在年初的各种币乱涨的时候，马斯克可是拱火先锋，尤其是在带头收割 <a href="https://dogecoin.com/" target="_blank">$DOGE</a> ，我们尝试画出了此人发推与 $DOGE 币价的关系</p>
+              <div class="my-4" ></div>-->
+              <div id="annual2021bangdream" class="mb-4">
+                <h4>BanG Dream!</h4>
+                <p class="text-muted">2021-01-01 ~ 2021-12-27 (GMT+9)</p>
+                <div class="my-1">
+                  <span type="button" @click="swapGroupStatus('bangdream', group)" :class="{'badge': true, 'mr-1': true, 'text-white': true}" :style="{'background-color': selected ? accountColor.group[group] : '#6c757d'}" v-for="(selected, group) in accountListFilter.bangdream" :key="group">{{group}}</span>
+                </div>
+                <heat-map-chart title="发推热力图（包含发推转推）" :data="accountComputedData.bangdream.tweets" year="2021"/>
+                <heat-map-chart title="转推热力图" :data="accountComputedData.bangdream.retweet" year="2021" class="mb-2"/>
+                <div class="row" >
+                  <bar-stack-chart-for-annual2021 title="时间段" :data="{tweet: accountComputedData.bangdream.hourCount, media: accountComputedData.bangdream.mediaCount}" class="col-12 col-lg-6 mb-2"/>
+                  <pie-chart title="发推时间段" :data="accountComputedData.bangdream.hourCount" class="col-12 col-lg-6 mb-2"/>
+                </div>
+                <sun-burst-chart-for-annual2021 class="mb-2" title="改名部" subtitle="让我看看是谁在改名" :data="accountComputedData.bangdream.renameDepartment" />
+
+                <word-cloud-chart-for-annual2021 :data="projectHashtagList.bangdream" title="标签云" subtitle="片假地狱" />
+
+                <tmv2-chart class="mb-2" :chart-rows="accountComputedData.bangdream.trendsData.followers" :label-map="accountComputedData.bangdream.trendsData.label"
+                            chart-type="line" chart-height="600px" :colors="accountComputedData.bangdream.trendsData.color" :set-option="{notMerge: true}" title="关注数"></tmv2-chart>
+                <tmv2-chart class="mb-2" :chart-rows="accountComputedData.bangdream.trendsData.statuses_count" :label-map="accountComputedData.bangdream.trendsData.label"
+                            chart-type="line" chart-height="600px" :colors="accountComputedData.bangdream.trendsData.color" :set-option="{notMerge: true}" title="推文数"></tmv2-chart>
               </div>
+              <div id="annual2021lovelive" class="mb-4" >
+                <h4>Love Live!</h4>
+                <p class="text-muted">2021-01-01 ~ 2021-12-27 (GMT+9)</p>
+                <div class="my-1">
+                  <span type="button" @click="swapGroupStatus('lovelive', group)" :class="{'badge': true, 'mr-1': true, 'text-white': true}" :style="{'background-color': selected ? accountColor.group[group] : '#6c757d'}" v-for="(selected, group) in accountListFilter.lovelive" :key="group">{{group}}</span>
+                </div>
+                <heat-map-chart title="发推热力图（包含发推转推）" :data="accountComputedData.lovelive.tweets" year="2021"/>
+                <heat-map-chart title="转推热力图" :data="accountComputedData.lovelive.retweet" year="2021" class="mb-2"/>
+                <div class="row" >
+                  <bar-stack-chart-for-annual2021 title="时间段" :data="{tweet: accountComputedData.lovelive.hourCount, media: accountComputedData.lovelive.mediaCount}" class="col-12 col-lg-6 mb-2"/>
+                  <pie-chart title="发推时间段" :data="accountComputedData.lovelive.hourCount" class="col-12 col-lg-6 mb-2"/>
+                </div>
+                <sun-burst-chart-for-annual2021 class="mb-2" title="改名部" subtitle="让我看看是谁在改名" :data="accountComputedData.lovelive.renameDepartment" />
+
+                <word-cloud-chart-for-annual2021 :data="projectHashtagList.lovelive" title="标签云" subtitle="片假地狱" />
+
+                <tmv2-chart class="mb-2" :chart-rows="accountComputedData.lovelive.trendsData.followers" :label-map="accountComputedData.lovelive.trendsData.label"
+                            chart-type="line" chart-height="600px" :colors="accountComputedData.lovelive.trendsData.color" :set-option="{notMerge: true}" title="关注数"></tmv2-chart>
+                <tmv2-chart class="mb-2" :chart-rows="accountComputedData.lovelive.trendsData.statuses_count" :label-map="accountComputedData.lovelive.trendsData.label"
+                            chart-type="line" chart-height="600px" :colors="accountComputedData.lovelive.trendsData.color" :set-option="{notMerge: true}" title="推文数"></tmv2-chart>
+              </div>
+              <div id="annual2021official" class="mb-4" >
+                <h4>官推</h4>
+                <p class="text-muted">包括 Love Live! 和 BanG Dream!</p>
+                <div class="my-1">
+                  <span type="button" @click="swapGroupStatus('official', group)" :class="{'badge': true, 'mr-1': true, 'text-white': true}" :style="{'background-color': selected ?( group === 'BanGDream!' ? '#E4003DD9' : '#1DA1F2FF') : '#6c757d'}" v-for="(selected, group) in accountListFilter.official" :key="group">{{group}}</span>
+                </div>
+                <heat-map-chart title="发推热力图（包含发推转推）" :data="accountComputedData.official.tweets" year="2021"/>
+                <heat-map-chart title="转推热力图" :data="accountComputedData.official.retweet" year="2021" class="mb-2"/>
+                <div class="row" >
+                  <bar-stack-chart-for-annual2021 title="时间段" :data="{tweet: accountComputedData.official.hourCount, media: accountComputedData.official.mediaCount}" class="col-12 col-lg-6 mb-2"/>
+                  <pie-chart title="发推时间段" :data="accountComputedData.official.hourCount" class="col-12 col-lg-6 mb-2"/>
+                </div>
+                <sun-burst-chart-for-annual2021 class="mb-2" title="改名部" subtitle="让我看看是谁在改名" :data="accountComputedData.official.renameDepartment" />
+                <tmv2-chart class="mb-2" :chart-rows="accountComputedData.official.trendsData.followers" :label-map="accountComputedData.official.trendsData.label"
+                            chart-type="line" chart-height="600px" :set-option="{notMerge: true}" title="关注数"></tmv2-chart>
+                <tmv2-chart class="mb-2" :chart-rows="accountComputedData.official.trendsData.statuses_count" :label-map="accountComputedData.official.trendsData.label"
+                            chart-type="line" chart-height="600px" :set-option="{notMerge: true}" title="推文数"></tmv2-chart>
+              </div>
+              <h3>一些别的话</h3>
+              <p class="text-muted">我来作为一个长...</p>
+              <p>
+                不要直接塞一个超大的文档进 <code>webpack</code>，会变得不幸<br>
+                提前一个月开始写并没有什么用，最后还是临近结束才搞出个雏形<br>
+                总之，<del>这个文档还没写完，</del>希望明年还能继续在这里见面
+              </p>
+              <ul>
+                <li><a :href="settings.data.basePath + '/static/db/annual2021.json'" target="_blank">本页数据</a></li>
+                <li><a :href="settings.data.basePath + '/static/db/annual2021Full.json'" target="_blank">更详细的年度数据</a></li>
+              </ul>
             </div>
-            <hr class="my-4">
-            <h3 class="my-3">数据变动</h3>
-            <el-table ref="accountData" v-loading="!userData.length" :data="userData"
-                      :default-sort="{prop: 'followers_add', order: 'descending'}" style="width: 100%">
-              <el-table-column label="用户名" prop="display_name"></el-table-column>
-              <el-table-column label="关注数" prop="followers" show-overflow-tooltip sortable></el-table-column>
-              <el-table-column label="关注变化量" prop="followers_add" show-overflow-tooltip sortable></el-table-column>
-              <el-table-column label="总推文数" prop="statuses_count" show-overflow-tooltip sortable></el-table-column>
-              <el-table-column label="推文变化量" prop="statuses_count_add" show-overflow-tooltip sortable></el-table-column>
-              <el-table-column label="监听天数" prop="time" sortable></el-table-column>
-              <el-table-column :filter-method="filterTag" :filters="projects" filter-placement="bottom-end"
-                               header-align="center" label="组" prop="group">
-                <template #default="scope">
-                  <el-tag v-for="group in scope.row.group" :key="group" :type="colorForGroup[group]" disable-transitions>
-                    {{ group }}
-                  </el-tag>
-                </template>
-              </el-table-column>
-            </el-table>
-            <hr class="my-4">
-            <h3>标签排行</h3>
-            <p class="text-muted">没有任何悬念，这玩意有什么存在的必要吗</p>
-            <el-table ref="accountData" v-loading="!hashTagList.length" :data="hashTagList"
-                      :default-sort="{prop: 'count', order: 'descending'}" style="width: 100%">
-              <el-table-column label="名称" prop="text"></el-table-column>
-              <el-table-column label="统计" prop="count" show-overflow-tooltip sortable></el-table-column>
-            </el-table>
-            <hr class="my-4">
-            <h3>质量</h3>
-            <p class="text-muted">例行公事，去年玩过了今年就不再重复介绍了</p>
-            <p>我们优化了整个流程，使用异步获取图片的<a href="https://blurha.sh/" target="_blank">blurhash</a>，使绝大多数的爬取都能压缩到<code>20s</code>左右（注意 <code>08-14</code> 的那个下折）</p>
-            <ul>
-              <li>最严重的是一次配置错误导致直接自动跳过所有任务（检查账号信息除外，所以我们还是正常记录下了所有关注数、发推数变化），由于错误推送系统并未恢复（*注：即使后来恢复了此事仍不会推送，因为推送系统运作的前提是代码可运行），我们无从得知问题的出现，直到数天后进行的例行检查中修复（2021-11-02 ~ 2021-11-14）</li>
-              <li>次之的是5月12日的那次强制启用 GraphQL api 事件导致在线率到了<code><abbr title="0.4898">50%</abbr></code>以下，关于这件事，我写了<a href="https://blog.nest.moe/2021/05/12/how-to-crawl-twitter-with-graphql/" target="_blank">一篇文章</a>作为记录</li>
-            </ul>
-            <tmv2-chart :chart-rows="serverStatusChartMeta.serverStatusTotalTweets"
-                        :colors="serverStatusColor.serverStatusTotalTweets" :label-map="serverStatusLabel.totalTweets"
-                        chart-type="line"></tmv2-chart>
-            <tmv2-chart :chart-rows="serverStatusChartMeta.serverStatusTotalTime"
-                        :colors="serverStatusColor.serverStatusTotalTime" :label-map="serverStatusLabel.totalTime"
-                        :y-axis="{type: 'log', name: '秒', scale: true}" chart-type="line"></tmv2-chart>
-            <tmv2-chart :chart-rows="serverStatusChartMeta.serverStatusTotalSuccessRate"
-                        :colors="serverStatusColor.serverStatusTotalSuccessRate"
-                        :label-map="serverStatusLabel.successRate" chart-type="line"></tmv2-chart>
-            <tmv2-chart :chart-rows="serverStatusChartMeta.serverStatusTotalOnline"
-                        :label-map="serverStatusLabel.onlineRate" chart-type="line" :y-axis-index="[0, 1]" :y-axis="[{type: 'value', scale: true, minInterval: 1}, {type: 'value', scale: true, minInterval: 1}]"></tmv2-chart>
-            <hr class="my-4">
-            <h3>独立数据</h3>
-            <p class="text-muted">川普篇和马斯克篇待定</p>
-            <!--<h4>川普 <small class="text-muted">@realdonaldtrump</small> </h4>
-            <p class="text-muted">一上来就是重量级人物啊（笑）</p>
-            <p>Twitter Monitor 因川普而生（请仔细阅读<router-link to="/about">关于页面</router-link>的内容），年初大选期间 Twitter Monitor 终究还是下手爬川普的 Twitter，虽然没过几天他的号就没了，遗留下来的东西也不知有什么用，毕竟有比 Twitter Monitor 更早干这玩意的<a href="https://www.thetrumparchive.com/" target="_blank">有心人士</a>记录得更完整，既然没什么好说的，我们来看看2021年短短几天里面川普的词云罢</p>
-            <div class="my-4" ></div>
-            <h4>马斯克 <small class="text-muted">@elonmusk</small> </h4>
-            <p class="text-muted">今年不对劲，这不是我熟悉的 Twitter Monitor（再笑）</p>
-            <p>众所周知，在年初的各种币乱涨的时候，马斯克可是拱火先锋，尤其是在带头收割 <a href="https://dogecoin.com/" target="_blank">$DOGE</a> ，我们尝试画出了此人发推与 $DOGE 币价的关系</p>
-            <div class="my-4" ></div>-->
-            <div id="annual2021bangdream" class="mb-4">
-              <h4>BanG Dream!</h4>
-              <p class="text-muted">2021-01-01 ~ 2021-12-27 (GMT+9)</p>
-              <div class="my-1">
-                <span type="button" @click="accountListFilter.bangdream[group] = !accountListFilter.bangdream[group]" :class="{'badge': true, 'mr-1': true, 'text-white': true}" :style="{'background-color': selected ? accountColor.group[group] : '#6c757d'}" v-for="(selected, group) in accountListFilter.bangdream" :key="group">{{group}}</span>
-              </div>
-              <heat-map-chart title="发推热力图（包含发推转推）" :data="accountComputedData.bangdream.tweets" year="2021"/>
-              <heat-map-chart title="转推热力图" :data="accountComputedData.bangdream.retweet" year="2021" class="mb-2"/>
-              <div class="row" >
-                <bar-stack-chart-for-annual2021 title="时间段" :data="{tweet: accountComputedData.bangdream.hourCount, media: accountComputedData.bangdream.mediaCount}" class="col-12 col-lg-6 mb-2"/>
-                <pie-chart title="发推时间段" :data="accountComputedData.bangdream.hourCount" class="col-12 col-lg-6 mb-2"/>
-              </div>
-              <sun-burst-chart-for-annual2021 class="mb-2" title="改名部" subtitle="让我看看是谁在改名" :data="accountComputedData.bangdream.renameDepartment" />
-              <tmv2-chart class="mb-2" :chart-rows="accountComputedData.bangdream.trendsData.followers" :label-map="accountComputedData.bangdream.trendsData.label"
-                          chart-type="line" chart-height="600px" :colors="accountComputedData.bangdream.trendsData.color" :set-option="{notMerge: true}" title="关注数"></tmv2-chart>
-              <tmv2-chart class="mb-2" :chart-rows="accountComputedData.bangdream.trendsData.statuses_count" :label-map="accountComputedData.bangdream.trendsData.label"
-                          chart-type="line" chart-height="600px" :colors="accountComputedData.bangdream.trendsData.color" :set-option="{notMerge: true}" title="推文数"></tmv2-chart>
-            </div>
-            <div id="annual2021lovelive" class="mb-4" >
-              <h4>Love Live!</h4>
-              <p class="text-muted">2021-01-01 ~ 2021-12-27 (GMT+9)</p>
-              <div class="my-1">
-                <span type="button" @click="accountListFilter.lovelive[group] = !accountListFilter.lovelive[group]" :class="{'badge': true, 'mr-1': true, 'text-white': true}" :style="{'background-color': selected ? accountColor.group[group] : '#6c757d'}" v-for="(selected, group) in accountListFilter.lovelive" :key="group">{{group}}</span>
-              </div>
-              <heat-map-chart title="发推热力图（包含发推转推）" :data="accountComputedData.lovelive.tweets" year="2021"/>
-              <heat-map-chart title="转推热力图" :data="accountComputedData.lovelive.retweet" year="2021" class="mb-2"/>
-              <div class="row" >
-                <bar-stack-chart-for-annual2021 title="时间段" :data="{tweet: accountComputedData.lovelive.hourCount, media: accountComputedData.lovelive.mediaCount}" class="col-12 col-lg-6 mb-2"/>
-                <pie-chart title="发推时间段" :data="accountComputedData.lovelive.hourCount" class="col-12 col-lg-6 mb-2"/>
-              </div>
-              <sun-burst-chart-for-annual2021 class="mb-2" title="改名部" subtitle="让我看看是谁在改名" :data="accountComputedData.lovelive.renameDepartment" />
-              <tmv2-chart class="mb-2" :chart-rows="accountComputedData.lovelive.trendsData.followers" :label-map="accountComputedData.lovelive.trendsData.label"
-                          chart-type="line" chart-height="600px" :colors="accountComputedData.lovelive.trendsData.color" :set-option="{notMerge: true}" title="关注数"></tmv2-chart>
-              <tmv2-chart class="mb-2" :chart-rows="accountComputedData.lovelive.trendsData.statuses_count" :label-map="accountComputedData.lovelive.trendsData.label"
-                          chart-type="line" chart-height="600px" :colors="accountComputedData.lovelive.trendsData.color" :set-option="{notMerge: true}" title="推文数"></tmv2-chart>
-            </div>
-            <div id="annual2021official" class="mb-4" >
-              <h4>官推</h4>
-              <p class="text-muted">包括 Love Live! 和 BanG Dream!</p>
-              <heat-map-chart title="发推热力图（包含发推转推）" :data="accountComputedData.official.tweets" year="2021"/>
-              <heat-map-chart title="转推热力图" :data="accountComputedData.official.retweet" year="2021" class="mb-2"/>
-              <div class="row" >
-                <bar-stack-chart-for-annual2021 title="时间段" :data="{tweet: accountComputedData.official.hourCount, media: accountComputedData.official.mediaCount}" class="col-12 col-lg-6 mb-2"/>
-                <pie-chart title="发推时间段" :data="accountComputedData.official.hourCount" class="col-12 col-lg-6 mb-2"/>
-              </div>
-              <sun-burst-chart-for-annual2021 class="mb-2" title="改名部" subtitle="让我看看是谁在改名" :data="accountComputedData.official.renameDepartment" />
-              <tmv2-chart class="mb-2" :chart-rows="accountComputedData.official.trendsData.followers" :label-map="accountComputedData.official.trendsData.label"
-                          chart-type="line" chart-height="600px" :set-option="{notMerge: true}" title="关注数"></tmv2-chart>
-              <tmv2-chart class="mb-2" :chart-rows="accountComputedData.official.trendsData.statuses_count" :label-map="accountComputedData.official.trendsData.label"
-                          chart-type="line" chart-height="600px" :set-option="{notMerge: true}" title="推文数"></tmv2-chart>
-            </div>
-            <h3>一些别的话</h3>
-            <p class="text-muted">我来作为一个长...</p>
-            <p>
-              不要直接塞一个超大的文档进 <code>webpack</code>，会变得不幸<br>
-              提前一个月开始写并没有什么用，最后还是临近结束才搞出个雏形<br>
-              总之，<del>这个文档还没写完，</del>希望明年还能继续在这里见面
-            </p>
-            <ul>
-              <li><a :href="settings.data.basePath + '/static/db/annual2021.json'" target="_blank">本页数据</a></li>
-              <li><a :href="settings.data.basePath + '/static/db/annual2021Full.json'" target="_blank">完整年度数据</a></li>
-            </ul>
           </div>
         </div>
+        <p class="lead text-center mb-4">Project Twitter Monitor</p>
       </div>
-      <p class="lead text-center mb-4">Project Twitter Monitor</p>
-    </div>
+    </el-collapse-transition>
   </div>
 </template>
 
@@ -211,11 +222,13 @@ import BarStackChartForAnnual2021 from "@/components/pages/events/modules/barSta
 import SunBurstChartForAnnual2021 from "@/components/pages/events/modules/sunBurstChartForAnnual2021";
 import {inject} from "vue";
 import {mapState} from "vuex";
+import WordCloudChartForAnnual2021 from "@/components/pages/events/modules/wordCloudChartForAnnual2021";
 //import html2canvas from 'html2canvas';
 
 export default {
   name: "annual2021",
   components: {
+    WordCloudChartForAnnual2021,
     SunBurstChartForAnnual2021, BarStackChartForAnnual2021, PieChart, HeatMapChart, Tmv2Chart},
   setup() {
     const scrollToTop = inject('scrollToTop')
@@ -241,167 +254,45 @@ export default {
     userData: [],
     colorForGroup: {"BanGDream!": "", "ARGONAVIS": "success", "LoveLive!": "warning", "艦これ": "danger", "227": "info"},
     userDataTypeColors: ['', 'success', 'warning', 'danger', 'info'],
-    projects: [
-      {"text": "BanGDream!", "value": "BanGDream!"},
-      {"text": "ARGONAVIS", "value": "ARGONAVIS"},
-      {"text": "LoveLive!", "value": "LoveLive!"},
-      {"text": "艦これ", "value": "艦これ"},
-      {"text": "227", "value": "227"},
-    ],
+    projects: [{"text": "BanGDream!", "value": "BanGDream!"}, {"text": "ARGONAVIS", "value": "ARGONAVIS"}, {"text": "LoveLive!", "value": "LoveLive!"}, {"text": "艦これ", "value": "艦これ"}, {"text": "227", "value": "227"},],
     serverStatusLabel: {
-      totalTweets: {
-        "date": "日期",
-        "total_tweets": "每日处理推文数",
-        "tweets_count": "总处理推文数",
-        "avg_tweets": "平均每次处理条数"
-      },
-      totalTime: {
-        "date": "日期",
-        "total_time_cost": "总耗时",
-        "max_time_cost": "最大耗时",
-        "min_time_cost": "最小耗时",
-        "avg_time_cost": "平均耗时",
-      },
-      successRate: {
-        "date": "日期",
-        "success_rate": "成功率",
-      },
-      onlineRate: {
-        "date": "日期",
-        "online_rate": "在线率",
-        "down_time_count": "离线时长"
-      }
+      totalTweets: {"date": "日期", "total_tweets": "每日处理推文数", "tweets_count": "总处理推文数", "avg_tweets": "平均每次处理条数"},
+      totalTime: {"date": "日期", "total_time_cost": "总耗时", "max_time_cost": "最大耗时", "min_time_cost": "最小耗时", "avg_time_cost": "平均耗时",},
+      successRate: {"date": "日期", "success_rate": "成功率",},
+      onlineRate: {"date": "日期", "online_rate": "在线率", "down_time_count": "离线时长"}
     },
-    serverStatusChartMeta: {
-      serverStatusTotalTweets: [],
-      serverStatusTotalTime: [],
-      serverStatusTotalSuccessRate: [],
-      serverStatusTotalAverageTweets: [],
-      serverStatusTotalOnline: [],
-    },
-    serverStatusColor: {
-      serverStatusTotalTweets: ['#19d4ae', '#d87a80', '#5ab1ef'],
-      serverStatusTotalTime: ['#5ab1ef', '#fa6e86', '#ffb980', '#c4b4e4'],
-      serverStatusTotalSuccessRate: ['#0067a6'],
-    },
+    serverStatusChartMeta: {serverStatusTotalTweets: [], serverStatusTotalTime: [], serverStatusTotalSuccessRate: [], serverStatusTotalAverageTweets: [], serverStatusTotalOnline: [],},
+    serverStatusColor: {serverStatusTotalTweets: ['#19d4ae', '#d87a80', '#5ab1ef'], serverStatusTotalTime: ['#5ab1ef', '#fa6e86', '#ffb980', '#c4b4e4'], serverStatusTotalSuccessRate: ['#0067a6'],},
     serverStatusMeta: [],
     accountData: [],//require('../../../assets/testAccountData'),//TODO remove it
     accountListFilter: {
-      bangdream: {
-        "Poppin'Party": true,
-        "Afterglow": true,
-        "Pastel*Palettes": true,
-        "Roselia":  true,
-        "Hello, Happy World!": true,
-        "Morfonica": true,
-        "RAISE A SUILEN": true,
-      },
-      lovelive: {
-        "μ's": true,
-        "A-RISE": true,
-        "Aqours": true,
-        "Saint Snow":  true,
-        "虹ヶ咲学園": true,
-        "Liella!": true,
-      },
+      bangdream: {"Poppin'Party": true, "Afterglow": true, "Pastel*Palettes": true, "Roselia":  true, "Hello, Happy World!": true, "Morfonica": true, "RAISE A SUILEN": true,},
+      lovelive: {"μ's": true, "A-RISE": true, "Aqours": true, "Saint Snow":  true, "虹ヶ咲学園": true, "Liella!": true,},
+      official: {"BanGDream!": true, "LoveLive!": true}
     },
-    accountColor: {
-      group: {
-        "Poppin'Party": "rgba(255,51,119,0.85)",
-        "Afterglow": "rgba(229,51,68,0.85)",
-        "Pastel*Palettes": "rgba(51,221,170,0.85)",
-        "Roselia": "rgba(51,68,170,0.85)",
-        "Hello, Happy World!": "rgba(255,221,0,0.85)",
-        "Morfonica":"rgba(51,170,255,0.85)",
-        "RAISE A SUILEN": "rgba(51,204,204,0.85)",
-        "μ's": "rgba(228,0,127,0.85)",
-        "A-RISE": "rgba(55,13,87,0.85)",
-        "Aqours": "rgba(50,170,255,0.85)",
-        "Saint Snow": "rgba(203,57,53,0.85)",
-        "虹ヶ咲学園": "rgba(243,152,0,0.85)",
-        "Liella!": "rgba(165,70,156,0.85)",
-      },
-      member: {
-        "aimi_sound":"rgba(255,85,34,0.85)",
-        "OSae1010":"rgba(0,119,221,0.85)",
-        "Rimi_nsmt":"rgba(255,85,187,0.85)",
-        "AyakaOhashi":"rgba(255,204,17,0.85)",
-        "ayasa_ito":"rgba(170,102,221,0.85)",
-        "misawa_official":"rgba(0,204,170,0.85)",
-        "Emiryun":"rgba(255,153,153,0.85)",
-        "_maeshima_ami":"rgba(255,136,187,0.85)",
-        "uesaka_official":"rgba(255,238,170,0.85)",
-        "_193_":"rgba(153,221,136,0.85)",
-        "shawako_914":"rgba(255,238,136,0.85)",
-        "aibaaiai":"rgba(136,17,136,0.85)",
-        "kudoharuka910":"rgba(0,170,187,0.85)",
-        "endo_yurika":"rgba(221,34,0,0.85)",
-        "Yuki_Nakashim":"rgba(221,34,0,0.85)",
-        "sakuragawa_megu":"rgba(221,0,136,0.85)",
-        "akekodao":"rgba(187,187,187,0.85)",
-        "Kanon_Shizaki":"rgba(187,187,187,0.85)",
-        "InfoItomiku":"rgba(255,238,34,0.85)",
-        "AzusaTadokoro":"rgba(170,51,204,0.85)",
-        "toyotamoe":"rgba(68,221,255,0.85)",
-        "TomoyoKurosawa":"rgba(0,101,153,0.85)",
-        "amane_bushi":"rgba(102,119,204,0.85)",
-        "hina_suguta":"rgba(238,102,102,0.85)",
-        "240y_k":"rgba(238,119,68,0.85)",
-        "mika_d_dr":"rgba(238,119,136,0.85)",
-        "AyAsA_violin":"rgba(102,153,136,0.85)",
-        "Lay0113":"rgba(204,0,0,0.85)",
-        "Riko_kohara":"rgba(170,238,34,0.85)",
-        "nananananachume":"rgba(238,187,68,0.85)",
-        "kurachireo":"rgba(255,153,187,0.85)",
-        "risa_tsumugi":"rgba(0,187,255,0.85)",
-        "nittaemi85": "rgba(255,174,0,0.85)",
-        "aya_uchida": "rgba(168,168,168,0.85)",
-        "mimori_suzuko": "rgba(109,86,255,0.85)",
-        "pile_eric": "rgba(255,98,57,0.85)",
-        "shikaco_staff": "rgba(68,205,113,0.85)",//选了staff是我的失误
-        "INFO_shikaco": "rgba(68,205,113,0.85)",
-        "rippialoha": "rgba(254,225,85,0.85)",
-        "tokui_sorangley": "rgba(255,98,221,0.85)",
-        "nanjolno": "rgba(0,187,255,0.85)",
-        "kusudaaina": "rgba(228,79,255,0.85)",
-        "asami_manager": "rgba(0,204,255,0.85)",
-        "satohina1223": "rgba(187,187,187,0.85)",
-        "anju_inami":"rgba(255,121,27,0.85)",
-        "Rikako_Aida":"rgba(255,119,119,0.85)",
-        "Saito_Shuka":"rgba(42,164,219,0.85)",
-        "Aikyan_":"rgba(174,174,174,0.85)",
-        "Kanako_tktk":"rgba(207,186,15,0.85)",
-        "furihata_ai":"rgba(238,85,183,0.85)",
-        "aina_suzuki723":"rgba(165,48,224,0.85)",
-        "suwananaka":"rgba(0,210,158,0.85)",
-        "box_komiyaarisa":"rgba(244,50,50,0.85)",
-        "aguri_onishi":"rgba(237,125,149,0.85)",
-        "natyaaaaaaan07":"rgba(255,88,0,0.85)",
-        "tomori_kusunoki":"rgba(216,28,47,0.85)",
-        "MayuSgr":"rgba(231,214,0,0.85)",
-        "kaor1n_n":"rgba(1,183,237,0.85)",
-        "t_chiemi1006":"rgba(156,165,185,0.85)",
-        "iRis_k_miyu":"rgba(72,94,198,0.85)",
-        "kitoakari_1016":"rgba(166,100,160,0.85)",
-        "sashide_m":"rgba(132,195,110,0.85)",
-        "k_moeka_":"rgba(55,180,132,0.85)",
-        "homoto_akina":"rgba(246,153,146,0.85)",
-        "uchida_shu0524":"rgba(169,168,152,0.85)",
-        "yano_hinaki35":"rgba(0,0,0,0.85)",
-        "SayuriDate":"rgba(255,127,39,0.85)",
-        "Liyu0109":"rgba(160,255,249,0.85)",
-        "MisakiNako_":"rgba(255,110,144,0.85)",
-        "_Naomi_Payton_":"rgba(116,244,102,0.85)",
-        "AoyamaNagisa":"rgba(0,0,160,0.85)"
-      }
-    },
+    accountColor: {},
     accountComputedData: {},
+    tmpDataTemplate: JSON.stringify({
+      tweets: [],
+      retweet: [],
+      hourCount: new Array(24).fill(0),
+      mediaCount: new Array(24).fill(0),
+      renameDepartment: {},
+      trendsData: {
+        label: {date: '日期'},
+        color: [],
+        followers: [],
+        statuses_count: [],
+      }
+    }),
+    projectHashtagList: {},
+
   }),
   watch: {
     "accountListFilter": {
       deep: true,
       handler: function () {
-        this.render()
+        this.renderAll()
       }
     },
   },
@@ -410,7 +301,7 @@ export default {
   }),
   mounted: function () {
     //TODO replace link
-    fetch(this.settings.data.basePath + "/static/db/annual2021.json").then(response => {
+    fetch(this.settings.data.basePath + "/static/db/annual2021.json?_" + new Date().getTime()).then(response => {
       let reader = response.body.getReader()
       let bytesReceived = 0
       let that = this
@@ -422,7 +313,7 @@ export default {
         }
         chunks.push(result.value)
         bytesReceived += result.value.length
-        that.progress = Math.floor((bytesReceived / 5198719) * 100)//不要想太多, 这个数字只是文件大小已知而已
+        that.progress = Math.floor((bytesReceived / 5239588) * 100)//不要想太多, 这个数字只是文件大小已知而已
         return reader.read().then(processResult)
       })
     })//.catch(e => this.notice("error", e))
@@ -442,6 +333,9 @@ export default {
     //    document.body.appendChild(canvas);
     //  });
     //},
+    swapGroupStatus: function (project, group) {
+      this.accountListFilter[project][group] = !this.accountListFilter[project][group]
+    },
     init: function (bytesReceived, chunks) {
       let chunksAll = new Uint8Array(bytesReceived);
       let position = 0;
@@ -456,9 +350,12 @@ export default {
       this.userData = data.user_data
       this.serverStatusMeta = data.server_status_meta
       this.accountData = data.account_data
+      this.accountColor = data.account_color
+      this.projectHashtagList = data.single_project_hashtag
       this.setupCharts()
-      this.render()
+      this.renderAll()
       this.loading = false
+      this.scrollToTop()
     },
     setupCharts: function () {
       this.serverStatusMeta.map(x => {
@@ -488,32 +385,25 @@ export default {
         })
       })
     },
-    render: function () {
-      let tmpDataTemplate = JSON.stringify({
-        tweets: [],
-        retweet: [],
-        hourCount: new Array(24).fill(0),
-        mediaCount: new Array(24).fill(0),
-        renameDepartment: {},
-        trendsData: {
-          label: {date: '日期'},
-          color: [],
-          followers: [],
-          statuses_count: [],
-        }
-      })
-
+    renderAll: function () {
       let tmpData = {
-        bangdream: JSON.parse(tmpDataTemplate),
-        lovelive: JSON.parse(tmpDataTemplate),
-        official: JSON.parse(tmpDataTemplate)
+        bangdream: JSON.parse(this.tmpDataTemplate),
+        lovelive: JSON.parse(this.tmpDataTemplate),
+        official: JSON.parse(this.tmpDataTemplate)
       }
       this.accountData.map(account => {
-        //跳过官方
-        //if (account.organization) {
-        //  return
-        //}
-        let tmpPersonData = JSON.parse(tmpDataTemplate)
+        //break
+        let breakRender = false
+        account.projects.map(projectMeta => {
+          let tmpProject = account.organization ? 'official': (projectMeta[0] === 'BanGDream!' ? 'bangdream' : 'lovelive')
+          if ((!account.organization && !this.accountListFilter[tmpProject][projectMeta[1]]) || (account.organization && !this.accountListFilter[tmpProject][projectMeta[0]])) {
+            breakRender = true
+          }
+        })
+        if (breakRender) {
+          return
+        }
+        let tmpPersonData = JSON.parse(this.tmpDataTemplate)
         //每日数据
         Object.keys(account.daily_data).map(date => {
           let tmpDate = (date => {
@@ -540,7 +430,7 @@ export default {
         account.projects.map(projectMeta => {
           let tmpProject = account.organization ? 'official': (projectMeta[0] === 'BanGDream!' ? 'bangdream' : 'lovelive')
           //break
-          if (!account.organization && !this.accountListFilter[tmpProject][projectMeta[1]]) {
+          if ((!account.organization && !this.accountListFilter[tmpProject][projectMeta[1]]) || (account.organization && !this.accountListFilter[tmpProject][projectMeta[0]])) {
             return
           }
           //label
