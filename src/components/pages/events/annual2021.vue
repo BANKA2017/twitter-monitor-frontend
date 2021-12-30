@@ -12,7 +12,7 @@
         <div class="jumbotron jumbotron-fluid" style="background-color: #1da1f2">
           <div class="container">
             <h1 class="display-4" style="color: white">Twitter Monitor</h1>
-            <p class="lead" style="color: white">2021 年度数据</p>
+            <p class="lead" style="color: white">2021 年度报告</p>
           </div>
         </div>
 
@@ -135,7 +135,7 @@
               <div class="my-4" ></div>-->
               <div id="annual2021bangdream" class="mb-4">
                 <h4>BanG Dream!</h4>
-                <p class="text-muted">2021-01-01 ~ 2021-12-27 (GMT+9)</p>
+                <p class="text-muted">2021-01-01 ~ 2021-12-30 (GMT+9)</p>
                 <div class="my-1">
                   <span type="button" @click="swapGroupStatus('bangdream', group)" :class="{'badge': true, 'mr-1': true, 'text-white': true}" :style="{'background-color': selected ? accountColor.group[group] : '#6c757d'}" v-for="(selected, group) in accountListFilter.bangdream" :key="group">{{group}}</span>
                 </div>
@@ -158,7 +158,7 @@
               </div>
               <div id="annual2021lovelive" class="mb-4" >
                 <h4>Love Live!</h4>
-                <p class="text-muted">2021-01-01 ~ 2021-12-27 (GMT+9)</p>
+                <p class="text-muted">2021-01-01 ~ 2021-12-30 (GMT+9)</p>
                 <div class="my-1">
                   <span type="button" @click="swapGroupStatus('lovelive', group)" :class="{'badge': true, 'mr-1': true, 'text-white': true}" :style="{'background-color': selected ? accountColor.group[group] : '#6c757d'}" v-for="(selected, group) in accountListFilter.lovelive" :key="group">{{group}}</span>
                 </div>
@@ -207,9 +207,12 @@
               <p>
                 不要直接塞一个超大的文档进 <code>webpack</code>，会变得不幸<br>
                 提前一个月开始写并没有什么用，最后还是临近结束才搞出个雏形<br>
-                总之，<del>这个文档还没写完，</del>希望明年还能继续在这里见面<br>
-                为什么不分开做每个企划的表格？因为我懒，不想重复造；官号的图表也有<router-link to="/i/events/staff_data_page/">更详细的版本</router-link>，这里只是顺手做的
+                总之，希望明年还能继续在这里见面<br>
+                为什么不分开做每个企划的表格？因为我懒，不想重复造<br>
+                官号的图表也有<router-link to="/i/events/staff_data_page/">更详细的版本</router-link>，这里只是顺手做的
               </p>
+              <h3>数据</h3>
+              <p>本页内容及下列数据在 <a href="https://creativecommons.org/licenses/by-sa/4.0/legalcode.zh-Hans" target="_blank">署名—相同方式共享 4.0 协议国际版</a> 之条款下提供</p>
               <ul>
                 <li><a :href="settings.data.basePath + '/static/db/annual2021.json'" target="_blank">本页数据</a></li>
                 <li><a :href="settings.data.basePath + '/static/db/annual2021Full.json'" target="_blank">更详细的年度数据</a></li>

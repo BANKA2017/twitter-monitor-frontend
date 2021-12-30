@@ -61,8 +61,8 @@ export default {
       link: "/i/events/staff_data_page/"
     },{
       title: "2021年度统计",
-      description: "Twitter monitor 2021年度统计，进度缓慢",
-      update_time: "2021-12-29",
+      description: "Twitter monitor 2021年度报告",
+      update_time: "2021-12-30",
       link: "/i/events/2021/"
     },].reverse()
   }),
