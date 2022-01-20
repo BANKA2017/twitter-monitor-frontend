@@ -1,0 +1,23 @@
+<template>
+  <div class="bg-twitter-blue mb-5" :style="{'height': subTitle === '' ? '170px' : '230px'}">
+    <h1 class="display-4" style="color: white; padding: 55px 0 0 10vw">{{ title }}</h1>
+    <p class="lead text-break" style="color: white; padding: 10px 0 0 10vw">{{ subTitle }}</p>
+  </div>
+</template>
+
+<script setup lang="ts">
+defineProps({
+  title: {
+    type: String,
+    default: ""
+  },
+  subTitle: {
+    type: String,
+    default: ""
+  },
+})
+</script>
+
+<style scoped>
+
+</style>

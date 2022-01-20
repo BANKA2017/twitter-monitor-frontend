@@ -81,7 +81,7 @@
 </template>
 
 <script>
-    import HtmlText from "./htmlText";
+    import HtmlText from "../FullText";
     import Translate from "./translate";
     import ImageList from "./imageList";
     import QuoteCard from "./quoteCard";

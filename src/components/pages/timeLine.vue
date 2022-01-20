@@ -236,7 +236,7 @@
     import Locked from "../icons/locked";
     import Search from "../modules/search";
     import Tweet from "../modules/tweet";
-    import Navigation from "../modules/Navigation";
+    import Navigation from "../Navigation";
     import ProjectList from "../modules/projectList";
     import LinkList from "../modules/linkList";
     import Tmv2Chart from "@/components/modules/tmv2Chart";

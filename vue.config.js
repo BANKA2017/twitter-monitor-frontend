@@ -1,35 +1,9 @@
-//const path = require('path');
-//const PrerenderSPAPlugin = require('prerender-spa-plugin');
-//const Renderer = PrerenderSPAPlugin.PuppeteerRenderer;
-
 module.exports = {
     assetsDir: 'static',
     productionSourceMap: false,
 
     publicPath: '/',
-    //outputDir: 'dist/twitter/',
-    //mode: 'production'
 
-    //configureWebpack: () => {
-    //    if (process.env.NODE_ENV === "production") {
-    //        return {
-    //            plugins: [
-    //                new PrerenderSPAPlugin({
-    //                    staticDir: path.join(__dirname, "dist"),
-    //                    publicPath: '/twitter/',
-    //                    indexPath: path.join(__dirname, 'dist/twitter/index.html'),
-    //                    routes: ["/", "/about", "/api", "/account", "/i/stats", "/i/status",],
-    //                    renderer: new Renderer({
-    //                        inject: {
-    //                            foo: "bar"
-    //                        },
-    //                        headless: false,
-    //                    })
-    //                })
-    //            ]
-    //        };
-    //    }
-    //},
     pwa: {
         name: 'Twitter Monitor',
         themeColor: '#ffffff',
