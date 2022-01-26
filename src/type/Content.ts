@@ -4,8 +4,63 @@ export interface AccountList {
   }
 }
 
-export interface Tweets {
+export interface UserInfo {
+  uid: number
+  uid_str: string
+  name: string
+  display_name: string
+  header: string
+  banner: number
+  following: number
+  followers: number
+  description: string
+  description_origin: string
+  statuses_count: number
+  top: string
+  locked: number
+  deleted: number
+  verified: number
+  description_entities: Entity[]
+}
 
+export interface Chart {
+  timestamp: number | string
+  followers: number
+  following: number
+  statuses_count: number
+}
+
+export interface Tweet {
+  tweet_id: number
+  tweet_id_str: string
+  uid: number
+  uid_str: string
+  name: string
+  display_name: string
+  media: number
+  video: number
+  card: string
+  poll: number
+  quote_status: number
+  source: string
+  full_text: string
+  full_text_origin: string
+  retweet_from: string
+  retweet_from_name: string
+  dispute: number
+  time: number
+  type: string
+  entities: Entity[]
+  cardObject: Card | {}
+  quoteObject: Quote | {}
+  mediaObject: { [P in 'tweetsMedia' | 'quoteMedia' | 'cardMedia']: Media[]}
+}
+
+export interface TweetEx extends Tweet {
+  translate: {
+    text: string
+    translate_source: string
+  }
 }
 
 export interface Entity {
@@ -13,12 +68,12 @@ export interface Entity {
   indices_end: number
   indices_start: number
   text: string
-  type: 'hashtag' | 'cashtag' | 'urls' | 'user_mentions' | "emoji" | '' //emoji and empty('') is for FullTextToHtml
+  type: 'hashtag' | 'symbol' | 'url' | 'user_mention' | "emoji" | '' //emoji and empty('') are for FullTextToHtml
 }
 
 export interface Media {
-  tweet_id: bigint
-  uid: bigint
+  tweet_id: number
+  uid: number
   cover: string
   url: string
   extension: string
@@ -32,7 +87,7 @@ export interface Media {
 }
 
 export interface Quote {
-  tweet_id: bigint
+  tweet_id: number
   name: string
   display_name: string
   full_text: string
@@ -49,12 +104,12 @@ export interface Card {
   secondly_type: string
   url: string
   media: number
-  unified_card_app: number | boolean//'true'
+  unified_card_app: number | boolean//set 'true' while key 'app' existed
   app?: {
     unified_card_type: string
     type: 'iphone_app' | 'ipad_app' | 'android_app'
     appid: string | number
-      country_code: string
+    country_code: string
     title: string
     category: string
   }
@@ -73,7 +128,7 @@ export interface Status {
 }
 
 export interface Stats {
-  uid: bigint
+  uid: number
   name: string
   display_name: string
   following: number

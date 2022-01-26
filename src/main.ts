@@ -57,6 +57,7 @@ import { createHead } from "@vueuse/head"
 import './registerServiceWorker'
 import {ScrollTo} from "@/share/Tools";
 
+import VueLazyLoad from 'vue3-lazyload'
 router.afterEach(() => {
   ScrollTo(0)
 })
@@ -69,7 +70,7 @@ app.config.globalProperties.append = (path: string, pathToAppend: string) => pat
 app.use(ElBacktop).use(ElImage).use(ElSkeletonItem).use(ElCollapseTransition).use(ElSkeleton).use(ElTable).use(ElTableColumn).use(ElButton).use(ElLoading).use(ElDivider).use(ElInput).use(ElCarousel).use(ElCarouselItem).use(ElNotification).use(ElTag).use(ElRow).use(ElSelect).use(ElOption).use(ElSwitch).use(ElAvatar).use(ElProgress)
 //app.use(ElIcon)
 //app.use(ElementPlus)
-app.use(router).use(store, key).use(i18n).use(createHead())
+app.use(router).use(store, key).use(i18n).use(createHead()).use(VueLazyLoad)
 
 //app.config.globalProperties.scrollToTop = scrollToTop
 //app.config.globalProperties.notice = notice

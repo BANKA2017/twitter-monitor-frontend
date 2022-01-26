@@ -1,10 +1,10 @@
 /* 先填写 .env.local */
 import { InjectionKey } from 'vue'
 import { createStore, useStore as baseUseStore, Store } from 'vuex'
-import { i18n } from "@/i18n";
 import {State} from '@/type/State'
 import {isDark} from "@/share/Time";
 import language from '@/assets/language.json'
+import {i18n} from "@/i18n";
 
 const devmode = process.env.NODE_ENV === "development"
 const basePath = !devmode ? import.meta.env.VITE_PRO_BASE_PATH : import.meta.env.VITE_DEV_BASE_PATH
@@ -25,8 +25,9 @@ export const store = createStore<State>({
     links: [],
     home: true,
     project: "",
-    title: "Twitter Monitor",
+    title: "Twitter Monitor v3",
     tweets: [],
+    userExists: true,
     height: 0,
     width: 0,
     altitudeDifference: 0,
@@ -49,7 +50,6 @@ export const store = createStore<State>({
   },
   mutations: {
     setLanguage: (state, payload) => {
-      i18n.global.locale = payload.lang
       state.settings.language = payload.lang
     },
     updateUserList: (state, payload) => state.userList = payload.users,
@@ -73,6 +73,7 @@ export const store = createStore<State>({
     //set core data
     setCoreValue: (state: any, payload) => state[payload.key] = payload.value,
     //pushCoreValue: (state, payload) => state[payload.key] = state[payload.key].concat(payload.value),
+    updateTweetsTranslate: (state, payload) => state.tweets[payload.order].translate = payload.translate
   },
   actions: {
     setLanguage: function (context, payload) {
@@ -137,6 +138,7 @@ export const store = createStore<State>({
     setCoreValue: (context, payload) => context.commit({type: 'setCoreValue', key: payload.key, value: payload.value}),
     pushCoreValue: (context: any, payload) => context.commit({type: 'setCoreValue', key: payload.key, value: context.state[payload.key].concat(payload.value)}),
     //TODO fix all any type
+    updateTweetsTranslate: (context, payload) => context.commit("updateTweetsTranslate", {order: payload.order, translate: payload.translate}),
   }
 })
 

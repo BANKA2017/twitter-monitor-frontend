@@ -121,11 +121,11 @@
 </template>
 
 <script>
-    import List from "@/components/icons/list";
-    import Verified from "@/components/icons/verified";
+    import List from "@/icons/List.vue";
+    import Verified from "@/icons/Verified.vue";
     import {mapState} from "vuex";
-    import BoxArrowUpRight from "@/components/icons/boxArrowUpRight";
-    import Link45deg from "@/components/icons/link45deg";
+    import BoxArrowUpRight from "@/icons/BoxArrowUpRight.vue";
+    import Link45deg from "@/icons/Link45deg.vue";
     export default {
       name: "twCard",
       components: {Link45deg, BoxArrowUpRight, Verified, List, },

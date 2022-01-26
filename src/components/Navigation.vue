@@ -1,5 +1,5 @@
 <template>
-  <nav id="Navigation" class="navbar navbar-expand-lg navbar-light text-center bg-light" style="z-index: 1001">
+  <nav id="Navigation" class="navbar navbar-expand-lg navbar-light text-center bg-light">
     <span class="navbar-brand mb-0 h1 d-inline-block text-truncate" style="max-width: 250px;">
       {{ displayName }}
     </span>
@@ -37,16 +37,17 @@
     import ChevronLeft from "@/icons/ChevronLeft.vue";
 
     defineProps({
-      displayName: {
-        type: String,
-        default: "Twitter Monitor"// + (Vue.prototype.onlinePath ? ' Online': ''),
-      },
+      //displayName: {
+      //  type: String,
+      //  default: "Twitter Monitor"// + (Vue.prototype.onlinePath ? ' Online': ''),
+      //},
       displayType: String,
     })
     const store = useStore()
     const names = computed(() => store.state.names)
     const project = computed(() => store.state.project)
     const projects = computed(() => store.state.projects)
+    const displayName = computed(() => store.state.title)
 </script>
 
 <style scoped>

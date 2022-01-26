@@ -1,4 +1,4 @@
-import {AccountList} from "@/type/Content";
+import {AccountList, Tweet, TweetEx} from "@/type/Content";
 
 export interface State {
   now: Date
@@ -11,7 +11,8 @@ export interface State {
   names: AccountList
   userList: {name: string; display_name: string; project: string; tag: string}[]
   languageList: { code: string; name: string; local_name: string; status: string}[]
-  tweets: any[]//TODO get tweet type
+  tweets: TweetEx[]
+  userExists: boolean
 
   home: boolean
   project: string

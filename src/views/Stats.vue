@@ -54,7 +54,6 @@ export default defineComponent({
     })
 
     const store = useStore()
-    const userList = computed(() => store.state.userList)
     const settings = computed(() => store.state.settings)
     const tableData = computed(() => {
       if (!state.rawData) {
@@ -80,19 +79,12 @@ export default defineComponent({
     }
 
     onMounted(async () => {
-      if (userList.value.length === 0) {
-        await request<ApiAccounts>(settings.value.basePath + '/api/v2/data/accounts/', controller).then(response => {
-          store.dispatch({type: 'setCoreValue', key: 'names', value: response.data.account_info})
-          store.dispatch({type: 'setCoreValue', key: 'projects', value: response.data.projects})
-          store.dispatch({type: 'setCoreValue', key: 'links', value: response.data.links})
-        }).catch((e: Error) => Notice(String(e)))
-      }
       await request<ApiStats>(settings.value.basePath + '/api/v2/data/stats/', controller).then(response => {
         state.rawData = response.data
         if (!state.rawData.length) {
           Notice("chart: " + response.message, "warning");
         }
-      }).catch((e: Error) => Notice(String(e)))
+      }).catch((e: Error) => Notice(String(e), "error"))
     })
 
     return {chartData, tableData}

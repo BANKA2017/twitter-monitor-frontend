@@ -27,9 +27,9 @@
 </template>
 
 <script>
-    import ImageList from "./imageList";
+    import ImageList from "./imageList.vue";
     import {mapState} from "vuex";
-    import BoxArrowUpRight from "@/components/icons/boxArrowUpRight";
+    import BoxArrowUpRight from "@/icons/BoxArrowUpRight.vue";
     //import twemoji from "twemoji";
     export default {
         name: "quoteCard",

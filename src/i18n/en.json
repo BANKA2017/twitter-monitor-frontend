@@ -135,7 +135,7 @@
             "line3": "First char is {cashtag} can search cashtag, cashtag is used for Stock (Like: $TWTR) or Cryptocurrency (Like: $BTC)",
             "line4": "Input text can search it, add {at_username} can filter",
             "line5": "Input text or tweet id in user's page can search current user's tweet",
-            "line6": "input {help_en} can show this tips"
+            "line6": "Type {help_en} or {help_zh} can show this tips"
         }
     },
     "tw_card": {

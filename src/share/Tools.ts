@@ -15,4 +15,6 @@ const Notice = (text: string = "", status: 'success' | 'warning' | 'info' | 'err
   });
 }
 
-export {ScrollTo, Notice}
+const createRealMediaPath = (realMediaPath: string, samePath: boolean = false, type:string = 'tweets'): string => realMediaPath + (samePath ? type + '/' : '')
+
+export {ScrollTo, Notice, createRealMediaPath}

@@ -7,23 +7,23 @@
         <div class="col-md-8 offset-md-2">
           <div class="input-group mb-3">
             <div class="input-group-prepend">
-              <span class="input-group-text" id="api_path">{{ $t("settings.api_path") }}</span>
+              <span class="input-group-text" id="api_path">{{ t("settings.api_path") }}</span>
             </div>
             <input v-model="basePath" aria-describedby="api_path" aria-label="Sizing example input" class="form-control" type="text">
           </div>
-          <label class="mb-3 text-muted" for="api_path">{{ $t("settings.default_api_path", [defaultBasePath]) }}</label>
+          <label class="mb-3 text-muted" for="api_path">{{ t("settings.default_api_path", [defaultBasePath]) }}</label>
           <div class="input-group mb-3">
             <div class="input-group-prepend">
-              <span class="input-group-text" id="media_path">{{ $t("settings.media_path") }}</span>
+              <span class="input-group-text" id="media_path">{{ t("settings.media_path") }}</span>
             </div>
             <input v-model="mediaPath" aria-describedby="media_path" aria-label="Sizing example input" class="form-control" type="text">
           </div>
-          <label class="mb-3 text-muted" for="media_path">{{ $t("settings.default_media_path", [defaultMediaPath]) }}</label>
+          <label class="mb-3 text-muted" for="media_path">{{ t("settings.default_media_path", [defaultMediaPath]) }}</label>
           <div class="input-group mb-3">
             <div class="input-group-prepend">
-              <label class="input-group-text" for="selectLaguage">{{ $t("settings.language") }}</label>
+              <label class="input-group-text" for="select-language">{{ t("settings.language") }}</label>
             </div>
-            <select id="selectLaguage" v-model="language" class="custom-select">
+            <select id="select-language" v-model="language" class="custom-select">
               <option v-for="languageInfo in languageList" :key="languageInfo.code" :selected="language === languageInfo.code" :value="languageInfo.code">{{ languageInfo.local_name }}
               </option>
             </select>
@@ -42,9 +42,13 @@ import Navigation from "@/components/Navigation.vue"
 import ArrowLeft from "@/icons/ArrowLeft.vue"
 import {computed, defineComponent} from "vue"
 import {useStore} from "@/store"
+import {useI18n} from "vue-i18n";
 export default defineComponent({
   components: {ArrowLeft, Navigation},
   setup() {
+
+    const { t } = useI18n()
+
     const defaultBasePath = process.env.NODE_ENV !== "development" ? import.meta.env.VITE_PRO_BASE_PATH : import.meta.env.VITE_DEV_BASE_PATH
     const defaultMediaPath = import.meta.env.VITE_MEDIA_PATH ? import.meta.env.VITE_MEDIA_PATH : defaultBasePath + '/api/v2/media/'
 
@@ -76,7 +80,7 @@ export default defineComponent({
       }
     })
 
-    return {defaultBasePath, defaultMediaPath, languageList, basePath, mediaPath, language}
+    return {defaultBasePath, defaultMediaPath, languageList, basePath, mediaPath, language, t}
   }
 })
 </script>

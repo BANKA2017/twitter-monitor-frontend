@@ -81,18 +81,18 @@
 </template>
 
 <script>
-    import HtmlText from "../FullText";
-    import Translate from "./translate";
-    import ImageList from "./imageList";
-    import QuoteCard from "./quoteCard";
-    import TwPolls from "./twPolls";
-    import TwCard from "./twCard";
-    import Retweet from "../icons/retweet";
+    import HtmlText from "../FullText.vue";
+    import Translate from "../Translate.vue";
+    import ImageList from "./imageList.vue";
+    import QuoteCard from "./quoteCard.vue";
+    import TwPolls from "./twPolls.vue";
+    import TwCard from "./twCard.vue";
+    import Retweet from "@/icons/Retweet.vue";
     import {mapState} from "vuex";
-    import ImageIcon from "@/components/icons/imageIcon";
-    import CameraVideoIcon from "@/components/icons/cameraVideoIcon";
-    import BoxArrowUpRight from "@/components/icons/boxArrowUpRight";
-    import ExclamationCircle from "@/components/icons/exclamationCircle";
+    import ImageIcon from "@/icons/ImageIcon.vue";
+    import CameraVideoIcon from "@/icons/CameraVideoIcon.vue";
+    import BoxArrowUpRight from "@/icons/BoxArrowUpRight.vue";
+    import ExclamationCircle from "@/icons/ExclamationCircle.vue";
     //import html2canvas from 'html2canvas';
 
     export default {

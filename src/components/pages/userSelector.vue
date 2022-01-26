@@ -48,7 +48,7 @@
 </template>
 
 <script>
-import Search from "../modules/search";
+import Search from "../Search";
 import LinkList from "@/components/modules/linkList";
 import {mapState, useStore} from "vuex";
 import {computed, inject} from "vue";

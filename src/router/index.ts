@@ -1,14 +1,14 @@
 import {createRouter, createWebHistory} from "vue-router";
 
-const About = () => import("@/views/About.vue");
-const Api = () => import("@/views/Api.vue");
-const Stats = () => import("@/views/Stats.vue");
-const Status = () => import("@/views/Status.vue");
+const About = () => import("@/views/About.vue")
+const Api = () => import("@/views/Api.vue")
+const Stats = () => import("@/views/Stats.vue")
+const Status = () => import("@/views/Status.vue")
 //const Online = () => import(/* webpackChunkName: "pages" */ "../components/pages/online");
-//const timeLine = () => import(/* webpackChunkName: "core" */ "../components/pages/timeLine");
+const timeLine = () => import("@/views/TimeLine.vue")
 //const UserSelector = () => import(/* webpackChunkName: "core" */ "../components/pages/userSelector");
 //const devConfig = () => import(/* webpackChunkName: "pages" */ "../components/pages/devConfig");
-const Trends = () => import("@/views/Trends.vue");
+const Trends = () => import("@/views/Trends.vue")
 //const Event = () => import(/* webpackChunkName: "events" */ "../components/pages/events");
 //const Annual2019 = () => import(/* webpackChunkName: "events" */ "../components/pages/events/annual2019");
 //const Annual2020 = () => import(/* webpackChunkName: "events" */ "../components/pages/events/annual2020");
@@ -101,15 +101,17 @@ export default createRouter({
         //            }
         //        ]
         //    }]
-        //}, {
-        //    path: '/:name',
-        //    component: timeLine,
-        //    children: [
-        //        {path: '', component: timeLine,},
-        //        {path: ':display', component: timeLine,},
-        //        {path: 'status/:status', component: timeLine,}
-        //    ]
         //},
+        {
+            path: '/:name',
+            component: timeLine,
+            children: [
+                {path: '', component: timeLine,},
+                {path: ':display', component: timeLine,},
+                {path: 'status/:status', component: timeLine,},
+            ]
+        },
+        {path: '/i/status/:status', component: timeLine,},
         { path: '/:pathMatch(.*)*', name: 'not-found', component: NotFound },
         { path: '/:pathMatch(.*)', name: 'bad-not-found', component: NotFound },
     ]

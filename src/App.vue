@@ -12,6 +12,10 @@
   import {useStore} from "@/store";
   import {computed, onMounted, watch} from "vue";
   import { i18n } from './i18n';
+  import {controller, request} from "@/share/Fetch";
+  import {ApiAccounts} from "@/type/Api";
+  import {Notice} from "@/share/Tools";
+  import {useI18n} from "vue-i18n";
   export default {
     name: 'App',
     setup() {
@@ -23,6 +27,8 @@
         ]
       })
 
+      const {locale} = useI18n()
+
       const store = useStore()
       const settings = computed(() => store.state.settings)
       const hasBeenSyncFromLocalStorage = computed(() => store.state.hasBeenSyncFromLocalStorage)
@@ -32,7 +38,7 @@
 
       watch(settings, () => {
         //TODO divide language
-        i18n.global.locale = settings.value.language
+        locale.value = settings.value.language
         if (hasBeenSyncFromLocalStorage) {
           localStorage.setItem('tm_settings', JSON.stringify(settings.value))
         }
@@ -50,7 +56,7 @@
       const updateHeight = () => {
         store.dispatch({
           type: 'updateBrowserSize',
-          altitudeDifference: Number(height) - document.documentElement.scrollTop,//TODO check number type
+          altitudeDifference: height.value - document.documentElement.scrollTop,//TODO check number type
           height: document.documentElement.scrollTop,
           width: window.innerWidth,
         })
@@ -81,29 +87,34 @@
       }
 
 
-      onMounted(() => {
+      onMounted(async () => {
         //localStorage
         let tm_settings = localStorage.getItem('tm_settings')
         if (!tm_settings || Object.keys(JSON.parse(tm_settings)).join('') !== Object.keys(settings.value).join('')) {
           localStorage.setItem('tm_settings', JSON.stringify(settings.value))//提前写入
           setLanguage()
         } else {
-          store.dispatch({
+          await store.dispatch({
             type: 'setCoreValue',
             key: 'settings',
             value: JSON.parse(tm_settings)
           })
         }
-        store.dispatch('setTrueToHasBeenSyncFromLocalStorage')
-        store.dispatch('setUserTimeZone')
-        store.dispatch('checkSamePath')
-        store.dispatch('updateRealMediaPath')
+        await store.dispatch('setTrueToHasBeenSyncFromLocalStorage')
+        await store.dispatch('setUserTimeZone')
+        await store.dispatch('checkSamePath')
+        await store.dispatch('updateRealMediaPath')
         //time
         updateNow()
         updateHeight()
         //updateHeightStatus
         //this.isUp();
         konamiCode()
+        await request<ApiAccounts>(settings.value.basePath + '/api/v2/data/accounts/', controller).then(response => {
+          store.dispatch({type: 'setCoreValue', key: 'names', value: response.data.account_info})
+          store.dispatch({type: 'setCoreValue', key: 'projects', value: response.data.projects})
+          store.dispatch({type: 'setCoreValue', key: 'links', value: response.data.links})
+        }).catch((e: Error) => Notice(String(e), "error"))
       })
 
       return {devmode}

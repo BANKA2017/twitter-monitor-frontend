@@ -92,7 +92,7 @@ export default defineComponent({
         response.data.following.push(response.data.statuses)
         state.userData = response.data.following
         state.userData[1] = state.userData[1].reverse()
-      }).catch((e: Error) => Notice(String(e)))
+      }).catch((e: Error) => Notice(String(e), "error"))
     }
     onMounted(() => {
       getData()

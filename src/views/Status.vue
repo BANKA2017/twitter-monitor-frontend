@@ -68,7 +68,7 @@ export default defineComponent({
         if (!state.rows.length) {
           Notice("chart: " + response.message, "warning");
         }
-      }).catch((e: Error) => Notice(String(e)))
+      }).catch((e: Error) => Notice(String(e), "error"))
     })
 
     const itemRows = computed(() => {

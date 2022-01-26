@@ -1,4 +1,4 @@
-import {AccountList, Card, Entity, Media, Quote, Stats, Status} from "@/type/Content";
+import {AccountList, Card, Chart, Entity, Media, Quote, Stats, Status, Tweet, UserInfo} from "@/type/Content";
 
 export interface Api<T> {
   code: number
@@ -16,53 +16,16 @@ export interface ApiAccounts extends Api<{
   hash: string
 }> {}
 
-export interface ApiUserInfo extends Api<{
-  uid: bigint
-  uid_str: string
-  name: string
-  display_name: string
-  header: string
-  banner: bigint
-  following: number
-  followers: number
-  description: string
-  description_origin: string
-  statuses_count: number
-  top: string
-  locked: number
-  deleted: number
-  verified: number
-  description_entities: Entity[]
-}> {}
+export interface ApiUserInfo extends Api<UserInfo> {}
 
-export interface ApiTweets extends Api<{
-  tweet_id: bigint
-  tweet_id_str: string
-  uid: bigint
-  uid_str: string
-  name: string
-  display_name: string
-  media: number
-  video: number
-  card: string
-  poll: number
-  quote_status: number
-  source: string
-  full_text: string
+export interface ApiTweets extends Api<Tweet[]> {}
+
+export interface ApiTranslate extends Api<{
+  cache: boolean
   full_text_origin: string
-  retweet_from: string
-  retweet_from_name: string
-  dispute: number
-  time: number
-  type: string
-  entities: Entity[]
-  cardObject: Card
-  quoteObject: Quote | []
-  mediaObject: {
-    tweetsMedia: Media[]
-    "quoteMedia": Media[]
-    "cardMedia": Media[]
-  }
+  target: string
+  translate: string
+  translate_source: string
 }> {}
 
 //TODO new api
@@ -75,12 +38,7 @@ export interface ApiStats extends Api<Stats[]> {}
 //TODO new api
 export interface ApiChart extends Api<string[] | number[]> {}
 
-export interface ApiChartLegacy extends Api<{
-  timestamp: number
-  followers: number
-  following: number
-  statuses_count: number
-}[]> {}
+export interface ApiChartLegacy extends Api<Chart[]> {}
 
 export interface ApiTrends extends Api<{
   timestamp: number

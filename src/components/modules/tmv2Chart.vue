@@ -1,12 +1,12 @@
 <template>
   <div id="tmv2-chart">
-    <el-skeleton :loading="!computedOptions.series.length" :rows="5" animated></el-skeleton>
-    <!--<span v-if="title !== '' && generateSeries.length" class="text-muted mb-1"><small>{{ title }}</small></span>-->
-    <v-chart v-if="computedOptions.series.length" :option="computedOptions" :style="{width: '100%', height: (typeof(chartHeight) === 'number' ? (chartHeight + 'px') : chartHeight)}" :update-options="setOption" autoresize></v-chart>
+    <el-skeleton :loading="!computedOptions.series.length" :rows="5" animated>
+      <v-chart v-if="computedOptions.series.length" :option="computedOptions" :style="{width: '100%', height: (typeof(chartHeight) === 'number' ? (chartHeight + 'px') : chartHeight)}" :update-options="setOption" autoresize></v-chart>
+    </el-skeleton>
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { use } from "echarts/core";
 import { CanvasRenderer } from "echarts/renderers";
 import { LineChart } from "echarts/charts";
