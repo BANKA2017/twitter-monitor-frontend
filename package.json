@@ -1,7 +1,8 @@
 {
-  "name": "tmv2-frontend",
+  "name": "twitter-monitor-frontend",
   "version": "0.2.0",
   "private": true,
+  "license": "MIT",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
