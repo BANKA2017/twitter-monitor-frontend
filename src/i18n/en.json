@@ -18,6 +18,7 @@
         "media": "Media",
         "username": "Username",
         "group": "Group",
+        "user_list": "User list",
         "time": {
             "second": "second | seconds",
             "minute": "minute | minutes",
@@ -41,6 +42,7 @@
             "no_image": "No image"
         },
         "side_tags": {
+            "search": "Search",
             "settings": "Settings",
             "about": "About",
             "stats": "Stats",
@@ -53,7 +55,7 @@
         "scripts": {
             "time": "Time",
             "message": {
-                "update_tweets": "{0} tweet loaded | {0} tweets loaded",
+                "update_tweets": "{count} tweet loaded | {count} tweets loaded",
                 "missing_parameter": "Missing parameters",
                 "failed_to_generate_chart": "Chart generation failure #{0}"
             }
@@ -167,6 +169,8 @@
         "api_path": "API path",
         "default_api_path": "Default API path: {0}",
         "media_path": "Media path",
-        "default_media_path": "Default media path: {0}"
+        "default_media_path": "Default media path: {0}",
+        "auto_refresh": "Auto refresh tweets",
+        "auto_load_tweets": "Auto load more tweets in bottom"
     }
 }

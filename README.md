@@ -1,6 +1,6 @@
 # twitter-monitor-frontend v3 (DEV)
 
-**NOT COMPLETE AND DO NOT USE THIS BRANCH**
+**NOT COMPLETED AND DO NOT USE THIS BRANCH**
 
 ## How to
 
@@ -27,7 +27,7 @@
 
 ## Translation
 
-check more in `/src/i18n/`, base language is **Chinese simplified**
+check more in `/src/i18n/`, base language is **Chinese simplified（zh-hans）**
 
 - 简体中文 (zh-hans)
 - 繁體中文/正體中文 (zh-hant)
@@ -38,6 +38,9 @@ check more in `/src/i18n/`, base language is **Chinese simplified**
 ## Backend
 
 [Twitter Monitor](https://github.com/BANKA2017/twitter-monitor)
+
+## Known issues
+- use default settings before loading settings from LocalStorage
 
 ## More
 
@@ -75,9 +78,20 @@ check more in `/src/i18n/`, base language is **Chinese simplified**
 
 ## 翻译
 
-检查目录 `/src/i18n/` 了解更多，我只能保障简体中文的准确性
+检查目录 `/src/i18n/` 了解更多，我只能确保 **简体中文（zh-hans）** 用词的准确性
 - 简体中文 (zh-hans)
 - 繁體中文/正體中文 (zh-hant)
 - English (en) (很烂)
 - 日本語 (ja) (根本没有)
 - 한국어 (ko) (根本没有)
+
+## 已知的问题
+- 从 LocalStorage 加载设置前会使用默认配置
+
+## JetBrains Open Source development license
+
+本项目重度依赖于JetBrains™ 全家桶，感谢JetBrains s.r.o为本项目提供 [开源许可证](https://jb.gg/OpenSourceSupport) ，如果你同样对开发充满热情并且经常使用JetBrains s.r.o的产品，你也可以尝试通过JetBrains官方渠道 [申请](https://www.jetbrains.com/shop/eform/opensource) 开源许可证以供核心开发者使用
+
+![JetBrains Logo (Main) logo](https://resources.jetbrains.com/storage/products/company/brand/logos/jb_beam.svg)
+
+Copyright © 2022 JetBrains s.r.o.

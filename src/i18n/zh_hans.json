@@ -18,6 +18,7 @@
         "media": "媒体",
         "username": "用户名",
         "group": "组",
+        "user_list": "用户列表",
         "time": {
             "second": "秒 | 秒",
             "minute": "分钟 | 分钟",
@@ -41,6 +42,7 @@
             "no_image": "无图"
         },
         "side_tags": {
+            "search": "搜索",
             "settings": "设置",
             "about": "关于",
             "stats": "统计",
@@ -53,7 +55,7 @@
         "scripts": {
             "time": "时间",
             "message": {
-                "update_tweets": "已加载 {0} 条推文 | 已加载 {0} 条推文",
+                "update_tweets": "已加载 {count} 条推文 | 已加载 {count} 条推文",
                 "missing_parameter": "缺少参数",
                 "failed_to_generate_chart": "图表生成失败 #{0}"
             }
@@ -167,6 +169,8 @@
         "api_path": "API目录",
         "default_api_path": "默认API目录: {0}",
         "media_path": "媒体目录",
-        "default_media_path": "默认媒体目录: {0}"
+        "default_media_path": "默认媒体目录: {0}",
+        "auto_refresh": "自动刷新推文",
+        "auto_load_tweets": "到达底部加载更多"
     }
 }

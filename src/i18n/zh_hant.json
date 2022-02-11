@@ -18,6 +18,7 @@
         "media": "媒體",
         "username": "用戶名",
         "group": "組",
+        "user_list": "用戶列表",
         "time": {
             "second": "秒 | 秒",
             "minute": "分鐘 | 分鐘",
@@ -41,6 +42,7 @@
             "no_image": "無圖"
         },
         "side_tags": {
+            "search": "搜索",
             "settings": "設定",
             "about": "關於",
             "stats": "統計",
@@ -53,7 +55,7 @@
         "scripts": {
             "time": "時間",
             "message": {
-                "update_tweets": "已加載 {0} 條推文 | 已加載 {0} 條推文",
+                "update_tweets": "已加載 {count} 條推文 | 已加載 {count} 條推文",
                 "missing_parameter": "缺少參數",
                 "failed_to_generate_chart": "圖表生成失敗 #{0}"
             }
@@ -167,6 +169,8 @@
         "api_path": "API目錄",
         "default_api_path": "默認API目錄: {0}",
         "media_path": "媒體目錄",
-        "default_media_path": "默認媒體目錄: {0}"
+        "default_media_path": "默認媒體目錄: {0}",
+        "auto_refresh": "自動刷新推文",
+        "auto_load_tweets": "到達底部自動加載更多"
     }
 }

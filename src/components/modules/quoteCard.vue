@@ -27,7 +27,7 @@
 </template>
 
 <script>
-    import ImageList from "./imageList.vue";
+    import ImageList from "../TweetImages.vue";
     import {mapState} from "vuex";
     import BoxArrowUpRight from "@/icons/BoxArrowUpRight.vue";
     //import twemoji from "twemoji";

@@ -12,18 +12,18 @@
             <template #at><code>@</code></template>
           </i18n-t>
           <i18n-t keypath="search.tips.line2" tag="li">
-            <template v-slot:hashtag><code>#</code></template>
+            <template #hashtag><code>#</code></template>
           </i18n-t>
           <i18n-t keypath="search.tips.line3" tag="li">
-            <template v-slot:cashtag><code>$</code></template>
+            <template #cashtag><code>$</code></template>
           </i18n-t>
           <i18n-t keypath="search.tips.line4" tag="li">
-            <template v-slot:at_username><code>@username</code></template>
+            <template #at_username><code>@username</code></template>
           </i18n-t>
           <i18n-t keypath="search.tips.line5" tag="li"></i18n-t>
           <i18n-t keypath="search.tips.line6" tag="li">
-            <template v-slot:help_en><code>help</code></template>
-            <template v-slot:help_zh><code>帮助</code></template>
+            <template #help_en><code>help</code></template>
+            <template #help_zh><code>帮助</code></template>
           </i18n-t>
         </ul>
       </div>

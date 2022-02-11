@@ -1,8 +1,8 @@
 <template>
   <nav id="Navigation" class="navbar navbar-expand-lg navbar-light text-center bg-light">
-    <span class="navbar-brand mb-0 h1 d-inline-block text-truncate" style="max-width: 250px;">
+    <router-link to="/" class="navbar-brand mb-0 h1 d-inline-block text-truncate text-black" style="max-width: 250px;">
       {{ displayName }}
-    </span>
+    </router-link>
     <div class="btn-group" role="group">
       <button class="btn navbar-toggler" type="button" @click="$router.go(-1)">
         <span><chevron-left height="30" status="text-success" width="30"/></span>
@@ -47,7 +47,7 @@
     const names = computed(() => store.state.names)
     const project = computed(() => store.state.project)
     const projects = computed(() => store.state.projects)
-    const displayName = computed(() => store.state.title)
+    const displayName = "Twitter Monitor v3"
 </script>
 
 <style scoped>

@@ -24,22 +24,18 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import {useHead} from "@vueuse/head";
+import {defineComponent} from "vue";
 
-export default {
-  name: "index",
+export default defineComponent({
   setup() {
     useHead({
       title: '专题',
-      meta: [{
-        name: "theme-color",
-        content: "#1da1f2"
-      }]
+      meta: [{name: "theme-color", content: "#1da1f2"}]
     })
-  },
-  data: () => ({
-    events: [{
+
+    const events = [{
       title: "2019年度统计",
       description: "Twitter monitor 2019年度统计，第一次做这玩意，写得很烂",
       update_time: "2021-02-24",
@@ -65,8 +61,9 @@ export default {
       update_time: "2021-12-30",
       link: "/i/events/2021/"
     },].reverse()
-  }),
-}
+    return {events}
+  }
+})
 </script>
 
 <style scoped>

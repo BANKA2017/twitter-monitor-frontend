@@ -31,7 +31,7 @@
 </template>
 
 <script>
-import CandlestickChart from "@/components/modules/candlestickChart";
+import CandlestickChart from "@/components/modules/candlestickChart.vue";
 import {mapState} from "vuex";
 import {inject} from "vue";
 import {useHead} from "@vueuse/head";

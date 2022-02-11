@@ -18,7 +18,13 @@ export interface ApiAccounts extends Api<{
 
 export interface ApiUserInfo extends Api<UserInfo> {}
 
-export interface ApiTweets extends Api<Tweet[]> {}
+export interface ApiTweets extends Api<{
+  bottom_tweet_id: string
+  hasmore: boolean
+  rss_mode: boolean
+  top_tweet_id: string
+  tweets: Tweet[]
+}> {}
 
 export interface ApiTranslate extends Api<{
   cache: boolean

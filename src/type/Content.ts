@@ -56,11 +56,9 @@ export interface Tweet {
   mediaObject: { [P in 'tweetsMedia' | 'quoteMedia' | 'cardMedia']: Media[]}
 }
 
-export interface TweetEx extends Tweet {
-  translate: {
-    text: string
-    translate_source: string
-  }
+export interface Translate {
+  text: string
+  translate_source: string
 }
 
 export interface Entity {
@@ -85,6 +83,8 @@ export interface Media {
   origin_info_width: number
   blurhash: string | null
 }
+
+export type MediaSize = 'large' | 'medium' | 'small' | 'thumb' | 'tiny' | 'orig'
 
 export interface Quote {
   tweet_id: number

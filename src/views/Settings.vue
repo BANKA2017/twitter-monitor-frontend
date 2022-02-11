@@ -28,6 +28,14 @@
               </option>
             </select>
           </div>
+          <div class="custom-control custom-checkbox mb-3">
+            <input type="checkbox" class="custom-control-input" id="auto-refresh" v-model="autoRefresh">
+            <label class="custom-control-label" for="auto-refresh">{{ t("settings.auto_refresh") }}</label>
+          </div>
+          <div class="custom-control custom-checkbox mb-3">
+            <input type="checkbox" class="custom-control-input" id="auto-load-more" v-model="autoLoadMore">
+            <label class="custom-control-label" for="auto-load-more">{{ t("settings.auto_load_tweets") }}</label>
+          </div>
           <div class="text-center my-4">
             <el-button circle @click="$router.go(-1)"><arrow-left height="1em" status="" width="1em"/></el-button>
           </div>
@@ -55,32 +63,30 @@ export default defineComponent({
     const store = useStore()
     const languageList = computed(() => store.state.languageList)
     const basePath = computed({
-      get () {
-        return store.state.settings.basePath
-      },
-      set (value) {
-        store.dispatch({type: 'updateBasePath', basePath: value})
-      }
+      get () {return store.state.settings.basePath},
+      set (value) {store.dispatch({type: 'updateBasePath', basePath: value})}
     })
     const mediaPath = computed({
-      get () {
-        return store.state.settings.mediaPath
-      },
-      set (value) {
-        store.dispatch({type: 'updateMediaPath', mediaPath: value})
-      }
+      get () {return store.state.settings.mediaPath},
+      set (value) {store.dispatch({type: 'updateMediaPath', mediaPath: value})}
     })
 
     const language = computed({
-      get () {
-        return store.state.settings.language
-      },
-      set (value) {
-        store.dispatch({type: 'setLanguage', lang: value})
-      }
+      get () {return store.state.settings.language},
+      set (value) {store.dispatch({type: 'setLanguage', lang: value})}
     })
 
-    return {defaultBasePath, defaultMediaPath, languageList, basePath, mediaPath, language, t}
+    const autoRefresh = computed({
+      get () {return store.state.settings.autoRefresh},
+      set (value) {store.dispatch({type: "updateAutoRefreshStatus", value})}
+    })
+
+    const autoLoadMore = computed({
+      get () {return store.state.settings.autoLoadTweets},
+      set (value) {store.dispatch({type: "updateAutoLoadMoreStatus", value})}
+    })
+
+    return {defaultBasePath, defaultMediaPath, languageList, basePath, mediaPath, language, autoRefresh, autoLoadMore, t}
   }
 })
 </script>

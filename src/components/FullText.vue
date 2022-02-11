@@ -1,12 +1,13 @@
 <template>
   <div id="htmlText" ref="html_text">
-    <p class="card-text">
+    <div class="card-text">
       <template v-for="(obj, order) in textObject(full_text_origin, entities, true)" :key="order">
-        <template v-for="(text, ord) in spreadText(obj.text)">
+        <template v-for="(text, ord) in x = spreadText(obj.text)">
           <template v-for="(textData, textOrder) in textObject(text, emojiObject(text))">
             <span v-if="textData.text" :key="'span'+ord+order+textOrder+text" class="mb-1">{{ textData.text }}</span>
             <img v-if="textData.tag_text" :src="textData.url" style="height: 1em;" :alt="textData.tag_text" :key="'img'+ord+order+textOrder+text" class="mb-1">
           </template>
+          <br v-if="ord !== x.length - 1">
         </template>
         <router-link v-if="obj.type === 'hashtag' || obj.type === 'symbol'" :to="(obj.type === 'hashtag' ? `/hashtag/` : `/cashtag/`) + obj.tag_text">#{{ obj.tag_text }}</router-link>
         <router-link
@@ -15,7 +16,7 @@
         </router-link>
         <a v-else id="url" :href="obj.url" target="_blank">{{ obj.tag_text }}</a>
       </template>
-    </p>
+    </div>
   </div>
 </template>
 
@@ -37,7 +38,7 @@ const props = defineProps({
 const store = useStore()
 const userList = computed(() => store.state.userList)
 const twemojiBasePath = computed(() => store.state.twemojiBasePath)
-const buildUrl = (codepoints: string, assetType: string): string => twemojiBasePath + `svg/${codepoints}.${assetType}`
+const buildUrl = (codepoints: string, assetType: string): string => twemojiBasePath.value + `svg/${codepoints}.${assetType}`
 const emojiObject = (text: string = ''): Entity[] => parse(text, {buildUrl: buildUrl, assetType: 'svg'}).map((x: EmojiEntity): Entity => ({
   expanded_url: x.url,
   indices_end: x.indices[1],

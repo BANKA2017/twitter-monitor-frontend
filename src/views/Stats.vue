@@ -28,7 +28,7 @@
 </template>
 
 <script lang="ts">
-import Tmv2Table from "../components/modules/tmv2Table.vue"
+import Tmv2Table from "../components/Tmv2Table.vue"
 import Tmv2Chart from "../components/modules/tmv2Chart.vue"
 import {computed, defineComponent, onMounted, reactive, Ref, ref} from "vue"
 import {useHead} from "@vueuse/head"
