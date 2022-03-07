@@ -42,6 +42,7 @@ export interface Tweet {
   card: string
   poll: number
   quote_status: number
+  quote_status_str: string
   source: string
   full_text: string
   full_text_origin: string
@@ -51,6 +52,7 @@ export interface Tweet {
   time: number
   type: string
   entities: Entity[]
+  pollObject: PollItem[]
   cardObject: Card | {}
   quoteObject: Quote | {}
   mediaObject: { [P in 'tweetsMedia' | 'quoteMedia' | 'cardMedia']: Media[]}
@@ -84,16 +86,43 @@ export interface Media {
   blurhash: string | null
 }
 
+export interface OnlineMedia {
+  basename: string
+  bitrate: number
+  content_type: string
+  cover: string
+  extension: string
+  filename: string
+  hidden: boolean
+  media_key: string
+  origin_info_height: number
+  origin_info_width: number
+  origin_type: string
+  source: string
+  tweet_id: string
+  uid: string
+  url: string
+}
+
 export type MediaSize = 'large' | 'medium' | 'small' | 'thumb' | 'tiny' | 'orig'
 
 export interface Quote {
   tweet_id: number
+  id_str: string
   name: string
   display_name: string
   full_text: string
   time: number
   media: number
   video: number
+}
+
+export interface PollItem {
+  choice_label: string
+  poll_order: 1 | 2 | 3 | 4
+  end_datetime: number
+  count: number
+  checked: boolean
 }
 
 export interface Card {
@@ -112,7 +141,7 @@ export interface Card {
     country_code: string
     title: string
     category: string
-  }
+  }[]
 }
 
 export interface Status {
@@ -135,4 +164,9 @@ export interface Stats {
   followers: number
   statuses_count: number
   group: string[]
+}
+
+export interface HashtagList {
+  name: string
+  value: number
 }

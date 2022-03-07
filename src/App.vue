@@ -4,7 +4,7 @@
     <el-backtop style="z-index: 1500" />
     <router-view/>
     <div v-if="devmode" class="bg-dark text-white" style="left: 0; bottom: 0; position: fixed; z-index: 9999; padding: 5px">
-      <span>开发测试版本</span><br><span style="align-content: end">{{width + 'x' + viewportHeight}}</span>
+      <span style="align-content: end">{{width + 'x' + viewportHeight}}</span>
     </div>
   </div>
 </template>
@@ -20,10 +20,7 @@
   export default {
     name: 'App',
     setup() {
-
-
       const {locale} = useI18n()
-
       const store = useStore()
       const settings = computed(() => store.state.settings)
       const hasBeenSyncFromLocalStorage = computed(() => store.state.hasBeenSyncFromLocalStorage)

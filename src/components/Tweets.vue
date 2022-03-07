@@ -1,10 +1,9 @@
 <template>
   <div id="tweets">
-    <nav :style="{'position': 'sticky', 'top': '1.5rem', 'z-index': 1, 'background-color': 'rgba(255, 255, 255, 0.9)', 'border-radius': '0.25rem'}" class="nav nav-pills nav-fill border">
+    <nav v-if="route.name !== 'main'" :style="{'position': 'sticky', 'top': '1.5rem', 'z-index': 1, 'background-color': 'rgba(255, 255, 255, 0.9)', 'border-radius': '0.25rem'}" class="nav nav-pills nav-fill border">
       <!--v-if="tweetStatus.displayType === 'timeline' && !load.leftCard"-->
-      <template v-if="$route.name === 'name-display'">
+      <template v-if="route.name === 'name-display'">
         <li v-for="(value, s) in displayMode" :key="s" class="nav-item">
-          <!--TODO update while click-->
           <!--tweetStatus.display-->
           <div v-if="value[1] === tweetTypeValue" class="nav-link active" role="button" @click="loading(true)">{{ value[0] }}</div>
           <router-link v-else :to="`./`+value[1]" class="nav-link">{{ value[0] }}</router-link>
@@ -14,7 +13,7 @@
         <div :class="{'nav-link': true, 'active': settings.displayPicture, 'text-primary': !settings.displayPicture}" role="button" @click="swapDisplayPictureStatus">{{ t("timeline.nav_bar.no_image") }}</div>
       </li>
     </nav>
-    <hr class="my-4">
+    <hr v-if="route.name !== 'main'" class="my-4">
     <div class="text-center" element-loading-background="rgba(255, 255, 0, 0)" style="height: 60px" v-if="state.loadingTop" v-loading="state.loadingTop"></div>
 
     <el-skeleton :loading="state.loadingTimeline" :rows="5" animated class="mb-2">
@@ -24,13 +23,7 @@
       </div>
       <div v-if="!state.reload && tweets.length">
         <div v-for="(tweet, order) in tweets" :key="order">
-          <div class="text-center" v-if="tweet.type === 'msg'">
-            {{ tweet.full_text }}
-          </div>
-          <div v-else>
-            <!--TODO fix top tweet id which from userinfo-->
-            <tweet-item :display="tweetModeValue" :display-type="tweetTypeValue" :top="0" :order="order" :tweet="tweet"/>
-          </div>
+          <tweet-item :tweet="tweet"/>
           <hr class="my-4">
         </div>
         <button v-if="state.moreTweets && !state.loadingBottom" class="btn btn-primary btn-lg btn-block mb-3" type="button" @click="loading(false)">
@@ -46,8 +39,7 @@
       </div>
     </el-skeleton>
   </div>
-  <!--TODO REFRESH-->
-  <transition name="el-fade-in" v-if="$route.name !== 'name-status'">
+  <transition name="el-fade-in" v-if="route.name !== 'name-status'">
     <div class="el-backtop" style="right: 40px; bottom: 90px; z-index: 1500" @click="() => {ScrollTo(); loading(true)}">
       <arrow-clockwise height="1em" status="" width="1em" />
     </div>
@@ -56,10 +48,10 @@
 
 <script setup lang="ts">
 import {useStore} from "@/store";
-import {computed, reactive, ref, Ref, defineComponent, toRefs, watch} from "vue";
+import {computed, reactive, ref, Ref, defineComponent, toRefs, watch, onMounted} from "vue";
 import {useI18n} from "vue-i18n";
 //import TweetItem from "./TweetItem";
-import {onBeforeRouteUpdate, RouteLocationNormalized, useRoute, useRouter} from "vue-router";
+import {onBeforeRouteLeave, onBeforeRouteUpdate, RouteLocationNormalized, useRoute, useRouter} from "vue-router";
 import {TweetType} from "@/type/State";
 import {TweetMode} from "@/type/State";
 import {Equal, Notice, NullSafeParams, ScrollTo} from "@/share/Tools";
@@ -67,6 +59,7 @@ import {controller, request} from "@/share/Fetch";
 import {ApiTweets} from "@/type/Api";
 import TweetItem from "@/components/TweetItem.vue";
 import ArrowClockwise from "@/icons/ArrowClockwise.vue";
+import {RouterNameList} from "@/share/Content";
 const {t} = useI18n()
 const route = useRoute()
 const router = useRouter()
@@ -185,6 +178,11 @@ const routeCase = (to: RouteLocationNormalized) => {
       queryStringObject.set('tweet_id', <string>NullSafeParams(to.params.status, ''))
       setTweetMode('status')
       break
+    case "main":
+      url += 'search/'
+      queryStringObject.set('advanced', '1')
+      setTweetMode('timeline')
+      break
     default:
       url += 'tweets/'
       queryStringObject.set('name', <string>NullSafeParams(to.params.name, ''))
@@ -240,10 +238,6 @@ const loading = (top: boolean = false) => {
         if (response.data.top_tweet_id !== '0') {
           state.topTweetId = response.data.top_tweet_id;
         }
-        //TODO generate chart
-        //if (this.chart.generate && this.tweetStatus.displayType === 'timeline') {
-        //  this.createChart(this.chart.latestTimestamp, true)
-        //}
         store.dispatch({
           type: 'setCoreValue',
           key: 'tweets',
@@ -279,38 +273,45 @@ const emptyTranslateList = () => {
   store.dispatch("setCoreValue", {key: 'translate', value: {}})
 }
 
-routeCase(route)
-emptyTranslateList()
-if (route.name === 'search' && !route.query.q) {
-  state.loadingTimeline = false
-} else {
-  update()
-}
-if (route.name === 'search') {
+//TODO fix unknown to no-name-status
+//TODO fix repeated request
+const routeRun = (to: RouteLocationNormalized, from: RouteLocationNormalized | {name: string}) => {
+  if (from.name === 'no-name-status' && to.name === 'name-status') {return}
+  //if (!RouterNameList.timeline.has(typeof to.name === 'string' ? to.name : '') || (RouterNameList.timeline.has(typeof to.name === 'string' ? to.name : '') && from.name === 'search')) {
+  //  return
+  //}
+  //search
+  //if (from.name !== 'search' && to.name === 'search') {
   store.dispatch({
     type: 'setCoreValue',
     key: 'tweets',
     value: []
   })
-}
-//TODO fix unknown to no-name-status
-onBeforeRouteUpdate((to, from) => {
+  //}
   //status
-  if (!((from.name === 'no-name-status' && to.name === 'name-status'))) {
-    routeCase(to)
-    emptyTranslateList()
+  routeCase(to)
+  emptyTranslateList()
+  if (!(to.name === 'search' && !to.query.q && to.query.advanced !== '1')) {
     update()
+  } else {
+    state.loadingTimeline = false
   }
-  //search
-  if (!(from.name === 'search' && to.name === 'search')) {
-    store.dispatch({
-      type: 'setCoreValue',
-      key: 'tweets',
-      value: []
-    })
-  }
+}
+//first entry
+onMounted(()  => {
+  routeRun(route, {name: 'everywhere'})
 })
-
+//update
+//无法监听跨路由
+onBeforeRouteUpdate((to, from, next) => {
+  routeRun(to, from)
+  next()
+})
+//leave
+onBeforeRouteLeave((to, from, next) => {
+  routeRun(to, from)
+  next()
+})
 
 </script>
 

@@ -1,7 +1,22 @@
 <template id="project-list">
-  <button class="btn btn-outline-primary btn-block btn-sm mb-4" @click="projectS = !projectS">{{ project ? project : t("project_list.button.select_project") }}</button>
+  <!--TODO fix element-->
+  <button class="btn navbar-toggler" data-toggle="collapse" type="button" v-if="onNav" @click="projectS = !projectS">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <button v-else-if="!onNav && !onMain" class="btn btn-outline-primary btn-block btn-sm mb-4" @click="projectS = !projectS">{{t("public.user_list") }}</button>
 
-  <el-drawer v-model="projectS" :title="t('public.user_list')" size="100vw" append-to-body ref="elDrawer">
+  <div v-if="onMain" >
+    <template v-for="(projectName, s) in projects" :key="s">
+      <el-button class="text-decoration-none mx-1 mb-2" round size="small" @click="setProject(project === projectName ? '' : projectName)">{{ projectName }}</el-button>
+    </template>
+    <div v-if="project && state.list.length" class="list-group my-2">
+      <router-link v-for="(user, s) in state.list" :key="s" :to="`/` + user.name + `/all`" class="list-group-item list-group-item-action" @click="$refs.elDrawer.handleClose()"><b>{{ user.display_name }}</b> |
+        <small>@{{ user.name }}</small> >
+        <small>{{ project + " (" + user.tag + ")" }}</small>
+      </router-link>
+    </div>
+  </div>
+  <el-drawer v-else v-model="projectS" :title="t('public.user_list')" size="100vw" append-to-body ref="elDrawer">
     <div class="container">
       <div class="col-md-8 offset-md-2">
         <template v-for="(project, s) in projects" :key="s">
@@ -16,45 +31,50 @@
       </div>
     </div>
   </el-drawer>
-
-  <!--<div class="list-group my-4" v-if="projectS">
-    <router-link v-for="project_ in projects" :key="project_" :to="`/i/project/`+project_" @click="projectS = !projectS" :class="`list-group-item list-group-item-action`+(project_.toLowerCase() === project.toLowerCase() ? ' active' : '')">{{ project_ }}</router-link>
-  </div>-->
 </template>
 
 <script setup lang="ts">
 import {useStore} from "@/store";
-import {computed, reactive, Ref, ref, watch} from "vue";
+import {computed, onMounted, reactive, Ref, ref, watch} from "vue";
 import {useI18n} from "vue-i18n";
 import {userListInterface} from "@/type/State";
+import {useRouter} from "vue-router";
 const { t } = useI18n()
+const router = useRouter()
 const store = useStore()
 const project = computed(() => store.state.project)
 const projects = computed(() => store.state.projects)
 const names = computed(() => store.state.names)
 const userList = computed(() => store.state.userList)
+const props = defineProps({
+  onNav: {
+    type: Boolean,
+    default: false
+  },
+  onMain: {
+    type: Boolean,
+    default: false
+  }
+})
+
 const state = reactive<{
   list: Ref<userListInterface[]>
 }>({
   list: ref([])
 })
-const createList = () => {
-  let tmpList: userListInterface[] = []
-  userList.value.map((values) => {
-    if (values.project === project.value && values.name) {
-      tmpList.push(values);
-    }
-  })
-  state.list = tmpList
-}
+
+const createList = () => state.list = userList.value.filter((values: userListInterface) => (values.project === project.value && values.name))
+
 createList()
 watch(project, () => createList())
 
 const setProject = (project: string) => {
   store.dispatch("setCoreValue", {key: 'project', value: project})
 }
-const projectS = ref(false)
-
+let projectS = ref(false)
+router.beforeEach(() => {
+  projectS = ref(false)
+})
 </script>
 
 <style scoped>

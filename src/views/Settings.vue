@@ -85,7 +85,7 @@ export default defineComponent({
       get () {return store.state.settings.autoLoadTweets},
       set (value) {store.dispatch({type: "updateAutoLoadMoreStatus", value})}
     })
-
+    //TODO load conversation from status
     return {defaultBasePath, defaultMediaPath, languageList, basePath, mediaPath, language, autoRefresh, autoLoadMore, t}
   }
 })

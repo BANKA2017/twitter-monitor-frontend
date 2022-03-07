@@ -155,7 +155,7 @@
         }
     },
     "polls": {
-        "vote": "{0} vote | {0} votes",
+        "vote": "{count} vote | {count} votes",
         "final_results": "Final results",
         "wait_for_sync": "Waiting for sync",
         "eta": "{0} left"

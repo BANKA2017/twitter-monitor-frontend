@@ -13,6 +13,7 @@
             <li>下面的内容选自 <a href="https://github.com/BANKA2017/twitter-monitor/blob/master/v2api.php" target="_blank">BANKA2017:
               twitter-monitor~/v2api.php</a> 注释，组合后可使用
             </li>
+            <li>关于接口返回的数据类型，请访问 <a href="https://github.com/BANKA2017/twitter-monitor-frontend/blob/v3/src/type/Api.ts" target="_blank">BANKA2017/twitter-monitor-frontend~/src/type/Api.ts</a> 了解更多</li>
           </ul>
           <hr class="my-4">
           <p>api基础链接 {{ settings.basePath + "/api/v2" }}</p>

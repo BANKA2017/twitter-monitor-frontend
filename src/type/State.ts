@@ -16,6 +16,7 @@ export interface State {
   links: {url: string; display: string}[]
   names: AccountList
   userList: userListInterface[]
+  topTweetId: string//BigInt as String
   languageList: { code: string; name: string; local_name: string; status: string}[]
   tweets: Tweet[]
   translate: { [p: string]: Translate }//{tweet_id: Translate}

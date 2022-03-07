@@ -3,22 +3,18 @@
     <el-skeleton :loading="state.loading" animated>
       <!--TODO fix !displayPicture-->
       <!--TODO replace .banner to cacheable extension for banner-->
+      <!--TODO fix banner for short screen_name-->
       <div class="card mb-4">
-        <el-collapse-transition>
+        <el-collapse-transition v-if="state.userInfo.banner !== 0">
           <div class="row no-gutters" v-show="isMobileRatio" :style="{'position': 'relative', 'aspect-ratio': !settings.displayPicture ? '3 / 1' : ''}">
             <el-image v-if="!settings.displayPicture" :src="createRealMediaPath(realMediaPath, samePath, 'userinfo')+`pbs.twimg.com/profile_banners/`+state.userInfo.uid_str+`/`+state.userInfo.banner+`.banner`" :preview-src-list="[createRealMediaPath(realMediaPath, samePath, 'userinfo')+`pbs.twimg.com/profile_banners/`+state.userInfo.uid_str+`/`+state.userInfo.banner+`.banner`]" alt="Banner" style="position: absolute" class="col-12 card-img-top banner" fit="cover" lazy append-to-body hide-on-click-modal/>
           </div>
         </el-collapse-transition>
-        <!--TODO fix no banner-->
         <div class="row mx-2">
-          <div :class="{'col-4': width > 768 && height > 50,}" v-if="!settings.displayPicture" style="width: calc(100% / 4); max-width: 100px; aspect-ratio: 1; align-items: center; display: flex; justify-content: center; margin: -50% 0">
-
-
-            <el-image class="rounded-circle" :src="createRealMediaPath(realMediaPath, samePath, 'userinfo')+state.userInfo.header" :preview-src-list="[createRealMediaPath(realMediaPath, samePath, 'userinfo')+state.userInfo.header]" alt="Avatar" append-to-body hide-on-click-modal :z-index="9901"/>
+          <div :class="{'col-4': ((width > 768 && height > 50) || state.userInfo.banner === 0),}" v-if="!settings.displayPicture" style="width: calc(100% / 4); max-width: 100px; aspect-ratio: 1; align-items: center; display: flex; justify-content: center; margin: -50% 0">
+            <el-image class="rounded-circle" :src="createRealMediaPath(realMediaPath, samePath, 'userinfo')+state.userInfo.header" :preview-src-list="[createRealMediaPath(realMediaPath, samePath, 'userinfo')+state.userInfo.header.replace(/([\w]+)\.([\w]+)$/gm, `$1_reasonably_small.$2`)]" alt="Avatar" append-to-body hide-on-click-modal/>
           </div>
-          <div :class="{ 'margin-3': isMobileRatio, 'col-8': width > 768 && height > 50, 'col-12': settings.displayPicture, 'my-2': height > 50, 'mt-5': (height <= 50 || width <= 768) }" style=" justify-content: center;">
-
-
+          <div :class="{ 'col-8': ((width > 768 && height > 50) || state.userInfo.banner === 0), 'col-12': !((width > 768 && height > 50) || state.userInfo.banner === 0), 'my-2': (height > 50 || state.userInfo.banner === 0), 'mt-5': ((height <= 50 || width <= 768) && state.userInfo.banner !== 0), }" style=" justify-content: center;">
             <h5 class="card-title mb-1 align-middle"><b>{{ state.userInfo.display_name }}</b><verified height="1em" status="text-primary" width="1.2em" class="ml-2 "/></h5>
             <small><a :href="`//twitter.com/`+state.userInfo.name" class="text-dark" target="_blank">@{{ state.userInfo.name }}</a></small>
           </div>
@@ -43,11 +39,9 @@
 </template>
 
 <script setup lang="ts">
-import {computed, onMounted, reactive, Ref, ref, watch} from "vue";
+import {computed, onMounted, reactive, Ref, ref} from "vue";
 import {useStore} from "@/store";
 import Verified from "@/icons/Verified.vue";
-import Deleted from "@/icons/Deleted.vue";
-import Locked from "@/icons/Locked.vue";
 import FullText from '@/components/FullText.vue'
 import Translate from "@/components/Translate.vue";
 import {request} from "@/share/Fetch";
@@ -55,8 +49,8 @@ import {ApiChartLegacy, ApiUserInfo} from "@/type/Api";
 import {Notice, createRealMediaPath} from "@/share/Tools";
 import {Chart, UserInfo} from "@/type/Content";
 import {useI18n} from "vue-i18n";
-import {onBeforeRouteUpdate, useRoute, useRouter} from "vue-router";
-import Tmv2Chart from "@/components/modules/tmv2Chart.vue";
+import {onBeforeRouteLeave, onBeforeRouteUpdate, useRoute, useRouter} from "vue-router";
+import Tmv2Chart from "@/components/Tmv2ChartWithoutDataSet.vue";
 
 const { t } = useI18n()
 
@@ -112,6 +106,7 @@ const state = reactive<{
 
 const getUserInfo = (name: string | string[]) => {
   state.loading = true
+  state.chartData = []
   if (route.name === 'no-name-status') {return}
   if (typeof name === "object") {Notice("Wrong name"); return}
   request<ApiUserInfo>(settings.value.basePath + '/api/v2/data/userinfo/?name=' + name, controller).then(response => {
@@ -123,6 +118,7 @@ const getUserInfo = (name: string | string[]) => {
       //  '总推文数': '总推文数 ' + this.info.statuses_count
       //};
       store.dispatch("setCoreValue", {key: 'userExists', value: true})
+      store.dispatch("setCoreValue", {key: 'topTweetId', value: response.data.top})
       createChart()
     } else {
       Notice(response.message, "error")
@@ -159,7 +155,7 @@ const controller = new AbortController
 onMounted(() => {
   getUserInfo(route.params.name)
 })
-router.afterEach((to, from) => {
+onBeforeRouteUpdate((to, from) => {
   if (to.params.name !== from.params.name && (to.name === 'name-display' || to.name === 'name-status')) {
     getUserInfo(to.params.name)
   }
@@ -169,6 +165,11 @@ router.afterEach((to, from) => {
   //  key: 'title',
   //  value: !(to.name === 'name-display' || to.name === 'name-status') ? state.userInfo.display_name + ' (@' + state.userInfo.name + ') / Twitter Monitor' : "Twitter Monitor"
   //})
+})
+onBeforeRouteLeave((to, from) => {
+  if (to.params.name !== from.params.name && (to.name === 'name-display' || to.name === 'name-status')) {
+    getUserInfo(to.params.name)
+  }
 })
 </script>
 

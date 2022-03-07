@@ -1,21 +1,21 @@
 <template>
   <div id="tweet">
     <div v-if="false">{{ tweet }}</div>
-    <div v-else :id="tweet.tweet_id_str" :class="{'card': true, 'card-border': true, 'border-danger': tweet.dispute === 1, 'border-primary': tweet.tweet_id_str === top}">
+    <div v-else :id="tweet.tweet_id_str" :class="{'card': true, 'card-border': true, 'border-danger': tweet.dispute === 1, 'border-primary': tweet.tweet_id_str === topTweetId}">
       <div class='card-body'>
-        <p v-if="displayType === 'timeline' && tweet.tweet_id_str === top"><small class="text-muted">{{ $t("tweet.text.pinned_tweet") }}</small></p>
-        <p v-if="tweet.dispute === 1"><small class="text-muted"><exclamation-circle height="1em" status="" width="1em" /> {{ $t("tweet.text.this_is_a_dispute_tweet") }}
-          <router-link to="/about">{{ $t("tweet.text.learn_more") }}</router-link>
+        <p v-if="tweetModeValue === 'timeline' && tweet.tweet_id_str === topTweetId"><small class="text-muted">{{ t("tweet.text.pinned_tweet") }}</small></p>
+        <p v-if="tweet.dispute === 1"><small class="text-muted"><exclamation-circle height="1em" status="" width="1em" /> {{ t("tweet.text.this_is_a_dispute_tweet") }}
+          <router-link to="/about">{{ t("tweet.text.learn_more") }}</router-link>
         </small></p>
         <div>
           <small class="text-muted" v-if="tweet.retweet_from">
             <retweet height="1em" status="" width="1em"/>
-            <router-link :to="`/`+tweet.name+(displayType === 'status' ? `/` + display : `/status/`+tweet.tweet_id_str)" class="text-muted">
+            <router-link :to="`/`+tweet.name+(tweetModeValue === 'status' ? `/all` : `/status/`+tweet.tweet_id_str)" class="text-muted">
               {{ tweet.display_name }}
             </router-link>
           </small>
         </div>
-        <router-link v-if="!tweet.retweet_from_name || (tweet.retweet_from_name && userList.map(x => x.name).includes(tweet.retweet_from_name))" :to="`/`+ (tweet.retweet_from ? tweet.retweet_from_name : tweet.name) + (tweet.retweet_from_name && tweet.retweet_from_name !== tweet.name ? '/all' : displayType === 'status' ? `/` + display : `/status/`+tweet.tweet_id_str)" class="card-title text-dark">
+        <router-link v-if="!tweet.retweet_from_name || (tweet.retweet_from_name && userList.map(x => x.name).includes(tweet.retweet_from_name))" :to="`/`+ (tweet.retweet_from ? tweet.retweet_from_name : tweet.name) + (tweet.retweet_from_name && tweet.retweet_from_name !== tweet.name ? '/all' : tweetModeValue === 'status' ? `/all` : `/status/`+tweet.tweet_id_str)" class="card-title text-dark">
           {{ tweet.retweet_from ? tweet.retweet_from : tweet.display_name }}
         </router-link>
         <a v-else :href="`//twitter.com/` + tweet.retweet_from_name" class="text-dark" target="_blank">{{ tweet.retweet_from }}</a>
@@ -34,21 +34,20 @@
         <!--<div v-html="`<p class='card-text'>`+tweet.full_text+`</p>`"></div>-->
         <!--excited!-->
         <html-text :entities="tweet.entities" :full_text_origin="tweet.full_text_origin"/>
-        <translate v-if="order !== -1 && tweet.full_text_origin" :id="tweet.tweet_id_str" :order="order" :to="settings.language" type="0"/>
+        <translate v-if="tweet.full_text_origin" :id="tweet.tweet_id_str" :to="settings.language" type="0"/>
         <!--media-->
         <template v-if="tweet.media === 1&&!settings.displayPicture && tweet.mediaObject.tweetsMedia.length">
           <div class="my-4"></div>
-          <image-list :is_video="tweet.video" :list="tweet.mediaObject.tweetsMedia" :unlimited="displayType === 'status'"/>
+          <image-list :is_video="tweet.video" :list="tweet.mediaObject.tweetsMedia" :unlimited="tweetModeValue === 'status'"/>
         </template>
         <!--quote-->
-        <!--TODO fix quote-->
-        <!--<template v-if="tweet.quote_status !== 0 && tweet.quote_status !== '0'">
+        <template v-if="tweet.quote_status !== 0">
           <div class="my-4"></div>
-          <quote-card :base-path="settings.basePath" :display-picture="settings.displayPicture" :language="settings.language" :quote-media="tweet.mediaObject.quoteMedia" :quote-object="tweet.quoteObject"/>
-        </template>-->
+          <quote-card :quote-media="tweet.mediaObject.quoteMedia" :quote-object="tweet.quoteObject"/>
+        </template>
         <!--polls-->
         <template v-if="tweet.poll !== 0">
-          <tw-polls :language="settings.language" :media="tweet.mediaObject.cardMedia" :polls="tweet.pollObject" :tweet_id="tweet.tweet_id_str"/>
+          <tw-polls :media="tweet.mediaObject.cardMedia" :polls="tweet.pollObject"/>
         </template>
         <!--card-->
         <template v-else-if="tweet.card !== '' && Object.keys(tweet.cardObject).length">
@@ -68,34 +67,24 @@
 import HtmlText from "./FullText.vue";
 import Translate from "./Translate.vue";
 import ImageList from "./TweetImages.vue";
-import QuoteCard from "./modules/quoteCard.vue";
-import TwPolls from "./modules/twPolls.vue";
-import TwCard from "./modules/twCard.vue";
+import QuoteCard from "./QuoteCard.vue";
+import TwPolls from "./TwPolls.vue";
+import TwCard from "./TwCard.vue";
 import Retweet from "@/icons/Retweet.vue";
-import {mapState} from "vuex";
 import ImageIcon from "@/icons/ImageIcon.vue";
 import CameraVideoIcon from "@/icons/CameraVideoIcon.vue";
 import BoxArrowUpRight from "@/icons/BoxArrowUpRight.vue";
 import ExclamationCircle from "@/icons/ExclamationCircle.vue";
 import {useStore} from "@/store";
-import {computed} from "vue";
+import {computed, PropType} from "vue";
 import {useI18n} from "vue-i18n";
+import {Tweet} from "@/type/Content";
 //import html2canvas from 'html2canvas';
 
 defineProps({
-  top: {
-    type: [Number, String],
-    default: 0
-  },
-  displayType: String,
   tweet: {
-    type: Object,
+    type: Object as PropType<Tweet>,
     default: () => ({})
-  },
-  display: String,
-  order: {
-    type: Number,
-    default: -1
   },
 })
 
@@ -104,6 +93,10 @@ const store = useStore()
 const now = computed(() => store.state.now)
 const settings = computed(() => store.state.settings)
 const userList = computed(() => store.state.userList)
+const topTweetId = computed(() => store.state.topTweetId)
+
+const tweetModeValue = computed(() => store.state.tweetMode)
+const tweetTypeValue = computed(() => store.state.tweetType)
 
 const swapDisplayPictureStatus = () => {
   store.dispatch('swapDisplayPictureStatus')

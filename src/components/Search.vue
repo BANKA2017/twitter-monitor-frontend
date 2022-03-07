@@ -81,13 +81,13 @@
     <button v-if="adminMode" :class="{'btn': true, 'btn-outline-dark': true, 'btn-sm': true, 'btn-block': true, 'active': state.advancedSearch.hidden}" role="button" @click="state.advancedSearch.hidden = !state.advancedSearch.hidden">{{ t('search.advanced_search.nav_bar.hidden') }}</button>
     <div class="my-1"></div>
     <i18n-t class="text-muted" keypath="search.advanced_search.tips.line1.text" tag="label">
-      <template v-slot:or_mode>
+      <template #:or_mode>
         <code>{{ t('search.advanced_search.tips.line1.or_mode') }}</code>
       </template>
-      <template v-slot:and_mode>
+      <template #:and_mode>
         <code>{{ t('search.advanced_search.tips.line1.and_mode') }}</code>
       </template>
-      <template v-slot:not_mode>
+      <template #:not_mode>
         <code>{{ t('search.advanced_search.tips.line1.not_mode') }}</code>
       </template>
     </i18n-t>
@@ -128,11 +128,10 @@ import {useStore} from "@/store";
 import {useRoute, useRouter} from "vue-router";
 import {userListInterface} from "@/type/State";
 import {Equal} from "@/share/Tools";
-import * as stream from "stream";
 
 const {t} = useI18n()
 const state = reactive<{
-  keywords: string
+  keywords: Ref<string>
   mode: Ref<0 | 1 | 2>//0->keywords, 1->date, 2->advanced
   advancedSearch: {
     user: { text: string; andMode: boolean; notMode: boolean; },
@@ -148,7 +147,7 @@ const state = reactive<{
   }
   name: string
 }>({
-  keywords: '',
+  keywords: ref(''),
   mode: ref(0),//0->keywords, 1->date, 2->advanced
   advancedSearch: {
     user: {"text": "", "andMode": false, "notMode": false,},
@@ -174,15 +173,7 @@ const settings = computed(() => store.state.now)
 const project = computed(() => store.state.project)
 const userList = computed(() => store.state.userList)
 const adminMode = computed(() => store.state.adminMode)
-const correctUserList = computed(() => {
-  let tmpList: userListInterface[] = [];
-  userList.value.map(x => {
-    if (state.keywords.slice(1).length > 0 && (RegExp(state.keywords.slice(1), 'i').test(x.name) || RegExp(state.keywords.slice(1)).test(x.display_name))) {
-      tmpList.push(x)
-    }
-  })
-  return tmpList
-})
+const correctUserList = computed(() => userList.value.filter(x => state.keywords.slice(1).length > 0 && (RegExp(state.keywords.slice(1), 'i').test(x.name) || RegExp(state.keywords.slice(1)).test(x.display_name))))
 
 watch(() => state.mode, () => {
   if (state.mode === 2) {//时间搜索
@@ -232,7 +223,13 @@ const queryObject = computed((): {
   }
 })
 
+if (route.name === 'search' && route.query.advanced === '1') {
+  state.mode = 2
+}
 router.afterEach((to, from) => {
+  if (to.name !== 'search') {
+    state.keywords = ''
+  }
   if ((from.name === 'name-display' || from.name === 'name-status') && to.name === 'search') {
     state.name = from.params.name.toString()
   } else {

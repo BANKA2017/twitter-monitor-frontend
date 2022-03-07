@@ -1,6 +1,6 @@
 <template>
   <div id="htmlText" ref="html_text">
-    <div class="card-text">
+    <div class="card-text text-break">
       <template v-for="(obj, order) in textObject(full_text_origin, entities, true)" :key="order">
         <template v-for="(text, ord) in x = spreadText(obj.text)">
           <template v-for="(textData, textOrder) in textObject(text, emojiObject(text))">

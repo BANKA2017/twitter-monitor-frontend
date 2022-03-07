@@ -1,4 +1,13 @@
-import {AccountList, Card, Chart, Entity, Media, Quote, Stats, Status, Tweet, UserInfo} from "@/type/Content";
+import {
+  AccountList,
+  Chart,
+  HashtagList,
+  OnlineMedia,
+  Stats,
+  Status,
+  Tweet,
+  UserInfo
+} from "@/type/Content";
 
 export interface Api<T> {
   code: number
@@ -52,4 +61,24 @@ export interface ApiTrends extends Api<{
   tweet_time_list: number[]
   following: {name: string; display_name: string; header: string; count: number}[][]
   statuses: {name: string; display_name: string; header: string; count: number}[]
+}> {}
+
+export interface ApiOnline extends Api<{
+  media_info: OnlineMedia[]
+  video: boolean
+  video_info: {
+    aspect_ratio: number[]
+    duration_millis: number
+    variants: {
+      bitrate?: number
+      content_type: string
+      url: string
+    }[]
+  } | {}
+}> {}
+
+export interface ApiHashtagList extends Api<{
+  list: HashtagList[]
+  start: number
+  end: number
 }> {}

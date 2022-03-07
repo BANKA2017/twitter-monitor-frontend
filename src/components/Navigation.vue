@@ -7,11 +7,12 @@
       <button class="btn navbar-toggler" type="button" @click="$router.go(-1)">
         <span><chevron-left height="30" status="text-success" width="30"/></span>
       </button>
-      <button aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation" class="btn navbar-toggler" data-target="#navbarNav" data-toggle="collapse" type="button" v-if="project && projects.length && displayType === 'timeline'">
+      <project-list v-show="width < 992" :on-nav="true" />
+      <!--<button aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation" class="btn navbar-toggler" data-target="#navbarNav" data-toggle="collapse" type="button" v-if="project && projects.length && displayType === 'timeline'">
         <span class="navbar-toggler-icon"></span>
-      </button>
+      </button>-->
     </div>
-    <div class="collapse navbar-collapse" id="navbarNav" v-if="displayType === 'timeline'">
+    <!--<div class="collapse navbar-collapse" id="navbarNav" v-if="displayType === 'timeline'">
       <ul v-if="project" class="navbar-nav">
         <li v-for="(values, key) in names[project]" :key="key" class="nav-item dropdown">
           <router-link aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle" data-toggle="dropdown" id="navbarDropdown" is="a" role="button" style="cursor:pointer" v-if="names[project][key].length > 1" to="">
@@ -27,7 +28,7 @@
           </div>
         </li>
       </ul>
-    </div>
+    </div>-->
   </nav>
 </template>
 
@@ -35,6 +36,7 @@
     import {computed} from "vue"
     import {useStore} from "@/store";
     import ChevronLeft from "@/icons/ChevronLeft.vue";
+    import ProjectList from "@/components/ProjectList.vue";
 
     defineProps({
       //displayName: {
@@ -47,7 +49,8 @@
     const names = computed(() => store.state.names)
     const project = computed(() => store.state.project)
     const projects = computed(() => store.state.projects)
-    const displayName = "Twitter Monitor v3"
+    const width = computed(() => store.state.width)
+    const displayName = "Twitter Monitor"
 </script>
 
 <style scoped>

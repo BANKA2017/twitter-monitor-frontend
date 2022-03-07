@@ -155,7 +155,7 @@
         }
     },
     "polls": {
-        "vote": "{0} 次投票 | {0} 次投票",
+        "vote": "{count} 次投票 | {count} 次投票",
         "final_results": "最終結果",
         "wait_for_sync": "等待同步",
         "eta": "剩下 {0}"

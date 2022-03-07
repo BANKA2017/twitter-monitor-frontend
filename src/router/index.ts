@@ -1,67 +1,51 @@
-import {createRouter, createWebHistory} from "vue-router";
+import {createRouter, createWebHistory} from "vue-router"
 
 const About = () => import("@/views/About.vue")
 const Api = () => import("@/views/Api.vue")
 const Stats = () => import("@/views/Stats.vue")
 const Status = () => import("@/views/Status.vue")
-//const Online = () => import(/* webpackChunkName: "pages" */ "../components/pages/online");
+const Online = () => import("@/views/Online.vue")
 const TimeLine = () => import("@/views/TimeLine.vue")
 const Main = () => import('@/views/Main.vue')
 const Trends = () => import("@/views/Trends.vue")
-//const Event = () => import(/* webpackChunkName: "events" */ "../components/pages/events");
-//const Annual2019 = () => import(/* webpackChunkName: "events" */ "../components/pages/events/annual2019");
-//const Annual2020 = () => import(/* webpackChunkName: "events" */ "../components/pages/events/annual2020");
-//const Annual2021 = () => import(/* webpackChunkName: "events" */ "../components/pages/events/annual2021");
-//const loveliveTrends = () => import(/* webpackChunkName: "events" */ "../components/pages/events/loveliveTrends");
-//const staffCandleStickPage = () => import(/* webpackChunkName: "events" */ "../components/pages/events/staffCandleStickPage");
+//TODO update to TypeScript
+const Event = () => import("@/views/events/index.vue")
+const Annual2019 = () => import("@/views/events/annual2019.vue")
+const Annual2020 = () => import("@/views/events/annual2020.vue")
+const Annual2021 = () => import("@/views/events/annual2021.vue")
+const loveliveTrends = () => import("@/views/events/loveliveTrends.vue")
+const staffCandleStickPage = () => import("@/views/events/staffCandleStickPage.vue")
 const NotFound = () => import("@/views/NotFound.vue")
 const Settings = () => import("@/views/Settings.vue")
-//const PhotoPreview = () => import('@/views/PhotoPreview.vue')
+//const PhotoPreview = () => import('@/views/TO_DEL_PhotoPreview.vue')
 
 export default createRouter({
     history: createWebHistory('/'),
     routes: [
         { path: '/about', component: About, name: 'about'},
-        //{
-        //    path: '/i/events',
-        //    component: Event,
-        //    name: 'mainEvents',
-        //    children: [
-        //        {
-        //            path: '2019',//2019年度总结
-        //            component: Annual2019,
-        //        },
-        //        {
-        //            path: '2020',//2020年度总结
-        //            component: Annual2020,
-        //        },
-        //        {
-        //            path: '2021',//2021年度总结
-        //            component: Annual2021,
-        //        },
-        //        {
-        //            path: 'lovelive_trends',//lovelive趨勢
-        //            component: loveliveTrends,
-        //        },
-        //        {
-        //            path: 'staff_data_page',
-        //            component: staffCandleStickPage
-        //        }
-        //    ]
-        //},
+        {
+            path: '/i/events',
+            component: Event,
+            name: 'mainEvents',
+            children: [
+                {path: '2019', component: Annual2019, name: '2019'},
+                {path: '2020', component: Annual2020, name: '2020'},
+                {path: '2021', component: Annual2021, name: '2021'},
+                {path: 'lovelive_trends', component: loveliveTrends, name: 'lovelive_trends'},
+                {path: 'staff_data_page', component: staffCandleStickPage, name: 'staff_data_page'}
+            ]
+        },
         { path: '/api', component: Api, name: 'api'},
         { path: '/i/stats', component: Stats, name: 'stats'},
         { path: '/i/status', component: Status, name: 'status'},
         { path: '/i/trends', component: Trends, name: 'trends'},
         //will split to another project
-        //{
-        //    path: '/i/online',
-        //    component: Online,
-        //    children: [{
-        //        path: ':tweet_id',
-        //        component: Online,
-        //    }]
-        //},
+        {
+            path: '/i/online',
+            name: 'online',
+            component: Online,
+            children: [{path: ':tweet_id', component: Online, name: 'online-status'}]
+        },
         { path: '/settings', component: Settings, name: 'settings'},
         { path: '/hashtag/:tag?', component: TimeLine, name: 'hashtag'},
         { path: '/cashtag/:tag?', component: TimeLine, name: 'cashtag'},
@@ -76,6 +60,7 @@ export default createRouter({
         {
             path: '/',
             component: Main,
+            name: 'main',
             children: [{
                 path: 'index.html',
                 redirect: '/'

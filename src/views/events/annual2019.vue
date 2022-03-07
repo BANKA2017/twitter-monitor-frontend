@@ -36,21 +36,15 @@
   </div>
 </template>
 
-<script>
+<script setup lang="ts">
 import {useHead} from "@vueuse/head";
-
-export default {
-  name: "annual2019",
-  setup() {
-    useHead({
-      title: '2019统计',
-      meta: [{
-        name: "theme-color",
-        content: "#1da1f2"
-      }]
-    })
-  },
-}
+useHead({
+  title: '2019统计',
+  meta: [{
+    name: "theme-color",
+    content: "#1da1f2"
+  }]
+})
 </script>
 
 <style scoped>

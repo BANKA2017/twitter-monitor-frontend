@@ -13,7 +13,7 @@
             {{ name }}
           </el-tag>
           <button :class="{'btn': true, 'btn-block': true, 'btn-outline-primary': true, 'active': status.displayTips}" @click="status.displayTips = !status.displayTips">说明 <info-circle-fill height="1em" status="" width="1em" /></button>
-          <a :href="settings.data.basePath + '/static/lovelive_trends/' + dateList[status.dateOrder] + '.json'" class="btn btn-block btn-outline-primary" target="_blank">下载数据 <download-icon height="1em" status="" width="1em" /></a>
+          <a :href="settings.basePath + '/static/lovelive_trends/' + dateList[status.dateOrder] + '.json'" class="btn btn-block btn-outline-primary" target="_blank">下载数据 <download-icon height="1em" status="" width="1em" /></a>
         </div>
         <div class="col-lg-8 mb-4">
           <div class="card" v-show="status.displayTips">
@@ -80,7 +80,7 @@
                 <el-table-column label="名称">
                   <template #default="scope">
                     <!--<el-button @click="() => {status.name = scope.row.name; status.value = 'info'}" type="text" size="small">详情</el-button>-->
-                    <el-button size="small" type="text" @click="() => {scrollToTop();status.userOrder = scope.row.order}">{{ scope.row.display_name[0] }}</el-button>
+                    <el-button size="small" type="text" @click="() => {scrollTo();status.userOrder = scope.row.order}">{{ scope.row.display_name[0] }}</el-button>
                   </template>
                 </el-table-column>
                 <el-table-column label="关注者数" prop="followers" show-overflow-tooltip sortable></el-table-column>
@@ -121,14 +121,16 @@
 </template>
 
 <script>
-import Tmv2Chart from "@/components/modules/tmv2Chart";
-import CandlestickChart from "@/components/modules/candlestickChart";
+import Tmv2Chart from "@/components/Tmv2ChartWithoutDataSet.vue";
+import CandlestickChart from "@/components/modules/candlestickChart.vue";
 import {mapState} from "vuex";
 import {inject} from "vue";
 import {useHead} from "@vueuse/head";
-import ArrowLeft from "@/components/icons/arrowLeft";
-import InfoCircleFill from "@/components/icons/infoCircleFill";
-import DownloadIcon from "@/components/icons/downloadIcon";
+import ArrowLeft from "@/icons/ArrowLeft.vue";
+import InfoCircleFill from "@/icons/InfoCircleFill.vue";
+import DownloadIcon from "@/icons/DownloadIcon.vue";
+import {ScrollTo, Notice} from "../../share/Tools";
+
 export default {
   name: "loveliveTrends",
   setup () {
@@ -139,12 +141,6 @@ export default {
         content: "#1da1f2"
       }]
     })
-    const scrollToTop = inject('scrollToTop')
-    const notice = inject('notice')
-    return {
-      scrollToTop,
-      notice
-    }
   },
 
   components: {DownloadIcon, InfoCircleFill, ArrowLeft, CandlestickChart, Tmv2Chart},
@@ -232,20 +228,24 @@ export default {
   }),
   methods: {
     getDateInfo: function () {
-      fetch(this.settings.data.basePath + (process.env.NODE_ENV === "development" ? '/proxy.php?filename=lovelive_date' : '/static/lovelive_trends/date.json?' + Math.random())).then(async response => {
+      fetch(this.settings.basePath + (process.env.NODE_ENV === "development" ? '/proxy.php?filename=lovelive_date' : '/static/lovelive_trends/date.json?' + Math.random())).then(async response => {
         this.dateList = await response.json()
         if (this.dateList.length > 0) {
           this.getData()
         } else {
-          this.notice("没有数据", 'error')
+          Notice("没有数据", 'error')
         }
-      }).catch(e => this.notice(e, 'error'))
+      }).catch(e => {
+        Notice(String(e), 'error')
+      })
     },
     getData: function () {
-      fetch(this.settings.data.basePath + (process.env.NODE_ENV === "development" ? '/proxy.php?filename=lovelive_data&date=' + this.dateList[this.status.dateOrder] : '/static/lovelive_trends/' + this.dateList[this.status.dateOrder] + '.json')).then(async response => {
+      fetch(this.settings.basePath + (process.env.NODE_ENV === "development" ? '/proxy.php?filename=lovelive_data&date=' + this.dateList[this.status.dateOrder] : '/static/lovelive_trends/' + this.dateList[this.status.dateOrder] + '.json')).then(async response => {
         //status.userOrder = -1
         this.trendsData = await response.json()
-      }).catch(e => this.notice(e, 'error'))
+      }).catch(e => {
+        Notice(String(e), 'error')
+      })
     },
     createDate: function (timestamp) {
       let date = new Date(timestamp * 1000)

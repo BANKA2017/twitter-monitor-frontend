@@ -11,7 +11,7 @@
     </div>
     <div v-else-if="realList.length === 1">
       <div :style="`width: 100%; padding-bottom: ` + ( realList[0].origin_info_height / realList[0].origin_info_width * 100) +  `%; height: 0; border-radius: 14px 14px 14px 14px`" class="no-gutters card">
-        <el-image :alt="realList[0].uid+'_'+realList[0].tweet_id+'_'+0" :initial-index="0" :preview-src-list="previewList" :src="createRealMediaPath(realMediaPath, samePath.value,'tweets') +realList[0].url+':small'" class="border border-white" fit="cover" lazy style="width: 100%; height: 100%; position: absolute; border-radius: 14px 14px 14px 14px">
+        <el-image :alt="realList[0].uid+'_'+realList[0].tweet_id+'_'+0" :initial-index="0" :preview-src-list="previewList" :src="createRealMediaPath(realMediaPath, samePath.value,'tweets') +realList[0].url+':small'" class="border border-white" fit="cover" lazy style="width: 100%; height: 100%; position: absolute; border-radius: 14px 14px 14px 14px" append-to-body hide-on-click-modal>
           <template #placeholder>
             <!--TODO fix blurhash-->
             <!--<blur-hash-canvas v-if="realList[0].blurhash && realList[0].blurhash !== 'deleted'" :hash-text="realList[0].blurhash" class="full" :width="realList[0].origin_info_width" :height="realList[0].origin_info_height"/>-->
@@ -21,7 +21,7 @@
     </div>
     <div v-else-if="realList.length >= 2 && realList.length <= 4">
       <div class="card no-gutters" style="width: 100%; padding-bottom: 56.25%; height: 0; border-radius: 14px 14px 14px 14px">
-        <el-image v-for="(image, order) in realList" :key="order" :alt="image.uid+'_'+image.tweet_id+'_'+0" :initial-index="order" :preview-src-list="previewList" :src="createRealMediaPath(realMediaPath, samePath.value,'tweets') +image.url+':small'" :style="listStyle[realList.length-2][order]" class="border border-white" fit="cover" lazy>
+        <el-image v-for="(image, order) in realList" :key="order" :alt="image.uid+'_'+image.tweet_id+'_'+0" :initial-index="order" :preview-src-list="previewList" :src="createRealMediaPath(realMediaPath, samePath.value,'tweets') +image.url+':small'" :style="listStyle[realList.length-2][order]" class="border border-white" fit="cover" lazy append-to-body hide-on-click-modal>
           <template #placeholder>
             <!--<blur-hash-canvas class="full" :hash="image.blurhash" v-if="image.blurhash && image.blurhash !== 'deleted'" :hash-text="image.blurhash" :width="image.origin_info_width" :height="image.origin_info_height"/>-->
           </template>
@@ -33,13 +33,13 @@
 
 <script setup lang="ts">
 import {computed, PropType} from "vue";
-import {Media, MediaSize} from "@/type/Content";
+import {Media, MediaSize, OnlineMedia} from "@/type/Content";
 import {useStore} from "@/store";
 import {createRealMediaPath} from "@/share/Tools";
 
 const props = defineProps({
   list: {
-    type: Array as PropType<Media[]>,
+    type: Array as PropType<Media[] | OnlineMedia[]>,
     default: () => []
   },
   is_video: {
