@@ -35,9 +35,9 @@ import {useHead} from "@vueuse/head"
 import ArrowLeft from "@/icons/ArrowLeft.vue"
 import SinglePageHeader from "../components/SinglePageHeader.vue"
 import {useStore} from "@/store"
-import {controller, request} from "@/share/Fetch"
+import {request} from "@/share/Fetch"
 import {Stats} from "@/type/Content"
-import {ApiAccounts, ApiStats} from "@/type/Api"
+import {ApiStats} from "@/type/Api"
 import {Notice} from "@/share/Tools"
 export default defineComponent({
   components: {SinglePageHeader, ArrowLeft, Tmv2Chart, Tmv2Table},
@@ -79,7 +79,7 @@ export default defineComponent({
     }
 
     onMounted(async () => {
-      await request<ApiStats>(settings.value.basePath + '/api/v2/data/stats/', controller).then(response => {
+      await request<ApiStats>(settings.value.basePath + '/api/v2/data/stats/').then(response => {
         state.rawData = response.data
         if (!state.rawData.length) {
           Notice("chart: " + response.message, "warning");

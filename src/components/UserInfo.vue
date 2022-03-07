@@ -12,7 +12,7 @@
         </el-collapse-transition>
         <div class="row mx-2">
           <div :class="{'col-4': ((width > 768 && height > 50) || state.userInfo.banner === 0),}" v-if="!settings.displayPicture" style="width: calc(100% / 4); max-width: 100px; aspect-ratio: 1; align-items: center; display: flex; justify-content: center; margin: -50% 0">
-            <el-image class="rounded-circle" :src="createRealMediaPath(realMediaPath, samePath, 'userinfo')+state.userInfo.header" :preview-src-list="[createRealMediaPath(realMediaPath, samePath, 'userinfo')+state.userInfo.header.replace(/([\w]+)\.([\w]+)$/gm, `$1_reasonably_small.$2`)]" alt="Avatar" append-to-body hide-on-click-modal/>
+            <el-image class="rounded-circle" :src="createRealMediaPath(realMediaPath, samePath, 'userinfo')+state.userInfo.header.replace(/([\w]+)\.([\w]+)$/gm, `$1_reasonably_small.$2`)" :preview-src-list="[createRealMediaPath(realMediaPath, samePath, 'userinfo')+state.userInfo.header]" alt="Avatar" append-to-body hide-on-click-modal/>
           </div>
           <div :class="{ 'col-8': ((width > 768 && height > 50) || state.userInfo.banner === 0), 'col-12': !((width > 768 && height > 50) || state.userInfo.banner === 0), 'my-2': (height > 50 || state.userInfo.banner === 0), 'mt-5': ((height <= 50 || width <= 768) && state.userInfo.banner !== 0), }" style=" justify-content: center;">
             <h5 class="card-title mb-1 align-middle"><b>{{ state.userInfo.display_name }}</b><verified height="1em" status="text-primary" width="1.2em" class="ml-2 "/></h5>
@@ -44,7 +44,7 @@ import {useStore} from "@/store";
 import Verified from "@/icons/Verified.vue";
 import FullText from '@/components/FullText.vue'
 import Translate from "@/components/Translate.vue";
-import {request} from "@/share/Fetch";
+import {Controller, request} from "@/share/Fetch";
 import {ApiChartLegacy, ApiUserInfo} from "@/type/Api";
 import {Notice, createRealMediaPath} from "@/share/Tools";
 import {Chart, UserInfo} from "@/type/Content";
@@ -104,12 +104,17 @@ const state = reactive<{
   }
 })
 
+const controllerList = {
+  userInfo: new Controller(),
+  chart: new Controller()
+}
+
 const getUserInfo = (name: string | string[]) => {
   state.loading = true
   state.chartData = []
   if (route.name === 'no-name-status') {return}
   if (typeof name === "object") {Notice("Wrong name"); return}
-  request<ApiUserInfo>(settings.value.basePath + '/api/v2/data/userinfo/?name=' + name, controller).then(response => {
+  request<ApiUserInfo>(settings.value.basePath + '/api/v2/data/userinfo/?name=' + name, controllerList.userInfo).then(response => {
     state.userInfo = response.data
     if (response.code === 200) {
       //this.chart.legendName = {
@@ -126,11 +131,17 @@ const getUserInfo = (name: string | string[]) => {
       store.dispatch("setCoreValue", {key: 'userExists', value: false})
     }
     state.loading = false
-  }).catch(e => Notice(String(e), "error"))
+  }).catch(e => {
+    if (controllerList.userInfo.afterAbortSignal.aborted) {
+      Notice(t("public.loading"), "warning")
+    } else {
+      Notice(String(e), "error")
+    }
+  })
 }
 
 const createChart = (time: number = 0, refresh: boolean = false) => {
-  request<ApiChartLegacy>(settings.value.basePath + '/api/v2/data/chart/?uid=' + state.userInfo.uid_str + (time > 0 ? '&end=' + time : '') + (refresh ? '&refresh=1' : ''), controller).then(response => {
+  request<ApiChartLegacy>(settings.value.basePath + '/api/v2/data/chart/?uid=' + state.userInfo.uid_str + (time > 0 ? '&end=' + time : '') + (refresh ? '&refresh=1' : ''), controllerList.chart).then(response => {
     if (response.data.length) {
       state.latestChartTimestamp = Number(response.data.slice(-1)[0].timestamp)
     }
@@ -143,10 +154,14 @@ const createChart = (time: number = 0, refresh: boolean = false) => {
       state.chartExisted = false
     }
   }).catch(e => {
-    Notice(t("timeline.scripts.message.failed_to_generate_chart", [String(e)]), "error")
-    setTimeout(() => {
-      createChart(time, refresh)
-    }, 5000);
+    if (controllerList.chart.afterAbortSignal.aborted) {
+      Notice(t("public.loading"), "warning")
+    } else {
+      Notice(t("timeline.scripts.message.failed_to_generate_chart", [String(e)]), "error")
+      setTimeout(() => {
+        createChart(time, refresh)
+      }, 5000)
+    }
   })
 }
 

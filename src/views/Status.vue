@@ -27,7 +27,7 @@ import ArrowLeft from "@/icons/ArrowLeft.vue"
 import SinglePageHeader from "@/components/SinglePageHeader.vue"
 import {Status} from "@/type/Content"
 import {useStore} from "@/store"
-import {controller, request} from "@/share/Fetch"
+import {request} from "@/share/Fetch"
 import {ApiStatusLegacy} from "@/type/Api"
 import {Notice} from "@/share/Tools"
 
@@ -63,7 +63,7 @@ export default defineComponent({
     const settings = computed(() => store.state.settings)
 
     onMounted(() => {
-      request<ApiStatusLegacy>(settings.value.basePath + '/api/v2/data/status/', controller).then(response => {
+      request<ApiStatusLegacy>(settings.value.basePath + '/api/v2/data/status/').then(response => {
         state.rows = response.data
         if (!state.rows.length) {
           Notice("chart: " + response.message, "warning");

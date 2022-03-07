@@ -53,7 +53,7 @@ import {useHead} from "@vueuse/head"
 import ArrowClockwise from "@/icons/ArrowClockwise.vue"
 import SinglePageHeader from "../components/SinglePageHeader.vue"
 import {useStore} from "@/store"
-import {controller, request} from "@/share/Fetch"
+import {request} from "@/share/Fetch"
 import {ApiTrends} from "@/type/Api"
 import {Notice} from "@/share/Tools"
 export default defineComponent({
@@ -86,7 +86,7 @@ export default defineComponent({
     //}
 
     const getData = () => {
-      request<ApiTrends>(settings.value.basePath + '/api/v2/data/trends', controller).then(response => {
+      request<ApiTrends>(settings.value.basePath + '/api/v2/data/trends').then(response => {
         state.hashTagsRank24 = response.data.hashtag_list
         state.timeCountOrigin = response.data.tweet_time_list
         response.data.following.push(response.data.statuses)

@@ -13,7 +13,7 @@
   import {useHead} from "@vueuse/head";
   import {useStore} from "@/store";
   import {computed, onMounted, watch} from "vue";
-  import {controller, request} from "@/share/Fetch";
+  import {request} from "@/share/Fetch";
   import {ApiAccounts} from "@/type/Api";
   import {Notice} from "@/share/Tools";
   import {useI18n} from "vue-i18n";
@@ -115,7 +115,7 @@
         //updateHeightStatus
         //this.isUp();
         konamiCode()
-        await request<ApiAccounts>(settings.value.basePath + '/api/v2/data/accounts/', controller).then(response => {
+        await request<ApiAccounts>(settings.value.basePath + '/api/v2/data/accounts/').then(response => {
           store.dispatch({type: 'setCoreValue', key: 'names', value: response.data.account_info})
           store.dispatch("updateUserList")
           store.dispatch({type: 'setCoreValue', key: 'projects', value: response.data.projects})

@@ -11,10 +11,10 @@ const Trends = () => import("@/views/Trends.vue")
 //TODO update to TypeScript
 const Event = () => import("@/views/events/index.vue")
 const Annual2019 = () => import("@/views/events/annual2019.vue")
-const Annual2020 = () => import("@/views/events/annual2020.vue")
-const Annual2021 = () => import("@/views/events/annual2021.vue")
-const loveliveTrends = () => import("@/views/events/loveliveTrends.vue")
-const staffCandleStickPage = () => import("@/views/events/staffCandleStickPage.vue")
+//const Annual2020 = () => import("@/views/events/annual2020.vue")
+//const Annual2021 = () => import("@/views/events/annual2021.vue")
+//const loveliveTrends = () => import("@/views/events/loveliveTrends.vue")
+//const staffCandleStickPage = () => import("@/views/events/staffCandleStickPage.vue")
 const NotFound = () => import("@/views/NotFound.vue")
 const Settings = () => import("@/views/Settings.vue")
 //const PhotoPreview = () => import('@/views/TO_DEL_PhotoPreview.vue')
@@ -29,10 +29,10 @@ export default createRouter({
             name: 'mainEvents',
             children: [
                 {path: '2019', component: Annual2019, name: '2019'},
-                {path: '2020', component: Annual2020, name: '2020'},
-                {path: '2021', component: Annual2021, name: '2021'},
-                {path: 'lovelive_trends', component: loveliveTrends, name: 'lovelive_trends'},
-                {path: 'staff_data_page', component: staffCandleStickPage, name: 'staff_data_page'}
+                //{path: '2020', component: Annual2020, name: '2020'},
+                //{path: '2021', component: Annual2021, name: '2021'},
+                //{path: 'lovelive_trends', component: loveliveTrends, name: 'lovelive_trends'},
+                //{path: 'staff_data_page', component: staffCandleStickPage, name: 'staff_data_page'}
             ]
         },
         { path: '/api', component: Api, name: 'api'},

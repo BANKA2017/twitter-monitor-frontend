@@ -4,11 +4,6 @@
 
 declare module 'vue' {
   export interface GlobalComponents {
-    Annual2019: typeof import('./src/components/pages/events/annual2019.vue')['default']
-    Annual2020: typeof import('./src/components/pages/events/annual2020.vue')['default']
-    Annual2021: typeof import('./src/components/pages/events/annual2021.vue')['default']
-    BarRaceForAnnual2021: typeof import('./src/components/pages/events/modules/barRaceForAnnual2021.vue')['default']
-    BarStackChartForAnnual2021: typeof import('./src/components/pages/events/modules/barStackChartForAnnual2021.vue')['default']
     BlurHashCanvas: typeof import('./src/components/modules/blurHashCanvas.vue')['default']
     CandlestickChart: typeof import('./src/components/modules/candlestickChart.vue')['default']
     ElBacktop: typeof import('element-plus/es')['ElBacktop']
@@ -25,24 +20,17 @@ declare module 'vue' {
     ElTable: typeof import('element-plus/es')['ElTable']
     ElTableColumn: typeof import('element-plus/es')['ElTableColumn']
     ElTag: typeof import('element-plus/es')['ElTag']
-    Events: typeof import('./src/components/pages/events/index.vue')['default']
     FullText: typeof import('./src/components/FullText.vue')['default']
     HeatMapChart: typeof import('./src/components/modules/heatMapChart.vue')['default']
-    LineRaceChartForAnnual2021: typeof import('./src/components/pages/events/modules/lineRaceChartForAnnual2021.vue')['default']
     LinkList: typeof import('./src/components/LinkList.vue')['default']
     Loading: typeof import('element-plus/es')['ElLoadingDirective']
-    LoveliveTrends: typeof import('./src/components/pages/events/loveliveTrends.vue')['default']
     Navigation: typeof import('./src/components/Navigation.vue')['default']
-    Online: typeof import('./src/views/Online.vue')['default']
     PieChart: typeof import('./src/components/modules/pieChart.vue')['default']
     ProjectList: typeof import('./src/components/ProjectList.vue')['default']
     QuoteCard: typeof import('./src/components/QuoteCard.vue')['default']
     Search: typeof import('./src/components/Search.vue')['default']
     SearchTips: typeof import('./src/components/SearchTips.vue')['default']
     SinglePageHeader: typeof import('./src/components/SinglePageHeader.vue')['default']
-    StaffCandleStickPage: typeof import('./src/components/pages/events/staffCandleStickPage.vue')['default']
-    SunBurstChartForAnnual2021: typeof import('./src/components/pages/events/modules/sunBurstChartForAnnual2021.vue')['default']
-    Tmv2Chart: typeof import('./src/components/tmv2Chart.vue')['default']
     Tmv2ChartWithoutDataSet: typeof import('./src/components/Tmv2ChartWithoutDataSet.vue')['default']
     Tmv2Image: typeof import('./src/components/Tmv2Image.vue')['default']
     Tmv2Table: typeof import('./src/components/Tmv2Table.vue')['default']
@@ -53,8 +41,6 @@ declare module 'vue' {
     Tweets: typeof import('./src/components/Tweets.vue')['default']
     TwPolls: typeof import('./src/components/TwPolls.vue')['default']
     UserInfo: typeof import('./src/components/UserInfo.vue')['default']
-    UserSelector: typeof import('./src/components/pages/userSelector.vue')['default']
-    WordCloudChartForAnnual2021: typeof import('./src/components/pages/events/modules/wordCloudChartForAnnual2021.vue')['default']
   }
 }
 

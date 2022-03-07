@@ -55,7 +55,7 @@ import {onBeforeRouteLeave, onBeforeRouteUpdate, RouteLocationNormalized, useRou
 import {TweetType} from "@/type/State";
 import {TweetMode} from "@/type/State";
 import {Equal, Notice, NullSafeParams, ScrollTo} from "@/share/Tools";
-import {controller, request} from "@/share/Fetch";
+import {Controller, controller, request} from "@/share/Fetch";
 import {ApiTweets} from "@/type/Api";
 import TweetItem from "@/components/TweetItem.vue";
 import ArrowClockwise from "@/icons/ArrowClockwise.vue";
@@ -193,9 +193,14 @@ const routeCase = (to: RouteLocationNormalized) => {
   state.queryObject = queryStringObject
 }
 
+const controllerList = {
+  update: new Controller(),
+  loading: new Controller(),
+}
+
 const update = () => {
   state.loadingTimeline = true
-  request<ApiTweets>(state.url + '?' + state.queryObject.toString(), controller).then(response => {
+  request<ApiTweets>(state.url + '?' + state.queryObject.toString(), controllerList.update).then(response => {
     store.dispatch({
       type: 'setCoreValue',
       key: 'tweets',
@@ -214,8 +219,12 @@ const update = () => {
       router.replace({path: '/' + response.data.tweets[0].name + '/status/' + response.data.tweets[0].tweet_id_str})
     }
   }).catch(e => {
-    state.loadingTimeline =  false
-    Notice(String(e), 'error')
+    if (controllerList.update.afterAbortSignal.aborted) {
+      Notice(t("public.loading"), "warning")
+    } else {
+      state.loadingTimeline =  false
+      Notice(String(e), 'error')
+    }
   })
 }
 
@@ -231,7 +240,7 @@ const loading = (top: boolean = false) => {
       tmpQueryObject.set("refresh", '0')
       tmpQueryObject.set("tweet_id", state.bottomTweetId)
     }
-    request<ApiTweets>(state.url + '?' + tmpQueryObject.toString(), controller).then(response => {
+    request<ApiTweets>(state.url + '?' + tmpQueryObject.toString(), controllerList.loading).then(response => {
       if (top) {
         //TODO check count
         Notice(t("timeline.scripts.message.update_tweets", {count: response.data.tweets.length}), "success");//this.getUserInfo();if (response.data.top_tweet_id && response.data.top_tweet_id !== "0") {
@@ -262,7 +271,11 @@ const loading = (top: boolean = false) => {
       } else {
         state.loadingBottom = false
       }
-      Notice(String(e), "error")
+      if (controllerList.loading.afterAbortSignal.aborted) {
+        Notice(t("public.loading"), "warning")
+      } else {
+        Notice(String(e), "error")
+      }
     })
   } else {
     Notice(t("timeline.scripts.message.missing_parameter"), "error")
@@ -276,8 +289,8 @@ const emptyTranslateList = () => {
 //TODO fix unknown to no-name-status
 //TODO fix repeated request
 const routeRun = (to: RouteLocationNormalized, from: RouteLocationNormalized | {name: string}) => {
-  if (from.name === 'no-name-status' && to.name === 'name-status') {return}
-  //if (!RouterNameList.timeline.has(typeof to.name === 'string' ? to.name : '') || (RouterNameList.timeline.has(typeof to.name === 'string' ? to.name : '') && from.name === 'search')) {
+  if ((from.name === 'no-name-status' && to.name === 'name-status') || !RouterNameList.timeline.has(typeof to.name === 'string' ? to.name : '')) {return}
+  //if ( || (RouterNameList.timeline.has(typeof to.name === 'string' ? to.name : '') && from.name === 'search')) {
   //  return
   //}
   //search
