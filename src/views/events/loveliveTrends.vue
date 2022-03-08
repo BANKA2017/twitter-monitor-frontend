@@ -113,7 +113,7 @@
     </div>
     <transition name="el-fade-in">
       <div v-if="status.userOrder !== -1" class="el-backtop" style="right: 40px; bottom: 90px"
-           @click="()=>{scrollToTop();status.userOrder = -1}">
+           @click="()=>{ScrollTo();status.userOrder = -1}">
         <arrow-left height="1em" status="" width="1em"/>
       </div>
     </transition>
@@ -124,7 +124,6 @@
 import Tmv2Chart from "@/components/Tmv2ChartWithoutDataSet.vue";
 import CandlestickChart from "@/components/modules/candlestickChart.vue";
 import {mapState} from "vuex";
-import {inject} from "vue";
 import {useHead} from "@vueuse/head";
 import ArrowLeft from "@/icons/ArrowLeft.vue";
 import InfoCircleFill from "@/icons/InfoCircleFill.vue";

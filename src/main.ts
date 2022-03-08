@@ -54,7 +54,6 @@ import { createHead } from "@vueuse/head"
 import '@/registerServiceWorker.js'
 import {ScrollTo} from "@/share/Tools";
 
-
 router.afterEach(() => {
   ScrollTo(0)
 })

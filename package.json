@@ -11,6 +11,7 @@
   "dependencies": {
     "@highlightjs/vue-plugin": "^2.1.0",
     "@vueuse/head": "^0.7.2",
+    "blurhash": "^1.1.5",
     "bootstrap": "^4.6.0",
     "echarts": "^5.1.2",
     "echarts-wordcloud": "^2.0.0",
@@ -31,6 +32,7 @@
   },
   "devDependencies": {
     "@intlify/vite-plugin-vue-i18n": "^3.2.1",
+    "@types/echarts": "^4.9.13",
     "@types/node": "^17.0.17",
     "@types/twemoji-parser": "^13.1.1",
     "@vitejs/plugin-vue": "^2.0.1",

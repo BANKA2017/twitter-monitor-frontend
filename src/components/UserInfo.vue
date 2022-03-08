@@ -1,13 +1,10 @@
 <template>
   <div :style="{'position': 'sticky', 'top': '1.5rem'}">
     <el-skeleton :loading="state.loading" animated>
-      <!--TODO fix !displayPicture-->
-      <!--TODO replace .banner to cacheable extension for banner-->
-      <!--TODO fix banner for short screen_name-->
       <div class="card mb-4">
         <el-collapse-transition v-if="state.userInfo.banner !== 0">
           <div class="row no-gutters" v-show="isMobileRatio" :style="{'position': 'relative', 'aspect-ratio': !settings.displayPicture ? '3 / 1' : ''}">
-            <el-image v-if="!settings.displayPicture" :src="createRealMediaPath(realMediaPath, samePath, 'userinfo')+`pbs.twimg.com/profile_banners/`+state.userInfo.uid_str+`/`+state.userInfo.banner+`.banner`" :preview-src-list="[createRealMediaPath(realMediaPath, samePath, 'userinfo')+`pbs.twimg.com/profile_banners/`+state.userInfo.uid_str+`/`+state.userInfo.banner+`.banner`]" alt="Banner" style="position: absolute" class="col-12 card-img-top banner" fit="cover" lazy append-to-body hide-on-click-modal/>
+            <el-image v-if="!settings.displayPicture" :src="createRealMediaPath(realMediaPath, samePath, 'userinfo')+`pbs.twimg.com/profile_banners/`+state.userInfo.uid_str+`/`+state.userInfo.banner+`/banner.jpg`" :preview-src-list="[createRealMediaPath(realMediaPath, samePath, 'userinfo')+`pbs.twimg.com/profile_banners/`+state.userInfo.uid_str+`/`+state.userInfo.banner+`/banner.jpg`]" alt="Banner" style="position: absolute" class="col-12 card-img-top banner" fit="cover" lazy append-to-body hide-on-click-modal/>
           </div>
         </el-collapse-transition>
         <div class="row mx-2">
@@ -47,10 +44,11 @@ import Translate from "@/components/Translate.vue";
 import {Controller, request} from "@/share/Fetch";
 import {ApiChartLegacy, ApiUserInfo} from "@/type/Api";
 import {Notice, createRealMediaPath} from "@/share/Tools";
-import {Chart, UserInfo} from "@/type/Content";
+import {LegacyChart, UserInfo} from "@/type/Content";
 import {useI18n} from "vue-i18n";
-import {onBeforeRouteLeave, onBeforeRouteUpdate, useRoute, useRouter} from "vue-router";
+import {onBeforeRouteLeave, onBeforeRouteUpdate, RouteLocationNormalized, useRoute, useRouter} from "vue-router";
 import Tmv2Chart from "@/components/Tmv2ChartWithoutDataSet.vue";
+import {useHead} from "@vueuse/head";
 
 const { t } = useI18n()
 
@@ -70,12 +68,14 @@ const state = reactive<{
   loading: boolean;
   chartExisted: boolean;
   userInfo: Ref<UserInfo>;
-  chartData: Ref<Chart[]>;
+  chartData: Ref<LegacyChart[]>;
   latestChartTimestamp: Ref<Number>;
   labelMap: {[p in 'timestamp' | 'followers' | 'following' | 'statuses_count']: string}
+  title: Ref<string>
 }>({
   loading: true,
   chartExisted: true,
+  title: ref('Twitter Monitor'),
   userInfo: ref({
     uid: 0,
     uid_str: "",
@@ -92,7 +92,8 @@ const state = reactive<{
     locked: 0,
     deleted: 0,
     verified: 0,
-    description_entities: []
+    description_entities: [],
+
   }),
   chartData: ref([]),
   latestChartTimestamp: ref(0),
@@ -104,15 +105,20 @@ const state = reactive<{
   }
 })
 
+useHead({
+  title: computed(() => state.title)
+})
+
 const controllerList = {
   userInfo: new Controller(),
   chart: new Controller()
 }
 
-const getUserInfo = (name: string | string[]) => {
+const getUserInfo = (to: RouteLocationNormalized) => {
+  const name = to.params.name ? to.params.name.toString() : ''
   state.loading = true
   state.chartData = []
-  if (route.name === 'no-name-status') {return}
+  if (to.name === 'no-name-status') {return}
   if (typeof name === "object") {Notice("Wrong name"); return}
   request<ApiUserInfo>(settings.value.basePath + '/api/v2/data/userinfo/?name=' + name, controllerList.userInfo).then(response => {
     state.userInfo = response.data
@@ -124,6 +130,7 @@ const getUserInfo = (name: string | string[]) => {
       //};
       store.dispatch("setCoreValue", {key: 'userExists', value: true})
       store.dispatch("setCoreValue", {key: 'topTweetId', value: response.data.top})
+      state.title = (to.name === 'name-display' || to.name === 'name-status') ? state.userInfo.display_name + ' (@' + state.userInfo.name + ') / Twitter Monitor' : "Twitter Monitor"
       createChart()
     } else {
       Notice(response.message, "error")
@@ -168,22 +175,16 @@ const createChart = (time: number = 0, refresh: boolean = false) => {
 const controller = new AbortController
 
 onMounted(() => {
-  getUserInfo(route.params.name)
+  getUserInfo(route)
 })
 onBeforeRouteUpdate((to, from) => {
-  if (to.params.name !== from.params.name && (to.name === 'name-display' || to.name === 'name-status')) {
-    getUserInfo(to.params.name)
+  if ((to.name === 'name-status' && from.name === 'no-name-status') || (to.params.name !== from.params.name && (to.name === 'name-display' || to.name === 'name-status'))) {
+    getUserInfo(to)
   }
-  //TODO update title
-  //store.dispatch({
-  //  type: 'setCoreValue',
-  //  key: 'title',
-  //  value: !(to.name === 'name-display' || to.name === 'name-status') ? state.userInfo.display_name + ' (@' + state.userInfo.name + ') / Twitter Monitor' : "Twitter Monitor"
-  //})
 })
 onBeforeRouteLeave((to, from) => {
-  if (to.params.name !== from.params.name && (to.name === 'name-display' || to.name === 'name-status')) {
-    getUserInfo(to.params.name)
+  if ((to.name === 'name-status' && from.name === 'no-name-status') || (to.params.name !== from.params.name && (to.name === 'name-display' || to.name === 'name-status'))) {
+    getUserInfo(to)
   }
 })
 </script>

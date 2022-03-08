@@ -154,15 +154,15 @@ const routeCase = (to: RouteLocationNormalized) => {
       url += 'search/'
       queryStringObject.set('q', to.query.q ? <string>NullSafeParams(to.query.q, '') : <string>NullSafeParams(to.params.search, ''))
       if (to.query.advanced === '1') {
-        queryStringObject.set('text_or_mode', Equal(to.query.text_or_mode !== '0'))
-        queryStringObject.set('text_not_mode', Equal(to.query.text_not_mode !== '0'))
+        queryStringObject.set('text_or_mode', Equal(to.query.text_or_mode === '0'))
+        queryStringObject.set('text_not_mode', Equal(to.query.text_not_mode === '0'))
         queryStringObject.set('user', <string>NullSafeParams(to.query.user, ''))
-        queryStringObject.set('user_and_mode', Equal(to.query.user_and_mode !== '0'))
-        queryStringObject.set('user_not_mode', Equal(to.query.user_not_mode !== '0'))
+        queryStringObject.set('user_and_mode', Equal(to.query.user_and_mode === '0'))
+        queryStringObject.set('user_not_mode', Equal(to.query.user_not_mode === '0'))
         queryStringObject.set('tweet_type', (to.query.text_or_mode && Number(to.query.text_or_mode) > -1 && Number(to.query.text_or_mode) < 3) ? String(Number(to.query.tweet_type)) : '0')//0-> all, 1-> origin, 2-> retweet
-        queryStringObject.set('tweet_media', Equal(to.query.tweet_media !== '0'))//media
-        queryStringObject.set('start', (to.query.start === "" ? -1 : Date.parse(to.query.start + ' GMT' + userTimeZone.value) / 1000).toString())
-        queryStringObject.set('end', (to.query.end === "" ? -1 : Date.parse(to.query.end + ' GMT' + userTimeZone.value) / 1000).toString())
+        queryStringObject.set('tweet_media', Equal(to.query.tweet_media === '0'))//media
+        queryStringObject.set('start', (!to.query.start ? -1 : Date.parse(to.query.start + ' GMT' + userTimeZone.value) / 1000).toString())
+        queryStringObject.set('end', (!to.query.end ? -1 : Date.parse(to.query.end + ' GMT' + userTimeZone.value) / 1000).toString())
         queryStringObject.set('order', Equal(to.query.order === '1'))
         queryStringObject.set('advanced', '1')
         if (adminMode) {
@@ -242,7 +242,6 @@ const loading = (top: boolean = false) => {
     }
     request<ApiTweets>(state.url + '?' + tmpQueryObject.toString(), controllerList.loading).then(response => {
       if (top) {
-        //TODO check count
         Notice(t("timeline.scripts.message.update_tweets", {count: response.data.tweets.length}), "success");//this.getUserInfo();if (response.data.top_tweet_id && response.data.top_tweet_id !== "0") {
         if (response.data.top_tweet_id !== '0') {
           state.topTweetId = response.data.top_tweet_id;
@@ -289,7 +288,7 @@ const emptyTranslateList = () => {
 //TODO fix unknown to no-name-status
 //TODO fix repeated request
 const routeRun = (to: RouteLocationNormalized, from: RouteLocationNormalized | {name: string}) => {
-  if ((from.name === 'no-name-status' && to.name === 'name-status') || !RouterNameList.timeline.has(typeof to.name === 'string' ? to.name : '')) {return}
+  if ((from.name === 'no-name-status' && to.name === 'name-status') || (!RouterNameList.timeline.has(typeof to.name === 'string' ? to.name : '') && to.name !== 'main')) {return}
   //if ( || (RouterNameList.timeline.has(typeof to.name === 'string' ? to.name : '') && from.name === 'search')) {
   //  return
   //}

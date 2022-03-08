@@ -4,7 +4,7 @@
 
 declare module 'vue' {
   export interface GlobalComponents {
-    BlurHashCanvas: typeof import('./src/components/modules/blurHashCanvas.vue')['default']
+    BlurHashCanvas: typeof import('./src/components/BlurHashCanvas.vue')['default']
     CandlestickChart: typeof import('./src/components/modules/candlestickChart.vue')['default']
     ElBacktop: typeof import('element-plus/es')['ElBacktop']
     ElButton: typeof import('element-plus/es')['ElButton']
@@ -24,6 +24,7 @@ declare module 'vue' {
     HeatMapChart: typeof import('./src/components/modules/heatMapChart.vue')['default']
     LinkList: typeof import('./src/components/LinkList.vue')['default']
     Loading: typeof import('element-plus/es')['ElLoadingDirective']
+    LocalRouter: typeof import('./src/components/LocalRouter.vue')['default']
     Navigation: typeof import('./src/components/Navigation.vue')['default']
     PieChart: typeof import('./src/components/modules/pieChart.vue')['default']
     ProjectList: typeof import('./src/components/ProjectList.vue')['default']
@@ -34,6 +35,7 @@ declare module 'vue' {
     Tmv2ChartWithoutDataSet: typeof import('./src/components/Tmv2ChartWithoutDataSet.vue')['default']
     Tmv2Image: typeof import('./src/components/Tmv2Image.vue')['default']
     Tmv2Table: typeof import('./src/components/Tmv2Table.vue')['default']
+    TO_FIX_Tmv2Chart: typeof import('./src/components/TO_FIX_Tmv2Chart.vue')['default']
     Translate: typeof import('./src/components/Translate.vue')['default']
     TwCard: typeof import('./src/components/TwCard.vue')['default']
     TweetImages: typeof import('./src/components/TweetImages.vue')['default']

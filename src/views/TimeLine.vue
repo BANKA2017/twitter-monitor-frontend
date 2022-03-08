@@ -30,19 +30,7 @@
       <div id="links" class="col-sm-12 col-md-2">
         <div :style="{'position': 'sticky', 'top': '1.5rem'}">
           <project-list/>
-          <div class="mb-1 col-10 col-md-12" style="padding-left: 0;">
-            <router-link class="text-decoration-none badge badge-pill badge-primary mr-1" to="/search/">{{ t("timeline.side_tags.search") }}</router-link>
-            <router-link class="text-decoration-none badge badge-pill badge-primary mr-1" to="/settings/" >{{ t("timeline.side_tags.settings") }}</router-link>
-            <router-link class="text-decoration-none badge badge-pill badge-primary mr-1" to="/about/">{{ t("timeline.side_tags.about") }}</router-link>
-            <router-link class="text-decoration-none badge badge-pill badge-primary mr-1" to="/i/stats/">{{ t("timeline.side_tags.stats") }}</router-link>
-            <router-link class="text-decoration-none badge badge-pill badge-primary mr-1" to="/i/status/">{{ t("timeline.side_tags.status") }}</router-link>
-            <router-link class="text-decoration-none badge badge-pill badge-primary mr-1" to="/api/">{{ t("timeline.side_tags.api") }}</router-link>
-            <router-link class="text-decoration-none badge badge-pill badge-primary mr-1" to="/i/online">{{ t("timeline.side_tags.media_download_tool") }}</router-link>
-            <!--TODO RSS-->
-            <!--<a :href="settings.basePath + `/api/v2/rss/` + info.name + `.xml`" target="_blank"><span
-               v-if="!hidden && (tweetStatus.displayType === 'timeline' || tweetStatus.displayType === 'status')"
-               class="text-decoration-none text-white badge badge-pill badge-primary mx-1">{{ t("timeline.side_tags.rss") }}</span></a>-->
-          </div>
+          <local-router class="mb-1 col-10 col-md-12" style="padding-left: 0;" />
           <hr class="my-4">
           <link-list/>
         </div>
@@ -64,8 +52,9 @@ import Search from "@/components/Search.vue";
 import Tweets from "@/components/Tweets.vue";
 import { useRoute } from "vue-router";
 import BoxArrowUpRight from "@/icons/BoxArrowUpRight.vue";
+import LocalRouter from "@/components/LocalRouter.vue";
 export default defineComponent({
-  components: {BoxArrowUpRight, Tweets, Search, UserInfo, ArrowClockwise, LinkList, ProjectList, Navigation},
+  components: {LocalRouter, BoxArrowUpRight, Tweets, Search, UserInfo, ArrowClockwise, LinkList, ProjectList, Navigation},
   setup() {
     const { t } = useI18n()
     const store = useStore()
@@ -73,7 +62,6 @@ export default defineComponent({
     const userExists = computed(() => store.state.userExists)
     const settings = computed(() => store.state.settings)
     const tweetType = computed(() => store.state.tweetType)
-    const userInfo = computed(() => store.state.u)
     const swapDisplayPictureStatus = () => {
       store.dispatch('swapDisplayPictureStatus')
     }

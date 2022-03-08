@@ -49,12 +49,14 @@ export default defineComponent({
     //  description: "这是以周为更新周期自动生成的报告，报告仅供参考，Twitter monitor 不对其内容负责",
     //  update_time: "2021-04-10",
     //  link: "/i/events/lovelive_trends/"
-    //},{
-    //  title: "STAFF 数据",
-    //  description: "这是以10分钟为更新周期、以天为最小单位自动生成的报告，报告仅供参考，Twitter monitor 不对其内容负责，未来将会合并到其他板块",
-    //  update_time: "2021-09-07",
-    //  link: "/i/events/staff_data_page/"
-    //},{
+    //},
+    {
+      title: "STAFF 数据",
+      description: "这是以10分钟为更新周期、以天为最小单位自动生成的报告，报告仅供参考，Twitter monitor 不对其内容负责，未来将会合并到其他板块",
+      update_time: "2021-09-07",
+      link: "/i/events/staff_data_page/"
+    },
+    //{
     //  title: "2021年度统计",
     //  description: "Twitter monitor 2021年度报告",
     //  update_time: "2021-12-30",

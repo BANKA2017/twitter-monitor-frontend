@@ -23,7 +23,8 @@ export interface UserInfo {
   description_entities: Entity[]
 }
 
-export interface Chart {
+
+export interface LegacyChart {
   timestamp: number | string
   followers: number
   following: number
@@ -169,4 +170,20 @@ export interface Stats {
 export interface HashtagList {
   name: string
   value: number
+}
+
+export interface AdvancedSearchQuery {
+  q?: string
+  text_or_mode?: string
+  text_not_mode?: string
+  user?: string
+  user_and_mode?: string
+  user_not_mode?: string
+  tweet_type?: string
+  tweet_media?: string
+  start?: string
+  end?: string
+  order?: string
+  advanced?: string
+  hidden?: string
 }

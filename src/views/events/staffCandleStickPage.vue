@@ -30,13 +30,18 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import CandlestickChart from "@/components/modules/candlestickChart.vue";
-import {mapState} from "vuex";
-import {inject} from "vue";
+import {computed, defineComponent, reactive, ref, Ref, toRefs, watch} from "vue";
 import {useHead} from "@vueuse/head";
-export default {
-  name: "staffCandleStickPage",
+import {useStore} from "@/store";
+import {Controller, request} from "@/share/Fetch";
+import {Notice} from "@/share/Tools";
+import {useI18n} from "vue-i18n";
+import {ApiStaffData} from "@/type/Api";
+
+export default defineComponent({
+  components: {CandlestickChart},
   setup () {
     useHead({
       title: "部分官推数据",
@@ -45,14 +50,8 @@ export default {
         content: "#1da1f2"
       }]
     })
-    const notice = inject('notice')
-    return {
-      notice
-    }
-  },
-  components: {CandlestickChart},
-  data: () => ({
-    staffList: {
+
+    const staffList = {
       "BanG Dream!": [
         "bang_dream_info",
         "bang_dream_gbp",
@@ -68,27 +67,45 @@ export default {
         "nanaon_official",
         "227keisanchu"
       ]
-    },
-    activeStaff: "",
-    activeData: {},
-    lock: true,
-  }),
-  computed: mapState({
-    settings: 'settings',
-    candleData: function () {
-      let tmpCandleData = {
+    }
+    const state = reactive<{
+      activeStaff: Ref<string>
+      activeData: Ref<ApiStaffData["data"]>
+      lock: Ref<boolean>
+    }>({
+      activeStaff: ref(''),
+      activeData: ref({
+        display_name: '',
+        display_name_list: [],
+        name: '',
+        project: '',
+        uid: '',
+        followers: {},
+        tweets_daily: {}
+      }),
+      lock: ref(true)
+    })
+
+    const {t} = useI18n()
+    const store = useStore()
+    const settings = computed(() => store.state.settings)
+    const candleData = computed(() => {
+      let tmpCandleData: {
+        date: string[];
+        series: number[][]
+      } = {
         date: [],
         series: [],
       }
-      if (this.activeData !== {}) {
+      if (state.activeData.name) {
         //date
-        tmpCandleData.date = Object.keys(this.activeData.followers)
+        tmpCandleData.date = Object.keys(state.activeData.followers)
         //followers
         tmpCandleData.series = tmpCandleData.date.map(x => ([
-          this.activeData.followers[x].start,
-          this.activeData.followers[x].end,
-          this.activeData.followers[x].highest,
-          this.activeData.followers[x].lowest,
+          state.activeData.followers[x].start,
+          state.activeData.followers[x].end,
+          state.activeData.followers[x].highest,
+          state.activeData.followers[x].lowest,
         ]))
         tmpCandleData.date = tmpCandleData.date.map(x => {
           let tmpX = [...(x + '')]
@@ -96,23 +113,28 @@ export default {
         })
       }
       return tmpCandleData
+    })
+
+    watch(() => state.activeStaff, () => {
+      fetchData()
+    })
+
+    const controller = new Controller()
+    const fetchData =  () => {
+      request<ApiStaffData>(settings.value.basePath + '/static/trends/' + state.activeStaff + '.json', controller).then(response => {
+        state.activeData =  response.data
+        state.lock = false
+      }).catch(e => {
+        if (controller.afterAbortSignal.aborted) {
+          Notice(t("public.loading"), "warning")
+        } else {
+          Notice(String(e), 'error')
+        }
+      })
     }
-  }),
-  watch: {
-    "activeStaff": function () {
-      this.fetchData()
-    }
-  },
-  methods: {
-    fetchData: function () {
-      fetch(this.settings.data.basePath + (process.env.NODE_ENV === "development" ? '/proxy.php?filename=staff_data&name=' + this.activeStaff : '/static/trends/' + this.activeStaff + '.json')).then(async response => {
-        //status.userOrder = -1
-        this.activeData = (await response.json()).data
-        this.lock = false
-      }).catch(e => this.notice(e, 'error'))
-    }
+    return {...toRefs(state), candleData, staffList}
   }
-}
+})
 </script>
 
 <style scoped>

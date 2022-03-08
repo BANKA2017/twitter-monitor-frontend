@@ -22,6 +22,7 @@ import {
   DataZoomSliderComponent,
 } from "echarts/components";
 import VChart from "vue-echarts";
+import {useI18n} from "vue-i18n";
 
 use([
   CanvasRenderer,
@@ -39,6 +40,10 @@ use([
 ]);
 export default {
   name: "candlestickChart",
+  setup() {
+    const {t} = useI18n()
+    return {t}
+  },
   components: {
     VChart
   },
@@ -201,8 +206,8 @@ export default {
   computed: {
     computedOptions: function () {
       let tmpOptions = this.options
-      tmpOptions.legend.data[0] = this.$t("candlestick_chart.chart.candle_sticks")
-      tmpOptions.series[0].name = this.$t("candlestick_chart.chart.candle_sticks")
+      tmpOptions.legend.data[0] = this.t("candlestick_chart.chart.candle_sticks")
+      tmpOptions.series[0].name = this.t("candlestick_chart.chart.candle_sticks")
       tmpOptions.xAxis.data = this.xAxisData
       tmpOptions.series[0].data = this.dataArray
       if (this.zoom) {

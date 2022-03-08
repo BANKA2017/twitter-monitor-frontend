@@ -6,7 +6,6 @@
         <h6 class="card-subtitle mb-2 text-muted">
           {{ t("search.tips.tips_sub_title") }}
         </h6>
-        <!--TODO TRANSLATE IT-->
         <ul class="card-body">
           <i18n-t keypath="search.tips.line1" tag="li">
             <template #at><code>@</code></template>

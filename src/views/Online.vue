@@ -65,17 +65,19 @@ import {useHead} from "@vueuse/head"
 import SearchIcon from "@/icons/SearchIcon.vue"
 import {useStore} from "@/store";
 import {OnlineMedia} from "@/type/Content";
-import {controller, request} from "@/share/Fetch";
+import {Controller, request} from "@/share/Fetch";
 import {ApiOnline} from "@/type/Api";
 import {Notice} from "@/share/Tools";
 import {onBeforeRouteUpdate, useRoute, useRouter} from "vue-router";
 import {RouterNameList} from "@/share/Content";
+import {useI18n} from "vue-i18n";
 export default defineComponent({
   components: {SearchIcon, Navigation, ImageList},
   setup () {
     useHead({
       title: '媒体加载器',
     })
+    const {t} = useI18n()
     const route = useRoute()
     const router = useRouter()
     const store = useStore()
@@ -95,7 +97,8 @@ export default defineComponent({
       load: ref(false),
       video: false,
     })
-    //TODO cancel controller
+
+    const controller = new Controller()
     const fetchMedia = () => {
       state.load = true
       state.media = []
@@ -117,8 +120,12 @@ export default defineComponent({
         }
         state.load = false
       }).catch(e => {
-        Notice(e, "error")
-        state.load = false
+        if (controller.afterAbortSignal.aborted) {
+          Notice(t("public.loading"), "warning")
+        } else {
+          Notice(e, "error")
+          state.load = false
+        }
       })
     }
 
@@ -176,7 +183,7 @@ export default defineComponent({
         router.push('/i/online/' + state.tweet_id)
       }
     }
-    //TODO fix multi requests
+
     onMounted(() =>  {
       routeCase()
     })

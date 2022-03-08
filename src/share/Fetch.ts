@@ -1,6 +1,6 @@
 //export const controller = new AbortController
 export class Controller {
-  private controllerHandle: AbortController[];
+  private readonly controllerHandle: AbortController[];
   constructor() {
     this.controllerHandle = [new AbortController()]
   }

@@ -22,16 +22,15 @@ import {
   //DataZoomSliderComponent,
 } from "echarts/components";
 import VChart from "vue-echarts";
-import {computed, Prop, PropType, reactive} from "vue";
-import {Chart} from "@/type/Content";
-import {
-  GridOption,
-  LegendOption, SeriesOption,
-  TitleOption,
-  TooltipOption,
-  XAXisOption,
-  YAXisOption
-} from "echarts/types/dist/shared";
+import {computed, PropType, reactive} from "vue";
+//import {
+//  GridOption,
+//  LegendOption, SeriesOption,
+//  TitleOption,
+//  TooltipOption,
+//  XAXisOption,
+//  YAXisOption
+//} from "echarts/types/dist/shared";
 
 use([
   CanvasRenderer,
@@ -89,7 +88,7 @@ const props = defineProps({
     default: '280px',
   },
   chartType: {
-    type: String as PropType<SeriesOption["type"]>,
+    type: String,// as PropType<SeriesOption["type"]>,
     default: "bar"
   },
   chartArea: {
@@ -124,10 +123,10 @@ const props = defineProps({
 
 const state = reactive<{
   options: {
-    title: TitleOption
-    tooltip: TooltipOption
-    legend: LegendOption
-    grid: GridOption
+    title: any//TitleOption
+    tooltip: any//TooltipOption
+    legend: any//LegendOption
+    grid: any//GridOption
     color: string[]//TODO fix
     xAxis: any//TODO fix
     yAxis: any//TODO fix

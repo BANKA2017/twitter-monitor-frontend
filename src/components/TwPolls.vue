@@ -64,10 +64,7 @@ const eta = computed(() => {
     return t("polls.vote", {count: pollCount.value}, pollCount.value > 1 ? 2 : 1) + ' · ' + t("polls.final_results");
   } else if (etaSeconds.value <= 0) {
     return t("polls.vote", {count: pollCount.value}, pollCount.value > 1 ? 2 : 1) + ' · ' + t("polls.wait_for_sync");
-  }
-
-  //TODO 能不能压缩一下?
-  else if (etaSeconds.value < 60) {
+  } else if (etaSeconds.value < 60) {
     return etaContent(1)
   } else if (etaSeconds.value < 3600) {
     return etaContent(60)

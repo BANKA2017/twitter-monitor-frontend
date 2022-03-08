@@ -1,19 +1,19 @@
 import {
   AccountList,
-  Chart,
+  LegacyChart,
   HashtagList,
   OnlineMedia,
   Stats,
   Status,
   Tweet,
-  UserInfo
+  UserInfo,
 } from "@/type/Content";
 
 export interface Api<T> {
   code: number
   message: string
   query: string
-  version: 'v2' | 'v3' | 'test'
+  version: 'v2' | 'v3' | 'test' | 'compat_v3'
   data: T
 }
 
@@ -51,9 +51,9 @@ export interface ApiStatusLegacy extends Api<Status[]> {}
 export interface ApiStats extends Api<Stats[]> {}
 
 //TODO new api
-export interface ApiChart extends Api<string[] | number[]> {}
+export interface ApiChart extends Api<(string | number)[][]> {}
 
-export interface ApiChartLegacy extends Api<Chart[]> {}
+export interface ApiChartLegacy extends Api<LegacyChart[]> {}
 
 export interface ApiTrends extends Api<{
   timestamp: number
@@ -82,3 +82,27 @@ export interface ApiHashtagList extends Api<{
   start: number
   end: number
 }> {}
+
+export interface ApiStaffData {
+  data: {
+    display_name: string
+    display_name_list: string[]
+    name: string
+    project: string
+    uid: string
+    followers: {[p: string]: {start: number; highest: number; lowest: number; end: number}}
+    tweets_daily: {[p: string]: {
+      card: {[q: string]: number}
+      count: number
+      hour_count: number[]
+      link: string[]
+      media: number
+      origin: number
+      quote_status_count: number
+      retweet: number
+      tag: string[]
+      video_count: number
+    }}
+  }
+  range: number[]
+}

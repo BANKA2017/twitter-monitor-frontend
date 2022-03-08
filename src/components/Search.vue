@@ -126,8 +126,8 @@ import {useI18n} from "vue-i18n";
 import {computed, reactive, ref, Ref, watch,} from "vue";
 import {useStore} from "@/store";
 import {useRoute, useRouter} from "vue-router";
-import {userListInterface} from "@/type/State";
 import {Equal} from "@/share/Tools";
+import {AdvancedSearchQuery} from "@/type/Content";
 
 const {t} = useI18n()
 const state = reactive<{
@@ -185,25 +185,25 @@ watch(() => state.mode, () => {
     }
   }
 })
-//TODO auto insert to default data from route
-const queryObject = computed((): {
-  q: string
-  text_or_mode?: string
-  text_not_mode?: string
-  user?: string
-  user_and_mode?: string
-  user_not_mode?: string
-  tweet_type?: string
-  tweet_media?: string
-  start?: string
-  end?: string
-  order?: string
-  advanced?: '1'
-  hidden?: string
-} => {
+
+const defaultAdvancedSearchQueryValues: AdvancedSearchQuery = {
+  q: '',
+  text_or_mode: '0',
+  text_not_mode: '0',
+  user: '',
+  user_and_mode: '0',
+  user_not_mode: '0',
+  tweet_type: '0',
+  tweet_media: '0',
+  start: '',
+  end: '',
+  order: '0',
+  advanced: '1',
+  hidden: '0'
+}
+const queryObject = computed((): AdvancedSearchQuery => {
   if (state.mode === 2) {
-    //TODO 优化query string
-    return {
+    let tmpQueryObject: AdvancedSearchQuery = {
       q: state.advancedSearch.keywords.text.trim(),
       text_or_mode: Equal(state.advancedSearch.keywords.orMode),
       text_not_mode: Equal(state.advancedSearch.keywords.notMode),
@@ -215,9 +215,18 @@ const queryObject = computed((): {
       start: state.advancedSearch.start,
       end: state.advancedSearch.end,
       order: Equal(state.advancedSearch.order),
-      advanced: '1',
       hidden: Equal(state.advancedSearch.hidden)
     }
+    let returnQueryObject: AdvancedSearchQuery = {
+      advanced: '1'//TODO fix type
+    }
+    let queryKey: keyof AdvancedSearchQuery
+    for (queryKey in tmpQueryObject) {
+      if (tmpQueryObject[queryKey] !== defaultAdvancedSearchQueryValues[queryKey] && tmpQueryObject[queryKey] !== undefined) {
+        returnQueryObject[queryKey] = tmpQueryObject[queryKey]
+      }
+    }
+    return returnQueryObject
   } else {
     return {q: state.keywords.trim()}// + ((this.name.length && !RegExp('@' + this.name).test(state.keywords)) ? ' @' + this.name : '')
   }

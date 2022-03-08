@@ -4,6 +4,7 @@
     <div class="row">
       <div class="col-md-6">
         <project-list :on-main="true"/>
+        <local-router class="mt-3" style="padding-left: 5px" />
         <link-list style="padding-left: 5px" />
       </div>
       <div class="col-md-6">
@@ -20,8 +21,9 @@ import WordCloudChartForAnnual2021 from "@/views/events/modules/wordCloudChartFo
 import Tweets from "@/components/Tweets.vue";
 import ProjectList from "@/components/ProjectList.vue";
 import LinkList from "@/components/LinkList.vue";
+import LocalRouter from "@/components/LocalRouter.vue";
 export default defineComponent({
-  components: {LinkList, ProjectList, Tweets, WordCloudChartForAnnual2021, SinglePageHeader},
+  components: {LocalRouter, LinkList, ProjectList, Tweets, WordCloudChartForAnnual2021, SinglePageHeader},
 })
 </script>
 
