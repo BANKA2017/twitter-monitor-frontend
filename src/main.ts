@@ -57,12 +57,8 @@ import { useRegisterSW } from 'virtual:pwa-register/vue'
 import {Notice} from "@/share/Tools";
 
 const updateSW = registerSW({
-  onNeedRefresh() {
-    Notice('需要刷新', 'success')
-  },
-  onOfflineReady() {
-    Notice('已离线', 'warning')
-  }
+  onNeedRefresh() {},
+  onOfflineReady() {}
 })
 useRegisterSW()
 
