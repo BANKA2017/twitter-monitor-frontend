@@ -170,7 +170,8 @@
         "default_api_path": "默認API目錄: {0}",
         "media_path": "媒體目錄",
         "default_media_path": "默認媒體目錄: {0}",
-        "auto_refresh": "自動刷新推文",
-        "auto_load_tweets": "到達底部自動加載更多"
+        "auto_refresh": "自動刷新時間線",
+        "auto_load_tweets": "到達底部自動加載更多",
+        "load_conversation": "在狀態中加載對話"
     }
 }

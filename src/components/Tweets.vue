@@ -56,7 +56,7 @@ import {TweetType} from "@/type/State";
 import {TweetMode} from "@/type/State";
 import {Equal, Notice, NullSafeParams, ScrollTo} from "@/share/Tools";
 import {Controller, controller, request} from "@/share/Fetch";
-import {ApiTweets} from "@/type/Api";
+import {ApiTweets, ApiUserInfo} from "@/type/Api";
 import TweetItem from "@/components/TweetItem.vue";
 import ArrowClockwise from "@/icons/ArrowClockwise.vue";
 import {RouterNameList} from "@/share/Content";
@@ -64,7 +64,7 @@ const {t} = useI18n()
 const route = useRoute()
 const router = useRouter()
 const store = useStore()
-const userExists = computed(() => store.state.userExists)
+const now = computed(() => store.state.now)
 const settings = computed(() => store.state.settings)
 const tweetModeValue = computed(() => store.state.tweetMode)
 const tweetTypeValue = computed(() => store.state.tweetType)
@@ -97,6 +97,8 @@ const state = reactive<{
   //top and bottom
   topTweetId: string
   bottomTweetId: string
+  //refresh flag
+  refreshFlag: Date
 }>({
   url: ref(''),
   queryObject: new URLSearchParams(),
@@ -107,6 +109,7 @@ const state = reactive<{
   moreTweets: false,
   topTweetId: '0',
   bottomTweetId: '0',
+  refreshFlag: new Date()
 })
 
 watch(height, () => {
@@ -175,6 +178,7 @@ const routeCase = (to: RouteLocationNormalized) => {
     case "name-status":
       url += 'tweets/'
       queryStringObject.set('is_status', '1')
+      queryStringObject.set('load_conversation', Equal(settings.value.loadConversation))
       queryStringObject.set('tweet_id', <string>NullSafeParams(to.params.status, ''))
       setTweetMode('status')
       break
@@ -215,9 +219,6 @@ const update = () => {
     }
     state.reload = (![200, 404, 403].includes(response.code))
     state.loadingTimeline = false
-    if (route.name === 'no-name-status' && response.data.tweets.length) {
-      router.replace({path: '/' + response.data.tweets[0].name + '/status/' + response.data.tweets[0].tweet_id_str})
-    }
   }).catch(e => {
     if (controllerList.update.afterAbortSignal.aborted) {
       Notice(t("public.loading"), "warning")
@@ -228,15 +229,15 @@ const update = () => {
   })
 }
 
-const loading = (top: boolean = false) => {
+const loading = (top: boolean = false, mute: boolean = false) => {
   if (state.topTweetId && state.bottomTweetId) {
     let tmpQueryObject = state.queryObject
     if (top) {
-      state.loadingTop =  true
+      state.loadingTop = !mute
       tmpQueryObject.set("refresh", '1')
       tmpQueryObject.set("tweet_id", state.topTweetId)
     } else {
-      state.loadingBottom =  true
+      state.loadingBottom = !mute
       tmpQueryObject.set("refresh", '0')
       tmpQueryObject.set("tweet_id", state.bottomTweetId)
     }
@@ -251,7 +252,7 @@ const loading = (top: boolean = false) => {
           key: 'tweets',
           value: [...response.data.tweets, ...tweets.value]
         })
-        state.loadingTop =  false
+        state.loadingTop = false
       } else {
         state.moreTweets = response.data.hasmore;
         if (response.data.bottom_tweet_id !== '0') {
@@ -309,9 +310,19 @@ const routeRun = (to: RouteLocationNormalized, from: RouteLocationNormalized | {
     state.loadingTimeline = false
   }
 }
+//auto refresh
+const AutoRefresh = () => {
+  console.log(now.value, state.refreshFlag)
+  if (settings.value.autoRefresh && (Number(now.value) - Number(state.refreshFlag)) > 30000) {
+    loading(true, true)
+    state.refreshFlag = now.value
+  }
+  setTimeout(() => AutoRefresh(), 1000)
+}
 //first entry
 onMounted(()  => {
   routeRun(route, {name: 'everywhere'})
+  //AutoRefresh()
 })
 //update
 //无法监听跨路由

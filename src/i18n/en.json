@@ -170,7 +170,8 @@
         "default_api_path": "Default API path: {0}",
         "media_path": "Media path",
         "default_media_path": "Default media path: {0}",
-        "auto_refresh": "Auto refresh tweets",
-        "auto_load_tweets": "Auto load more tweets in bottom"
+        "auto_refresh": "Auto refresh timeline",
+        "auto_load_tweets": "Auto load more tweets in bottom",
+        "load_conversation": "Load conversation in tweet status"
     }
 }

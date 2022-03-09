@@ -39,9 +39,6 @@ check more in `/src/i18n/`, base language is **Chinese simplified（zh-hans）**
 
 [Twitter Monitor](https://github.com/BANKA2017/twitter-monitor)
 
-## Known issues
-- use default settings before loading settings from LocalStorage
-
 ## More
 
 >When using history mode, the URL will look "normal," e.g. <http://oursite.com/user/id>. Beautiful!
@@ -85,8 +82,25 @@ check more in `/src/i18n/`, base language is **Chinese simplified（zh-hans）**
 - 日本語 (ja) (根本没有)
 - 한국어 (ko) (根本没有)
 
-## 已知的问题
-- 从 LocalStorage 加载设置前会使用默认配置
+## 更多
+
+本项目默认使用 `vue-router` 的 `history` 模式，请自行参考 `Vue` 官网进行服务器的配置，本项目自带一个 `vercel` 的配置文件
+
+若需要使用 `hash` 模式，请自行修改 `/src/router/index.ts` 文件中的相关代码，我们不对 `hash` 模式下的代码的可用性负责
+
+```typescript
+// /src/router/index.ts
+// history
+export default createRouter({
+  history: createWebHistory('/'),
+  routes: [...]
+})
+// hash
+export default createRouter({
+  history: createWebHashHistory(),
+  routes: [...]
+})
+```
 
 ## JetBrains Open Source development license
 

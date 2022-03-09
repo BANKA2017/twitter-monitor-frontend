@@ -16,6 +16,10 @@ import {
   LegendComponent,
   GridComponent,
   TitleComponent,
+  LegendComponentOption,
+  GridComponentOption,
+  TitleComponentOption,
+  TooltipComponentOption,
   //ToolboxComponent,
   //DataZoomComponent,
   //DataZoomInsideComponent,
@@ -23,14 +27,9 @@ import {
 } from "echarts/components";
 import VChart from "vue-echarts";
 import {computed, PropType, reactive} from "vue";
-//import {
-//  GridOption,
-//  LegendOption, SeriesOption,
-//  TitleOption,
-//  TooltipOption,
-//  XAXisOption,
-//  YAXisOption
-//} from "echarts/types/dist/shared";
+import XAxis = echarts.EChartOption.XAxis;
+import YAxis = echarts.EChartOption.YAxis;
+import Series = echarts.EChartOption.Series;
 
 use([
   CanvasRenderer,
@@ -96,7 +95,7 @@ const props = defineProps({
     default: false
   },
   yAxis: {
-    type: [Object, Array],
+    type: Object as PropType<YAxis>,
     default: () => ([{type: 'value', scale: true}])
   },
   title: {
@@ -123,14 +122,14 @@ const props = defineProps({
 
 const state = reactive<{
   options: {
-    title: any//TitleOption
-    tooltip: any//TooltipOption
-    legend: any//LegendOption
-    grid: any//GridOption
+    title: TitleComponentOption
+    tooltip: TooltipComponentOption
+    legend: LegendComponentOption
+    grid: GridComponentOption
     color: string[]//TODO fix
-    xAxis: any//TODO fix
-    yAxis: any//TODO fix
-    series: any//TODO fix
+    xAxis: XAxis
+    yAxis: YAxis
+    series: Series
   }
 }>({
   options: {
@@ -173,7 +172,7 @@ const state = reactive<{
       scale: true,
       boundaryGap: false,
     },
-    yAxis: [],
+    yAxis: {},
     series: []
   }
 })

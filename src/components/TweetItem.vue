@@ -1,7 +1,7 @@
 <template>
   <div id="tweet">
     <div v-if="false">{{ tweet }}</div>
-    <div v-else :id="tweet.tweet_id_str" :class="{'card': true, 'card-border': true, 'border-danger': tweet.dispute === 1, 'border-primary': tweet.tweet_id_str === topTweetId}">
+    <div v-else :id="tweet.tweet_id_str" :class="{'card': true, 'card-border': true, 'border-danger': tweet.dispute === 1, 'border-primary': tweet.tweet_id_str === topTweetId || (settings.loadConversation && $route.name === 'name-status' && $route.params.status === tweet.tweet_id_str)}">
       <div class='card-body'>
         <p v-if="tweetModeValue === 'timeline' && tweet.tweet_id_str === topTweetId"><small class="text-muted">{{ t("tweet.text.pinned_tweet") }}</small></p>
         <p v-if="tweet.dispute === 1"><small class="text-muted"><exclamation-circle height="1em" status="" width="1em" /> {{ t("tweet.text.this_is_a_dispute_tweet") }}
@@ -10,12 +10,12 @@
         <div>
           <small class="text-muted" v-if="tweet.retweet_from">
             <retweet height="1em" status="" width="1em"/>
-            <router-link :to="`/`+tweet.name+(tweetModeValue === 'status' ? `/all` : `/status/`+tweet.tweet_id_str)" class="text-muted">
+            <router-link :to="`/`+(tweetModeValue === 'status' ? tweet.name + `/all` : `i/status/`+tweet.tweet_id_str)" class="text-muted">
               {{ tweet.display_name }}
             </router-link>
           </small>
         </div>
-        <router-link v-if="!tweet.retweet_from_name || (tweet.retweet_from_name && userList.map(x => x.name).includes(tweet.retweet_from_name))" :to="`/`+ (tweet.retweet_from ? tweet.retweet_from_name : tweet.name) + (tweet.retweet_from_name && tweet.retweet_from_name !== tweet.name ? '/all' : tweetModeValue === 'status' ? `/all` : `/status/`+tweet.tweet_id_str)" class="card-title text-dark">
+        <router-link v-if="!tweet.retweet_from_name || (tweet.retweet_from_name && userList.map(x => x.name).includes(tweet.retweet_from_name))" :to="`/`+ (tweetModeValue === 'status' ? ((tweet.retweet_from_name && tweet.retweet_from_name === tweet.name) ? `i/status/`+tweet.tweet_id_str : ((tweet.retweet_from ? tweet.retweet_from_name : tweet.name) + '/all')) : `i/status/`+tweet.tweet_id_str)" class="card-title text-dark">
           {{ tweet.retweet_from ? tweet.retweet_from : tweet.display_name }}
         </router-link>
         <a v-else :href="`//twitter.com/` + tweet.retweet_from_name" class="text-dark" target="_blank">{{ tweet.retweet_from }}</a>
@@ -76,12 +76,16 @@ import CameraVideoIcon from "@/icons/CameraVideoIcon.vue";
 import BoxArrowUpRight from "@/icons/BoxArrowUpRight.vue";
 import ExclamationCircle from "@/icons/ExclamationCircle.vue";
 import {useStore} from "@/store";
-import {computed, PropType} from "vue";
+import {computed, onMounted, PropType} from "vue";
 import {useI18n} from "vue-i18n";
 import {Tweet} from "@/type/Content";
+import {useRoute, useRouter} from "vue-router";
+import {request} from "@/share/Fetch";
+import {ApiUserInfo} from "@/type/Api";
+import {Notice} from "@/share/Tools";
 //import html2canvas from 'html2canvas';
 
-defineProps({
+const props = defineProps({
   tweet: {
     type: Object as PropType<Tweet>,
     default: () => ({})
@@ -89,6 +93,8 @@ defineProps({
 })
 
 const { t } = useI18n()
+const route = useRoute()
+const router = useRouter()
 const store = useStore()
 const now = computed(() => store.state.now)
 const settings = computed(() => store.state.settings)
@@ -114,6 +120,20 @@ const timeGap = (timestamp: number, now: number, language: string) => {
     return (new Date(timestamp * 1000)).toLocaleString(language);
   }
 }
+
+onMounted(() => {
+  if (route.name === 'no-name-status' && route.params.status === props.tweet.tweet_id_str) {
+    request<ApiUserInfo>(settings.value.basePath + '/api/v2/data/userinfo/?uid=' + props.tweet.uid_str).then(response => {
+      if (response.code === 200) {
+        router.replace({path: '/' + response.data.name + '/status/' + props.tweet.tweet_id_str})
+      } else {
+        router.replace({path: '/' + props.tweet.name + '/status/' + props.tweet.tweet_id_str})
+      }
+    }).catch(e => {
+      Notice(String(e), 'error')
+    })
+  }
+})
 
 //h2c: function () {
 //  html2canvas(document.getElementById(this.tweet.tweet_id_str), {useCORS: true}).then(function(canvas) {

@@ -28,13 +28,17 @@
               </option>
             </select>
           </div>
-          <div class="custom-control custom-checkbox mb-3">
+          <!--<div class="custom-control custom-checkbox mb-3">
             <input type="checkbox" class="custom-control-input" id="auto-refresh" v-model="autoRefresh">
             <label class="custom-control-label" for="auto-refresh">{{ t("settings.auto_refresh") }}</label>
-          </div>
+          </div>-->
           <div class="custom-control custom-checkbox mb-3">
             <input type="checkbox" class="custom-control-input" id="auto-load-more" v-model="autoLoadMore">
             <label class="custom-control-label" for="auto-load-more">{{ t("settings.auto_load_tweets") }}</label>
+          </div>
+          <div class="custom-control custom-checkbox mb-3">
+            <input type="checkbox" class="custom-control-input" id="load-conversation" v-model="loadConversation">
+            <label class="custom-control-label" for="load-conversation">{{ t("settings.load_conversation") }}</label>
           </div>
           <div class="text-center my-4">
             <el-button circle @click="$router.go(-1)"><arrow-left height="1em" status="" width="1em"/></el-button>
@@ -56,7 +60,6 @@ export default defineComponent({
   setup() {
 
     const { t } = useI18n()
-
     const defaultBasePath = process.env.NODE_ENV !== "development" ? import.meta.env.VITE_PRO_BASE_PATH : import.meta.env.VITE_DEV_BASE_PATH
     const defaultMediaPath = import.meta.env.VITE_MEDIA_PATH ? import.meta.env.VITE_MEDIA_PATH : defaultBasePath + '/api/v2/media/'
 
@@ -85,8 +88,13 @@ export default defineComponent({
       get () {return store.state.settings.autoLoadTweets},
       set (value) {store.dispatch({type: "updateAutoLoadMoreStatus", value})}
     })
+
+    const loadConversation = computed({
+      get () {return store.state.settings.loadConversation},
+      set (value) {store.dispatch({type: "updateLoadConversationStatus", value})}
+    })
     //TODO load conversation from status
-    return {defaultBasePath, defaultMediaPath, languageList, basePath, mediaPath, language, autoRefresh, autoLoadMore, t}
+    return {defaultBasePath, defaultMediaPath, languageList, basePath, mediaPath, language, autoRefresh, autoLoadMore, loadConversation, t}
   }
 })
 </script>

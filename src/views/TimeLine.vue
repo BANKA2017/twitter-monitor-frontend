@@ -53,6 +53,7 @@ import Tweets from "@/components/Tweets.vue";
 import { useRoute } from "vue-router";
 import BoxArrowUpRight from "@/icons/BoxArrowUpRight.vue";
 import LocalRouter from "@/components/LocalRouter.vue";
+import router from "@/router";
 export default defineComponent({
   components: {LocalRouter, BoxArrowUpRight, Tweets, Search, UserInfo, ArrowClockwise, LinkList, ProjectList, Navigation},
   setup() {
@@ -65,6 +66,9 @@ export default defineComponent({
     const swapDisplayPictureStatus = () => {
       store.dispatch('swapDisplayPictureStatus')
     }
+    router.beforeEach(() => {
+      store.dispatch("setCoreValue", {key: 'userExists', value: true})
+    })
     return {t, userExists, settings, swapDisplayPictureStatus, tweetType, route}
   }
 })

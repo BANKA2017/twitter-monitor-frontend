@@ -13,6 +13,7 @@
     "allowSyntheticDefaultImports": true,
     "sourceMap": true,
     "baseUrl": ".",
+    "types": ["vite-plugin-pwa/client", "node"],
     "paths": {
       "@/*": [
         "src/*"
@@ -20,7 +21,8 @@
     },
     "lib": [
       "esnext",
-      "dom"
+      "dom",
+      "WebWorker"
     ]
   },
   "include": [

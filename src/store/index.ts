@@ -45,6 +45,7 @@ export const store = createStore<State>({
       displayPicture: false,
       autoLoadTweets: false,
       autoRefresh: false,
+      loadConversation: false,
       basePath,
       mediaPath,
     },
@@ -88,6 +89,7 @@ export const store = createStore<State>({
     updateRealMediaPath: (state, payload) => state.realMediaPath = payload.realMediaPath,
     updateAutoRefreshStatus: (state, payload) => state.settings.autoRefresh = payload.value,
     updateAutoLoadMoreStatus: (state, payload) => state.settings.autoLoadTweets = payload.value,
+    updateLoadConversationStatus: (state, payload) => state.settings.loadConversation = payload.value,
     //set core data
     setCoreValue: (state: any, payload) => state[payload.key] = payload.value,
     //pushCoreValue: (state, payload) => state[payload.key] = state[payload.key].concat(payload.value),
@@ -154,6 +156,7 @@ export const store = createStore<State>({
     updateMediaPath: (context, payload) => context.commit({type: 'updateMediaPath', mediaPath: payload.mediaPath}),
     updateAutoRefreshStatus: (context, payload) => context.commit({type: 'updateAutoRefreshStatus', value: payload.value}),
     updateAutoLoadMoreStatus: (context, payload) => context.commit({type: 'updateAutoLoadMoreStatus', value: payload.value}),
+    updateLoadConversationStatus: (context, payload) => context.commit({type: 'updateLoadConversationStatus', value: payload.value}),
     checkSamePath: (context) => context.commit({type: 'checkSamePath'}),
     updateRealMediaPath: (context) => context.commit({type: 'updateRealMediaPath', realMediaPath: context.state.settings.mediaPath + (context.state.settings.mediaPath === context.state.settings.basePath ? '/api/v2/media/' : '')}),
     //set core data

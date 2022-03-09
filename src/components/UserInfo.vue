@@ -4,7 +4,7 @@
       <div class="card mb-4">
         <el-collapse-transition v-if="state.userInfo.banner !== 0">
           <div class="row no-gutters" v-show="isMobileRatio" :style="{'position': 'relative', 'aspect-ratio': !settings.displayPicture ? '3 / 1' : ''}">
-            <el-image v-if="!settings.displayPicture" :src="createRealMediaPath(realMediaPath, samePath, 'userinfo')+`pbs.twimg.com/profile_banners/`+state.userInfo.uid_str+`/`+state.userInfo.banner+`/banner.jpg`" :preview-src-list="[createRealMediaPath(realMediaPath, samePath, 'userinfo')+`pbs.twimg.com/profile_banners/`+state.userInfo.uid_str+`/`+state.userInfo.banner+`/banner.jpg`]" alt="Banner" style="position: absolute" class="col-12 card-img-top banner" fit="cover" lazy append-to-body hide-on-click-modal/>
+            <el-image v-if="!settings.displayPicture" :src="createRealMediaPath(realMediaPath, samePath, 'userinfo')+`pbs.twimg.com/profile_banners/`+state.userInfo.uid_str+`/`+state.userInfo.banner+`/banner.jpg`" :preview-src-list="[createRealMediaPath(realMediaPath, samePath, 'userinfo')+`pbs.twimg.com/profile_banners/`+state.userInfo.uid_str+`/`+state.userInfo.banner+`/banner.jpg`]" alt="Banner" style="position: absolute; max-height: 100%" class="col-12 card-img-top banner" fit="cover" lazy append-to-body hide-on-click-modal/>
           </div>
         </el-collapse-transition>
         <div class="row mx-2">
@@ -174,6 +174,7 @@ const createChart = (time: number = 0, refresh: boolean = false) => {
 
 const controller = new AbortController
 
+//TODO fix shock after no-name-status
 onMounted(() => {
   getUserInfo(route)
 })

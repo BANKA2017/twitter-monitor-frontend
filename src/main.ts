@@ -51,7 +51,21 @@ import { trackRouter } from 'vue-gtag-next'
 //use @vueuse/head
 import { createHead } from "@vueuse/head"
 
-import '@/registerServiceWorker.js'
+
+import { registerSW } from 'virtual:pwa-register'
+import { useRegisterSW } from 'virtual:pwa-register/vue'
+import {Notice} from "@/share/Tools";
+
+const updateSW = registerSW({
+  onNeedRefresh() {
+    Notice('需要刷新', 'success')
+  },
+  onOfflineReady() {
+    Notice('已离线', 'warning')
+  }
+})
+useRegisterSW()
+
 import {ScrollTo} from "@/share/Tools";
 
 router.afterEach(() => {

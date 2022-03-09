@@ -40,6 +40,7 @@ export interface State {
     displayPicture: boolean
     autoLoadTweets: boolean
     autoRefresh: boolean
+    loadConversation: boolean
     basePath: string
     mediaPath: string
   }
