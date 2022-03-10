@@ -1,7 +1,7 @@
 <template>
   <div id="search" @keyup.enter="$router.push({path: '/search/', query: queryObject})">
   <div class="mb-2" v-if="!(tweetModeValue === 'search' && state.mode === 2)" id="searchTweets">
-    <el-input v-model="state.keywords" :placeholder="t('search.normal_search.input_text_here')" clearable type="text" />
+    <el-input v-model="state.keywords" :placeholder="t('search.normal_search.input_text_here')" clearable type="text" size="large"/>
     <template v-if="state.keywords === 'help' || state.keywords === '帮助'">
       <search-tips class="my-4"/>
     </template>
@@ -99,7 +99,7 @@
     <template v-if="state.keywords && state.keywords.slice(0, 1) !== '!' && state.mode === 0">
       <!--user-->
       <template v-if="state.keywords.slice(0, 1) === '@'">
-        <router-link :key="s" :to="`/i/project/`+user.project+`/`+user.name+`/all`" class="list-group-item list-group-item-action" v-for="(user, s) in correctUserList"><b>{{user.display_name }}</b> | <small>@{{ user.name }}</small> > <small>{{ user.project + ' (' + user.tag + ')' }}</small></router-link>
+        <router-link :key="s" :to="`/`+user.name+`/all`" class="list-group-item list-group-item-action" v-for="(user, s) in correctUserList"><b>{{user.display_name }}</b> | <small>@{{ user.name }}</small> > <small>{{ user.project + ' (' + user.tag + ')' }}</small></router-link>
         <!--<div class="my-3" v-if="search.keywords.slice(1).length > 0"></div>-->
       </template>
       <!--hashtag && cashtag-->

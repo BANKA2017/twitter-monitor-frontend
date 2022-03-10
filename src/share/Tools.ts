@@ -1,5 +1,4 @@
 import {ElNotification} from "element-plus";
-import {registerSW} from "virtual:pwa-register";
 
 const ScrollTo = (top: number = 0): void => {
   window.scrollTo({
