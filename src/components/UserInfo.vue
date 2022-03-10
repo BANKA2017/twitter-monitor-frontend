@@ -93,7 +93,6 @@ const state = reactive<{
     deleted: 0,
     verified: 0,
     description_entities: [],
-
   }),
   chartData: ref([]),
   latestChartTimestamp: ref(0),
@@ -174,17 +173,16 @@ const createChart = (time: number = 0, refresh: boolean = false) => {
 
 const controller = new AbortController
 
-//TODO fix shock after no-name-status
 onMounted(() => {
   getUserInfo(route)
 })
 onBeforeRouteUpdate((to, from) => {
-  if ((to.name === 'name-status' && from.name === 'no-name-status') || (to.params.name !== from.params.name && (to.name === 'name-display' || to.name === 'name-status'))) {
+  if ((to.name === 'name-status' && from.name === 'no-name-status' && to.params.name !== state.userInfo.name) || (to.params.name !== from.params.name && (to.name === 'name-display' || to.name === 'name-status') && to.params.name !== state.userInfo.name)) {
     getUserInfo(to)
   }
 })
 onBeforeRouteLeave((to, from) => {
-  if ((to.name === 'name-status' && from.name === 'no-name-status') || (to.params.name !== from.params.name && (to.name === 'name-display' || to.name === 'name-status'))) {
+  if ((to.name === 'name-status' && from.name === 'no-name-status' && to.params.name !== state.userInfo.name) || (to.params.name !== from.params.name && (to.name === 'name-display' || to.name === 'name-status') && to.params.name !== state.userInfo.name)) {
     getUserInfo(to)
   }
 })

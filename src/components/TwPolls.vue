@@ -9,7 +9,7 @@
           </div>
         </div>
         <div v-if="etaSeconds <= 0 && polls[0].checked" class="col-12">
-          <el-progress :percentage="Math.ceil((poll.count/pollCount)*100)" v-for="poll in polls" :format="() => poll.choice_label+' (' + Math.ceil((poll.count/pollCount)*100) + '%)'" :key="poll.poll_order"></el-progress>
+          <el-progress class="mb-1" :percentage="Math.ceil((poll.count/pollCount)*100)" v-for="poll in polls" :format="() => poll.choice_label+' (' + Math.ceil((poll.count/pollCount)*100) + '%)'" :key="poll.poll_order"></el-progress>
         </div>
         <template v-else>
           <el-button round class="btn-block mx-auto" v-for="poll in polls" :key="poll.poll_order">{{ poll.choice_label }}</el-button>

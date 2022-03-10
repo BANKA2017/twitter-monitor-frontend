@@ -1,9 +1,9 @@
 <template id="project-list">
   <!--TODO fix element-->
-  <button class="btn navbar-toggler" data-toggle="collapse" type="button" v-if="onNav" @click="projectS = !projectS">
+  <button class="btn navbar-toggler" data-toggle="collapse" type="button" v-if="onNav" @click="state.projectS = !state.projectS">
     <span class="navbar-toggler-icon"></span>
   </button>
-  <button v-else-if="!onNav && !onMain" class="btn btn-outline-primary btn-block btn-sm mb-4" @click="projectS = !projectS">{{t("public.user_list") }}</button>
+  <button v-else-if="!onNav && !onMain" class="btn btn-outline-primary btn-block btn-sm mb-4" @click="state.projectS = !state.projectS">{{t("public.user_list") }}</button>
 
   <div v-if="onMain" >
     <template v-for="(projectName, s) in projects" :key="s">
@@ -16,7 +16,7 @@
       </router-link>
     </div>
   </div>
-  <el-drawer v-else v-model="projectS" :title="t('public.user_list')" size="100vw" append-to-body ref="elDrawer">
+  <el-drawer v-else v-model="state.projectS" :title="t('public.user_list')" size="100vw" append-to-body ref="elDrawer">
     <div class="container">
       <div class="col-md-8 offset-md-2">
         <template v-for="(project, s) in projects" :key="s">
@@ -59,8 +59,10 @@ const props = defineProps({
 
 const state = reactive<{
   list: Ref<userListInterface[]>
+  projectS: Ref<boolean>
 }>({
-  list: ref([])
+  list: ref([]),
+  projectS: ref(false)
 })
 
 const createList = () => state.list = userList.value.filter((values: userListInterface) => (values.project === project.value && values.name))
@@ -71,9 +73,9 @@ watch(project, () => createList())
 const setProject = (project: string) => {
   store.dispatch("setCoreValue", {key: 'project', value: project})
 }
-let projectS = ref(false)
+
 router.beforeEach(() => {
-  projectS = ref(false)
+  state.projectS = false
 })
 </script>
 
