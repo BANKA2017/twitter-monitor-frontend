@@ -126,7 +126,7 @@ const state = reactive<{
     tooltip: TooltipComponentOption
     legend: LegendComponentOption
     grid: GridComponentOption
-    color: string[]//TODO fix
+    color: string[]
     xAxis: XAxis
     yAxis: YAxis
     series: Series

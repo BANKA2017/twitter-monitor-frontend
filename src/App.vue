@@ -38,7 +38,6 @@
         ]
       })
       watch(settings, () => {
-        //TODO divide language
         locale.value = settings.value.language
         if (hasBeenSyncFromLocalStorage) {
           localStorage.setItem('tm_settings', JSON.stringify(settings.value))
@@ -58,7 +57,7 @@
         let tmpDocument = document
         store.dispatch({
           type: 'updateBrowserSize',
-          altitudeDifference: height.value - tmpDocument.documentElement.scrollTop,//TODO check number type
+          altitudeDifference: height.value - tmpDocument.documentElement.scrollTop,
           height: tmpDocument.documentElement.scrollTop,
           width: window.innerWidth,
           siteHeight: tmpDocument.body.scrollHeight,

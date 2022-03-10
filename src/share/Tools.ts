@@ -1,5 +1,5 @@
 import {ElNotification} from "element-plus";
-import {contain} from "echarts/types/src/scale/helper";
+import {registerSW} from "virtual:pwa-register";
 
 const ScrollTo = (top: number = 0): void => {
   window.scrollTo({
@@ -8,11 +8,12 @@ const ScrollTo = (top: number = 0): void => {
   });
 };
 
-const Notice = (text: string = "", status: 'success' | 'warning' | 'info' | 'error' | undefined = 'success') => {
+const Notice = (text: string = "", status: 'success' | 'warning' | 'info' | 'error' | undefined = 'success', duration: number = 1500, useHTML: boolean = false) => {
   ElNotification({
     message: text,
     type: status,
-    duration: 1500
+    dangerouslyUseHTMLString: useHTML,
+    duration
   });
 }
 

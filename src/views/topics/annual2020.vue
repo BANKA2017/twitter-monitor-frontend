@@ -1,11 +1,6 @@
 <template>
   <div id="annual2020">
-    <div class="jumbotron jumbotron-fluid" style="background-color: #1da1f2">
-      <div class="container">
-        <h1 class="display-4" style="color: white">Twitter Monitor</h1>
-        <p class="lead" style="color: white">2020 年度数据</p>
-      </div>
-    </div>
+    <single-page-header title="Twitter Monitor" sub-title="2020 年度数据" />
     <div v-if="!status" class="text-center mb-4"><div class="spinner-border"></div></div>
     <div class="container" v-else>
       <div class="row">
@@ -128,16 +123,15 @@
 </template>
 
 <script>
-import Tweet from "@/components/modules/tweet";
-import Tmv2Chart from "@/components/modules/tmv2Chart";
+import Tweet from "@/components/TweetItem.vue"
+import Tmv2Chart from "@/components/Tmv2ChartWithoutDataSet.vue"
 import {useHead} from "@vueuse/head";
-import {inject} from "vue";
+import {ScrollTo, Notice} from "@/share/Tools";
+import SinglePageHeader from "@/components/SinglePageHeader.vue";
 
 export default {
   name: "annual2020",
   setup() {
-    const scrollToTop = inject('scrollToTop')
-    const notice = inject('notice')
     useHead({
       title: '2020统计',
       meta: [{
@@ -146,11 +140,11 @@ export default {
       }]
     })
     return {
-      scrollToTop,
-      notice
+      ScrollTo,
+      Notice
     }
   },
-  components: {Tmv2Chart, Tweet},
+  components: {SinglePageHeader, Tmv2Chart, Tweet},
   data: () => ({
     status: false,
     userAddList: [],
@@ -195,13 +189,10 @@ export default {
   }),
   methods: {
     filterTag(value, row) {
-      let r = false
-      row.group.map(x => {
-        if (!r) {
-          r = x === value;
-        }
-      });
-      return r;
+      for (let x in row.group) {
+        if (x === value) {return true}
+      }
+      return false
     },
   },
   mounted: function () {
@@ -234,8 +225,8 @@ export default {
         })
       })
       this.status = true
-      this.scrollToTop()
-    }).catch(e => this.notice("error", e))
+      ScrollTo()
+    }).catch(e => Notice("error", e))
   },
 }
 </script>

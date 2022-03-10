@@ -93,7 +93,6 @@ export default defineComponent({
       get () {return store.state.settings.loadConversation},
       set (value) {store.dispatch({type: "updateLoadConversationStatus", value})}
     })
-    //TODO load conversation from status
     return {defaultBasePath, defaultMediaPath, languageList, basePath, mediaPath, language, autoRefresh, autoLoadMore, loadConversation, t}
   }
 })

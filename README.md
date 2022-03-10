@@ -1,7 +1,5 @@
 # twitter-monitor-frontend v3 (DEV)
 
-**NOT COMPLETED AND DO NOT USE THIS BRANCH**
-
 ## How to
 
 - Create file `.env.local`

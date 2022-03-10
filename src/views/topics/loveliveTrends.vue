@@ -1,17 +1,12 @@
 <template>
   <div id="lovelive-trends">
-    <div class="jumbotron jumbotron-fluid" style="background-color: #1da1f2">
-      <div class="container">
-        <h1 class="display-4" style="color: white">LoveLive! Trends</h1>
-        <p class="lead" style="color: white" v-if="trendsData.range.start">{{ createDate(trendsData.range.start) }} ~ {{ createDate(trendsData.range.end) }}</p>
-      </div>
-    </div>
+    <single-page-header title="LoveLive! Trends" :sub-title="trendsData.range.start ? (createDate(trendsData.range.start) + '~' + createDate(trendsData.range.end)) : ''" />
     <div class="container">
       <div class="row">
         <div class="col-lg-2 mb-4">
-          <el-tag role="button" :color="selectedTeams.indexOf(name) === -1 ? '#ffffff' : colorInfo" :class="{'text-white': selectedTeams.indexOf(name) !== -1,  'btn-block': true}" v-for="(colorInfo, name) in color" :key="name" @click="selectedTeams.indexOf(name) === -1 ? selectedTeams.push(name) : selectedTeams.splice(selectedTeams.indexOf(name), 1)">
+          <button role="button" :class="{'text-white': selectedTeams.has(name),  'btn-block': true, 'btn': true}" :style="{'background-color': selectedTeams.has(name) ? colorInfo : '#ffffff'}" v-for="(colorInfo, name) in color" :key="name" @click="selectedTeams.has(name) ? selectedTeams.delete(name) : selectedTeams.add(name)">
             {{ name }}
-          </el-tag>
+          </button>
           <button :class="{'btn': true, 'btn-block': true, 'btn-outline-primary': true, 'active': status.displayTips}" @click="status.displayTips = !status.displayTips">说明 <info-circle-fill height="1em" status="" width="1em" /></button>
           <a :href="settings.basePath + '/static/lovelive_trends/' + dateList[status.dateOrder] + '.json'" class="btn btn-block btn-outline-primary" target="_blank">下载数据 <download-icon height="1em" status="" width="1em" /></a>
         </div>
@@ -80,7 +75,7 @@
                 <el-table-column label="名称">
                   <template #default="scope">
                     <!--<el-button @click="() => {status.name = scope.row.name; status.value = 'info'}" type="text" size="small">详情</el-button>-->
-                    <el-button size="small" type="text" @click="() => {scrollTo();status.userOrder = scope.row.order}">{{ scope.row.display_name[0] }}</el-button>
+                    <el-button size="small" type="text" @click="() => {ScrollTo();status.userOrder = scope.row.order}">{{ scope.row.display_name[0] }}</el-button>
                   </template>
                 </el-table-column>
                 <el-table-column label="关注者数" prop="followers" show-overflow-tooltip sortable></el-table-column>
@@ -120,15 +115,19 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import Tmv2Chart from "@/components/Tmv2ChartWithoutDataSet.vue";
 import CandlestickChart from "@/components/modules/candlestickChart.vue";
-import {mapState} from "vuex";
 import {useHead} from "@vueuse/head";
 import ArrowLeft from "@/icons/ArrowLeft.vue";
 import InfoCircleFill from "@/icons/InfoCircleFill.vue";
 import DownloadIcon from "@/icons/DownloadIcon.vue";
-import {ScrollTo, Notice} from "../../share/Tools";
+import {ScrollTo, Notice} from "@/share/Tools";
+import {useStore} from "@/store";
+import {computed, onMounted, reactive, Ref, ref, toRefs, watch} from "vue";
+import {request} from "@/share/Fetch";
+import {ApiLoveLiveData, ApiLoveLiveDateList} from "@/type/Api";
+import SinglePageHeader from "@/components/SinglePageHeader.vue";
 
 export default {
   name: "loveliveTrends",
@@ -140,126 +139,130 @@ export default {
         content: "#1da1f2"
       }]
     })
-  },
 
-  components: {DownloadIcon, InfoCircleFill, ArrowLeft, CandlestickChart, Tmv2Chart},
-  data: () => ({
-    trendsData: {data: [], range: {}},
-    color: {
-      "Aqours": "#32aaff",
-      "虹ヶ咲学園": "#f39800",
-      "Liella!": "#a5469c",
-    },
-    teams: [{"text": "Aqours", "value": "Aqours"},{"text": "虹ヶ咲学園", "value": "虹ヶ咲学園"},{"text": "Liella!", "value": "Liella!"},],
-    selectedTeams: ["Aqours", "虹ヶ咲学園", "Liella!"],
-    status: {
-      userOrder: -1,
-      value: "overview",
-      displayTips: false,
-      dateOrder: 0,
-    },
-    dateList: [],
-  }),
-  watch: {
-    "status.dateOrder": {
-      handler: function () {
-        this.getData()
-      },
-      deep: true,
-    }
-  },
-  mounted: function () {
-    this.getDateInfo()
-  },
-  computed: mapState({
-    settings: 'settings',
-    tableData: function () {
-      let data = []
-      this.trendsData.data.map((x, order) => {
-        if (this.selectedTeams.indexOf(x.team) > -1) {
-          data.push({
-            order: order,
-            name: x.name,
-            display_name: x.display_name,
-            followers: x.followers[6].end,
-            followers_add: x.followers[6].end - x.followers[0].start,
-            followers_growth_rate: Math.floor(((x.followers[6].end - x.followers[0].start) / x.followers[0].start) * 10000) / 100 + '%',
-            tweets_count: x.tweets.count,
-            origin_ratio: Math.floor(x.tweets.origin / x.tweets.count * 100) + '%',
-            team: x.team
-          })
-        }
-      })
-      return data
-    },
-    timeCountRows: function () {
-      let data = []
-      this.trendsData.data.map(x => {
-        if (this.selectedTeams.indexOf(x.team) > -1) {
-          x.tweets.hour_count.map((count, time) => {
-            if (data[time]) {
-              data[time].count += count
-            } else {
-              data[time] = {time: time, count: count}
-            }
-          })
-        }
-      })
-      return data
-    },
-    userData: function () {
-      let label = {day: "日期"}
-      let color = []
-      let data = [{day: "星期日"}, {day: "星期一"}, {day: "星期二"}, {day: "星期三"}, {day: "星期四"}, {day: "星期五"}, {day: "星期六"}]
-      let count_data = [{day: "星期日"}, {day: "星期一"}, {day: "星期二"}, {day: "星期三"}, {day: "星期四"}, {day: "星期五"}, {day: "星期六"}]
-      this.trendsData.data.map(x => {
-        if (this.selectedTeams.indexOf(x.team) > -1) {
-          label[x.name] = x.name_cn
-          color.push(x.color)
-          x.followers.map((y, order) => {
-            data[order][x.name] = y.end - y.start
-            count_data[order][x.name] = y.end
-          })
-        }
-      })
-      return {label, color, data, count_data}
-    },
-  }),
-  methods: {
-    getDateInfo: function () {
-      fetch(this.settings.basePath + (process.env.NODE_ENV === "development" ? '/proxy.php?filename=lovelive_date' : '/static/lovelive_trends/date.json?' + Math.random())).then(async response => {
-        this.dateList = await response.json()
-        if (this.dateList.length > 0) {
-          this.getData()
+    const color = {"Aqours": "#32aaff", "虹ヶ咲学園": "#f39800", "Liella!": "#a5469c",}
+    const teams = [{"text": "Aqours", "value": "Aqours"},{"text": "虹ヶ咲学園", "value": "虹ヶ咲学園"},{"text": "Liella!", "value": "Liella!"},]
+    const selectedTeams = ref(new Set(["Aqours", "虹ヶ咲学園", "Liella!"]))
+
+    const store = useStore()
+    const settings = computed(() => store.state.settings)
+
+    const state = reactive<{
+      dateList: Ref<ApiLoveLiveDateList>
+      trendsData: Ref<ApiLoveLiveData>
+      status: Ref<{
+        userOrder: number
+        value: string
+        displayTips: boolean
+        dateOrder: number
+      }>
+    }>({
+      trendsData: ref({data: [], range: {start: 0, end: 0}}),
+      status: ref({
+        userOrder: -1,
+        value: "overview",
+        displayTips: false,
+        dateOrder: 0,
+      }),
+      dateList: ref([]),
+    })
+
+    const getDateInfo = () => {
+      request<ApiLoveLiveDateList>(settings.value.basePath + '/static/lovelive_trends/date.json?' + Math.random()).then(response => {
+        if (response.length) {
+          state.dateList = response
+          getData()
         } else {
           Notice("没有数据", 'error')
         }
       }).catch(e => {
         Notice(String(e), 'error')
       })
-    },
-    getData: function () {
-      fetch(this.settings.basePath + (process.env.NODE_ENV === "development" ? '/proxy.php?filename=lovelive_data&date=' + this.dateList[this.status.dateOrder] : '/static/lovelive_trends/' + this.dateList[this.status.dateOrder] + '.json')).then(async response => {
-        //status.userOrder = -1
-        this.trendsData = await response.json()
+    }
+    const getData = () => {
+      request<ApiLoveLiveData>(settings.value.basePath + '/static/lovelive_trends/' + state.dateList[state.status.dateOrder] + '.json').then(response => {
+        state.trendsData = response
       }).catch(e => {
         Notice(String(e), 'error')
       })
-    },
-    createDate: function (timestamp) {
+    }
+
+    const tableData = computed((): {
+          order: number
+          name: string
+          display_name: string[]
+          followers: number
+          followers_add: number
+          followers_growth_rate: string
+          tweets_count: number
+          origin_ratio: string
+          team: string
+        }[] => state.trendsData.data.filter(y => selectedTeams.value.has(y.team)).map((x, order) => ({
+        order,
+        name: x.name,
+        display_name: x.display_name,
+        followers: x.followers[6].end,
+        followers_add: x.followers[6].end - x.followers[0].start,
+        followers_growth_rate: Math.floor(((x.followers[6].end - x.followers[0].start) / x.followers[0].start) * 10000) / 100 + '%',
+        tweets_count: x.tweets.count,
+        origin_ratio: Math.floor(x.tweets.origin / x.tweets.count * 100) + '%',
+        team: x.team
+      }))
+    )
+
+    const timeCountRows = computed(() => {
+      let data: {time: number, count: number}[] = []
+      state.trendsData.data.filter(y => selectedTeams.value.has(y.team)).map(x => {
+        x.tweets.hour_count.map((count, time) => {
+          if (data[time]) {
+            data[time].count += count
+          } else {
+            data[time] = {time, count: count}
+          }
+        })
+      })
+      return data
+    })
+    const userData = computed(() => {
+      let label: {[p: 'day' | string]: string | number} = {day: "日期"}
+      let color: string[] = []
+      let data: {[p: 'day' | string]: string | number}[] = [{day: "星期日"}, {day: "星期一"}, {day: "星期二"}, {day: "星期三"}, {day: "星期四"}, {day: "星期五"}, {day: "星期六"}]
+      let count_data: {[p: 'day' | string]: string | number}[] = [{day: "星期日"}, {day: "星期一"}, {day: "星期二"}, {day: "星期三"}, {day: "星期四"}, {day: "星期五"}, {day: "星期六"}]
+      state.trendsData.data.filter(y => selectedTeams.value.has(y.team)).map(x => {
+        label[x.name] = x.name_cn
+        color.push(x.color)
+        x.followers.map((y, order) => {
+          data[order][x.name] = y.end - y.start
+          count_data[order][x.name] = y.end
+        })
+      })
+      return {label, color, data, count_data}
+    })
+
+    const createDate = (timestamp: number) => {
       let date = new Date(timestamp * 1000)
       return date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate()
-    },
-    splitData: function(rawData) {
-      let categoryData = [];
-      let values = []
-      for (let i = 0; i < rawData.length; i++) {
-        categoryData.push(rawData[i].splice(0, 1)[0]);
-        values.push(rawData[i])
-      }
-      return {categoryData, values};
     }
+    //这哪来干嘛的
+    //const splitData = computed((rawData) => {
+    //  let categoryData = [];
+    //  let values = []
+    //  for (let i = 0; i < rawData.length; i++) {
+    //    categoryData.push(rawData[i].splice(0, 1)[0]);
+    //    values.push(rawData[i])
+    //  }
+    //  return {categoryData, values};
+    //})
+
+    onMounted(() => {
+      getDateInfo()
+    })
+
+    watch(() => state.status.dateOrder, () => {getData()}, {deep: true})
+
+    return {...toRefs(state), ScrollTo, Notice, color, teams, selectedTeams, createDate, userData, timeCountRows, tableData, settings}
   },
+  components: {SinglePageHeader, DownloadIcon, InfoCircleFill, ArrowLeft, CandlestickChart, Tmv2Chart},
 }
 </script>
 

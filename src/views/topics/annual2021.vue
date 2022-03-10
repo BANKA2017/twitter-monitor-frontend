@@ -9,12 +9,7 @@
         </div>
       </div>
       <div v-else >
-        <div class="jumbotron jumbotron-fluid" style="background-color: #1da1f2">
-          <div class="container">
-            <h1 class="display-4" style="color: white">Twitter Monitor</h1>
-            <p class="lead" style="color: white">2021 年度报告</p>
-          </div>
-        </div>
+        <single-page-header title="Twitter Monitor" sub-title="2021 年度报告" />
 
         <div class="container">
           <div class="row">
@@ -209,13 +204,13 @@
                 提前一个月开始写并没有什么用，最后还是临近结束才搞出个雏形<br>
                 总之，希望明年还能继续在这里见面<br>
                 为什么不分开做每个企划的表格？因为我懒，不想重复造<br>
-                官号的图表也有<router-link to="/i/events/staff_data_page/">更详细的版本</router-link>，这里只是顺手做的
+                官号的图表也有<router-link to="/i/topics/staff_data_page/">更详细的版本</router-link>，这里只是顺手做的
               </p>
               <h3>数据</h3>
               <p>本页内容及下列数据在 <a href="https://creativecommons.org/licenses/by-sa/4.0/legalcode.zh-Hans" target="_blank">署名—相同方式共享 4.0 协议国际版</a> 之条款下提供</p>
               <ul>
-                <li><a :href="settings.data.basePath + '/static/db/annual2021.json'" target="_blank">本页数据</a></li>
-                <li><a :href="settings.data.basePath + '/static/db/annual2021Full.json'" target="_blank">更详细的年度数据</a></li>
+                <li><a :href="settings.basePath + '/static/db/annual2021.json'" target="_blank">本页数据</a></li>
+                <li><a :href="settings.basePath + '/static/db/annual2021Full.json'" target="_blank">更详细的年度数据</a></li>
               </ul>
             </div>
           </div>
@@ -228,25 +223,26 @@
 
 <script>
 import {useHead} from "@vueuse/head";
-import Tmv2Chart from "@/components/modules/tmv2Chart";
-import HeatMapChart from "@/components/modules/heatMapChart";
-import PieChart from "@/components/modules/pieChart";
-import BarStackChartForAnnual2021 from "@/components/pages/events/modules/barStackChartForAnnual2021";
-import SunBurstChartForAnnual2021 from "@/components/pages/events/modules/sunBurstChartForAnnual2021";
-import {inject} from "vue";
+import Tmv2Chart from "@/components/Tmv2ChartWithoutDataSet.vue";
+import HeatMapChart from "@/components/modules/heatMapChart.vue";
+import PieChart from "@/components/modules/pieChart.vue";
+import BarStackChartForAnnual2021 from "@/views/topics/modules/barStackChartForAnnual2021.vue";
+import SunBurstChartForAnnual2021 from "@/views/topics/modules/sunBurstChartForAnnual2021.vue";
 import {mapState} from "vuex";
-import WordCloudChartForAnnual2021 from "@/components/pages/events/modules/wordCloudChartForAnnual2021";
-import BarRaceForAnnual2021 from "@/components/pages/events/modules/barRaceForAnnual2021";
+import WordCloudChartForAnnual2021 from "@/views/topics/modules/wordCloudChartForAnnual2021.vue";
+import BarRaceForAnnual2021 from "@/views/topics/modules/barRaceForAnnual2021.vue";
+import SinglePageHeader from "@/components/SinglePageHeader.vue";
+import {ScrollTo} from "@/share/Tools";
 //import html2canvas from 'html2canvas';
 
 export default {
   name: "annual2021",
   components: {
+    SinglePageHeader,
     BarRaceForAnnual2021,
     WordCloudChartForAnnual2021,
     SunBurstChartForAnnual2021, BarStackChartForAnnual2021, PieChart, HeatMapChart, Tmv2Chart},
   setup() {
-    const scrollToTop = inject('scrollToTop')
     //const notice = inject('notice')
     useHead({
       title: '2021统计',
@@ -256,7 +252,7 @@ export default {
       }]
     })
     return {
-      scrollToTop,
+      ScrollTo,
       //notice
     }
   },
@@ -279,7 +275,7 @@ export default {
     serverStatusChartMeta: {serverStatusTotalTweets: [], serverStatusTotalTime: [], serverStatusTotalSuccessRate: [], serverStatusTotalAverageTweets: [], serverStatusTotalOnline: [],},
     serverStatusColor: {serverStatusTotalTweets: ['#19d4ae', '#d87a80', '#5ab1ef'], serverStatusTotalTime: ['#5ab1ef', '#fa6e86', '#ffb980', '#c4b4e4'], serverStatusTotalSuccessRate: ['#0067a6'],},
     serverStatusMeta: [],
-    accountData: [],//require('../../../assets/testAccountData'),//TODO remove it
+    accountData: [],
     accountListFilter: {
       bangdream: {"Poppin'Party": true, "Afterglow": true, "Pastel*Palettes": true, "Roselia":  true, "Hello, Happy World!": true, "Morfonica": true, "RAISE A SUILEN": true,},
       lovelive: {"μ's": true, "A-RISE": true, "Aqours": true, "Saint Snow":  true, "虹ヶ咲学園": true, "Liella!": true,},
@@ -316,7 +312,7 @@ export default {
   }),
   mounted: function () {
     //TODO replace link
-    fetch(this.settings.data.basePath + "/static/db/annual2021.json?_" + new Date().getTime()).then(response => {
+    fetch(this.settings.basePath + "/static/db/annual2021.json?_" + new Date().getTime()).then(response => {
       let reader = response.body.getReader()
       let bytesReceived = 0
       let that = this
@@ -371,7 +367,7 @@ export default {
       this.setupCharts()
       this.renderAll()
       this.loading = false
-      this.scrollToTop()
+      ScrollTo()
     },
     setupCharts: function () {
       this.serverStatusMeta.map(x => {

@@ -51,18 +51,10 @@ import { trackRouter } from 'vue-gtag-next'
 //use @vueuse/head
 import { createHead } from "@vueuse/head"
 
-
-import { registerSW } from 'virtual:pwa-register'
-import { useRegisterSW } from 'virtual:pwa-register/vue'
-import {Notice} from "@/share/Tools";
-
-const updateSW = registerSW({
-  onNeedRefresh() {},
-  onOfflineReady() {}
-})
-useRegisterSW()
-
 import {ScrollTo} from "@/share/Tools";
+
+//pwa
+//import '@/pwa'
 
 router.afterEach(() => {
   ScrollTo(0)

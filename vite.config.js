@@ -22,8 +22,8 @@ export default defineConfig({
       resolvers: [ElementPlusResolver()],
     }),
     VitePWA({
-      mode: 'development',
-      includeAssets: ['robots.txt', 'favicon.ico'],
+      includeAssets: ['favicon.ico'],
+      registerType: "autoUpdate",
       manifest: {
         name: "Twitter Monitor",
         short_name: "tmv2",
@@ -34,7 +34,6 @@ export default defineConfig({
           src: "static/img/icon.png",
           sizes: "144x144",
           type: "image/png",
-          purpose: 'any maskable',
         }]
       },
       workbox: {

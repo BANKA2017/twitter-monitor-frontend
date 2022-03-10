@@ -1,11 +1,6 @@
 <template>
   <div v-once id="annual2019">
-    <div class="jumbotron jumbotron-fluid" style="background-color: #1da1f2">
-      <div class="container">
-        <h1 class="display-4" style="color: white">Twitter Monitor</h1>
-        <p class="lead" style="color: white">2019 年度数据</p>
-      </div>
-    </div>
+    <single-page-header title="Twitter Monitor" sub-title="2019 年度数据" />
     <div class="container">
       <div class="row">
         <div class="col-md-10 offset-md-1">
@@ -38,6 +33,7 @@
 
 <script setup lang="ts">
 import {useHead} from "@vueuse/head";
+import SinglePageHeader from "@/components/SinglePageHeader.vue";
 useHead({
   title: '2019统计',
   meta: [{

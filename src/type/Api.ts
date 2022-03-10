@@ -106,3 +106,31 @@ export interface ApiStaffData {
   }
   range: number[]
 }
+
+export type ApiLoveLiveDateList = string[]
+
+export interface ApiLoveLiveData {
+  data: {
+    color: string
+    display_name: string[]
+    followers: {start: number; end: number; highest: number; lowest: number}[]
+    name: string
+    name_cn: string
+    project: string
+    team: string
+    uid: string
+    tweets: {
+      card: string[]
+      count: number
+      hour_count: number[]
+      link: {[p: string]: number}
+      tag: {[p: string]: number}
+      media: number
+      origin: number
+      quote_status_count: number
+      retweet: number
+      video_count: number
+    }
+  }[]
+  range: { start: number; end: number }
+}

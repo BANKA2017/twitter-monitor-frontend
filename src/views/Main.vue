@@ -17,13 +17,12 @@
 <script lang="ts">
 import {defineComponent} from "vue";
 import SinglePageHeader from "@/components/SinglePageHeader.vue";
-import WordCloudChartForAnnual2021 from "@/views/events/modules/wordCloudChartForAnnual2021.vue";
 import Tweets from "@/components/Tweets.vue";
 import ProjectList from "@/components/ProjectList.vue";
 import LinkList from "@/components/LinkList.vue";
 import LocalRouter from "@/components/LocalRouter.vue";
 export default defineComponent({
-  components: {LocalRouter, LinkList, ProjectList, Tweets, WordCloudChartForAnnual2021, SinglePageHeader},
+  components: {LocalRouter, LinkList, ProjectList, Tweets, SinglePageHeader},
 })
 </script>
 

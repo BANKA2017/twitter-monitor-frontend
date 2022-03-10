@@ -9,12 +9,12 @@ const TimeLine = () => import("@/views/TimeLine.vue")
 const Main = () => import('@/views/Main.vue')
 const Trends = () => import("@/views/Trends.vue")
 //TODO update to TypeScript
-const Event = () => import("@/views/events/index.vue")
-const Annual2019 = () => import("@/views/events/annual2019.vue")
-//const Annual2020 = () => import("@/views/events/annual2020.vue")
-//const Annual2021 = () => import("@/views/events/annual2021.vue")
-//const loveliveTrends = () => import("@/views/events/loveliveTrends.vue")
-const staffCandleStickPage = () => import("@/views/events/staffCandleStickPage.vue")
+const Topic = () => import("@/views/topics/index.vue")
+const Annual2019 = () => import("@/views/topics/annual2019.vue")
+const Annual2020 = () => import("@/views/topics/annual2020.vue")
+const Annual2021 = () => import("@/views/topics/annual2021.vue")
+const loveliveTrends = () => import("@/views/topics/loveliveTrends.vue")
+const staffCandleStickPage = () => import("@/views/topics/staffCandleStickPage.vue")
 const NotFound = () => import("@/views/NotFound.vue")
 const Settings = () => import("@/views/Settings.vue")
 //const PhotoPreview = () => import('@/views/TO_DEL_PhotoPreview.vue')
@@ -23,15 +23,16 @@ export default createRouter({
     history: createWebHistory('/'),
     routes: [
         { path: '/about', component: About, name: 'about'},
+        { path: '/i/events/:path?', redirect: to => ({ path: '/i/topics/' + to.params.path}) },//to topics
         {
-            path: '/i/events',
-            component: Event,
-            name: 'mainEvents',
+            path: '/i/topics',
+            component: Topic,
+            name: 'mainTopics',
             children: [
                 {path: '2019', component: Annual2019, name: '2019'},
-                //{path: '2020', component: Annual2020, name: '2020'},
-                //{path: '2021', component: Annual2021, name: '2021'},
-                //{path: 'lovelive_trends', component: loveliveTrends, name: 'lovelive_trends'},
+                {path: '2020', component: Annual2020, name: '2020'},
+                {path: '2021', component: Annual2021, name: '2021'},
+                {path: 'lovelive_trends', component: loveliveTrends, name: 'lovelive_trends'},
                 {path: 'staff_data_page', component: staffCandleStickPage, name: 'staff_data_page'}
             ]
         },
