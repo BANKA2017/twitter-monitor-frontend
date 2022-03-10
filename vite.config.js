@@ -24,6 +24,7 @@ export default defineConfig({
     VitePWA({
       includeAssets: ['favicon.ico'],
       registerType: "autoUpdate",
+      filename: 'service-worker.js',
       manifest: {
         name: "Twitter Monitor",
         short_name: "tmv2",
