@@ -8,7 +8,7 @@
             {{ name }}
           </button>
           <button :class="{'btn': true, 'btn-block': true, 'btn-outline-primary': true, 'active': status.displayTips}" @click="status.displayTips = !status.displayTips">说明 <info-circle-fill height="1em" status="" width="1em" /></button>
-          <a :href="settings.basePath + '/static/lovelive_trends/' + dateList[status.dateOrder] + '.json'" class="btn btn-block btn-outline-primary" target="_blank">下载数据 <download-icon height="1em" status="" width="1em" /></a>
+          <a :href="store.getters.getBasePath + '/static/lovelive_trends/' + dateList[status.dateOrder] + '.json'" class="btn btn-block btn-outline-primary" target="_blank">下载数据 <download-icon height="1em" status="" width="1em" /></a>
         </div>
         <div class="col-lg-8 mb-4">
           <div class="card" v-show="status.displayTips">
@@ -145,7 +145,6 @@ export default defineComponent({
     const selectedTeams = ref(new Set(["Aqours", "虹ヶ咲学園", "Liella!"]))
 
     const store = useStore()
-    const settings = computed(() => store.state.settings)
 
     const state = reactive<{
       dateList: Ref<ApiLoveLiveDateList>
@@ -168,7 +167,7 @@ export default defineComponent({
     })
 
     const getDateInfo = () => {
-      request<ApiLoveLiveDateList>(settings.value.basePath + '/static/lovelive_trends/date.json?' + Math.random()).then(response => {
+      request<ApiLoveLiveDateList>(store.getters.getBasePath + '/static/lovelive_trends/date.json?' + Math.random()).then(response => {
         if (response.length) {
           state.dateList = response
           getData()
@@ -180,7 +179,7 @@ export default defineComponent({
       })
     }
     const getData = () => {
-      request<ApiLoveLiveData>(settings.value.basePath + '/static/lovelive_trends/' + state.dateList[state.status.dateOrder] + '.json').then(response => {
+      request<ApiLoveLiveData>(store.getters.getBasePath + '/static/lovelive_trends/' + state.dateList[state.status.dateOrder] + '.json').then(response => {
         state.trendsData = response
       }).catch(e => {
         Notice(String(e), 'error')
@@ -260,7 +259,7 @@ export default defineComponent({
 
     watch(() => state.status.dateOrder, () => {getData()}, {deep: true})
 
-    return {...toRefs(state), ScrollTo, Notice, color, teams, selectedTeams, createDate, userData, timeCountRows, tableData, settings}
+    return {...toRefs(state), ScrollTo, Notice, color, teams, selectedTeams, createDate, userData, timeCountRows, tableData, store}
   },
   components: {SinglePageHeader, DownloadIcon, InfoCircleFill, ArrowLeft, CandlestickChart, Tmv2Chart},
 })

@@ -206,8 +206,8 @@
               <h3>数据</h3>
               <p>本页内容及下列数据在 <a href="https://creativecommons.org/licenses/by-sa/4.0/legalcode.zh-Hans" target="_blank">署名—相同方式共享 4.0 协议国际版</a> 之条款下提供</p>
               <ul>
-                <li><a :href="settings.basePath + '/static/db/annual2021.json'" target="_blank">本页数据</a></li>
-                <li><a :href="settings.basePath + '/static/db/annual2021Full.json'" target="_blank">更详细的年度数据</a></li>
+                <li><a :href="store.getters.getBasePath + '/static/db/annual2021.json'" target="_blank">本页数据</a></li>
+                <li><a :href="store.getters.getBasePath + '/static/db/annual2021Full.json'" target="_blank">更详细的年度数据</a></li>
               </ul>
             </div>
           </div>
@@ -221,7 +221,7 @@
 <script lang="ts">
 import {useHead} from "@vueuse/head";
 import Tmv2Chart from "@/components/Tmv2ChartWithoutDataSet.vue";
-import HeatMapChart from "@/components/modules/heatMapChart.vue";
+import HeatMapChart from "@/components/HeatMapChart.vue";
 import PieChart from "@/components/modules/pieChart.vue";
 import BarStackChartForAnnual2021 from "@/views/topics/modules/barStackChartForAnnual2021.vue";
 import SunBurstChartForAnnual2021 from "@/views/topics/modules/sunBurstChartForAnnual2021.vue";
@@ -230,7 +230,7 @@ import BarRaceForAnnual2021 from "@/views/topics/modules/barRaceForAnnual2021.vu
 import SinglePageHeader from "@/components/SinglePageHeader.vue";
 import {Notice, ScrollTo} from "@/share/Tools";
 import {useStore} from "@/store";
-import {computed, onMounted, reactive, Ref, ref, toRefs, watch} from "vue";
+import {onMounted, reactive, Ref, ref, toRefs, watch} from "vue";
 import {ApiAnnual2021} from "@/type/Api";
 import {Annual2021DataTemplate, Annual2021TmpDataTemplate} from "@/type/Content";
 import _ from 'lodash'
@@ -263,7 +263,6 @@ export default {
     const serverStatusColor = {serverStatusTotalTweets: ['#19d4ae', '#d87a80', '#5ab1ef'], serverStatusTotalTime: ['#5ab1ef', '#fa6e86', '#ffb980', '#c4b4e4'], serverStatusTotalSuccessRate: ['#0067a6'],}
 
     const store = useStore()
-    const settings = computed(() => store.state.settings)
 
     const state = reactive<{
       accountListFilter: Ref<{[p in string]: {[q in string]: boolean}}>
@@ -533,7 +532,7 @@ export default {
     }
 
     onMounted(() => {
-      fetch(settings.value.basePath + "/static/db/annual2021.json").then((response: Response) => {
+      fetch(store.getters.getBasePath + "/static/db/annual2021.json").then((response: Response) => {
         if (!response.body) {return}
         let reader = response.body.getReader()
         let bytesReceived = 0
@@ -558,7 +557,7 @@ export default {
     return {
       ...toRefs(state),
       ScrollTo,
-      settings,
+      store,
       filterTag,
       serverStatusLabel,
       serverStatusColor,

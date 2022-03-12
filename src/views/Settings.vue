@@ -66,32 +66,32 @@ export default defineComponent({
     const store = useStore()
     const languageList = computed(() => store.state.languageList)
     const basePath = computed({
-      get () {return store.state.settings.basePath},
-      set (value) {store.dispatch({type: 'updateBasePath', basePath: value})}
+      get () {return store.getters.getBasePath},
+      set (value: string) {store.dispatch("updateSettingsItem", {key: "basePath", value})}
     })
     const mediaPath = computed({
       get () {return store.state.settings.mediaPath},
-      set (value) {store.dispatch({type: 'updateMediaPath', mediaPath: value})}
+      set (value: string) {store.dispatch("updateSettingsItem", {key: "mediaPath", value})}
     })
 
     const language = computed({
       get () {return store.state.settings.language},
-      set (value) {store.dispatch({type: 'setLanguage', lang: value})}
+      set (value: string) {store.dispatch("updateSettingsItem", {key: "language", value})}
     })
 
     const autoRefresh = computed({
       get () {return store.state.settings.autoRefresh},
-      set (value) {store.dispatch({type: "updateAutoRefreshStatus", value})}
+      set (value: boolean) {store.dispatch("updateSettingsItem", {key: "autoRefresh", value})}
     })
 
     const autoLoadMore = computed({
       get () {return store.state.settings.autoLoadTweets},
-      set (value) {store.dispatch({type: "updateAutoLoadMoreStatus", value})}
+      set (value: boolean) {store.dispatch("updateSettingsItem", {key: "autoLoadTweets", value})}
     })
 
     const loadConversation = computed({
       get () {return store.state.settings.loadConversation},
-      set (value) {store.dispatch({type: "updateLoadConversationStatus", value})}
+      set (value: boolean) {store.dispatch("updateSettingsItem", {key: "loadConversation", value})}
     })
     return {defaultBasePath, defaultMediaPath, languageList, basePath, mediaPath, language, autoRefresh, autoLoadMore, loadConversation, t}
   }

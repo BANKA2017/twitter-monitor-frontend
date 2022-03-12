@@ -1,28 +1,31 @@
 <template>
-  <canvas class="fit" ref="canvasRef" />
+  <canvas class="fit" ref="BlurHashRef" />
 </template>
 
 <script setup lang="ts">
-//from https://github.com/LightNovelShelf/Web/blob/master/src/components/BlurHash.vue
 import { ref, watchEffect } from 'vue'
-import { decode } from 'blurhash'
-const props = defineProps<{ blurhash?: string }>()
-const canvasRef = ref<HTMLCanvasElement>()
+import { decode, isBlurhashValid } from 'blurhash'
+const props = defineProps({
+  hashText: {
+    type: String,
+    default: ""
+  }
+})
+const BlurHashRef = ref<HTMLCanvasElement>()
+
 watchEffect(() => {
-  const { value: canvas } = canvasRef
-  if (props.blurhash && canvas) {
-    const decodeSize = {
-      width: 2 * 10,
-      height: 2 * 10
-    }
-    canvas.width = decodeSize.width
-    canvas.height = decodeSize.height
-    const pixels = decode(props.blurhash, decodeSize.width, decodeSize.height)
+  const { value: canvas } = BlurHashRef
+  // pre check
+  if (props.hashText && canvas && isBlurhashValid(props.hashText).result) {
+    const canvasLength = 10//square
+    canvas.width = canvasLength
+    canvas.height = canvasLength
+    const pixels = decode(props.hashText, canvasLength,  canvasLength)
     const ctx = canvas.getContext('2d')
     if (!ctx) {
       return
     }
-    const imageData = ctx.createImageData(decodeSize.width, decodeSize.height)
+    const imageData = ctx.createImageData(canvasLength, canvasLength)
     imageData.data.set(pixels)
     ctx.putImageData(imageData, 0, 0)
   }

@@ -19,7 +19,7 @@
         <!--media-->
         <template v-if="quoteObject.media === 1&&!settings.displayPicture">
           <div class="my-4"></div>
-          <image-list :basePath="settings.basePath" :bottom="true" :is_video="quoteObject.video" :list="quoteMedia"/>
+          <image-list :basePath="store.getters.getBasePath" :bottom="true" :is_video="quoteObject.video" :list="quoteMedia"/>
         </template>
       </template>
     </div>

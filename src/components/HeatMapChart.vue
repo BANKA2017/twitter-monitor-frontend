@@ -47,34 +47,31 @@ const props = defineProps({
   },
 })
 
-const state = reactive<{
-  option: {
-    title: TitleComponentOption
-    tooltip: {}
-    visualMap: VisualMapComponentOption
-    calendar: CalendarComponentOption
-    series: {
-      type: string
-      coordinateSystem: string
-      data: [string, number][]
-    }
+const option: {
+  title: TitleComponentOption
+  tooltip: {}
+  visualMap: VisualMapComponentOption
+  calendar: CalendarComponentOption
+  series: {
+    type: string
+    coordinateSystem: string
+    data: [string, number][]
   }
-}>({
-  option: {
-    title: {top: 30, left: 'center', text: ''},
-    tooltip: {},
-    visualMap: {min: 0, max: 10, calculable: true, orient: 'horizontal', left: 'center', top: 65},
-    calendar: {top: 120, left: 30, right: 30, cellSize: ['auto', 13], range: '0', itemStyle: {borderWidth: 0.5}, yearLabel: { show: false }},
-    series: {
-      type: 'heatmap',
-      coordinateSystem: 'calendar',
-      data: []
-    }
+} = {
+  title: {top: 30, left: 'center', text: ''},
+  tooltip: {},
+  visualMap: {min: 0, max: 10, calculable: true, orient: 'horizontal', left: 'center', top: 65},
+  calendar: {top: 120, left: 30, right: 30, cellSize: ['auto', 13], range: '0', itemStyle: {borderWidth: 0.5}, yearLabel: { show: false }},
+  series: {
+    type: 'heatmap',
+    coordinateSystem: 'calendar',
+    data: []
   }
-})
+}
+
 
 const computedOptions = computed(() => {
-  let tmpOption = state.option
+  let tmpOption = option
   let tmpMax = 0, tmpMin = 10000
   props.data.map(singleData => {
     tmpMax = singleData[1] > tmpMax ? singleData[1] : tmpMax

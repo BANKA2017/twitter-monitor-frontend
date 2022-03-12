@@ -16,7 +16,7 @@
             <li>关于接口返回的数据类型，请访问 <a href="https://github.com/BANKA2017/twitter-monitor-frontend/blob/v3/src/type/Api.ts" target="_blank">BANKA2017/twitter-monitor-frontend~/src/type/Api.ts</a> 了解更多</li>
           </ul>
           <hr class="my-4">
-          <p>api基础链接 {{ settings.basePath + "/api/v2" }}</p>
+          <p>api基础链接 {{ store.getters.getBasePath + "/api/v2" }}</p>
           <template v-for="doc in docs" :key="doc">
             <pre>{{ doc }}</pre>
           </template>
@@ -45,8 +45,7 @@ export default defineComponent({
       "// /data/accounts/\n// /?mode=data&type=accounts"
     ]
     const store = useStore()
-    const settings = computed(() => store.state.settings)
-    return {settings, docs}
+    return {store, docs}
   }
 })
 </script>

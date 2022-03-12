@@ -24,12 +24,15 @@
       <div v-if="!state.reload && tweets.length">
         <div v-for="(tweet, order) in tweets" :key="order">
           <tweet-item :tweet="tweet"/>
-          <hr class="my-4">
+          <el-divider v-if="order < tweets.length - 1 && tweet.conversation_id_str === tweets[order + 1].conversation_id_str">
+            <el-icon><caret-bottom /></el-icon>
+          </el-divider>
+          <el-divider v-else />
         </div>
-        <button v-if="state.moreTweets && !state.loadingBottom" class="btn btn-primary btn-lg btn-block mb-3" type="button" @click="loading(false)">
+        <button v-if="state.moreTweets && !state.loadingBottom && !settings.autoLoadTweets" class="btn btn-primary btn-lg btn-block mb-3" type="button" @click="loading(false)">
           <span>{{ t("timeline.message.load_more") }}</span>
         </button>
-        <el-skeleton v-else-if="state.moreTweets && state.loadingBottom" :rows="1" animated class="mb-2"/>
+        <el-skeleton v-else-if="state.moreTweets && (state.loadingBottom || settings.autoLoadTweets)" :rows="1" animated class="mb-2"/>
         <div v-else-if="!(tweetModeValue === 'status')">
           <h5 class="text-center">{{ t("timeline.message.no_more") }}</h5>
         </div>
@@ -48,18 +51,19 @@
 
 <script setup lang="ts">
 import {useStore} from "@/store";
-import {computed, reactive, ref, Ref, defineComponent, toRefs, watch, onMounted} from "vue";
+import {computed, reactive, ref, Ref, watch, onMounted} from "vue";
 import {useI18n} from "vue-i18n";
-//import TweetItem from "./TweetItem";
 import {onBeforeRouteLeave, onBeforeRouteUpdate, RouteLocationNormalized, useRoute, useRouter} from "vue-router";
 import {TweetType} from "@/type/State";
 import {TweetMode} from "@/type/State";
 import {Equal, Notice, NullSafeParams, ScrollTo} from "@/share/Tools";
-import {Controller, controller, request} from "@/share/Fetch";
-import {ApiTweets, ApiUserInfo} from "@/type/Api";
+import {Controller, request} from "@/share/Fetch";
+import {ApiTweets} from "@/type/Api";
 import TweetItem from "@/components/TweetItem.vue";
 import ArrowClockwise from "@/icons/ArrowClockwise.vue";
 import {RouterNameList} from "@/share/Content";
+import {CaretBottom} from "@element-plus/icons-vue";
+import {Tweet} from "@/type/Content";
 const {t} = useI18n()
 const route = useRoute()
 const router = useRouter()
@@ -70,7 +74,7 @@ const tweetModeValue = computed(() => store.state.tweetMode)
 const tweetTypeValue = computed(() => store.state.tweetType)
 const userTimeZone = computed(() => store.state.userTimeZone)
 const adminMode = computed(() => store.state.adminMode)
-const tweets = computed(() => store.state.tweets)
+const tweets = computed((): Tweet[] => store.state.tweets)
 const height = computed(() => store.state.height)
 const siteHeight = computed(() => store.state.siteHeight)
 const viewportHeight = computed(() => store.state.viewportHeight)
@@ -113,7 +117,7 @@ const state = reactive<{
 })
 
 watch(height, () => {
-  if (route.name  !== 'name-status' && siteHeight.value - height.value - viewportHeight.value < 150 && settings.value.autoLoadTweets && !state.loadingBottom) {
+  if (route.name !== 'name-status' && route.name !== 'no-name-status' && siteHeight.value - height.value - viewportHeight.value < 150 && settings.value.autoLoadTweets && !state.loadingBottom) {
     loading(false)
   }
 })

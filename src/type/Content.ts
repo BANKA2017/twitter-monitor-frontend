@@ -34,6 +34,7 @@ export interface LegacyChart {
 export interface Tweet {
   tweet_id: number
   tweet_id_str: string
+  conversation_id_str: string
   uid: number
   uid_str: string
   name: string

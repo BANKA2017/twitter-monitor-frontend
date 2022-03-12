@@ -1,6 +1,6 @@
 /* 先填写 .env.local */
 import { InjectionKey } from 'vue'
-import { createStore, useStore as baseUseStore, Store } from 'vuex'
+import {createStore, useStore as baseUseStore, Store, ActionContext} from 'vuex'
 import {State} from '@/type/State'
 import {isDark} from "@/share/Time";
 import language from '@/assets/language.json'
@@ -63,6 +63,9 @@ export const store = createStore<State>({
     twemojiBasePath: twemojiBasePath,
     //onlinePath,
   },
+  getters: {
+    getBasePath: (state): string => state.settings.basePath,
+  },
   mutations: {
     setLanguage: (state, payload) => {
       state.settings.language = payload.lang
@@ -82,21 +85,17 @@ export const store = createStore<State>({
     },
     //settings
     swapDisplayPictureStatus: (state) => state.settings.displayPicture = !state.settings.displayPicture,
-    updateDisplayPictureStatus: (state, payload) => state.settings.displayPicture = payload.status,
-    updateBasePath: (state, payload) => state.settings.basePath = payload.basePath,
-    updateMediaPath: (state, payload) => state.settings.mediaPath = payload.mediaPath,
+    //updateDisplayPictureStatus: (state, payload) => state.settings.displayPicture = payload.status,
+    updateSettingsItem: (state: State, payload: {key: keyof State["settings"]; value: string & boolean}) => {state.settings[payload.key] = payload.value},
     checkSamePath: (state) =>state.samePath = (state.settings.basePath === state.settings.mediaPath),
     updateRealMediaPath: (state, payload) => state.realMediaPath = payload.realMediaPath,
-    updateAutoRefreshStatus: (state, payload) => state.settings.autoRefresh = payload.value,
-    updateAutoLoadMoreStatus: (state, payload) => state.settings.autoLoadTweets = payload.value,
-    updateLoadConversationStatus: (state, payload) => state.settings.loadConversation = payload.value,
     //set core data
     setCoreValue: (state: any, payload) => state[payload.key] = payload.value,
     //pushCoreValue: (state, payload) => state[payload.key] = state[payload.key].concat(payload.value),
     updateTweetsTranslate: (state, payload) => state.translate[payload.tweet_id] = payload.translate,
   },
   actions: {
-    setLanguage: function (context, payload) {
+    setLanguage: function (context, payload: {lang: string}) {
       context.commit({
         type: 'setLanguage',
         lang: ((lang) => {
@@ -151,12 +150,8 @@ export const store = createStore<State>({
     },
     //settings
     swapDisplayPictureStatus: (context) => context.commit('swapDisplayPictureStatus'),
-    updateDisplayPictureStatus: (context, payload) => context.commit({type: 'updateDisplayPictureStatus', status: payload.status}),
-    updateBasePath: (context, payload) => context.commit({type: 'updateBasePath', basePath: payload.basePath}),
-    updateMediaPath: (context, payload) => context.commit({type: 'updateMediaPath', mediaPath: payload.mediaPath}),
-    updateAutoRefreshStatus: (context, payload) => context.commit({type: 'updateAutoRefreshStatus', value: payload.value}),
-    updateAutoLoadMoreStatus: (context, payload) => context.commit({type: 'updateAutoLoadMoreStatus', value: payload.value}),
-    updateLoadConversationStatus: (context, payload) => context.commit({type: 'updateLoadConversationStatus', value: payload.value}),
+    //updateDisplayPictureStatus: (context, payload) => context.commit('updateDisplayPictureStatus', {status: payload.status}),
+    updateSettingsItem: (context: ActionContext<State, State>, payload: {key: keyof State["settings"]; value: string & boolean}) => context.commit('updateSettingsItem', {key: payload.key, value: payload.value}),
     checkSamePath: (context) => context.commit({type: 'checkSamePath'}),
     updateRealMediaPath: (context) => context.commit({type: 'updateRealMediaPath', realMediaPath: context.state.settings.mediaPath + (context.state.settings.mediaPath === context.state.settings.basePath ? '/api/v2/media/' : '')}),
     //set core data

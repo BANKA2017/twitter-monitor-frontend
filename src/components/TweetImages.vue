@@ -13,7 +13,7 @@
       <div :style="`width: 100%; padding-bottom: ` + ( realList[0].origin_info_height / realList[0].origin_info_width * 100) +  `%; height: 0; border-radius: 14px 14px 14px 14px`" class="no-gutters card">
         <el-image :alt="realList[0].uid+'_'+realList[0].tweet_id+'_'+0" :initial-index="0" :preview-src-list="previewList" :src="createRealMediaPath(realMediaPath, samePath.value,'tweets') +realList[0].url+':small'" class="border border-white" fit="cover" lazy style="width: 100%; height: 100%; position: absolute; border-radius: 14px 14px 14px 14px" append-to-body hide-on-click-modal>
           <template #placeholder>
-            <blur-hash-canvas v-if="realList[0].blurhash && realList[0].blurhash !== 'deleted'" :blurhash="realList[0].blurhash" class="full" :style="{width: realList[0].origin_info_width, height: realList[0].origin_info_height}"/>
+            <blur-hash-canvas v-if="realList[0].blurhash && realList[0].blurhash !== 'deleted'" :hash-text="realList[0].blurhash" class="full" :style="{width: realList[0].origin_info_width, height: realList[0].origin_info_height}"/>
           </template>
         </el-image>
       </div>
@@ -22,7 +22,7 @@
       <div class="card no-gutters" style="width: 100%; padding-bottom: 56.25%; height: 0; border-radius: 14px 14px 14px 14px">
         <el-image v-for="(image, order) in realList" :key="order" :alt="image.uid+'_'+image.tweet_id+'_'+0" :initial-index="order" :preview-src-list="previewList" :src="createRealMediaPath(realMediaPath, samePath.value,'tweets') +image.url+':small'" :style="listStyle[realList.length-2][order]" class="border border-white" fit="cover" lazy append-to-body hide-on-click-modal>
           <template #placeholder>
-            <blur-hash-canvas class="full" :blurhash="image.blurhash" v-if="image.blurhash && image.blurhash !== 'deleted'" :style="{width: image.origin_info_width, height: image.origin_info_height}"/>
+            <blur-hash-canvas class="full" :hash-text="image.blurhash" v-if="image.blurhash && image.blurhash !== 'deleted'" :style="{width: image.origin_info_width, height: image.origin_info_height}"/>
           </template>
         </el-image>
       </div>

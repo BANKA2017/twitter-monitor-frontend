@@ -69,7 +69,7 @@
       const setLanguage = () => {
         store.dispatch({
           type: 'setLanguage',
-          lang: 'zh-cn'//window.navigator.language.toLowerCase()
+          lang: window.navigator.language.toLowerCase()
         })
       }
       const konamiCode = () => {
