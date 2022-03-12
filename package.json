@@ -18,6 +18,7 @@
     "element-plus": "^2.0.1",
     "highlight.js": "^11.4.0",
     "jquery": "^3.6.0",
+    "lodash": "^4.17.21",
     "popper.js": "^1.16.1",
     "print-js": "^1.6.0",
     "twemoji-parser": "^13.1.0",
@@ -31,6 +32,7 @@
   "devDependencies": {
     "@intlify/vite-plugin-vue-i18n": "^3.2.1",
     "@types/echarts": "^4.9.13",
+    "@types/lodash": "^4.14.179",
     "@types/node": "^17.0.17",
     "@types/twemoji-parser": "^13.1.1",
     "@vitejs/plugin-vue": "^2.0.1",

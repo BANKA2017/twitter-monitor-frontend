@@ -73,16 +73,14 @@
               </div>
               <hr class="my-4">
               <h3 class="my-3">数据变动</h3>
-              <el-table ref="accountData" v-loading="!userData.length" :data="userData"
-                        :default-sort="{prop: 'followers_add', order: 'descending'}" style="width: 100%">
+              <el-table v-loading="!userData.length" :data="userData" :default-sort="{prop: 'followers_add', order: 'descending'}" style="width: 100%">
                 <el-table-column label="用户名" prop="display_name"></el-table-column>
                 <el-table-column label="关注数" prop="followers" show-overflow-tooltip sortable></el-table-column>
                 <el-table-column label="关注变化量" prop="followers_add" show-overflow-tooltip sortable></el-table-column>
                 <el-table-column label="总推文数" prop="statuses_count" show-overflow-tooltip sortable></el-table-column>
                 <el-table-column label="推文变化量" prop="statuses_count_add" show-overflow-tooltip sortable></el-table-column>
                 <el-table-column label="监听天数" prop="time" sortable></el-table-column>
-                <el-table-column :filter-method="filterTag" :filters="projects" filter-placement="bottom-end"
-                                 header-align="center" label="组" prop="group">
+                <el-table-column :filter-method="filterTag" :filters="projects" filter-placement="bottom-end" header-align="center" label="组" prop="group">
                   <template #default="scope">
                     <el-tag v-for="group in scope.row.group" :key="group" :type="colorForGroup[group]" disable-transitions>
                       {{ group }}
@@ -93,8 +91,7 @@
               <hr class="my-4">
               <h3>标签排行</h3>
               <p class="text-muted">没有任何悬念，这玩意有什么存在的必要吗</p>
-              <el-table ref="accountData" v-loading="!hashTagList.length" :data="hashTagList"
-                        :default-sort="{prop: 'count', order: 'descending'}" style="width: 100%">
+              <el-table v-loading="!hashTagList.length" :data="hashTagList" :default-sort="{prop: 'count', order: 'descending'}" style="width: 100%">
                 <el-table-column label="名称" prop="text"></el-table-column>
                 <el-table-column label="统计" prop="count" show-overflow-tooltip sortable></el-table-column>
               </el-table>
@@ -221,19 +218,22 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import {useHead} from "@vueuse/head";
 import Tmv2Chart from "@/components/Tmv2ChartWithoutDataSet.vue";
 import HeatMapChart from "@/components/modules/heatMapChart.vue";
 import PieChart from "@/components/modules/pieChart.vue";
 import BarStackChartForAnnual2021 from "@/views/topics/modules/barStackChartForAnnual2021.vue";
 import SunBurstChartForAnnual2021 from "@/views/topics/modules/sunBurstChartForAnnual2021.vue";
-import {mapState} from "vuex";
 import WordCloudChartForAnnual2021 from "@/views/topics/modules/wordCloudChartForAnnual2021.vue";
 import BarRaceForAnnual2021 from "@/views/topics/modules/barRaceForAnnual2021.vue";
 import SinglePageHeader from "@/components/SinglePageHeader.vue";
-import {ScrollTo} from "@/share/Tools";
-//import html2canvas from 'html2canvas';
+import {Notice, ScrollTo} from "@/share/Tools";
+import {useStore} from "@/store";
+import {computed, onMounted, reactive, Ref, ref, toRefs, watch} from "vue";
+import {ApiAnnual2021} from "@/type/Api";
+import {Annual2021DataTemplate, Annual2021TmpDataTemplate} from "@/type/Content";
+import _ from 'lodash'
 
 export default {
   name: "annual2021",
@@ -243,7 +243,6 @@ export default {
     WordCloudChartForAnnual2021,
     SunBurstChartForAnnual2021, BarStackChartForAnnual2021, PieChart, HeatMapChart, Tmv2Chart},
   setup() {
-    //const notice = inject('notice')
     useHead({
       title: '2021统计',
       meta: [{
@@ -251,183 +250,178 @@ export default {
         content: "#1da1f2"
       }]
     })
-    return {
-      ScrollTo,
-      //notice
-    }
-  },
-  data: () => ({
-    loading: true,
-    progress: 0,
-    userAddList: [],
-    userDeleteList: [],
-    hashTagList: [],
-    userData: [],
-    colorForGroup: {"BanGDream!": "", "ARGONAVIS": "success", "LoveLive!": "warning", "艦これ": "danger", "227": "info"},
-    userDataTypeColors: ['', 'success', 'warning', 'danger', 'info'],
-    projects: [{"text": "BanGDream!", "value": "BanGDream!"}, {"text": "ARGONAVIS", "value": "ARGONAVIS"}, {"text": "LoveLive!", "value": "LoveLive!"}, {"text": "艦これ", "value": "艦これ"}, {"text": "227", "value": "227"},],
-    serverStatusLabel: {
+
+    const serverStatusLabel = {
       totalTweets: {"date": "日期", "total_tweets": "每日处理推文数", "tweets_count": "总处理推文数", "avg_tweets": "平均每次处理条数"},
       totalTime: {"date": "日期", "total_time_cost": "总耗时", "max_time_cost": "最大耗时", "min_time_cost": "最小耗时", "avg_time_cost": "平均耗时",},
       successRate: {"date": "日期", "success_rate": "成功率",},
       onlineRate: {"date": "日期", "online_rate": "在线率", "down_time_count": "离线时长"}
-    },
-    serverStatusChartMeta: {serverStatusTotalTweets: [], serverStatusTotalTime: [], serverStatusTotalSuccessRate: [], serverStatusTotalAverageTweets: [], serverStatusTotalOnline: [],},
-    serverStatusColor: {serverStatusTotalTweets: ['#19d4ae', '#d87a80', '#5ab1ef'], serverStatusTotalTime: ['#5ab1ef', '#fa6e86', '#ffb980', '#c4b4e4'], serverStatusTotalSuccessRate: ['#0067a6'],},
-    serverStatusMeta: [],
-    accountData: [],
-    accountListFilter: {
-      bangdream: {"Poppin'Party": true, "Afterglow": true, "Pastel*Palettes": true, "Roselia":  true, "Hello, Happy World!": true, "Morfonica": true, "RAISE A SUILEN": true,},
-      lovelive: {"μ's": true, "A-RISE": true, "Aqours": true, "Saint Snow":  true, "虹ヶ咲学園": true, "Liella!": true,},
-      official: {"BanGDream!": true, "LoveLive!": true}
-    },
-    accountColor: {},
-    accountComputedData: {},
-    tmpDataTemplate: JSON.stringify({
+    }
+    const projects = [{"text": "BanGDream!", "value": "BanGDream!"}, {"text": "ARGONAVIS", "value": "ARGONAVIS"}, {"text": "LoveLive!", "value": "LoveLive!"}, {"text": "艦これ", "value": "艦これ"}, {"text": "227", "value": "227"},]
+    const colorForGroup = {"BanGDream!": "", "ARGONAVIS": "success", "LoveLive!": "warning", "艦これ": "danger", "227": "info"}
+
+    const serverStatusColor = {serverStatusTotalTweets: ['#19d4ae', '#d87a80', '#5ab1ef'], serverStatusTotalTime: ['#5ab1ef', '#fa6e86', '#ffb980', '#c4b4e4'], serverStatusTotalSuccessRate: ['#0067a6'],}
+
+    const store = useStore()
+    const settings = computed(() => store.state.settings)
+
+    const state = reactive<{
+      accountListFilter: Ref<{[p in string]: {[q in string]: boolean}}>
+      loading: Ref<boolean>
+      progress: Ref<number>
+      userAddList: ApiAnnual2021["user_add_list"]
+      userDeleteList: ApiAnnual2021["user_del_list"]
+      hashTagList: ApiAnnual2021["hashtag_rank"]
+      userData: ApiAnnual2021["user_data"]
+      serverStatusMeta: ApiAnnual2021["server_status_meta"]
+      accountData: Ref<ApiAnnual2021["account_data"]>
+      accountColor: ApiAnnual2021["account_color"]
+      accountComputedData: { [p in 'bangdream' | 'lovelive' | 'official']: Annual2021DataTemplate } | {}
+      projectHashtagList: ApiAnnual2021["single_project_hashtag"]
+      displayNameList: ApiAnnual2021["display_name_list"]
+      serverStatusChartMeta: {
+        serverStatusTotalTweets: { date: string; total_tweets: number; tweets_count: number; avg_tweets: number; }[]
+        serverStatusTotalTime: { date: string; total_time_cost: number; max_time_cost: number; min_time_cost: number; avg_time_cost: number; }[]
+        serverStatusTotalSuccessRate: { date: string; success_rate: number }[]
+        serverStatusTotalOnline: { date: string; online_rate: number; down_time_count: number }[]
+      }
+    }>({
+      accountListFilter: ref({
+        bangdream: {"Poppin'Party": true, "Afterglow": true, "Pastel*Palettes": true, "Roselia":  true, "Hello, Happy World!": true, "Morfonica": true, "RAISE A SUILEN": true,},
+        lovelive: {"μ's": true, "A-RISE": true, "Aqours": true, "Saint Snow":  true, "虹ヶ咲学園": true, "Liella!": true,},
+        official: {"BanGDream!": true, "LoveLive!": true}
+      }),
+      loading: ref(true),
+      progress: ref(0),
+      userAddList: [],
+      userDeleteList: [],
+      hashTagList: [],
+      userData: [],
+      serverStatusMeta: [],
+      accountData: ref([]),
+      accountColor: {},
+      accountComputedData: {},
+      projectHashtagList: {},
+      displayNameList: {},
+      serverStatusChartMeta: {serverStatusTotalTweets: [], serverStatusTotalTime: [], serverStatusTotalSuccessRate: [], serverStatusTotalOnline: [],},
+    })
+
+    const filterTag = (value: string, row: any) => {
+      for (let x in row.group) {
+        if (x === value) {return true}
+      }
+      return false
+    }
+    const tmpDataTemplate = (): Annual2021DataTemplate => ({
       tweets: [],
       retweet: [],
       hourCount: new Array(24).fill(0),
       mediaCount: new Array(24).fill(0),
-      renameDepartment: {},
+      renameDepartment: [],
       trendsData: {
         label: {date: '日期'},
         color: [],
         followers: [],
         statuses_count: [],
       }
-    }),
-    projectHashtagList: {},
-    displayNameList: {},
-  }),
-  watch: {
-    "accountListFilter": {
-      deep: true,
-      handler: function () {
-        this.renderAll()
+    })
+
+    const tmpUserDataTemplate = (): Annual2021TmpDataTemplate => ({
+      tweets: {},
+      retweet: {},
+      hourCount: new Array(24).fill(0),
+      mediaCount: new Array(24).fill(0),
+      renameDepartment: [],
+      trendsData: {
+        label: {date: '日期'},
+        color: [],
+        followers: {},
+        statuses_count: {},
       }
-    },
-  },
-  computed: mapState({
-    settings: 'settings',
-  }),
-  mounted: function () {
-    //TODO replace link
-    fetch(this.settings.basePath + "/static/db/annual2021.json?_" + new Date().getTime()).then(response => {
-      let reader = response.body.getReader()
-      let bytesReceived = 0
-      let that = this
-      let chunks = []
-      reader.read().then(async function processResult(result) {
-        if (result.done) {
-          that.init(bytesReceived, chunks)
-          return
-        }
-        chunks.push(result.value)
-        bytesReceived += result.value.length
-        that.progress = Math.floor((bytesReceived / 5242672) * 100)//不要想太多, 这个数字只是文件大小已知而已
-        return reader.read().then(processResult)
-      })
-    })//.catch(e => this.notice("error", e))
-  },
-  methods: {
-    filterTag: function (value, row) {
-      let r = false
-      row.group.map(x => {
-        if (!r) {
-          r = x === value;
-        }
-      });
-      return r;
-    },
-    //h2c: function (id) {
-    //  html2canvas(document.getElementById(id), {useCORS: true}).then(function(canvas) {
-    //    document.body.appendChild(canvas);
-    //  });
-    //},
-    swapGroupStatus: function (project, group) {
-      this.accountListFilter[project][group] = !this.accountListFilter[project][group]
-    },
-    init: function (bytesReceived, chunks) {
+    })
+
+    const swapGroupStatus = (project: string, group: string) => {
+      state.accountListFilter[project][group] = !state.accountListFilter[project][group]
+    }
+
+    const init = (bytesReceived: number, chunks: ArrayLike<number>[]) => {
       let chunksAll = new Uint8Array(bytesReceived);
       let position = 0;
       for(let chunk of chunks) {
         chunksAll.set(chunk, position);
         position += chunk.length;
       }
-      let data = JSON.parse(new TextDecoder("utf-8").decode(chunksAll))
-      this.displayNameList = data.display_name_list
-      this.userAddList = data.user_add_list
-      this.userDeleteList = data.user_del_list
-      this.hashTagList = data.hashtag_rank
-      this.userData = data.user_data
-      this.serverStatusMeta = data.server_status_meta
-      this.accountData = data.account_data
-      this.accountColor = data.account_color
-      this.projectHashtagList = data.single_project_hashtag
-      this.setupCharts()
-      this.renderAll()
-      this.loading = false
+      let data: ApiAnnual2021 = JSON.parse(new TextDecoder("utf-8").decode(chunksAll))
+      state.displayNameList = data.display_name_list
+      state.userAddList = data.user_add_list
+      state.userDeleteList = data.user_del_list
+      state.hashTagList = data.hashtag_rank
+      state.userData = data.user_data
+      state.serverStatusMeta = data.server_status_meta
+      state.accountData = data.account_data
+      state.accountColor = data.account_color
+      state.projectHashtagList = data.single_project_hashtag
+      setupCharts()
+      renderAll()
+      state.loading = false
       ScrollTo()
-    },
-    setupCharts: function () {
-      this.serverStatusMeta.map(x => {
-        if (x.total_time_cost !== 0) {
-          this.serverStatusChartMeta.serverStatusTotalTweets.push({
-            date: x.date,
-            total_tweets: x.total_tweets,
-            tweets_count: x.tweets_count,
-            avg_tweets: x.avg_tweets,
-          })
-          this.serverStatusChartMeta.serverStatusTotalTime.push({
-            date: x.date,
-            total_time_cost: x.total_time_cost,
-            max_time_cost: x.max_time_cost,
-            min_time_cost: x.min_time_cost,
-            avg_time_cost: x.avg_time_cost,
-          })
-          this.serverStatusChartMeta.serverStatusTotalSuccessRate.push({
-            date: x.date,
-            success_rate: x.success_rate,
-          })
+    }
+
+    let latestAccountListFilter: {[p in string]: {[q in string]: boolean}} = {}
+
+    const renderAll = () => {
+      //TODO fix type {[p in 'bangdream' | 'lovelive' | 'official']: dataTemplate}
+      let tmpData: any = Object.values(state.accountComputedData).length === 0 ? {
+        bangdream: tmpDataTemplate(),
+        lovelive: tmpDataTemplate(),
+        official: tmpDataTemplate()
+      } : _.cloneDeep(state.accountComputedData)
+      //pre check
+      let tmpUpdateList = new Set()
+      for (let projectName of ['bangdream', 'lovelive', 'official']) {
+        if (latestAccountListFilter[projectName]) {
+          let tmp = Object.values(latestAccountListFilter[projectName])
+          let tmpOrigin = Object.values(state.accountListFilter[projectName])
+          for (let valueIndex in tmp) {
+            if (tmp[valueIndex] !== tmpOrigin[valueIndex]) {
+              tmpUpdateList.add(projectName)
+              tmpData[projectName] = tmpDataTemplate()
+              break
+            }
+          }
+        } else if (!latestAccountListFilter[projectName]) {
+          tmpUpdateList.add(projectName)
         }
-        this.serverStatusChartMeta.serverStatusTotalOnline.push({
-          date: x.date,
-          online_rate: x.online_rate,
-          down_time_count: (1 - x.online_rate) * 1440
-        })
-      })
-    },
-    renderAll: function () {
-      let tmpData = {
-        bangdream: JSON.parse(this.tmpDataTemplate),
-        lovelive: JSON.parse(this.tmpDataTemplate),
-        official: JSON.parse(this.tmpDataTemplate)
       }
-      this.accountData.map(account => {
+      for (let account of state.accountData) {
         //break
         let breakRender = false
         account.projects.map(projectMeta => {
           let tmpProject = account.organization ? 'official': (projectMeta[0] === 'BanGDream!' ? 'bangdream' : 'lovelive')
-          if ((!account.organization && !this.accountListFilter[tmpProject][projectMeta[1]]) || (account.organization && !this.accountListFilter[tmpProject][projectMeta[0]])) {
+          if (!tmpUpdateList.has(tmpProject)) {
+            breakRender = true
+          }
+          if ((!account.organization && !state.accountListFilter[tmpProject][projectMeta[1]]) || (account.organization && !state.accountListFilter[tmpProject][projectMeta[0]])) {
             breakRender = true
           }
         })
         if (breakRender) {
-          return
+          continue
         }
-        let tmpPersonData = JSON.parse(this.tmpDataTemplate)
+        let tmpPersonData = tmpUserDataTemplate()
         //每日数据
-        Object.keys(account.daily_data).map(date => {
-          let tmpDate = (date => {
-            date = [...date]
-            return date.splice(0, 4).join('') + '-' + date.splice(0, 2).join('') + '-' + date.join('')
-          })(date)
+        for (let date in account.daily_data) {
+          let tmpDate = date.slice(0, 4) + '-' + date.slice(4, 6) + '-' + date.slice(6, 8)
           let tmpDailyTweetCount = account.daily_data[date].hour_count.length === 0 ? 0 : account.daily_data[date].hour_count.reduce((acr, cur) => acr + cur)
           let tmpRetweetCount = typeof(account.daily_data[date].origin) === 'undefined' ? 0 : tmpDailyTweetCount - (account.daily_data[date].origin)
           tmpPersonData.tweets[tmpDate] ? tmpPersonData.tweets[tmpDate] += tmpDailyTweetCount : tmpPersonData.tweets[tmpDate] = tmpDailyTweetCount
           tmpPersonData.retweet[tmpDate] ? tmpPersonData.retweet[tmpDate] += tmpRetweetCount : tmpPersonData.retweet[tmpDate] = tmpRetweetCount
-          account.daily_data[date].hour_count.map((count, time) => tmpPersonData.hourCount[time] += count)
-          account.daily_data[date].media.map((count, time) => tmpPersonData.mediaCount[time] += count)
+          account.daily_data[date].hour_count.map((count, time) => {
+            tmpPersonData.hourCount[time] += count
+          })
+          account.daily_data[date].media.map((count, time) => {
+            tmpPersonData.mediaCount[time] += count
+          })
 
           //三大件
           tmpPersonData.trendsData.followers[tmpDate] = account.daily_data[date].followers ? account.daily_data[date].followers : NaN
@@ -435,58 +429,65 @@ export default {
           //following: account.daily_data[date].following ? account.daily_data[date].following : NaN,
           //statuses_count: account.daily_data[date].statuses_count ? account.daily_data[date].statuses_count : NaN,
           //name: account.name,
-        })
+        }
         //tmpPersonData.tweets = Object.keys(tmpPersonData.tweets).map(day => [day, tmpPersonData.tweets[day]])
         //tmpPersonData.retweet = Object.keys(tmpPersonData.retweet).map(day => [day, tmpPersonData.retweet[day]])
 
         account.projects.map(projectMeta => {
-          let tmpProject = account.organization ? 'official': (projectMeta[0] === 'BanGDream!' ? 'bangdream' : 'lovelive')
+          let tmpProject: 'official' | 'bangdream' | 'lovelive' = account.organization ? 'official': (projectMeta[0] === 'BanGDream!' ? 'bangdream' : 'lovelive')
           //break
-          if ((!account.organization && !this.accountListFilter[tmpProject][projectMeta[1]]) || (account.organization && !this.accountListFilter[tmpProject][projectMeta[0]])) {
+          if ((!account.organization && !state.accountListFilter[tmpProject][projectMeta[1]]) || (account.organization && !state.accountListFilter[tmpProject][projectMeta[0]])) {
             return
           }
           //label
-          tmpData[tmpProject].trendsData.label[account.name] = this.displayNameList[account.name]
-          tmpData[tmpProject].trendsData.color.push(this.accountColor.member[account.name])
+          tmpData[tmpProject].trendsData.label[account.name] = state.displayNameList[account.name]
+          tmpData[tmpProject].trendsData.color.push(state.accountColor.member[account.name])
           //合并数据
           Object.keys(tmpPersonData.tweets).map(date => tmpData[tmpProject].tweets[date] ? tmpData[tmpProject].tweets[date] += tmpPersonData.tweets[date] : tmpData[tmpProject].tweets[date] = tmpPersonData.tweets[date])
           Object.keys(tmpPersonData.retweet).map(date => tmpData[tmpProject].retweet[date] ? tmpData[tmpProject].retweet[date] += tmpPersonData.retweet[date] : tmpData[tmpProject].retweet[date] = tmpPersonData.retweet[date])
-          Object.keys(tmpPersonData.hourCount).map(time => tmpData[tmpProject].hourCount[time] += tmpPersonData.hourCount[time])
-          Object.keys(tmpPersonData.mediaCount).map(time => tmpData[tmpProject].mediaCount[time] += tmpPersonData.mediaCount[time])
+          for (let time in tmpPersonData.hourCount) {
+            tmpData[tmpProject].hourCount[time] += tmpPersonData.hourCount[time]
+          }
+          for (let time in tmpPersonData.mediaCount) {
+            tmpData[tmpProject].mediaCount[time] += tmpPersonData.mediaCount[time]
+          }
 
-          let baseFollowers = tmpPersonData.trendsData.followers["2021-01-01"]//only bangdream
+          let baseFollowers: number | string = tmpPersonData.trendsData.followers["2021-01-01"]//only bangdream
           Object.keys(tmpPersonData.trendsData.followers).map(date => {
             if (!tmpData[tmpProject].trendsData.followers[date]) {
               tmpData[tmpProject].trendsData.followers[date] = {date}
             }
-            tmpData[tmpProject].trendsData.followers[date][account.name] = tmpPersonData.trendsData.followers[date] - baseFollowers// (tmpProject === 'bangdream' ? baseFollowers : 0)
+            tmpData[tmpProject].trendsData.followers[date][account.name] = Number(tmpPersonData.trendsData.followers[date]) - Number(baseFollowers)// (tmpProject === 'bangdream' ? baseFollowers : 0)
           })
 
-          let baseStatusesCount = tmpPersonData.trendsData.statuses_count["2021-01-01"]//only bangdream
+          let baseStatusesCount: number | string = tmpPersonData.trendsData.statuses_count["2021-01-01"]//only bangdream
           Object.keys(tmpPersonData.trendsData.statuses_count).map(date => {
             if (!tmpData[tmpProject].trendsData.statuses_count[date]) {
               tmpData[tmpProject].trendsData.statuses_count[date] = {date}
             }
-            tmpData[tmpProject].trendsData.statuses_count[date][account.name] = tmpPersonData.trendsData.statuses_count[date] - baseStatusesCount// (tmpProject === 'bangdream' ? baseStatusesCount : 0)
+            tmpData[tmpProject].trendsData.statuses_count[date][account.name] = Number(tmpPersonData.trendsData.statuses_count[date]) - Number(baseStatusesCount)// (tmpProject === 'bangdream' ? baseStatusesCount : 0)
           })
           //改名部
           let tmpChildren = {
             name: account.name,
-            itemStyle: {color: this.accountColor.member[account.name]},
+            itemStyle: {color: state.accountColor.member[account.name]},
             children: account.display_name_list.map(name => ({
               name,
-              itemStyle: {color: this.accountColor.member[account.name]},
+              itemStyle: {color: state.accountColor.member[account.name]},
               value: 1,
             }))}
           tmpData[tmpProject].renameDepartment[projectMeta[Number(!account.organization)]] ? tmpData[tmpProject].renameDepartment[projectMeta[Number(!account.organization)]].push(tmpChildren) : tmpData[tmpProject].renameDepartment[projectMeta[Number(!account.organization)]] = [tmpChildren]
         })
-      })
-
-      Object.keys(tmpData).map(projectName => {
+      }
+      for (let projectName of ['bangdream', 'lovelive', 'official']) {
+        if (!tmpUpdateList.has(projectName)) {
+          continue
+        }
+        if (tmpData[projectName] === undefined) {continue}
         //改名部
         tmpData[projectName].renameDepartment = (Object.keys(tmpData[projectName].renameDepartment).map(groupName => ({
           name: groupName,
-          itemStyle: {color: this.accountColor.group[groupName]},//.85不错
+          itemStyle: {color: state.accountColor.group[groupName]},//.85不错
           children: tmpData[projectName].renameDepartment[groupName]
         })))
         //三大件
@@ -495,12 +496,77 @@ export default {
         //热力图
         tmpData[projectName].tweets = Object.keys(tmpData[projectName].tweets).map(date => [date, tmpData[projectName].tweets[date]])
         tmpData[projectName].retweet = Object.keys(tmpData[projectName].retweet).map(date => [date, tmpData[projectName].retweet[date]])
-      })
+      }
       //tmpData.hourCount = tmpData.hourCount.map((count, time) => ({name: time + '时', value: count}))
       //tmpData.mediaCount = tmpData.mediaCount.map((count, time) => ({name: time + '时', value: count}))
-      this.accountComputedData = tmpData
+      latestAccountListFilter = _.cloneDeep(state.accountListFilter)
+      state.accountComputedData = tmpData
     }
-  },
+
+    const setupCharts = () => {
+      state.serverStatusMeta.map(x => {
+        if (x.total_time_cost !== 0) {
+          state.serverStatusChartMeta.serverStatusTotalTweets.push({
+            date: x.date,
+            total_tweets: x.total_tweets,
+            tweets_count: x.tweets_count,
+            avg_tweets: x.avg_tweets,
+          })
+          state.serverStatusChartMeta.serverStatusTotalTime.push({
+            date: x.date,
+            total_time_cost: x.total_time_cost,
+            max_time_cost: x.max_time_cost,
+            min_time_cost: x.min_time_cost,
+            avg_time_cost: x.avg_time_cost,
+          })
+          state.serverStatusChartMeta.serverStatusTotalSuccessRate.push({
+            date: x.date,
+            success_rate: x.success_rate,
+          })
+        }
+        state.serverStatusChartMeta.serverStatusTotalOnline.push({
+          date: x.date,
+          online_rate: x.online_rate,
+          down_time_count: (1 - x.online_rate) * 1440
+        })
+      })
+    }
+
+    onMounted(() => {
+      fetch(settings.value.basePath + "/static/db/annual2021.json").then((response: Response) => {
+        if (!response.body) {return}
+        let reader = response.body.getReader()
+        let bytesReceived = 0
+        let chunks: ArrayLike<number>[] = []
+        reader.read().then(async function processResult(result): Promise<any> {
+          if (result.done) {
+            init(bytesReceived, chunks)
+            return
+          }
+          chunks.push(result.value)
+          bytesReceived += result.value.length
+          state.progress = Math.floor((bytesReceived / 5242672) * 100)//不要想太多, 这个数字只是文件大小已知而已
+          return reader.read().then(processResult)
+        })
+      }).catch(e => {
+        Notice(e.toString(), 'error')
+      })
+    })
+
+    watch(() => state.accountListFilter, () => {renderAll()}, {deep: true})
+
+    return {
+      ...toRefs(state),
+      ScrollTo,
+      settings,
+      filterTag,
+      serverStatusLabel,
+      serverStatusColor,
+      projects,
+      colorForGroup,
+      swapGroupStatus
+    }
+  }
 }
 </script>
 

@@ -21,7 +21,7 @@
   ```
 
 - `yarn`
-- `vite`
+- `yarn run dev`
 
 ## Translation
 
@@ -69,7 +69,7 @@ check more in `/src/i18n/`, base language is **Chinese simplified（zh-hans）**
   ```
 
 - `yarn`
-- `vite`
+- `yarn run dev`
 
 ## 翻译
 

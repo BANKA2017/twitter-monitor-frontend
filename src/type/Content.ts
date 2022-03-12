@@ -187,3 +187,33 @@ export interface AdvancedSearchQuery {
   advanced?: string
   hidden?: string
 }
+
+export interface renameDepartmentChildItem {name: string; value: number; itemStyle: {color: string}}
+export interface renameDepartmentItem {name: string; itemStyle: {color: string}; children: renameDepartmentChildItem[] | {[p in string]: renameDepartmentChildItem}}
+export interface Annual2021DataTemplate {
+  tweets: [string, number][]
+  retweet: [string, number][]
+  hourCount: number[]
+  mediaCount: number[]
+  trendsData: {
+    followers: {[index: string]: number | string; date: string;}[]
+    statuses_count: {[index: string]: number | string; date: string;}[]
+    label: {[p in string]: string}
+    color: string[]
+  }
+  renameDepartment: renameDepartmentItem[] | {[p in string]: renameDepartmentItem}
+}
+
+export interface Annual2021TmpDataTemplate {
+  tweets: {[p in string]: number}
+  retweet: {[p in string]: number}
+  hourCount: number[]
+  mediaCount: number[]
+  trendsData: {
+    followers: {[index: string]: number | string}
+    statuses_count: {[index: string]: number | string}
+    label: {[p in string]: string}
+    color: string[]
+  }
+  renameDepartment: renameDepartmentItem[] | {[p in string]: renameDepartmentItem}
+}

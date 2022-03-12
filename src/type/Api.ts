@@ -134,3 +134,60 @@ export interface ApiLoveLiveData {
   }[]
   range: { start: number; end: number }
 }
+
+export interface ApiAnnual2020 {
+  userAddList: {name: string; display_name: string; add: boolean}[]
+  userDeleteList: {name: string; display_name: string; add: boolean}[]
+  pollTopTweet: Tweet
+  userData: {
+    uid: string
+    name: string
+    display_name: string
+    followers: number
+    statuses_count: number
+    time: number
+    followers_add: number
+    statuses_count_add: number
+  }[]
+  projects: {text: string; value: string}[]
+  hashTagList: {count: number; text: string}[]
+  serverStatusMeta: {
+    date: string
+    total_tweets: number
+    success_rate: number
+    total_time_cost: number
+    max_time_cost: number
+    min_time_cost: number
+    avg_time_cost: number
+    avg_tweets: number
+    tweets_count: number
+  }[]
+}
+
+export interface ApiAnnual2021 {
+  range: {start: number; end: number}
+  user_add_list: {name: string; display_name: string; add: boolean}[]
+  user_del_list: {name: string; display_name: string; add: boolean}[]
+  hashtag_rank: {count: number; text: string}[]
+  user_data: { uid: number; name: string; display_name: string; followers: number; statuses_count: number; time: number; followers_add: number; statuses_count_add: number; group: string[] }[]
+  server_status_meta: { date: string; total_tweets: number; success_rate: number; online_rate: number; total_time_cost: number; max_time_cost: number; min_time_cost: number; avg_time_cost: number; avg_tweets: number; tweets_count: number; }[]
+  account_color: {[p in string]: {[q in string]: string}}
+  single_project_hashtag: {[p in string]: {value: number; name: string}[]}
+  display_name_list: {[p in string]: string}
+  account_data: {
+    name: string
+    display_name_list: string[]
+    organization: boolean
+    uid: string
+    projects: string[][]
+    daily_data: {[p in string]: {
+      followers: number
+      following: number
+      statuses_count: number
+      origin: number
+      hour_count: number[]
+      media: number[]
+    }}
+    range: {start: number; end: number}
+  }[]
+}

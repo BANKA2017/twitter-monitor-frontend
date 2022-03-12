@@ -124,12 +124,12 @@ import InfoCircleFill from "@/icons/InfoCircleFill.vue";
 import DownloadIcon from "@/icons/DownloadIcon.vue";
 import {ScrollTo, Notice} from "@/share/Tools";
 import {useStore} from "@/store";
-import {computed, onMounted, reactive, Ref, ref, toRefs, watch} from "vue";
+import {computed, onMounted, reactive, Ref, ref, toRefs, watch, defineComponent} from "vue";
 import {request} from "@/share/Fetch";
 import {ApiLoveLiveData, ApiLoveLiveDateList} from "@/type/Api";
 import SinglePageHeader from "@/components/SinglePageHeader.vue";
 
-export default {
+export default defineComponent({
   name: "loveliveTrends",
   setup () {
     useHead({
@@ -140,7 +140,7 @@ export default {
       }]
     })
 
-    const color = {"Aqours": "#32aaff", "虹ヶ咲学園": "#f39800", "Liella!": "#a5469c",}
+    const color = {"Aqours": "#1AB1F6", "虹ヶ咲学園": "#F8B657", "Liella!": "#DA57D8",}
     const teams = [{"text": "Aqours", "value": "Aqours"},{"text": "虹ヶ咲学園", "value": "虹ヶ咲学園"},{"text": "Liella!", "value": "Liella!"},]
     const selectedTeams = ref(new Set(["Aqours", "虹ヶ咲学園", "Liella!"]))
 
@@ -263,7 +263,7 @@ export default {
     return {...toRefs(state), ScrollTo, Notice, color, teams, selectedTeams, createDate, userData, timeCountRows, tableData, settings}
   },
   components: {SinglePageHeader, DownloadIcon, InfoCircleFill, ArrowLeft, CandlestickChart, Tmv2Chart},
-}
+})
 </script>
 
 <style scoped>

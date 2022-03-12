@@ -60,8 +60,7 @@
                 <tbody>
                 <tr v-for="(userInfo, order) in userDeleteList" :key="order" class="table-danger">
                   <th scope="row">{{ userInfo.display_name }}</th>
-                  <td><a :href="`https://twitter.com/` + userInfo.name" class="text-decoration-none text-dark"
-                         target="_blank">@{{ userInfo.name }}</a></td>
+                  <td><a :href="`https://twitter.com/` + userInfo.name" class="text-decoration-none text-dark" target="_blank">@{{ userInfo.name }}</a></td>
                 </tr>
                 </tbody>
               </table>
@@ -72,16 +71,14 @@
           <p>投票不多，也不难找，粗略翻了一下就找到参与人数最多的投票了……关于送啥的……果然免（bai）费（piao）才是人气所在（</p>
           <tweet :order="-1" :tweet="pollTopTweet" class="col-md-8 offset-md-2" display="all" display-type="timeline"/>
           <h5 class="my-3">用户数据变动</h5>
-          <el-table ref="accountData" v-loading="!userData.length" :data="userData"
-                    :default-sort="{prop: 'followers_add', order: 'descending'}" style="width: 100%">
+          <el-table ref="accountData" v-loading="!userData.length" :data="userData" :default-sort="{prop: 'followers_add', order: 'descending'}" style="width: 100%">
             <el-table-column label="用户名" prop="display_name"></el-table-column>
             <el-table-column label="关注数" prop="followers" show-overflow-tooltip sortable></el-table-column>
             <el-table-column label="关注变化量" prop="followers_add" show-overflow-tooltip sortable></el-table-column>
             <el-table-column label="总推文数" prop="statuses_count" show-overflow-tooltip sortable></el-table-column>
             <el-table-column label="推文变化量" prop="statuses_count_add" show-overflow-tooltip sortable></el-table-column>
             <el-table-column label="监听天数" prop="time" sortable></el-table-column>
-            <el-table-column :filter-method="filterTag" :filters="projects" filter-placement="bottom-end"
-                             header-align="center" label="组" prop="group">
+            <el-table-column :filter-method="filterTag" :filters="projects" filter-placement="bottom-end" header-align="center" label="组" prop="group">
               <template #default="scope">
                 <el-tag v-for="group in scope.row.group" :key="group" :type="colorForGroup[group]" disable-transitions>
                   {{ group }}
@@ -90,8 +87,7 @@
             </el-table-column>
           </el-table>
           <h5 class="my-4">标签排行</h5>
-          <el-table ref="accountData" v-loading="!hashTagList.length" :data="hashTagList"
-                    :default-sort="{prop: 'count', order: 'descending'}" style="width: 100%">
+          <el-table ref="accountData" v-loading="!hashTagList.length" :data="hashTagList" :default-sort="{prop: 'count', order: 'descending'}" style="width: 100%">
             <el-table-column label="名称" prop="text"></el-table-column>
             <el-table-column label="统计" prop="count" show-overflow-tooltip sortable></el-table-column>
           </el-table>
@@ -104,16 +100,10 @@
           <p>除了服务器迁移和六月初的强制拔线，本站基本没有出现过长时间停机，但由于对Twitter的请求数量过多，我们经常会得到两种错误：<span class="text-monospace">Rate limit exceeded</span>
             和 <span class="text-monospace">Bad guest token.</span></p>
           <p>下面就是没什么用的数据啦</p>
-          <tmv2-chart :chart-rows="serverStatusChartMeta.serverStatusTotalTweets"
-                      :colors="serverStatusColor.serverStatusTotalTweets" :label-map="serverStatusLabel.totalTweets"
-                      chart-type="line"></tmv2-chart>
-          <tmv2-chart :chart-rows="serverStatusChartMeta.serverStatusTotalTime"
-                      :colors="serverStatusColor.serverStatusTotalTime" :label-map="serverStatusLabel.totalTime"
-                      :y-axis="{type: 'log', name: '秒', scale: true}" chart-type="line"></tmv2-chart>
-          <tmv2-chart :chart-rows="serverStatusChartMeta.serverStatusTotalSuccessRate"
-                      :colors="serverStatusColor.serverStatusTotalSuccessRate"
-                      :label-map="serverStatusLabel.successRate" chart-type="line"></tmv2-chart>
-          <h3 class="my-3">后话</h3>
+          <tmv2-chart :chart-rows="serverStatusChartMeta.serverStatusTotalTweets" :colors="serverStatusColor.serverStatusTotalTweets" :label-map="serverStatusLabel.totalTweets" chart-type="line"></tmv2-chart>
+          <tmv2-chart :chart-rows="serverStatusChartMeta.serverStatusTotalTime" :colors="serverStatusColor.serverStatusTotalTime" :label-map="serverStatusLabel.totalTime" :y-axis="{type: 'log', name: '秒', scale: true}" chart-type="line"></tmv2-chart>
+          <tmv2-chart :chart-rows="serverStatusChartMeta.serverStatusTotalSuccessRate" :colors="serverStatusColor.serverStatusTotalSuccessRate" :label-map="serverStatusLabel.successRate" chart-type="line"></tmv2-chart>
+          <h3 class="my-3">其他</h3>
           <p><a class="text-decoration-none text-dark" href="/static/db/annual2020.json" target="_blank">本页数据</a></p>
         </div>
       </div>
@@ -122,14 +112,17 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import Tweet from "@/components/TweetItem.vue"
 import Tmv2Chart from "@/components/Tmv2ChartWithoutDataSet.vue"
 import {useHead} from "@vueuse/head";
 import {ScrollTo, Notice} from "@/share/Tools";
 import SinglePageHeader from "@/components/SinglePageHeader.vue";
+import {onMounted, reactive, ref, Ref, toRefs, defineComponent} from "vue";
+import {request} from "@/share/Fetch";
+import {ApiAnnual2020} from "@/type/Api";
 
-export default {
+export default defineComponent({
   name: "annual2020",
   setup() {
     useHead({
@@ -139,23 +132,8 @@ export default {
         content: "#1da1f2"
       }]
     })
-    return {
-      ScrollTo,
-      Notice
-    }
-  },
-  components: {SinglePageHeader, Tmv2Chart, Tweet},
-  data: () => ({
-    status: false,
-    userAddList: [],
-    userDeleteList: [],
-    pollTopTweet: {},
-    userData: [],
-    userDataTypeColors: ['', 'success', 'warning', 'danger', 'info', 'text'],
-    projects: [],
-    colorForGroup: {"BanGDream!": "", "ARGONAVIS": "success", "LoveLive!": "warning", "艦これ": "danger"},
-    hashTagList: [],
-    serverStatusLabel: {
+
+    const serverStatusLabel = {
       totalTweets: {
         "date": "日期",
         "total_tweets": "每日处理推文数",
@@ -173,62 +151,97 @@ export default {
         "date": "日期",
         "success_rate": "成功率",
       },
-    },
-    serverStatusMeta: [],
-    serverStatusChartMeta: {
-      serverStatusTotalTweets: [],
-      serverStatusTotalTime: [],
-      serverStatusTotalSuccessRate: [],
-      serverStatusTotalAverageTweets: [],
-    },
-    serverStatusColor: {
+    }
+    const serverStatusColor = {
       serverStatusTotalTweets: ['#19d4ae', '#d87a80', '#5ab1ef'],
       serverStatusTotalTime: ['#5ab1ef', '#fa6e86', '#ffb980', '#c4b4e4'],
       serverStatusTotalSuccessRate: ['#0067a6'],
     }
-  }),
-  methods: {
-    filterTag(value, row) {
+
+    const colorForGroup = {"BanGDream!": "", "ARGONAVIS": "success", "LoveLive!": "warning", "艦これ": "danger"}
+
+    const filterTag = (value: string, row: any) => {
       for (let x in row.group) {
         if (x === value) {return true}
       }
       return false
-    },
-  },
-  mounted: function () {
-    fetch("/static/db/annual2020.json").then(async response => {
-      response = await response.json()
-      this.userAddList = response.userAddList
-      this.userDeleteList = response.userDeleteList
-      this.pollTopTweet = response.pollTopTweet
-      this.userData = response.userData
-      this.projects = response.projects
-      this.hashTagList = response.hashTagList
-      this.serverStatusMeta = response.serverStatusMeta
-      this.serverStatusMeta.map(x => {
-        this.serverStatusChartMeta.serverStatusTotalTweets.push({
-          date: x.date,
-          total_tweets: x.total_tweets,
-          tweets_count: x.tweets_count,
-          avg_tweets: x.avg_tweets,
+    }
+
+    const state = reactive<{
+      status: Ref<boolean>,
+      userAddList: ApiAnnual2020["userAddList"]
+      userDeleteList: ApiAnnual2020["userDeleteList"]
+      pollTopTweet: ApiAnnual2020["pollTopTweet"] | {}
+      userData: ApiAnnual2020["userData"]
+      projects: ApiAnnual2020["projects"]
+      hashTagList: ApiAnnual2020["hashTagList"]
+      serverStatusMeta: ApiAnnual2020["serverStatusMeta"]
+      serverStatusChartMeta: {
+        serverStatusTotalTweets: {date: string; total_tweets: number; tweets_count: number; avg_tweets: number}[],
+        serverStatusTotalTime: {date: string; total_time_cost: number; max_time_cost: number; min_time_cost: number; avg_time_cost: number}[],
+        serverStatusTotalSuccessRate: {date: string; success_rate: number}[],
+      },
+    }>({
+      status: ref(false),
+      userAddList: [],
+      userDeleteList: [],
+      pollTopTweet: {},
+      userData: [],
+      projects: [],
+      hashTagList: [],
+      serverStatusMeta: [],
+      serverStatusChartMeta: {
+        serverStatusTotalTweets: [],
+        serverStatusTotalTime: [],
+        serverStatusTotalSuccessRate: [],
+      },
+    })
+
+    onMounted(() => {
+      request<ApiAnnual2020>('/static/db/annual2020.json').then(response => {
+        state.userAddList = response.userAddList
+        state.userDeleteList = response.userDeleteList
+        state.pollTopTweet = response.pollTopTweet
+        state.userData = response.userData
+        state.projects = response.projects
+        state.hashTagList = response.hashTagList
+        state.serverStatusMeta = response.serverStatusMeta
+        state.serverStatusMeta.map(x => {
+          state.serverStatusChartMeta.serverStatusTotalTweets.push({
+            date: x.date,
+            total_tweets: x.total_tweets,
+            tweets_count: x.tweets_count,
+            avg_tweets: x.avg_tweets,
+          })
+          state.serverStatusChartMeta.serverStatusTotalTime.push({
+            date: x.date,
+            total_time_cost: x.total_time_cost,
+            max_time_cost: x.max_time_cost,
+            min_time_cost: x.min_time_cost,
+            avg_time_cost: x.avg_time_cost,
+          })
+          state.serverStatusChartMeta.serverStatusTotalSuccessRate.push({
+            date: x.date,
+            success_rate: x.success_rate,
+          })
         })
-        this.serverStatusChartMeta.serverStatusTotalTime.push({
-          date: x.date,
-          total_time_cost: x.total_time_cost,
-          max_time_cost: x.max_time_cost,
-          min_time_cost: x.min_time_cost,
-          avg_time_cost: x.avg_time_cost,
-        })
-        this.serverStatusChartMeta.serverStatusTotalSuccessRate.push({
-          date: x.date,
-          success_rate: x.success_rate,
-        })
+        state.status = true
+        ScrollTo()
+      }).catch(e => {
+        Notice(String(e), 'error')
       })
-      this.status = true
-      ScrollTo()
-    }).catch(e => Notice("error", e))
+    })
+
+    return {
+      ...toRefs(state),
+      serverStatusLabel,
+      serverStatusColor,
+      colorForGroup,
+      filterTag
+    }
   },
-}
+  components: {SinglePageHeader, Tmv2Chart, Tweet},
+})
 </script>
 
 <style scoped>

@@ -65,23 +65,7 @@ export default createRouter({
             children: [{
                 path: 'index.html',
                 redirect: '/'
-            }
-            //{
-            //    path: 'i',
-            //    component: UserSelector,
-            //    children: [
-            //        {
-            //            path: 'project/:project',
-            //            component: UserSelector,
-            //            children: [
-            //                {path: ':name', component: UserSelector},
-            //                {path: ':name/:display', component: UserSelector},
-            //                {path: ':name/status/:status', component: UserSelector}
-            //            ]
-            //        }
-            //    ]
-            //}
-            ]
+            }]
         },
         {
             path: '/:name',

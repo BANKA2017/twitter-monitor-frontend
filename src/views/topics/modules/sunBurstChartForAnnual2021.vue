@@ -5,96 +5,97 @@
   </div>
 </template>
 
-<script>
+<script setup lang="ts">
 import * as echarts from 'echarts/core';
-import { TitleComponent } from 'echarts/components';
+import {TitleComponent, TitleComponentOption, TooltipComponentOption} from 'echarts/components';
 import { SunburstChart } from 'echarts/charts';
 import { CanvasRenderer } from 'echarts/renderers';
 import VChart from "vue-echarts";
+import {computed, PropType} from "vue";
+import {renameDepartmentItem} from "@/type/Content";
+import {SunburstSeriesOption} from "echarts";
 
 echarts.use([TitleComponent, SunburstChart, CanvasRenderer]);
-export default {
-  name: "sunBurstChartForAnnual2021",
-  components: {
-    VChart
+
+const props = defineProps({
+  data: {
+    type: Array as PropType<renameDepartmentItem[]>,
+    default: () => ([])
   },
-  props: {
-    data: {
-      type: Array,
-      default: () => ([])
-    },
-    title: {
-      type: String,
-      default: ""
-    },
-    subtitle: {
-      type: String,
-      default: ""
-    },
-    height: {
-      type: [String, Number],
-      default: "820px"
-    },
+  title: {
+    type: String,
+    default: ""
   },
-  data: () => ({
-    option: {
-      title: {text: '', subtext: '', subtextStyle: {align: 'center'},},
-      tooltip: {},
-      series: {
-        type: 'sunburst',
-        data: [],
-        radius: [0, '95%'],
-        sort: undefined,
-        emphasis: {
-          focus: 'ancestor'
+  subtitle: {
+    type: String,
+    default: ""
+  },
+  height: {
+    type: [String, Number],
+    default: "820px"
+  },
+})
+
+const option: {
+  title: TitleComponentOption
+  tooltip: TooltipComponentOption
+  series: SunburstSeriesOption
+} = {
+  title: {text: '', subtext: '', subtextStyle: {align: 'center'},},
+  tooltip: {},
+  series: {
+    type: 'sunburst',
+    data: [],
+    radius: [0, '95%'],
+    sort: undefined,
+    emphasis: {
+      focus: 'ancestor'
+    },
+    levels: [
+      {},
+      {
+        r0: '10%',
+        r: '27%',
+        itemStyle: {
+          borderWidth: 2
         },
-        levels: [
-          {},
-          {
-            r0: '10%',
-            r: '27%',
-            itemStyle: {
-              borderWidth: 2
-            },
-            label: {
-              align: 'right',
-              //color: '#FFFFFF'
-              //rotate: 'tangential'
-            }
-          },
-          {
-            r0: '27%',
-            r: '52%',
-            label: {
-              align: 'right'
-            }
-          },
-          {
-            r0: '52%',
-            r: '54%',
-            label: {
-              position: 'outside',
-              padding: 3,
-              silent: false
-            },
-            itemStyle: {
-              borderWidth: 3
-            }
-          }
-        ]
+        label: {
+          align: 'right',
+          //color: '#FFFFFF'
+          //rotate: 'tangential'
+        }
+      },
+      {
+        r0: '27%',
+        r: '52%',
+        label: {
+          align: 'right'
+        }
+      },
+      {
+        r0: '52%',
+        r: '54%',
+        label: {
+          position: 'outside',
+          padding: 3,
+          silent: false
+        },
+        itemStyle: {
+          borderWidth: 3
+        }
       }
-    }
-  }),
-  computed: {
-    computedOptions: function () {
-      let tmpOption = this.option
-      tmpOption.title.text = this.title
-      tmpOption.title.subtext = this.subtitle
-      tmpOption.series.data = this.data
-      return tmpOption
-    }
+    ]
   }
 }
+
+const computedOptions = computed(() => {
+  let tmpOption = option
+  tmpOption.title.text = props.title
+  tmpOption.title.subtext = props.subtitle
+  tmpOption.series.data = props.data
+  return tmpOption
+})
+
 </script>
 
 <style scoped>
