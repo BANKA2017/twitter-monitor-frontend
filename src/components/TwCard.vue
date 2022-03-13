@@ -4,7 +4,7 @@
       <a v-if="object?.url && object.type !== 'unified_card'" :href="(object.type === 'audiospace' ? 'https://twitter.com/i/spaces/' : '') + object.url" class="stretched-link text-decoration-none" target="_blank"></a>
       <template v-if="object.type === 'summary' || object.type === 'audio' || object.type === 'app' || object.type === 'moment'">
         <div class="row no-gutters">
-          <el-image v-if="object.media === 1 && mediaState" :preview-src-list="[createRealMediaPath(realMediaPath, samePath)+latestMedia.cover]" :src="createRealMediaPath(realMediaPath, samePath)+latestMedia.cover" alt="cardImage" class="col-4 card-img border-right" fit="cover" lazy style="border-radius: 14px 0 0 14px" append-to-body hide-on-click-modal></el-image>
+          <el-image v-if="object.media === 1 && mediaState" :preview-src-list="[createRealMediaPath(realMediaPath, samePath)+latestMedia.cover]" :src="createRealMediaPath(realMediaPath, samePath)+latestMedia.cover" alt="cardImage" class="col-4 card-img border-right" fit="cover" lazy style="border-radius: 14px 0 0 14px; aspect-ratio: 1" append-to-body hide-on-click-modal></el-image>
           <div class="col-8">
             <div class="card-body">
               <div class="row no-gutters">
@@ -145,11 +145,11 @@ const store = useStore()
 const settings = computed(() => store.state.settings)
 const realMediaPath = computed(() => store.state.realMediaPath)
 const samePath = computed(() => store.state.samePath)
-const latestMedia = computed(() => {
+const latestMedia = computed((): Media | {} => {
   if (props.media) {
     return props.media[props.media.length - 1]
   } else {
-    return []
+    return {}
   }
 })
 

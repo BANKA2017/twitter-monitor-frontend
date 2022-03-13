@@ -142,4 +142,7 @@
 .bg-twitter-blue {
   background-color: #1da1f2;
 }
+.plyr {
+  border-radius: 14px;
+}
 </style>

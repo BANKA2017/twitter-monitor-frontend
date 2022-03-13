@@ -53,8 +53,8 @@ import { createHead } from "@vueuse/head"
 
 import {ScrollTo} from "@/share/Tools";
 
-//pwa
-//import '@/pwa'
+//plyr
+import 'plyr/dist/plyr.css'
 
 router.afterEach(() => {
   ScrollTo(0)

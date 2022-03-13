@@ -13,7 +13,6 @@ declare module 'vue' {
     ElCollapseTransition: typeof import('element-plus/es')['ElCollapseTransition']
     ElDivider: typeof import('element-plus/es')['ElDivider']
     ElDrawer: typeof import('element-plus/es')['ElDrawer']
-    ElIcon: typeof import('element-plus/es')['ElIcon']
     ElImage: typeof import('element-plus/es')['ElImage']
     ElInput: typeof import('element-plus/es')['ElInput']
     ElProgress: typeof import('element-plus/es')['ElProgress']

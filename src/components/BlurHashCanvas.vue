@@ -17,7 +17,7 @@ watchEffect(() => {
   const { value: canvas } = BlurHashRef
   // pre check
   if (props.hashText && canvas && isBlurhashValid(props.hashText).result) {
-    const canvasLength = 10//square
+    const canvasLength = 20//square
     canvas.width = canvasLength
     canvas.height = canvasLength
     const pixels = decode(props.hashText, canvasLength,  canvasLength)
