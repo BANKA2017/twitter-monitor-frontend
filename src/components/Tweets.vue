@@ -25,7 +25,7 @@
         <div v-for="(tweet, order) in tweets" :key="order">
           <tweet-item :tweet="tweet"/>
           <el-divider v-if="order < tweets.length - 1 && tweet.conversation_id_str === tweets[order + 1].conversation_id_str">
-            <el-icon><caret-bottom /></el-icon>
+            <svg class="icon" width="1rem" height="1rem" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" data-v-4194ce60=""><path fill="currentColor" d="M192 384l320 384 320-384z"></path></svg>
           </el-divider>
           <el-divider v-else />
         </div>
@@ -117,7 +117,7 @@ const state = reactive<{
 })
 
 watch(height, () => {
-  if (route.name !== 'name-status' && route.name !== 'no-name-status' && siteHeight.value - height.value - viewportHeight.value < 150 && settings.value.autoLoadTweets && !state.loadingBottom) {
+  if (route.name !== 'name-status' && route.name !== 'no-name-status' && siteHeight.value - height.value - viewportHeight.value < 150 && settings.value.autoLoadTweets && !state.loadingBottom && state.moreTweets) {
     loading(false)
   }
 })

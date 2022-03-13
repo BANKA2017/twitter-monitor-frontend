@@ -1,13 +1,13 @@
 <template>
   <div >
-    <router-link class="text-decoration-none badge badge-pill badge-primary mr-1" to="/search/">{{ t("timeline.side_tags.search") }}</router-link>
-    <router-link class="text-decoration-none badge badge-pill badge-primary mr-1" to="/settings/" >{{ t("timeline.side_tags.settings") }}</router-link>
-    <router-link class="text-decoration-none badge badge-pill badge-primary mr-1" to="/about/">{{ t("timeline.side_tags.about") }}</router-link>
-    <router-link class="text-decoration-none badge badge-pill badge-primary mr-1" to="/i/stats/">{{ t("timeline.side_tags.stats") }}</router-link>
-    <router-link class="text-decoration-none badge badge-pill badge-primary mr-1" to="/i/status/">{{ t("timeline.side_tags.status") }}</router-link>
-    <router-link class="text-decoration-none badge badge-pill badge-primary mr-1" to="/api/">{{ t("timeline.side_tags.api") }}</router-link>
-    <router-link class="text-decoration-none badge badge-pill badge-primary mr-1" to="/i/online">{{ t("timeline.side_tags.media_download_tool") }}</router-link>
-    <a :href="store.getters.getBasePath + `/api/v2/rss/` + $route.params.name.toString().toLowerCase() + `.xml`" target="_blank" v-if="($route.name === 'name-display' || $route.name === 'name-status') && $route.params.name"><span class="text-decoration-none text-white badge badge-pill badge-primary mx-1">{{ t("timeline.side_tags.rss") }}</span></a>
+    <router-link to="/search/"><el-tag class="text-decoration-none mr-1 mb-1">{{ t("timeline.side_tags.search") }}</el-tag></router-link>
+    <router-link to="/settings/"><el-tag class="text-decoration-none mr-1 mb-1" >{{ t("timeline.side_tags.settings") }}</el-tag></router-link>
+    <router-link to="/about/"><el-tag class="text-decoration-none mr-1 mb-1">{{ t("timeline.side_tags.about") }}</el-tag></router-link>
+    <router-link to="/i/stats/"><el-tag class="text-decoration-none mr-1 mb-1">{{ t("timeline.side_tags.stats") }}</el-tag></router-link>
+    <router-link to="/i/status/"><el-tag class="text-decoration-none mr-1 mb-1">{{ t("timeline.side_tags.status") }}</el-tag></router-link>
+    <router-link to="/api/"><el-tag class="text-decoration-none mr-1 mb-1" >{{ t("timeline.side_tags.api") }}</el-tag></router-link>
+    <router-link to="/i/online"><el-tag class="text-decoration-none mr-1 mb-1">{{ t("timeline.side_tags.media_download_tool") }}</el-tag></router-link>
+    <a :href="store.getters.getBasePath + `/api/v2/rss/` + $route.params.name.toString().toLowerCase() + `.xml`" target="_blank" v-if="($route.name === 'name-display' || $route.name === 'name-status') && $route.params.name"><el-tag class="text-decoration-none mr-1 mb-1">{{ t("timeline.side_tags.rss") }}</el-tag></a>
   </div>
 </template>
 

@@ -38,7 +38,7 @@ import {
     ElAvatar,
     ElProgress,
     ElDrawer,
-    ElIcon,
+    //ElIcon,
 } from 'element-plus'//
 
 
@@ -65,7 +65,8 @@ const app = createApp(App)
 app.config.globalProperties.append = (path: string, pathToAppend: string) => path + (path.endsWith('/') ? '' : '/') + pathToAppend
 
 //element-plus
-app.use(ElBacktop).use(ElImage).use(ElSkeletonItem).use(ElCollapseTransition).use(ElSkeleton).use(ElTable).use(ElTableColumn).use(ElButton).use(ElLoading).use(ElDivider).use(ElInput).use(ElCarousel).use(ElCarouselItem).use(ElNotification).use(ElTag).use(ElRow).use(ElSelect).use(ElOption).use(ElSwitch).use(ElAvatar).use(ElProgress).use(ElDrawer).use(ElIcon)
+app.use(ElBacktop).use(ElImage).use(ElSkeletonItem).use(ElCollapseTransition).use(ElSkeleton).use(ElTable).use(ElTableColumn).use(ElButton).use(ElLoading).use(ElDivider).use(ElInput).use(ElCarousel).use(ElCarouselItem).use(ElNotification).use(ElTag).use(ElRow).use(ElSelect).use(ElOption).use(ElSwitch).use(ElAvatar).use(ElProgress).use(ElDrawer)
+//app.use(ElIcon)
 //app.use(ElementPlus)
 app.use(router).use(store, key).use(i18n).use(createHead())
 if (process.env.NODE_ENV !== 'development') {
