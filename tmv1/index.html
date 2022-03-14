@@ -8,10 +8,9 @@
     <meta name="description" content="Twitter Monitor v1">
     <meta name="keywords" content="Twitter Monitor, twitter监控, Twitter Monitor计划">
     <title>Twitter Monitor</title>
-    <!--<script src="./sw.js"></script>-->
-    <link href="https://tmv2api2.bangdream.fun/static/css/bootstrap.min.css" rel="stylesheet preload" as="style">
-    <script src="https://tmv2api2.bangdream.fun/static/js/jquery.slim.min.js"></script>
-    <script src="https://tmv2api2.bangdream.fun/static/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"></script>
 </head>
 <body>
 <noscript>
@@ -408,20 +407,15 @@
     </button>
 </div>
 <!--css and js-->
-<link rel="stylesheet" href="https://tmv2api2.bangdream.fun/static/css/noty.css">
-<script src="https://tmv2api2.bangdream.fun/static/js/vue.min.js"></script>
-<script src="https://tmv2api2.bangdream.fun/static/js/vue-router.js"></script>
-<script src="https://tmv2api2.bangdream.fun/static/js/axios.min.js"></script>
-<script src="https://tmv2api2.bangdream.fun/static/js/fastclick.js"></script>
-<script src="https://tmv2api2.bangdream.fun/static/js/noty.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/element-ui@2.15.6/lib/theme-chalk/index.min.css">
+<script src="https://cdn.jsdelivr.net/npm/noty@3.2.0-beta-deprecated/lib/noty.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue-router@3.5.3/dist/vue-router.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios@0.26.1/dist/axios.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue-lazyload@1.3.3/vue-lazyload.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/element-ui@2.15.6/lib/element-ui.common.min.js"></script>
 <script src="https://tmv2api2.bangdream.fun/static/js/echarts.min.js"></script>
 <script src="https://tmv2api2.bangdream.fun/static/js/index.min.js"></script>
-<script src="https://tmv2api2.bangdream.fun/static/js/vue-lazyload.js"></script>
-<!--<script src="/static/js/lodash.min.js"></script>-->
-<!-- 引入样式 -->
-<link rel="stylesheet" href="https://tmv2api2.bangdream.fun/static/element/lib/theme-chalk/index.css">
-<!-- 引入组件库 -->
-<script src="https://tmv2api2.bangdream.fun/static/element/lib/index.js"></script>
 <script>
     'use strict';
     Vue.use(VueLazyload, {
@@ -842,10 +836,6 @@
                 return singleUser;
             },
             //localrun: function() {
-            //    //FastClick
-            //    $(function() {
-            //        FastClick.attach(document.body);
-            //    });
             //    //TODO service worker
             //    //if ('serviceWorker' in navigator) {
             //    //    navigator.serviceWorker.register('./sw.js').then(function(registration) {
