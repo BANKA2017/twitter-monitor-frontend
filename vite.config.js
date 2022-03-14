@@ -1,4 +1,5 @@
 import { defineConfig } from 'vite'
+const { resolve } = require('path')
 import vue from '@vitejs/plugin-vue'
 import {vueI18n} from "@intlify/vite-plugin-vue-i18n";
 import path from 'path'
@@ -10,7 +11,15 @@ import { VitePWA } from 'vite-plugin-pwa'
 // https://vitejs.dev/config/
 export default defineConfig({
   server: {host: true},
-  build: {assetsDir: 'static'},
+  build: {
+    assetsDir: 'static',
+    rollupOptions: {
+      input: {
+        main: resolve(__dirname, 'index.html'),
+        tmv1: resolve(__dirname, 'tmv1/index.html')
+      }
+    }
+  },
   plugins: [
     vue(),
     vueI18n({include: path.resolve(__dirname, './src/i18n/*.json')}),

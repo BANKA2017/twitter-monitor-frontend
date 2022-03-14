@@ -60,7 +60,7 @@ const option: {
 } = {
   title: {top: 30, left: 'center', text: ''},
   tooltip: {},
-  visualMap: {min: 0, max: 10, calculable: true, orient: 'horizontal', left: 'center', top: 65},
+  visualMap: {min: 0, max: 10, calculable: true, orient: 'horizontal', left: 'center', top: 65, type: 'continuous'},
   calendar: {top: 120, left: 30, right: 30, cellSize: ['auto', 13], range: '0', itemStyle: {borderWidth: 0.5}, yearLabel: { show: false }},
   series: {
     type: 'heatmap',

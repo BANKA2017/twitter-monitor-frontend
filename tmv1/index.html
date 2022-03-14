@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <link rel="shortcut icon" href="/static/img/icon.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="author" content="Banka2017 (https://bangdream.fun)">
+    <meta name="description" content="Twitter Monitor v1">
+    <meta name="keywords" content="Twitter Monitor, twitter监控, Twitter Monitor计划">
+    <title>Twitter Monitor</title>
+    <!--<script src="./sw.js"></script>-->
+    <link href="https://tmv2api2.bangdream.fun/static/css/bootstrap.min.css" rel="stylesheet preload" as="style">
+    <script src="https://tmv2api2.bangdream.fun/static/js/jquery.slim.min.js"></script>
+    <script src="https://tmv2api2.bangdream.fun/static/js/bootstrap.bundle.min.js"></script>
+</head>
+<body>
+<noscript>
+    <div style="background-color: #fff; position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 9999;">
+        <div style="font-size: 18px; font-family: Helvetica,sans-serif; line-height: 24px; margin: 10%; width: 80%;">
+            <p>We've detected that JavaScript is disabled in your browser. <del>Would you like to proceed to legacy Twitter Monitor?</del></p>
+            <!--<p style="margin: 20px 0;">
+              <a href="./legacy">
+                <button style="background-color: #1da1f2; border-radius: 100px; border: none; box-shadow: none; color: #fff; cursor: pointer; font-size: 14px; font-weight: bold; line-height: 20px; padding: 6px 16px;">Yes</button>
+              </a>
+            </p>-->
+        </div>
+    </div>
+</noscript>
+<div id="app">
+    <!--<div class="alert alert-secondary" role="alert" v-if="!settings.data.cookie_accept">
+        使用 Twitter Monitor 服务即表明你同意我们的<span class="alert-link">Cookie 使用</span>。我们使用 Cookie 用途包括分析、个性化服务和广告。
+      <button type="button" class="close" @click="settings.data.cookie_accept = true">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>-->
+    <template v-if="$route.path != '/' && !$route.params.project">
+        <nav class="navbar navbar-expand-lg navbar-light text-center bg-light sticky-top">
+            <span class="navbar-brand mb-0 h1 d-inline-block text-truncate" style="max-width: 250px;">{{ display_name }}</span>
+            <div class="btn-group" role="group" >
+                <button class="navbar-toggler" type="button" @click="$router.go(-1)">
+              <span>
+                <svg class="bi bi-chevron-left text-success" width="30" height="30" viewBox="0 0 20 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                  <path fill-rule="evenodd" d="M13.354 3.646a.5.5 0 010 .708L7.707 10l5.647 5.646a.5.5 0 01-.708.708l-6-6a.5.5 0 010-.708l6-6a.5.5 0 01.708 0z" clip-rule="evenodd"/>
+                </svg>
+              </span>
+                </button>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation" v-if="project.length&&!$route.params.hash&&!search">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+            </div>
+            <div class="collapse navbar-collapse" id="navbarNav" v-if="!$route.params.hash&&!search">
+                <ul class="navbar-nav">
+                    <li class="nav-item dropdown" v-for="(values, key) in names[project]" v-if="project">
+                        <a class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" :href="`#`+$route.path" v-if="names[project][key].length > 1">
+                            {{ key }}
+                        </a>
+                        <router-link class="nav-link" :to="`/`+(values[0].projects.length <= 1 ? '' : 'project/'+project+'/')+values[0].name+`/all`" v-else>{{ values[0].display_name }}</router-link>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown" v-if="names[project][key].length > 1">
+                            <div v-for="value in values">
+                                <router-link :to="`/`+(value.projects.length <= 1 ? '' : 'project/'+project+'/')+value.name+`/all`" :class="`dropdown-item `+(value.name ? '' : 'disabled')">{{ value.display_name }}</router-link>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+        <div class="my-4"></div>
+        <main role="main" class="container">
+            <div class="row">
+                <div class="col-md-4" v-if="!$route.params.status">
+                    <div v-if="search && search_type == 'text'">
+                        <div class="card">
+                            <div class="card-body">
+                                <h3>搜索</h3>
+                            </div>
+                        </div>
+                        <div class="my-4"></div>
+                    </div>
+                    <div v-else-if="!hash && info!=null">
+                        <div v-if="!init || $route.params.name == info.name">
+                            <div class="card">
+                                <img v-if="info.banner!=0" class="card-img-top" :src="`https://tmv2media.bangdream.fun/api/v2/media/pbs.twimg.com/profile_banners/`+info.uid+`/`+info.banner+`.banner.jpg`" alt="Banner">
+                                <div class="card-body">
+                                    <div class="container">
+                                        <div class="row">
+                                            <div class="col-4" style="max-height:100px;max-width:100px;">
+                                                <img v-if="info.header" class="rounded-circle img-fluid" :src="`https://tmv2media.bangdream.fun/api/v2/media/pbs.twimg.com/profile_images/`+info.header" alt="Header">
+                                                <div class="my-4"></div>
+                                            </div>
+                                            <div class="col-8">
+                                                <h5 class="card-title mt-0">
+                                                    <b>{{ info.display_name }}</b>
+                                                    <span></span>
+                                                    <svg v-if="info.verified" class="text-primary" width="1em" height="1em" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                                        <path d="M22.5 12.5c0-1.58-.875-2.95-2.148-3.6.154-.435.238-.905.238-1.4 0-2.21-1.71-3.998-3.818-3.998-.47 0-.92.084-1.336.25C14.818 2.415 13.51 1.5 12 1.5s-2.816.917-3.437 2.25c-.415-.165-.866-.25-1.336-.25-2.11 0-3.818 1.79-3.818 4 0 .494.083.964.237 1.4-1.272.65-2.147 2.018-2.147 3.6 0 1.495.782 2.798 1.942 3.486-.02.17-.032.34-.032.514 0 2.21 1.708 4 3.818 4 .47 0 .92-.086 1.335-.25.62 1.334 1.926 2.25 3.437 2.25 1.512 0 2.818-.916 3.437-2.25.415.163.865.248 1.336.248 2.11 0 3.818-1.79 3.818-4 0-.174-.012-.344-.033-.513 1.158-.687 1.943-1.99 1.943-3.484zm-6.616-3.334l-4.334 6.5c-.145.217-.382.334-.625.334-.143 0-.288-.04-.416-.126l-.115-.094-2.415-2.415c-.293-.293-.293-.768 0-1.06s.768-.294 1.06 0l1.77 1.767 3.825-5.74c.23-.345.696-.436 1.04-.207.346.23.44.696.21 1.04z"></path>
+                                                    </svg>
+                                                    <svg v-if="info.deleted" class="bi bi-trash text-danger" width="1em" height="1em" viewBox="0 0 20 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                                        <path fill-rule="evenodd" d="M6 6v8.5c0 .47.124.874.297 1.144.177.275.361.356.489.356h6.428c.127 0 .312-.08.489-.356.173-.27.297-.673.297-1.144V6h1v8.5c0 .634-.164 1.23-.456 1.685-.288.448-.747.815-1.33.815H6.786c-.583 0-1.042-.367-1.33-.815C5.164 15.73 5 15.134 5 14.5V6h1z" clip-rule="evenodd"/>
+                                                        <path fill-rule="evenodd" d="M7.5 7.5A.5.5 0 018 8v6a.5.5 0 01-1 0V8a.5.5 0 01.5-.5zm2.5 0a.5.5 0 01.5.5v6a.5.5 0 01-1 0V8a.5.5 0 01.5-.5zm2.5 0a.5.5 0 01.5.5v6a.5.5 0 01-1 0V8a.5.5 0 01.5-.5zm3-3.5h-11v1h11V4zm-11-1a1 1 0 00-1 1v1a1 1 0 001 1h11a1 1 0 001-1V4a1 1 0 00-1-1h-11z" clip-rule="evenodd"/>
+                                                        <path d="M8 3a1 1 0 011-1h2a1 1 0 011 1v1H8V3z"/>
+                                                    </svg>
+                                                    <svg v-else-if="info.locked" class="bi bi-lock text-danger" width="1em" height="1em" viewBox="0 0 20 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                                        <path fill-rule="evenodd" d="M13.655 9H6.333c-.264 0-.398.068-.471.121a.73.73 0 00-.224.296 1.626 1.626 0 00-.138.59V15c0 .342.076.531.14.635.064.106.151.18.256.237a1.122 1.122 0 00.436.127l.013.001h7.322c.264 0 .398-.068.471-.121a.73.73 0 00.224-.296 1.627 1.627 0 00.138-.59V10c0-.342-.076-.531-.14-.635a.658.658 0 00-.255-.237 1.123 1.123 0 00-.45-.128zm.012-1H6.333C4.5 8 4.5 10 4.5 10v5c0 2 1.833 2 1.833 2h7.334c1.833 0 1.833-2 1.833-2v-5c0-2-1.833-2-1.833-2zM6.5 5a3.5 3.5 0 117 0v3h-1V5a2.5 2.5 0 00-5 0v3h-1V5z" clip-rule="evenodd"/>
+                                                    </svg>
+                                                </h5>
+                                                <p>
+                                                    <small>
+                                                        <a :href="`//twitter.com/`+info.name" target="_blank" class="text-dark">@{{ info.name }}</a>
+                                                    </small>
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div v-html="`<p class='card-text'>`+info.description+`</p>`"></div>
+                                        <div v-if="!info.translate" class='card-text'>
+                                            <a :href="`#`+$route.path" class="text-decoration-none"><small style="color:#1DA1F2" @click="translate(info.uid,0,'profile')">翻译简介</small></a>
+                                        </div>
+                                        <div v-else-if="info.translate=='pending'" class="spinner-grow spinner-grow-sm" role="status">
+                                            <span class="sr-only">Loading...</span>
+                                        </div>
+                                        <div v-else>
+                                            <hr class="my-4">
+                                            <p class='card-text'><small class="text-muted">由 {{ info.translate_source }} 翻译</small></p>
+                                            <p v-if="info.translate" v-html="`<p class='card-text'>`+info.translate+`</p>`"></p>
+                                            <a :href="`#`+$route.path" class="text-decoration-none"><small style="color:#1DA1F2" @click="translate(info.uid,0,'profile')">重新翻译</small></a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--Load data-->
+                            <div class="my-4"></div>
+                            <ve-line :data="chart.chartData" :settings="chart.chartSettings" :extend="chart.chartOptions" :init-options="{renderer: 'svg'}" :height="chart.chartHeight" v-if="chart.chartData"></ve-line>
+                        </div>
+                        <div v-else class="text-center">
+                            <div class="spinner-border" role="status">
+                                <span class="sr-only">Loading...</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div v-else>
+                        <div class="card">
+                            <div class="card-body">
+                                <router-link :to="`/tag/`+hash"><h3>#{{ hash }}</h3></router-link>
+                            </div>
+                        </div>
+                        <div class="my-4"></div>
+                    </div>
+                </div>
+                <div :class="`col-md-`+($route.params.status ? '10' : '6')">
+                    <div id="search">
+                        <div class="input-group mb-3">
+                            <input type="text" class="form-control" placeholder="搜索..." aria-describedby="search" v-model.trim="search" v-if="search_type == 'text'">
+                            <input type="date" class="form-control" aria-describedby="search" v-model="search" v-if="search_type == 'date'">
+                            <div class="input-group-append" v-if="!hash||search">
+                                <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">搜索模式</button>
+                                <div class="dropdown-menu dropdown-menu-right">
+                                    <button class="dropdown-item" @click="search_type = searchType[1];search = ''" type="button" v-for="searchType in [['文字搜索', 'text'], ['日期搜索', 'date']]">{{ searchType[0] }}</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card" v-if="search && search.toLowerCase() == 'help' || search === '帮助'">
+                            <div class="card-body">
+                                <h5 class="card-title">帮助</h5>
+                                <h6 class="card-subtitle mb-2 text-muted">搜索快速入门</h6>
+                                <div v-for="tip in tips">
+                                    <div v-html="tip"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="list-group" v-if="search && search.slice(0, 1) != '!' && search_type == 'text'">
+                        <a :href="`#/project/`+search_user.project+`/`+search_user.name+`/all`" class="list-group-item list-group-item-action" v-for="search_user in findUser(search.toString().slice(1).toLowerCase(), names)"><b>{{ search_user.display_name }}</b> | <small>@{{ search_user.name }}</small> > <small>{{ search_user.project }}</small></a>
+                        <a :href="`#/tag/`+search.slice(1)" class="list-group-item list-group-item-action" v-if="search.slice(0, 1) === '#'">查找标签 {{ search }}</a>
+                        <a :href="`#/`+name+`/status/`+search" class="list-group-item list-group-item-action" v-if="search > 0 && search.match(/[0-9]+/g)[0] === search">查找推文 {{ search }}</a>
+                        <a :href="`#/search/`+search" class="list-group-item list-group-item-action" v-if="search_type == 'text' && search.slice(0, 1) != '#'"><span class="d-inline-block text-truncate" style="max-width: 250px;">搜索项目 {{ search }}</span></a>
+                    </div>
+                    <div class="my-4"></div>
+                    <nav class="nav nav-pills nav-fill">
+                        <li class="nav-item" v-if="!(hash||search)" v-for="value in check">
+                            <a :class="`nav-link `+(value[1] == display ? 'active' : '')" :href="`#/`+name+`/`+value[1]" @click="(display == value[1] && !$route.params.status) ? loading(tweets[tweets[0].top ? 1 : 0].tweet_id, 'refresh') : display = value[1]">{{ value[0] }}</a>
+                        </li>
+                        <li class="nav-item">
+                            <a :class="`nav-link `+(settings.data.displayPicture ? 'active' : '')" :href="`#`+$route.path" @click="settings.data.displayPicture = !settings.data.displayPicture;window.stop()">无图</a>
+                        </li>
+                    </nav>
+                    <hr class="my-4">
+                    <div v-if="refresh" class="text-center">
+                        <div class="spinner-border" role="status">
+                            <span class="sr-only">Loading...</span>
+                        </div>
+                        <div class="my-4"></div>
+                    </div>
+                    <div v-if="!init">
+                        <template v-if="!$route.params.search && !$route.params.hash && (info.deleted || info.locked)">
+                            <div class="card card-border border-info" id="alertMsg">
+                                <div class='card-body'>
+                                    {{ '此账户已'+(info.deleted ? '删除' : '被保护')+'，我们将不再监控此账户' }}
+                                </div>
+                            </div>
+                            <hr class="my-4">
+                        </template>
+
+                        <div v-if="tweets.length">
+                            <div v-for="(tweet, ids) in tweets">
+                                <div v-if="tweet.type == 'msg'" class="text-center">
+                                    {{ tweet.full_text }}
+                                </div>
+                                <div v-else>
+                                    <div :class="`card card-border`+((!search.length && !$route.params.hash && !$route.params.status && tweet.tweet_id == info.top) ? ' border-primary' : '')" :id="tweet.tweet_id">
+                                        <div class='card-body'>
+                                            <p v-if="!search.length && !$route.params.hash && tweet.tweet_id == info.top"><small class="text-muted">置顶推文</small></p>
+                                            <p v-if="tweet.retweet_from">
+                                                <small class="text-muted">
+                                                    <svg class="bi" width="1em" height="1em" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                                        <path d="M23.77 15.67c-.292-.293-.767-.293-1.06 0l-2.22 2.22V7.65c0-2.068-1.683-3.75-3.75-3.75h-5.85c-.414 0-.75.336-.75.75s.336.75.75.75h5.85c1.24 0 2.25 1.01 2.25 2.25v10.24l-2.22-2.22c-.293-.293-.768-.293-1.06 0s-.294.768 0 1.06l3.5 3.5c.145.147.337.22.53.22s.383-.072.53-.22l3.5-3.5c.294-.292.294-.767 0-1.06zm-10.66 3.28H7.26c-1.24 0-2.25-1.01-2.25-2.25V6.46l2.22 2.22c.148.147.34.22.532.22s.384-.073.53-.22c.293-.293.293-.768 0-1.06l-3.5-3.5c-.293-.294-.768-.294-1.06 0l-3.5 3.5c-.294.292-.294.767 0 1.06s.767.293 1.06 0l2.22-2.22V16.7c0 2.068 1.683 3.75 3.75 3.75h5.85c.414 0 .75-.336.75-.75s-.337-.75-.75-.75z"></path>
+                                                    </svg>
+                                                    <a :href="`#/`+tweet.name+($route.params.status ? `/all` : `/status/`+tweet.tweet_id)" class="text-muted">
+                                                        {{ tweet.display_name }}
+                                                    </a>
+                                                </small>
+                                            </p>
+                                            <a :href="`#/`+tweet.name+($route.params.status ? `/all` : `/status/`+tweet.tweet_id)" class="card-title text-dark">
+                                                {{ tweet.retweet_from ? tweet.retweet_from : tweet.display_name }}
+                                            </a>
+                                            <template v-if="!tweet.retweet_from"> | <small>@{{ tweet.name }}</small></template>
+                                            <a v-if="tweet.media.length" :href="`#`+$route.path" @click="settings.data.displayPicture = !settings.data.displayPicture;window.stop()">
+                                                <svg class="bi bi-image text-success" width="2em" height="2em" viewBox="0 0 20 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                                    <path fill-rule="evenodd" d="M16.002 4h-12a1 1 0 00-1 1v10a1 1 0 001 1h12a1 1 0 001-1V5a1 1 0 00-1-1zm-12-1a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2h-12z" clip-rule="evenodd" />
+                                                    <path d="M12.648 9.646a.5.5 0 01.577-.093l3.777 1.947V16h-14v-2l2.646-2.354a.5.5 0 01.63-.062l2.66 1.773 3.71-3.71z" />
+                                                    <path fill-rule="evenodd" d="M6.502 9a1.5 1.5 0 100-3 1.5 1.5 0 000 3z" clip-rule="evenodd" />
+                                                </svg>
+                                            </a>
+                                            <svg v-if="tweet.hasvideo" class="bi bi-camera-video text-danger" width="2em" height="2em" viewBox="0 0 20 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                                <path fill-rule="evenodd" d="M4.667 5.5c-.645 0-1.167.522-1.167 1.167v6.666c0 .645.522 1.167 1.167 1.167h6.666c.645 0 1.167-.522 1.167-1.167V6.667c0-.645-.522-1.167-1.167-1.167H4.667zM2.5 6.667C2.5 5.47 3.47 4.5 4.667 4.5h6.666c1.197 0 2.167.97 2.167 2.167v6.666c0 1.197-.97 2.167-2.167 2.167H4.667A2.167 2.167 0 012.5 13.333V6.667z" clip-rule="evenodd"/>
+                                                <path fill-rule="evenodd" d="M13.25 7.65l2.768-1.605a.318.318 0 01.482.263v7.384c0 .228-.26.393-.482.264l-2.767-1.605-.502.865 2.767 1.605c.859.498 1.984-.095 1.984-1.129V6.308c0-1.033-1.125-1.626-1.984-1.128L12.75 6.785l.502.865z" clip-rule="evenodd"/>
+                                            </svg>
+                                            <a :href="`//twitter.com/i/status/`+tweet.tweet_id" target="_blank">
+                                                <svg class="bi bi-box-arrow-up-right text-primary" width="2em" height="2em" viewBox="0 0 20 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                                    <path fill-rule="evenodd" d="M3.5 15A1.5 1.5 0 005 16.5h8a1.5 1.5 0 001.5-1.5v-4a.5.5 0 00-1 0v4a.5.5 0 01-.5.5H5a.5.5 0 01-.5-.5V7a.5.5 0 01.5-.5h4a.5.5 0 000-1H5A1.5 1.5 0 003.5 7v8zm7-11a.5.5 0 01.5-.5h5a.5.5 0 01.5.5v5a.5.5 0 01-1 0V4.5H11a.5.5 0 01-.5-.5z" clip-rule="evenodd"/>
+                                                    <path fill-rule="evenodd" d="M16.354 3.646a.5.5 0 010 .708l-8 8a.5.5 0 01-.708-.708l8-8a.5.5 0 01.708 0z" clip-rule="evenodd"/>
+                                                </svg>
+                                            </a>
+                                            <div class="my-4"></div>
+                                            <div v-html="`<p class='card-text'>`+tweet.full_text+`</p>`"></div>
+                                            <div v-if="!tweet.translate" class='card-text'>
+                                                <a :href="`#`+$route.path" class="text-decoration-none"><small style="color:#1DA1F2" @click="translate(tweet.tweet_id,ids)">翻译推文</small></a>
+                                            </div>
+                                            <div v-else-if="tweet.translate=='pending'" class="spinner-grow spinner-grow-sm" role="status">
+                                                <span class="sr-only">Loading...</span>
+                                            </div>
+                                            <div v-else>
+                                                <hr class="my-4">
+                                                <p class='card-text'><small class="text-muted">由 {{ tweet.translate_source }} 翻译</small></p>
+                                                <p v-if="tweet.translate" v-html="`<p class='card-text'>`+tweet.translate+`</p>`"></p>
+                                                <a :href="`#`+$route.path" class="text-decoration-none"><small style="color:#1DA1F2" @click="translate(tweet.tweet_id,ids)">重新翻译</small></a>
+                                            </div>
+                                            <div id="time">
+                                                <small class="text-muted">{{ (new Date(tweet.time * 1000)).toLocaleString(settings.data.language) }}</small>
+                                            </div>
+                                            <!--pic-->
+                                            <div v-if="!settings.data.displayPicture">
+                                                <div class="my-4" v-if="tweet.media.length"></div>
+                                                <div :class="tweet.media.length > 1 ? `card-columns` : ''">
+                                                    <el-image  v-for="(media, s) in tweet.media" :key="`https://tmv2media.bangdream.fun/api/v2/media/`+media.cover.thumb_img_url.replace('https://', '')+':thumb'" :src="`https://tmv2media.bangdream.fun/api/v2/media/`+media.cover.thumb_img_url.replace('https://', '')+':thumb'" lazy style="width: 100px; height: 100px" fit="cover" :preview-src-list="[`https://tmv2media.bangdream.fun/api/v2/media/`+media.cover.thumb_img_url.replace('https://', '')+':orig']">
+                                                        <div slot="error" class="image-slot">
+                                                            <i class="el-icon-picture-outline"></i>
+                                                        </div>
+                                                        <div slot="placeholder" class="image-slot">
+                                                            <i class="el-icon-picture-outline"></i>
+                                                        </div>
+                                                    </el-image>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr class="my-4">
+                            </div>
+                            <button type="button" class="btn btn-primary btn-lg btn-block" @click="loading(tweet_id)" v-if="hasmore&&!load">
+                                <span>加载更多</span>
+                            </button>
+                            <div v-else-if="load" class="text-center">
+                                <div class="spinner-border" role="status">
+                                    <span class="sr-only">Loading...</span>
+                                </div>
+                            </div>
+                            <div v-else-if="!$route.params.status">
+                                <h5 class="text-center">已经没有更多内容</h5>
+                            </div>
+                        </div>
+                        <div v-else>
+                            <h5 class="text-center">已经没有更多内容</h5>
+                        </div>
+                    </div>
+                    <div v-else class="text-center">
+                        <div class="spinner-border" role="status">
+                            <span class="sr-only">Loading...</span>
+                        </div>
+                    </div>
+                    <div class="my-4"></div>
+
+                    <!--media-->
+                    <div class="modal fade" id="Amodal" tabindex="-1" role="dialog" aria-hidden="true" v-if="tweets.length">
+                        <div :class="`modal-dialog modal-dialog-centered modal`+(settings.panel ? '' : '-xl')" role="document">
+                            <div class="modal-content">
+                                <template v-if="settings.panel">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">设置</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <label for="selectLaguage">语言</label>
+                                        <select id="selectLaguage" v-model="settings.data.language" class="form-control">
+                                            <option :value="slanguage.code" :selected="settings.data.language == slanguage.code" v-for="slanguage in language">{{ slanguage.local_name }}</option>
+                                        </select>
+                                    </div>
+                                </template>
+                                <div id="largePictureControls" class="carousel slide" data-ride="carousel" v-else-if="(tweets.length && tweets[largePicture[1]].media.length)">
+                                    <div class="carousel-inner">
+                                        <div :class="`carousel-item`+(s == largePicture[0] ? ` active` : '')" v-for="(media, s) in tweets[largePicture[1]].media" v-if="tweets[largePicture[1]].media[largePicture[0]].origin.origin_type === 'photo'">
+                                            <img v-lazy="`https://tmv2media.bangdream.fun/api/v2/media/`+media.cover.thumb_img_url.replace('https://', '')+`:orig`" class="d-block w-100">
+                                        </div>
+                                        <div v-if="tweets[largePicture[1]].media[largePicture[0]].origin.origin_type == 'video' || tweets[largePicture[1]].media[largePicture[0]].origin.origin_type == 'animated_gif'">
+                                            <video :src="`https://tmv2media.bangdream.fun/api/v2/media/`+tweets[largePicture[1]].media[largePicture[0]].origin.url.replace('https://', '')" :poster="`https://tmv2media.bangdream.fun/api/v2/media/`+tweets[largePicture[1]].media[largePicture[0]].cover.thumb_img_url.replace('https://', '')+`:medium`" :type="tweets[largePicture[1]].media[largePicture[0]].origin.content_type" preload="none" controls muted playsinline loop width="100%" id="videoPlayer"></video>
+                                        </div>
+                                    </div>
+                                    <a class="carousel-control-prev" href="#largePictureControls" role="button" data-slide="prev" v-if="tweets[largePicture[1]].media[largePicture[0]].origin.origin_type === 'photo' && tweets[largePicture[1]].media.length > 1">
+                                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                        <span class="sr-only">Previous</span>
+                                    </a>
+                                    <a class="carousel-control-next" href="#largePictureControls" role="button" data-slide="next" v-if="tweets[largePicture[1]].media[largePicture[0]].origin.origin_type === 'photo' && tweets[largePicture[1]].media.length > 1">
+                                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                        <span class="sr-only">Next</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <template v-if="project">
+                        <button type="button" class="btn btn-outline-primary btn-block btn-sm" @click="projectS = !projectS">{{ project }}</button>
+                        <div class="my-4"></div>
+                    </template>
+                    <template v-if="projectS">
+                        <div class="list-group">
+                            <a type="button" :href="`#/project/`+project_" :class="`list-group-item list-group-item-action`+(project_.toLowerCase() == project.toLowerCase() ? ' active' : '')" v-for="project_ in projects" @click="projectS = !projectS">{{ project_ }}</a>
+                        </div>
+                        <div class="my-4"></div>
+                    </template>
+                    <a :href="`#`+$route.path" class="text-decoration-none badge badge-pill badge-primary" @click="settings.panel=true;$('#Amodal').modal();autoPause()">设置</a>
+                    <!--<a href="./about.html" class="text-decoration-none badge badge-pill badge-primary">关于</a>-->
+                    <hr class="my-4">
+                    <template v-for="(link, s) in links">
+                        <span v-if="s!==0"> · </span><a :href="link.url" target="_blank" class="text-muted"><small>{{ link.display }}</small></a>
+                    </template>
+                    <div class="my-4"></div>
+                </div>
+            </div>
+        </main>
+    </template>
+    <template v-else>
+        <div class="jumbotron">
+            <h1 class="display-4">Twitter Monitor</h1>
+        </div>
+        <dev class="container">
+            <div class="col-md-8 offset-md-2">
+                <div id="search">
+                    <div class="input-group mb-3 input-group-lg">
+                        <input type="text" class="form-control" placeholder="搜索..." aria-describedby="search" v-model.trim="search">
+                    </div>
+                    <div class="card" v-if="search && search.toLowerCase() == 'help' || search === '帮助'">
+                        <div class="card-body">
+                            <h5 class="card-title">帮助</h5>
+                            <h6 class="card-subtitle mb-2 text-muted">搜索快速入门</h6>
+                            <div v-for="tip in tips">
+                                <div v-html="tip"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="list-group" v-if="(search && search.slice(0, 1) != '!' && search_type == 'text') || $route.params.project">
+                    <template v-if="search && search.slice(0, 1) != '!' && search_type == 'text'">
+                        <a :href="`#/project/`+search_user.project+`/`+search_user.name+`/all`" class="list-group-item list-group-item-action" v-for="search_user in findUser(search.toString().slice(1).toLowerCase(), names)"><b>{{ search_user.display_name }}</b> | <small>@{{ search_user.name }}</small> > <small>{{ search_user.project }}</small></a>
+                        <a :href="`#/tag/`+search.slice(1)" class="list-group-item list-group-item-action" v-if="search.slice(0, 1) === '#'">查找标签 {{ search }}</a>
+                        <a :href="`#/`+name+`/status/`+search" class="list-group-item list-group-item-action" v-if="search > 0 && search.match(/[0-9]+/g)[0] === search">查找推文 {{ search }}</a>
+                        <a :href="`#/search/`+search" class="list-group-item list-group-item-action" v-if="search_type == 'text' && search.slice(0, 1) != '#'"><span class="d-inline-block text-truncate" style="max-width: 250px;">搜索项目 {{ search }}</span></a>
+                    </template>
+                    <template v-if="$route.params.project && names[$route.params.project]">
+                        <a :href="`#/project/`+user.project+`/`+user.name+`/all`" class="list-group-item list-group-item-action" v-for="user in getUser($route.params.project)"><b>{{ user.display_name }}</b> | <small>@{{ user.name }}</small> > <small>{{ $route.params.project + ' (' + user.tag + ')' }}</small></a>
+                    </template>
+                </div>
+                <div class="my-4"></div>
+                <div>
+                    <template v-for="project in projects">
+                        <a :href="`#/project/`+project" class="text-decoration-none badge badge-pill badge-primary">{{ project }}</a>
+                        <span></span>
+                    </template>
+                </div>
+            </div>
+        </dev>
+    </template>
+    <button type="button" class="btn btn-primary fixed-button" style="opacity: 0.8;position: fixed;bottom: 0;right: 0" @click="scrollToTop()" v-if="clientHeight > 500">
+        <svg class="bi bi-chevron-up" width="25" height="25" viewBox="0 0 20 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+            <path fill-rule="evenodd" d="M9.646 6.646a.5.5 0 01.708 0l6 6a.5.5 0 01-.708.708L10 7.707l-5.646 5.647a.5.5 0 01-.708-.708l6-6z" clip-rule="evenodd"/>
+        </svg>
+    </button>
+</div>
+<!--css and js-->
+<link rel="stylesheet" href="https://tmv2api2.bangdream.fun/static/css/noty.css">
+<script src="https://tmv2api2.bangdream.fun/static/js/vue.min.js"></script>
+<script src="https://tmv2api2.bangdream.fun/static/js/vue-router.js"></script>
+<script src="https://tmv2api2.bangdream.fun/static/js/axios.min.js"></script>
+<script src="https://tmv2api2.bangdream.fun/static/js/fastclick.js"></script>
+<script src="https://tmv2api2.bangdream.fun/static/js/noty.min.js"></script>
+<script src="https://tmv2api2.bangdream.fun/static/js/echarts.min.js"></script>
+<script src="https://tmv2api2.bangdream.fun/static/js/index.min.js"></script>
+<script src="https://tmv2api2.bangdream.fun/static/js/vue-lazyload.js"></script>
+<!--<script src="/static/js/lodash.min.js"></script>-->
+<!-- 引入样式 -->
+<link rel="stylesheet" href="https://tmv2api2.bangdream.fun/static/element/lib/theme-chalk/index.css">
+<!-- 引入组件库 -->
+<script src="https://tmv2api2.bangdream.fun/static/element/lib/index.js"></script>
+<script>
+    'use strict';
+    Vue.use(VueLazyload, {
+        error: 'data:image/svg+xml;base64, PHN2ZyB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHByZXNlcnZlQXNwZWN0UmF0aW89InhNaWRZTWlkIHNsaWNlIiBmb2N1c2FibGU9ImZhbHNlIiByb2xlPSJpbWciPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9IiM4NjhlOTYiPjwvcmVjdD48L3N2Zz4=',
+        loading: 'data:image/svg+xml;base64, PHN2ZyB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHByZXNlcnZlQXNwZWN0UmF0aW89InhNaWRZTWlkIHNsaWNlIiBmb2N1c2FibGU9ImZhbHNlIiByb2xlPSJpbWciPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9IiM4NjhlOTYiPjwvcmVjdD48L3N2Zz4=',
+    });
+    var bgfun = new Vue({
+        el: "#app",
+        data: {
+            name: '',
+            display_name: 'Twitter Monitor',
+            clientHeight: document.documentElement.scrollTop,
+            project: '',
+            projectS: false,
+            hash: '',
+            info: [],
+            tweets: [],
+            tweets_tmp: [],
+            check: [['全部', 'all', 0], ['原创', 'self', 0], ['转推', 'retweet', 0], ['媒体', 'media', 0]],
+            tweet_id: 0,
+            display: 'all',
+            search: '',
+            search_type: 'text',
+            largePicture: [0, 0],
+            load: false,
+            refresh: false,
+            init: true,
+            firstload: true,
+            hasmore: true,
+            tips: [
+                '<li>首字符为<code>@</code>可以快速定位到全站任何用户，支持twitter用户名及本地别名</li>',
+                '<li>首字符为<code>#</code>可定位tag，此功能适用于全站</li>',
+                '<li>在输入框输入任何内容可进行对推文的搜索，此功能适用于全站</li>',
+                '<li>任何时候在输入框输入<code>help</code>、<code>帮助</code>可弹出此教程</li>',
+            ],
+            projects: [],
+            names: [],
+            nsfwList: [],
+            links: [],
+            language: [],
+            chart: {
+                chartHeight: "250px",
+                chartData: {
+                    columns: ['timestamp', 'followers', 'following', 'statuses_count'],
+                    rows: []
+                },
+                chartSettings: {
+                    labelMap: {
+                        'timestamp': '日期',
+                        'followers': '关注者',
+                        'following': '正在关注',
+                        'statuses_count': '总推文数',
+                    },
+                    legendName: [],
+                    scale: [true, true],
+                },
+                chartOptions: {
+                    grid: {
+                        left: '3%',
+                        right: '4%',
+                        bottom: '3%',
+                        containLabel: true
+                    },
+                },
+            },
+            settings: {
+                data: {
+                    language: /zh/.test(window.navigator.language.toLowerCase()) ? window.navigator.language.toLowerCase() : 'en',
+                    cookie_accept: false,
+                    displayPicture: false,
+                },
+                panel: false,
+            },
+        },
+        router: new VueRouter({
+            routes: [
+                {
+                    path: '/project/:project',
+                    children: [
+                        {path: ''},
+                        {path: ':name/:display'},
+                        {path: ':name/status/:status'}
+                    ]
+                },{
+                    path: '/tag/:hash',
+                },{
+                    path: '/search/:search',
+                },{
+                    path: '/:name',
+                    children: [
+                        {path: ''},
+                        {path: ':display'},
+                        {path: 'status/:status'}
+                    ]
+                }
+            ]
+        }),
+        watch: {
+            "$route": function() {
+                console.log(this.$route.params);
+                if(!this.$route.params.search){
+                    window.stop();//cancel all requests
+                    this.search = '',
+                        this.hash = '',
+                        this.update();
+                    this.scrollToTop();
+                }else{
+                    this.update();
+                }
+                $('#Amodal').modal('hide');
+            },
+            "search": function() {
+                if(this.search){
+                    this.scrollToTop();
+                    if(this.search_type == 'date'){
+                        this.update();
+                    }
+                }else{
+                    if(!this.project){
+                        this.$router.replace({ path: '/' });
+                    }
+                }
+            },
+            "name": function(){
+                if(this.nsfwSearcher(this.name)){
+                    this.settings.data.displayPicture = true;
+                    this.noty('本twitter账号可能会含有<abbr title="Not safe for work">NSFW</abbr>内容', 'warning');
+                }
+            },
+            "info": function(){
+                //バンドリ！ BanG Dream! 公式 (@bang_dream_info) / Twitter
+                document.title = this.info.display_name + ' (@' + this.info.name + ') / Twitter Monitor';
+                //this.display_name = this.info.display_name;
+            },
+            //"check": function(){
+            //
+            //},
+            "settings.data": {
+                handler: function(){
+                    let stringSettings = JSON.stringify(this.settings.data);
+                    if(stringSettings.slice(0, 1) === '{'){
+                        localStorage.setItem('tm_settings', stringSettings);
+                    }else{
+                        this.noty('设置保存失败', 'error');
+                        this.settings.data = {language: window.navigator.language.toLowerCase(),cookie_accept: false,displayPicture: false};
+                    }
+                },
+                deep: true,
+            },
+        },
+        mounted: function() {
+            //this.localrun();
+            let startTime = Date.now();
+            axios.get('/static/db/account_info_t_tmv1.json').then(response => {
+                this.names = response.data.account_info;
+                this.projects = response.data.projects;
+                this.nsfwList = response.data.nsfwList;
+                this.links = response.data.links;
+                //this.project = Object.keys(this.projects)[0];
+                //this.name = this.projects[this.project].name;
+                this.update();
+                this.re();
+                if(Date.now() - startTime > 1000){
+                    this.settings.data.displayPicture = true;
+                    this.noty('当前网速较慢，已关闭图片显示', 'information');
+                }
+                axios.get('/static/db/language_t_tmv1.json').then(response => {
+                    this.language = response.data;
+                }).catch(error => {
+                    this.noty('加载失败，将无法选择语言 #' + error, 'error');
+                });
+            }).catch(error => {
+                this.noty('加载失败，请稍后再试 #' + error, 'error');
+            });
+        },
+        methods: {
+            loading: function(tweet_id = 0, type = 'load', mute = false) {
+                if(type != 'load' && !mute){
+                    this.refresh = true;
+                }else{
+                    this.load = true;
+                }
+                let url;
+                let url_add = '';
+                if(type != 'load'){
+                    url_add = "&type=refresh";
+                }else if(this.search && this.search_type === 'date'){
+                    url_add = "&date=" + (Date.parse(this.search+' UTC+8') / 1000);
+                }
+                if(!this.hash){
+                    if(this.search && this.search_type === 'text'){
+                        url = 'api/v1/?m=search&q=' + this.search.toString() + '&tweet_id=' + this.tweet_id;// + '&project=' + $route.path === '/' ? '' : this.project;
+                    }else{
+                        url = 'api/v1/?m=tweets&name=' + this.name + '&tweet_id=' + tweet_id + '&display=' + this.display + url_add;
+                    }
+                }else{
+                    url = 'api/v1/?m=tag&hash=' + this.hash + '&tweet_id=' + this.tweet_id;// + '&project=' + this.project;
+                }
+                axios.get('https://tmv2api2.bangdream.fun/tmv1/' + url).then(response => {
+                    if(type != 'load'){
+                        if(!mute){
+                            this.tweets = response.data.data.data.concat(this.tweets);
+                            let dataLength = response.data.data.data.length;
+                            this.noty(dataLength ? '加载完成，共加载' + dataLength + "条记录" : "没有更新", dataLength ? 'success' : 'information');
+                        }else{
+                            this.tweets_tmp = response.data.data.data.concat(this.tweets_tmp);
+                        }
+                        this.refresh = false;
+                    }else{
+                        this.hasmore = response.data.data.hasmore;
+                        this.tweets = this.tweets.concat(response.data.data.data);
+                        this.tweet_id = response.data.data.tweet_id;
+                        this.load = false;
+                    }
+                }).catch(error => {
+                    !mute ? this.noty('加载失败，请稍后再试 #' + error, 'error') : console.log('加载失败，请稍后再试 #' + error);
+                    this.load = false;
+                    this.refresh = false;
+                });
+            },
+            update: function() {
+                this.init = true;
+                this.hasmore = true;
+                if(this.$route.params.name && this.$route.params.name != this.name){
+                    this.chart.chartData.rows = [];
+                    this.chart.chartSettings.legendName = [];
+                }
+                this.tweets = [];
+                this.largePicture = [0, 0];
+                if(this.$route.params.project && !this.$route.params.status || this.$route.path == '/'+this.name){
+                    if(this.$route.params.project && this.$route.params.name){
+                        this.project = this.$route.params.project;
+                        this.$router.replace({ path: '/' + this.$route.params.name + '/all' });
+                    }else if(this.$route.params.name){
+                        this.$router.replace({ path: '/' + this.$route.params.name + '/all' });
+                    }
+                    return;
+                }
+                let url;
+                let url_add = '';
+                if(this.$route.params.status){
+                    url_add = "&status=" + this.$route.params.status;
+                }
+                if(this.search && this.search_type === 'date'){
+                    url_add = "&date=" + (Date.parse(this.search+' UTC'+(new Date().getTimezoneOffset()/60)) / 1000);
+                }
+                if(!this.$route.params.hash && !this.$route.params.search){
+                    if((this.$route.params.name && this.$route.params.name != this.name) && !this.search){
+                        this.hash = '';
+                        if(this.$route.params.project){
+                            if(this.$route.params.project && this.findProject(this.$route.params.project)){
+                                //this.project = this.$route.params.project;
+                                this.name = this.$route.params.name;
+                            }
+                        }else{
+                            let findUserInfo = this.findUser(this.$route.params.name, this.names);
+                            if(!this.project.length && findUserInfo.length){
+                                this.project = findUserInfo[0].project;
+                                this.name = findUserInfo[0].name;
+                            }else if(findUserInfo.length > 1){
+                                //this.project = findUserInfo[0].project;
+                                this.name = findUserInfo[0].name;
+                            }else{
+                                this.project = findUserInfo[0].project;
+                                this.name = findUserInfo[0].name;
+                            }
+                        }
+                        axios.get('https://tmv2api2.bangdream.fun/tmv1/api/v1/?m=info&name=' + this.name).then(response => {
+                            this.info = response.data.data;
+                            this.chart.chartSettings.legendName = {'关注者': '关注者 ' + this.info.followers, '正在关注': '正在关注 ' + this.info.following, '总推文数': '总推文数 ' + this.info.statuses_count};
+                            this.createChart();
+                        });
+                    }
+                    if (this.$route.params.display) {
+                        if(this.$route.params.display.toLowerCase() === 'all' || this.$route.params.display.toLowerCase() === 'self' || this.$route.params.display.toLowerCase() === 'retweet' || this.$route.params.display.toLowerCase() === 'media'){
+                            this.display = this.$route.params.display;
+                        }
+
+                    }
+
+                    //if(!this.chart.chartData.rows.length && this.info.uid){
+                    //    this.createChart();
+                    //}
+                    url = 'api/v1/?m=tweets&name=' + this.name + '&display=' + this.display + url_add;
+                }else if(!this.$route.params.hash && this.$route.params.search && this.search_type === 'text'){
+                    this.search = this.$route.params.search.toString();
+                    url = 'api/v1/?m=search&q=' + this.search;// + '&project=' + this.project;
+                }else{
+                    this.hash = this.$route.params.hash;
+                    url = 'api/v1/?m=tag&hash=' + this.hash;// + '&project=' + this.project;
+
+                }
+                axios.get('https://tmv2api2.bangdream.fun/tmv1/' + url).then(response => {
+                    this.hasmore = response.data.data.hasmore;
+                    this.tweets = this.tweets.concat(response.data.data.data);
+                    this.tweet_id = response.data.data.tweet_id;
+                    this.init = false;
+                }).catch(error => {
+                    new Noty({
+                        theme: 'metroui',
+                        type: 'error',
+                        text: '加载失败，点击重新加载 #' + error,
+                        callbacks: {
+                            onClose: () => {
+                                this.update();
+                            },
+                        }
+                    }).show();
+                });
+            },
+            check: function(tweet_id){
+
+            },
+            translate: function(data_id, ids, type = 'tweets') {
+                let url = 'api/v1/?m=translate';
+                switch(type){
+                    case 'tweets':
+                        this.tweets[ids].translate = 'pending';
+                        url = url + '&type=tweets&tweet_id=' + data_id.toString();
+                        break;
+                    case 'profile':
+                        this.info.translate = 'pending';
+                        url = url + '&type=profile&user_id=' + data_id.toString();
+                        break;
+                }
+                url = url + '&to=' + this.settings.data.language;
+                axios.get('https://tmv2api2.bangdream.fun/tmv1/' + url).then(response => {
+                    switch(type){
+                        case 'tweets':
+                            this.tweets[ids].translate = response.data.data.translate;
+                            this.tweets[ids].translate_source = response.data.data.translate_source;
+                            break;
+                        case 'profile':
+                            this.info.translate = response.data.data.translate;
+                            this.info.translate_source = response.data.data.translate_source;
+                            break;
+                    }
+                }).catch(error => {
+                    switch(type){
+                        case 'tweets':
+                            this.tweets[ids].translate = '';
+                            break;
+                        case 'profile':
+                            this.info.translate = '';
+                            break;
+                    }
+                    this.noty('加载失败，请稍后再试 #' + error, 'error');
+                });
+            },
+            findUser: function(text, names){
+                let users = [];
+                Object.keys(names).forEach(function(secondf){
+                    Object.keys(names[secondf]).forEach(function(thirdf){
+                        Object.keys(names[secondf][thirdf]).forEach(function(fourthf){
+                            if(names[secondf][thirdf][fourthf]["name"] && (names[secondf][thirdf][fourthf]["name"].toLowerCase() === text.toLowerCase() || names[secondf][thirdf][fourthf]["display_name"] === text)){
+                                users = users.concat({name: names[secondf][thirdf][fourthf]["name"], display_name: names[secondf][thirdf][fourthf]["display_name"], project: secondf});
+                            }
+                        })
+                    })
+                })
+                return users;
+            },
+            nsfwSearcher: function (name){
+                let danger = false;
+                this.nsfwList.forEach(function(bname) {
+                    if(name.toLowerCase() === bname){
+                        danger = true;
+                    }
+                });
+                return danger;
+            },
+            findProject: function(project){
+                let isProject = false;
+                Object.keys(this.projects).forEach(function(proj){
+                    if(proj.name.toLowerCase() === project.toLowerCase()){
+                        isProject = true;
+                    }
+                })
+                return isProject;
+            },
+            scrollToTop: function () {
+                window.scrollTo({
+                    top: 0,
+                    behavior: "smooth"
+                }), this.scrollTop = 0
+            },
+            noty: function(text, type='success'){
+                new Noty({
+                    timeout: 3000,
+                    theme: 'metroui',
+                    type: type,
+                    text: text,
+                }).show();
+            },
+            autoPause: function(){
+                $(() => {
+                    $('#Amodal').on('hidden.bs.modal',
+                        () => {
+                            //panel mode off
+                            this.settings.panel = false;
+                            if($("#videoPlayer").length){
+                                //pause video
+                                document.getElementById('videoPlayer').pause();
+                            }
+                        })
+                });
+            },
+            getUser: function(project){
+                let projectG = this.names[project];
+                let singleUser = [];
+                Object.keys(projectG).forEach(function(secondf){
+                    Object.keys(projectG[secondf]).forEach(function(thirdf){
+                        if(projectG[secondf][thirdf]["name"].length){
+                            singleUser = singleUser.concat({name: projectG[secondf][thirdf]["name"], display_name: projectG[secondf][thirdf]["display_name"], project: project, tag: secondf});
+                        }
+                    })
+                })
+                return singleUser;
+            },
+            //localrun: function() {
+            //    //FastClick
+            //    $(function() {
+            //        FastClick.attach(document.body);
+            //    });
+            //    //TODO service worker
+            //    //if ('serviceWorker' in navigator) {
+            //    //    navigator.serviceWorker.register('./sw.js').then(function(registration) {
+            //    //        // Registration was successful
+            //    //        console.log('ServiceWorker registration successful with scope: ', registration.scope);
+            //    //    }).
+            //    //    catch (function(err) {
+            //    //        // registration failed :(
+            //    //        console.log('ServiceWorker registration failed: ', err);
+            //    //    });
+            //    //}
+            //    //TODO autoCheck
+            //    //localStorage
+            //    if (!localStorage.getItem('tm_settings')) {
+            //        localStorage.setItem('tm_settings', JSON.stringify(this.settings.data));//提前写入
+            //    } else {
+            //        this.settings.data = JSON.parse(localStorage.getItem('tm_settings'));
+            //    }
+            //},
+            re: function() {
+                let n_top = document.documentElement.scrollTop;
+                this.clientHeight = n_top;
+                setTimeout(() => {
+                    this.re();
+                }, 500);
+            },
+            createSVG: function(width, height, text = '') {
+                let newSVG = '<svg width="' + width + '" height="' + height + '" xmlns="http://www.w3.org/2000/svg" role="img"><rect width="100%" height="100%" fill="#868e96"></rect>';
+                newSVG = newSVG + (text.length ? '<text x="50%" y="50%" fill="#dee2e6" dy=".3em">' + text + '</text></svg>' : '</svg>');
+                return 'data:image/svg+xml;base64,' + btoa(newSVG);
+            },
+            createChart: function(){
+                axios.get('https://tmv2api2.bangdream.fun/tmv1/api/v1/?m=data&uid=' + this.info.uid).then(response => {
+                    this.chart.chartData.rows = response.data.data;
+                }).catch(error => {
+                    this.noty('加载失败，请稍后再试 #' + error, 'error');
+                });
+            },
+            generateMediaLink: function (media) {
+
+            }
+        }
+    })
+</script>
+<script>
+    console.log('请前往v2 --- KDNETWORK');
+</script>
+</body>
+</html>
