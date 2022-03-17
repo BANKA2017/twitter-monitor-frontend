@@ -1,4 +1,3 @@
-//export const controller = new AbortController
 export class Controller {
   private readonly controllerHandle: AbortController[];
   constructor() {
@@ -22,12 +21,28 @@ export class Controller {
   }
 }
 export const controller = new Controller()
-export const request = <T>(url: string, controller?: Controller): Promise<T> => {
+export const request = <T>(url: string, controller?: Controller, method: 'POST' | 'GET' | 'DELETE' | 'PUT' = 'GET', body: any = ''): Promise<T> => {
   if (!controller) {
     controller = new Controller()
   }
   controller.abort()
-  return fetch(url, {signal: controller.signal}).then((response: Response) => {
+  const tmpBaseBodyType = typeof body
+  let options: {
+    method: 'POST' | 'GET' | 'DELETE' | 'PUT';
+    signal: AbortController["signal"];
+    headers: { [p in string]: string};
+    body ?: string
+  } = {
+    method,
+    signal: controller?.signal,
+    headers: {
+      'Content-Type': tmpBaseBodyType === 'string' ? 'application/x-www-form-urlencoded' : 'application/json'
+    }
+  }
+  if (method === 'POST') {
+    options['body'] = ((tmpBaseBodyType === 'object' ? JSON.stringify(body) : body.toString()))
+  }
+  return fetch(url, options).then((response: Response) => {
     if (!response.ok) {
       throw new Error(response.statusText)
     }

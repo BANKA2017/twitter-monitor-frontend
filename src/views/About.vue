@@ -44,15 +44,43 @@
           <p>本站仅对推文进行存档以及分析展示，展示的内容不应被视为对其中包含的观点或隐私政策的认可，如有必要，本站可能会对相关推文进行隐藏处理</p>
           <hr class="my-4">
           <h3>可信来源</h3>
-          <p>尽管我们会尽我们所能确保数据的真实性，但用户不应该将 Twitter Monitor 的内容视为可信来源</p>
+          <p>尽管我们会尽我们所能确保数据的真实性，但您不应该将 Twitter Monitor 的内容视为可信来源</p>
           <hr class="my-4">
-          <h3>GDPR</h3>
-          <p>根据相关法律法规，本站不对欧盟用户提供服务。</p>
+          <h3>用户数据</h3>
+          <ul>
+            <li>我们会保存来源的 <code>ip</code>、<code>国家/地区</code>、<code>user-agent</code>、<code>地址/状态</code>、<code>cf-ray</code>、<code>referer</code> 作为Log以及后续分析，如有需要可向我们发送删除请求</li>
+            <li>我们使用 Cloudflare 作为 后端cdn 以及域名解析用，这里仅作告知</li>
+            <li>我们使用 Google Analytics 作为数据分析，如有不适可使用<code>一些广告拦截工具</code>对相关域名进行拦截</li>
+            <li>我们使用 Vercel 进行前端的部署，因为使用的是免费版，我们无法从此得到可分析数据</li>
+            <li class="text-danger">除此以外，我们没有再使用其他任何第三方分析工具，如果您发现有多余的请求或cookie，可能说明您正在遭受中间人攻击</li>
+          </ul>
           <hr class="my-4">
           <h3>交流</h3>
           <p>有何意见，有何建议，畅所欲言，但请不要发出您认为不应该在群组作出的发言，<abbr title="Safe For Work">SFW</abbr>，谢绝色图，谢绝键政，谢绝梯子</p>
           <ul>
             <li>Telegram群：<a href="https://t.me/tmtg_cn" target="_blank">https://t.me/tmtg_cn</a></li>
+          </ul>
+          <hr class="my-4">
+          <h3>开源</h3>
+          <p>前端，后端与爬虫均以 <code>MIT</code> 协议开源</p>
+          <a class="text-decoration-none" href="https://github.com/BANKA2017/twitter-monitor-frontend" target="_blank">
+            <el-button class="mx-1 my-1" round size="mini">前端</el-button>
+          </a>
+          <a class="text-decoration-none" href="https://github.com/BANKA2017/twitter-monitor" target="_blank">
+            <el-button class="mx-1 my-1" round size="mini">后端 & 爬虫</el-button>
+          </a>
+          <p class="my-1">本项目使用或参考了以下项目</p>
+          <ul>
+            <li>bootstrap v4 | jquery | popper.js | bootstrap-icon（bootstrap四件套）</li>
+            <li>element-plus（不断吐槽但还得用）</li>
+            <li>vue3 | vue-router | vuex | vue-i18n | vue-gtag（vue工具包）</li>
+            <li>vite | typescript | vite-plugin-pwa（打包）</li>
+            <li>echarts（图表）</li>
+            <li>twemoji（统一emoji）</li>
+            <li>lodash（猜猜用来干啥了）</li>
+            <li>plyr（播放器）</li>
+            <li>@vueuse/head（修改 header）</li>
+            <li>blurhash（模糊化图片）</li>
           </ul>
           <hr class="my-4">
           <div class="text-center">
