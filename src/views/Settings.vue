@@ -40,6 +40,10 @@
             <input type="checkbox" class="custom-control-input" id="load-conversation" v-model="loadConversation">
             <label class="custom-control-label" for="load-conversation">{{ t("settings.load_conversation") }}</label>
           </div>
+          <div class="custom-control custom-checkbox mb-3" v-if="adminMode">
+            <input type="checkbox" class="custom-control-input" id="online-mode" v-model="onlineMode">
+            <label class="custom-control-label" for="online-mode">{{ t("settings.online_mode") }}</label>
+          </div>
           <div class="text-center my-4">
             <el-button circle @click="$router.go(-1)"><arrow-left height="1em" status="" width="1em"/></el-button>
           </div>
@@ -52,7 +56,7 @@
 <script lang="ts">
 import Navigation from "@/components/Navigation.vue"
 import ArrowLeft from "@/icons/ArrowLeft.vue"
-import {computed, defineComponent} from "vue"
+import {computed, defineComponent, watch} from "vue"
 import {useStore} from "@/store"
 import {useI18n} from "vue-i18n";
 export default defineComponent({
@@ -65,6 +69,7 @@ export default defineComponent({
 
     const store = useStore()
     const languageList = computed(() => store.state.languageList)
+    const adminMode = computed(() => store.state.adminMode)
     const basePath = computed({
       get () {return store.getters.getBasePath},
       set (value: string) {store.dispatch("updateSettingsItem", {key: "basePath", value})}
@@ -93,7 +98,12 @@ export default defineComponent({
       get () {return store.state.settings.loadConversation},
       set (value: boolean) {store.dispatch("updateSettingsItem", {key: "loadConversation", value})}
     })
-    return {defaultBasePath, defaultMediaPath, languageList, basePath, mediaPath, language, autoRefresh, autoLoadMore, loadConversation, t}
+
+    const onlineMode = computed({
+      get () {return store.state.settings.onlineMode},
+      set (value: boolean) {store.dispatch("updateSettingsItem", {key: "onlineMode", value})}
+    })
+    return {defaultBasePath, defaultMediaPath, languageList, basePath, mediaPath, language, autoRefresh, autoLoadMore, loadConversation, onlineMode, adminMode, t}
   }
 })
 </script>

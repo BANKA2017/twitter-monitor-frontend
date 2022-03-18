@@ -172,6 +172,7 @@
         "default_media_path": "Default media path: {0}",
         "auto_refresh": "Auto refresh timeline",
         "auto_load_tweets": "Auto load more tweets on bottom",
-        "load_conversation": "Load conversation in tweet status"
+        "load_conversation": "Load conversation in tweet status",
+        "online_mode": "Use online api"
     }
 }

@@ -7,7 +7,7 @@
       <button class="btn navbar-toggler" type="button" @click="$router.go(-1)">
         <span><chevron-left height="30" status="text-success" width="30"/></span>
       </button>
-      <project-list v-show="width < 992" :on-nav="true" />
+      <project-list v-if="!settings.onlineMode" v-show="width < 992" :on-nav="true" />
       <!--<button aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation" class="btn navbar-toggler" data-target="#navbarNav" data-toggle="collapse" type="button" v-if="project && projects.length && displayType === 'timeline'">
         <span class="navbar-toggler-icon"></span>
       </button>-->
@@ -50,7 +50,8 @@
     const project = computed(() => store.state.project)
     const projects = computed(() => store.state.projects)
     const width = computed(() => store.state.width)
-    const displayName = "Twitter Monitor"
+    const settings = computed(() => store.state.settings)
+    const displayName = computed(() => "Twitter Monitor" + (settings.value.onlineMode ? " Online" : ""))
 </script>
 
 <style scoped>

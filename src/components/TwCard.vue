@@ -125,7 +125,6 @@ const props = defineProps({
     default: "",
   },
 })
-
 const device = {
   android_app: "Android",
   iphone_app: "iPhone",
@@ -146,7 +145,7 @@ const settings = computed(() => store.state.settings)
 const realMediaPath = computed(() => store.state.realMediaPath)
 const samePath = computed(() => store.state.samePath)
 const latestMedia = computed((): Media | {} => {
-  if (props.media) {
+  if (props.media && props.media.length) {
     return props.media[props.media.length - 1]
   } else {
     return {}

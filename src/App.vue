@@ -44,7 +44,7 @@
         }
       }, {deep: true})
       watch(names, () => {
-        if (names.value.length) {
+        if (names.value && names.value.length) {
           store.dispatch('updateUserList')
         }
       })
@@ -113,12 +113,16 @@
         //updateHeightStatus
         //this.isUp();
         konamiCode()
-        request<ApiAccounts>(settings.value.basePath + '/api/v2/data/accounts/').then(response => {
-          store.dispatch({type: 'setCoreValue', key: 'names', value: response.data.account_info})
-          store.dispatch("updateUserList")
-          store.dispatch({type: 'setCoreValue', key: 'projects', value: response.data.projects})
-          store.dispatch({type: 'setCoreValue', key: 'links', value: response.data.links})
-        }).catch((e: Error) => Notice(String(e), "error"))
+        if (!settings.value.onlineMode) {
+          request<ApiAccounts>(settings.value.basePath + '/api/v2/data/accounts/').then(response => {
+            store.dispatch({type: 'setCoreValue', key: 'names', value: response.data.account_info})
+            store.dispatch("updateUserList")
+            store.dispatch({type: 'setCoreValue', key: 'projects', value: response.data.projects})
+            store.dispatch({type: 'setCoreValue', key: 'links', value: response.data.links})
+          }).catch((e: Error) => {
+            Notice(String(e), "error")
+          })
+        }
       })
 
       return {devmode, viewportHeight, width}

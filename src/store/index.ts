@@ -45,6 +45,7 @@ export const store = createStore<State>({
       displayPicture: false,
       autoLoadTweets: false,
       autoRefresh: false,
+      onlineMode: false,
       loadConversation: false,
       basePath,
       mediaPath,

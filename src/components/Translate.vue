@@ -10,7 +10,7 @@
     <div v-else>
       <hr class="my-4">
       <p class='card-text'><small class="text-muted">{{ t("translate.message.translate_by", [state.translate_source]) }}</small></p>
-      <full-text :entities="[]" :full_text_origin="state.text" />
+      <full-text class="card-text" :entities="[]" :full_text_origin="state.text" />
       <span class="text-decoration-none" role="button"><small style="color:#1DA1F2" @click="state.status = 0">{{ t("translate.message.hide_translated") }}</small></span>
     </div>
   </div>

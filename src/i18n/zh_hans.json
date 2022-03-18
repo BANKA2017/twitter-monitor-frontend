@@ -172,6 +172,7 @@
         "default_media_path": "默认媒体目录: {0}",
         "auto_refresh": "自动刷新时间线",
         "auto_load_tweets": "到达底部加载更多",
-        "load_conversation": "在状态中加载对话"
+        "load_conversation": "在状态中加载对话",
+        "online_mode": "使用在线 Api"
     }
 }

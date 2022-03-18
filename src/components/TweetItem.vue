@@ -10,15 +10,17 @@
         <div>
           <small class="text-muted" v-if="tweet.retweet_from">
             <retweet height="1em" status="" width="1em"/>
-            <router-link :to="`/`+(tweetModeValue === 'status' ? tweet.name + `/all` : `i/status/`+tweet.tweet_id_str)" class="text-muted">
-              {{ tweet.display_name }}
+            <router-link v-if="!settings.onlineMode" :to="`/`+(tweetModeValue === 'status' ? tweet.name + `/all` : `i/status/`+tweet.tweet_id_str)" class="text-muted">
+              <full-text :entities="[]" :full_text_origin="tweet.display_name" />
             </router-link>
+            <span class="text-muted" v-else><full-text :entities="[]" :full_text_origin="tweet.display_name" /></span>
           </small>
         </div>
-        <router-link v-if="!tweet.retweet_from_name || (tweet.retweet_from_name && userList.map(x => x.name).includes(tweet.retweet_from_name))" :to="`/`+ (tweetModeValue === 'status' ? ((tweet.retweet_from_name && tweet.retweet_from_name === tweet.name) ? `i/status/`+tweet.tweet_id_str : ((tweet.retweet_from ? tweet.retweet_from_name : tweet.name) + '/all')) : `i/status/`+tweet.tweet_id_str)" class="card-title text-dark">
-          {{ tweet.retweet_from ? tweet.retweet_from : tweet.display_name }}
+        <span v-if="settings.onlineMode"> <full-text :entities="[]" :full_text_origin="tweet.retweet_from ? tweet.retweet_from : tweet.display_name" /></span>
+        <router-link v-else-if="!tweet.retweet_from_name || (tweet.retweet_from_name && userList.map(x => x.name).includes(tweet.retweet_from_name))" :to="`/`+ (tweetModeValue === 'status' ? ((tweet.retweet_from_name && tweet.retweet_from_name === tweet.name) ? `i/status/`+tweet.tweet_id_str : ((tweet.retweet_from ? tweet.retweet_from_name : tweet.name) + '/all')) : `i/status/`+tweet.tweet_id_str)" class="card-title text-dark">
+          <full-text :entities="[]" :full_text_origin="tweet.retweet_from ? tweet.retweet_from : tweet.display_name" />
         </router-link>
-        <a v-else :href="`//twitter.com/` + tweet.retweet_from_name" class="text-dark" target="_blank">{{ tweet.retweet_from }}</a>
+        <a v-else :href="`//twitter.com/` + tweet.retweet_from_name" class="text-dark" target="_blank"><full-text :entities="[]" :full_text_origin="tweet.retweet_from" /></a>
         | <small>@{{ tweet.retweet_from ? tweet.retweet_from_name : tweet.name }}</small>
         <!--media-->
         <span v-if="tweet.media === 1" class="ml-1" style="cursor:pointer" @click="swapDisplayPictureStatus">
@@ -33,8 +35,8 @@
         <div class="my-4"></div>
         <!--<div v-html="`<p class='card-text'>`+tweet.full_text+`</p>`"></div>-->
         <!--excited!-->
-        <html-text :entities="tweet.entities" :full_text_origin="tweet.full_text_origin"/>
-        <translate v-if="tweet.full_text_origin" :id="tweet.tweet_id_str" :to="settings.language" type="0"/>
+        <full-text class="card-text" :entities="tweet.entities" :full_text_origin="tweet.full_text_origin"/>
+        <translate v-if="!settings.onlineMode && tweet.full_text_origin" :id="tweet.tweet_id_str" :to="settings.language" type="0"/>
         <!--media-->
         <template v-if="tweet.media === 1&&!settings.displayPicture && tweet.mediaObject.tweetsMedia.length">
           <div class="my-4"></div>
@@ -64,7 +66,7 @@
 </template>
 
 <script setup lang="ts">
-import HtmlText from "./FullText.vue";
+import FullText from "./FullText.vue";
 import Translate from "./Translate.vue";
 import ImageList from "./TweetImages.vue";
 import QuoteCard from "./QuoteCard.vue";
