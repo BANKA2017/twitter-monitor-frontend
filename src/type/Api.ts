@@ -12,8 +12,8 @@ import {
 export interface Api<T> {
   code: number
   message: string
-  query: string
-  version: 'v2' | 'v3' | 'test' | 'compat_v3'
+  query?: string
+  version: 'v2' | 'v3' | 'test' | 'compat_v3' | 'online'
   data: T
 }
 

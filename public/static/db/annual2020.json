@@ -176,11 +176,7 @@
     ],
     "cardObject": {},
     "quoteObject": {},
-    "mediaObject": {
-      "tweetsMedia": [],
-      "quoteMedia": [],
-      "cardMedia": []
-    },
+    "mediaObject": [],
     "tweet_id_str": "1234312472904925184",
     "origin_tweet_id_str": "1234312472904925184",
     "uid_str": "1158675515193999360"

@@ -38,23 +38,23 @@
         <full-text class="card-text" :entities="tweet.entities" :full_text_origin="tweet.full_text_origin"/>
         <translate v-if="!settings.onlineMode && tweet.full_text_origin" :id="tweet.tweet_id_str" :to="settings.language" type="0"/>
         <!--media-->
-        <template v-if="tweet.media === 1&&!settings.displayPicture && tweet.mediaObject.tweetsMedia.length">
+        <template v-if="tweet.media === 1&&!settings.displayPicture && tweet.mediaObject.filter(x => x.source === 'tweets').length">
           <div class="my-4"></div>
-          <image-list :is_video="tweet.video" :list="tweet.mediaObject.tweetsMedia" :unlimited="tweetModeValue === 'status'"/>
+          <image-list :is_video="tweet.video" :list="tweet.mediaObject.filter(x => x.source === 'tweets')" :unlimited="tweetModeValue === 'status'"/>
         </template>
         <!--quote-->
         <template v-if="tweet.quote_status !== 0">
           <div class="my-4"></div>
-          <quote-card :quote-media="tweet.mediaObject.quoteMedia" :quote-object="tweet.quoteObject"/>
+          <quote-card :quote-media="tweet.mediaObject.filter(x => x.source === 'quote_status')" :quote-object="tweet.quoteObject"/>
         </template>
         <!--polls-->
         <template v-if="tweet.poll !== 0">
-          <tw-polls :media="tweet.mediaObject.cardMedia" :polls="tweet.pollObject"/>
+          <tw-polls :media="tweet.mediaObject.filter(x => x.source === 'cards')" :polls="tweet.pollObject"/>
         </template>
         <!--card-->
         <template v-else-if="tweet.card !== '' && Object.keys(tweet.cardObject).length">
           <div class="my-4"></div>
-          <tw-card :media="tweet.mediaObject.cardMedia" :mediaState="!settings.displayPicture" :object="tweet.cardObject" :tweet-text="tweet.full_text_origin.split(`\n`)[0]" :user-name="tweet.retweet_from ? tweet.retweet_from : tweet.display_name"></tw-card>
+          <tw-card :media="tweet.mediaObject.filter(x => x.source === 'cards')" :mediaState="!settings.displayPicture" :object="tweet.cardObject" :tweet-text="tweet.full_text_origin.split(`\n`)[0]" :user-name="tweet.retweet_from ? tweet.retweet_from : tweet.display_name"></tw-card>
         </template>
         <!--time && source-->
         <div id="foot">

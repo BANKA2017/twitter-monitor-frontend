@@ -57,7 +57,7 @@ export interface Tweet {
   pollObject: PollItem[]
   cardObject: Card | {}
   quoteObject: Quote | {}
-  mediaObject: { [P in 'tweetsMedia' | 'quoteMedia' | 'cardMedia']: Media[]}
+  mediaObject: Media[]
 }
 
 export interface Translate {
