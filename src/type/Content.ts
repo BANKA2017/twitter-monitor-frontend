@@ -55,8 +55,8 @@ export interface Tweet {
   type: string
   entities: Entity[]
   pollObject: PollItem[]
-  cardObject: Card | {}
-  quoteObject: Quote | {}
+  cardObject?: Card
+  quoteObject?: Quote
   mediaObject: Media[]
 }
 

@@ -4,11 +4,10 @@ import App from '@/App.vue'
 import router from '@/router'
 import {store, key} from '@/store'
 //import 'bootstrap';
-import 'bootstrap/js/dist/util'
+import 'bootstrap/js/src/util'
 import 'bootstrap/js/dist/button'
 import 'bootstrap/js/dist/dropdown'
 import 'bootstrap/js/dist/collapse'
-import 'jquery';
 //import 'popper.js';
 
 //icons

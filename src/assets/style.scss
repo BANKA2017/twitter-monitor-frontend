@@ -1,2 +1,3 @@
 $primary: #1da1f2;
+$min-contrast-ratio: 2.5;//default value is 4.5, but while I setting it to 3, color of text in active button will become black
 @import "../../node_modules/bootstrap/scss/bootstrap.scss";

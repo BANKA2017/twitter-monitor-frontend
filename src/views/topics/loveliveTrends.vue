@@ -4,11 +4,13 @@
     <div class="container">
       <div class="row">
         <div class="col-lg-2 mb-4">
-          <button role="button" :class="{'text-white': selectedTeams.has(name),  'btn-block': true, 'btn': true}" :style="{'background-color': selectedTeams.has(name) ? colorInfo : '#ffffff'}" v-for="(colorInfo, name) in color" :key="name" @click="selectedTeams.has(name) ? selectedTeams.delete(name) : selectedTeams.add(name)">
-            {{ name }}
-          </button>
-          <button :class="{'btn': true, 'btn-block': true, 'btn-outline-primary': true, 'active': status.displayTips}" @click="status.displayTips = !status.displayTips">说明 <info-circle-fill height="1em" status="" width="1em" /></button>
-          <a :href="store.getters.getBasePath + '/static/lovelive_trends/' + dateList[status.dateOrder] + '.json'" class="btn btn-block btn-outline-primary" target="_blank">下载数据 <download-icon height="1em" status="" width="1em" /></a>
+          <div class="d-grid gap-2">
+            <button role="button" :class="{'text-white': selectedTeams.has(name), 'btn': true}" :style="{'background-color': selectedTeams.has(name) ? colorInfo : '#ffffff'}" v-for="(colorInfo, name) in color" :key="name" @click="selectedTeams.has(name) ? selectedTeams.delete(name) : selectedTeams.add(name)">
+              {{ name }}
+            </button>
+            <button :class="{'btn': true, 'btn-outline-primary': true, 'active': status.displayTips}" @click="status.displayTips = !status.displayTips">说明 <info-circle-fill height="1em" status="" width="1em" /></button>
+            <a :href="store.getters.getBasePath + '/static/lovelive_trends/' + dateList[status.dateOrder] + '.json'" class="btn btn-outline-primary" target="_blank">下载数据 <download-icon height="1em" status="" width="1em" /></a>
+          </div>
         </div>
         <div class="col-lg-8 mb-4">
           <div class="card" v-show="status.displayTips">
@@ -36,7 +38,7 @@
           <template v-else-if="status.userOrder !== -1" >
             <p class="display-4">{{ trendsData.data[status.userOrder].name_cn }}</p>
             <p>
-              <router-link :to="`/`+ trendsData.data[status.userOrder].name +`/all`" class="text-decoration-none text-muted">@{{ trendsData.data[status.userOrder].name }}</router-link> <span :style="{'background-color': trendsData.data[status.userOrder].color}" class="badge badge-pill text-white">{{ trendsData.data[status.userOrder].color }}</span> <span :style="{'background-color': color[trendsData.data[status.userOrder].team]}" class="badge badge-pill text-white">{{ trendsData.data[status.userOrder].team }}</span>
+              <router-link :to="`/`+ trendsData.data[status.userOrder].name +`/all`" class="text-decoration-none text-muted">@{{ trendsData.data[status.userOrder].name }}</router-link> <span :style="{'background-color': trendsData.data[status.userOrder].color}" class="badge rounded-pill text-white">{{ trendsData.data[status.userOrder].color }}</span> <span :style="{'background-color': color[trendsData.data[status.userOrder].team]}" class="badge rounded-pill text-white">{{ trendsData.data[status.userOrder].team }}</span>
             </p>
             <div class="container-fluid">
               <div class="row">
@@ -51,7 +53,7 @@
                   <div id="tag-list" class="list-group">
                     <router-link v-for="(count, tagName) in trendsData.data[status.userOrder].tweets.tag" :key="tagName" :to="`/hashtag/` + tagName" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
                       #{{ tagName }}
-                      <span class="badge badge-primary badge-pill">{{ count }}</span>
+                      <span class="badge bg-primary rounded-pill">{{ count }}</span>
                     </router-link>
                   </div>
                 </div>
@@ -60,7 +62,7 @@
                   <div id="link-list" class="list-group">
                     <div v-for="(count, linkName) in trendsData.data[status.userOrder].tweets.link" :key="linkName" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
                       {{ linkName }}
-                      <span class="badge badge-danger badge-pill">{{ count }}</span>
+                      <span class="badge bg-danger rounded-pill">{{ count }}</span>
                     </div>
                   </div>
                 </div>
@@ -69,8 +71,8 @@
           </template>
           <template v-else>
             <template v-if="status.value === 'overview'" >
-              <tmv2-chart :chart-rows="userData.count_data" :colors="userData.color" :label-map="userData.label" chart-type="line" chartHeight="500px" title="关注数" :set-option="{notMerge: true}"/>
               <tmv2-chart :chart-rows="userData.data" :colors="userData.color" :label-map="userData.label" chart-type="line" chartHeight="500px" title="关注数变动" :set-option="{notMerge: true}"/>
+              <tmv2-chart :chart-rows="userData.count_data" :colors="userData.color" :label-map="userData.label" chart-type="line" chartHeight="500px" title="关注数" :set-option="{notMerge: true}"/>
               <el-table ref="accountData" v-loading="!trendsData.data.length" :data="tableData" :default-sort="{prop: 'followers_add', order: 'descending'}" style="width: 100%">
                 <el-table-column label="名称">
                   <template #default="scope">

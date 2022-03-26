@@ -11,7 +11,7 @@
           <p>全站共有61,173条含有媒体的推文，占总推文数的54%；已翻译推文有302条，占总推文数的0.26%，在新的一年里面希望能够有所增长</p>
           <p>站内记录中发推数量最多的是 <a href="https://twitter.com/Yuki_Nakashim" target="_blank">中島由貴</a> ，共有3,052条推文；而总发推数最多的是 <a href="https://twitter.com/lovelive_SIF" target="_blank">【公式】ラブライブ！スクフェス事務局</a> ，共发推2,391,252条</p>
           还有一些有无趣的数据：
-          <ul class="ml-4">
+          <ul class="ms-4">
             <li>粉丝数最多的是 <a href="https://twitter.com/bang_dream_gbp" target="_blank">バンドリ！ ガールズバンドパーティ！</a>，共有1,511,462粉丝</li>
             <li>最愿意关注他人的账号是 <a href="https://twitter.com/nekopara_pr" target="_blank">NEKO WORKs@Official</a>，共关注了2,689个twitter账号</li>
             <li>发送最多媒体文件（图片/视频）的是<a href="https://twitter.com/lovelive_SIF" target="_blank">【公式】ラブライブ！スクフェス事務局</a>，共发送了2,387,538条带媒体推文</li>

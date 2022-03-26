@@ -2,16 +2,16 @@
   <div id="translate">
     <!--translate-->
     <div v-if="state.status === 0" class='card-text'>
-      <span role="button" class="text-decoration-none"><small style="color:#1DA1F2" @click="runTranslate(props.id)">{{ type === '1' ? t("translate.message.translate_profile") : t("translate.message.translate_tweet") }}</small></span>
+      <span role="button" class="text-decoration-none"><small style="color:#1DA1F2; font-size: 0.8rem" @click="runTranslate(props.id)">{{ type === '1' ? t("translate.message.translate_profile") : t("translate.message.translate_tweet") }}</small></span>
     </div>
-    <div v-else-if="state.status === 1" class="spinner-grow spinner-grow-sm" role="status" style="color:#1DA1F2">
-      <span class="sr-only">{{ t("public.loading") }}...</span>
+    <div v-else-if="state.status === 1" style="color:#1DA1F2">
+      <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
     </div>
     <div v-else>
       <hr class="my-4">
       <p class='card-text'><small class="text-muted">{{ t("translate.message.translate_by", [state.translate_source]) }}</small></p>
       <full-text class="card-text" :entities="[]" :full_text_origin="state.text" />
-      <span class="text-decoration-none" role="button"><small style="color:#1DA1F2" @click="state.status = 0">{{ t("translate.message.hide_translated") }}</small></span>
+      <div class="text-decoration-none" role="button"><small style="color:#1DA1F2; font-size: 0.8rem" @click="state.status = 0">{{ t("translate.message.hide_translated") }}</small></div>
     </div>
   </div>
 </template>
@@ -20,7 +20,7 @@
 import {useStore} from "@/store";
 import {computed, reactive, watch} from "vue";
 import {Notice} from "@/share/Tools";
-import {controller, request} from "@/share/Fetch";
+import {Controller, request} from "@/share/Fetch";
 import {ApiTranslate} from "@/type/Api";
 import {useI18n} from "vue-i18n";
 import FullText from "@/components/FullText.vue";
@@ -82,7 +82,7 @@ const runTranslate = (id: string = '0') => {
   //type为0即推文, 为1即用户信息
   state.status = 1;
   if (String(props.type) === '0') {
-    request<ApiTranslate>(settings.value.basePath + '/api/v2/data/translate/?tr_type=tweets&tweet_id=' + id + '&to=' + toLanguage.value, controller).then(response => {
+    request<ApiTranslate>(settings.value.basePath + '/api/v2/data/translate/?tr_type=tweets&tweet_id=' + id + '&to=' + toLanguage.value, new Controller()).then(response => {
       store.dispatch({type: "updateTweetsTranslate", tweet_id: props.id, translate: {text: response.data.translate, translate_source: response.data.translate_source}})
       state.text = response.data.translate
       state.translate_source = response.data.translate_source
@@ -92,7 +92,7 @@ const runTranslate = (id: string = '0') => {
       Notice(String(e), 'error')
     })
   } else if (String(props.type) === '1') {
-    request<ApiTranslate>(settings.value.basePath + '/api/v2/data/translate/?tr_type=profile&uid=' + id + '&to=' + toLanguage.value, controller).then(response => {
+    request<ApiTranslate>(settings.value.basePath + '/api/v2/data/translate/?tr_type=profile&uid=' + id + '&to=' + toLanguage.value, new Controller()).then(response => {
       state.text = response.data.translate
       state.translate_source = response.data.translate_source
       state.status = 2

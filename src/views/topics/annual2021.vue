@@ -18,7 +18,7 @@
               <p class="text-muted"><small>* 建议使用宽屏浏览，否则可能会出现图表显示不全</small></p>
               <h3>前言</h3>
               <p class="text-muted">在平淡无奇的日子里又过了一年</p>
-              <ul class="ml-3">
+              <ul class="ms-3">
                 <li>升级了前端 Vue 版本(Vue2 -> Vue3)，至少能用了，并释出了<a href="https://github.com/BANKA2017/tmv2-frontend" target="_blank">源码</a>，至此，任何人都能够构建一个不完整但核心功能完全可用的Twitter Monitor</li>
                 <li>重构了爬虫，提高了效率</li>
                 <li>搬了个家，迁移到了位于法国的 <code>KS-LE</code></li>
@@ -129,7 +129,7 @@
                 <h4>BanG Dream!</h4>
                 <p class="text-muted">2021-01-01 ~ 2021-12-30 (GMT+9)</p>
                 <div class="my-1">
-                  <span type="button" @click="swapGroupStatus('bangdream', group)" :class="{'badge': true, 'mr-1': true, 'text-white': true}" :style="{'background-color': selected ? accountColor.group[group] : '#6c757d'}" v-for="(selected, group) in accountListFilter.bangdream" :key="group">{{group}}</span>
+                  <span type="button" @click="swapGroupStatus('bangdream', group)" :class="{'badge': true, 'me-1': true, 'text-white': true}" :style="{'background-color': selected ? accountColor.group[group] : '#6c757d'}" v-for="(selected, group) in accountListFilter.bangdream" :key="group">{{group}}</span>
                 </div>
                 <heat-map-chart title="发推热力图（包含发推转推）" :data="accountComputedData.bangdream.tweets" year="2021"/>
                 <heat-map-chart title="转推热力图" :data="accountComputedData.bangdream.retweet" year="2021" class="mb-2"/>
@@ -152,7 +152,7 @@
                 <h4>Love Live!</h4>
                 <p class="text-muted">2021-01-01 ~ 2021-12-30 (GMT+9)</p>
                 <div class="my-1">
-                  <span type="button" @click="swapGroupStatus('lovelive', group)" :class="{'badge': true, 'mr-1': true, 'text-white': true}" :style="{'background-color': selected ? accountColor.group[group] : '#6c757d'}" v-for="(selected, group) in accountListFilter.lovelive" :key="group">{{group}}</span>
+                  <span type="button" @click="swapGroupStatus('lovelive', group)" :class="{'badge': true, 'me-1': true, 'text-white': true}" :style="{'background-color': selected ? accountColor.group[group] : '#6c757d'}" v-for="(selected, group) in accountListFilter.lovelive" :key="group">{{group}}</span>
                 </div>
                 <heat-map-chart title="发推热力图（包含发推转推）" :data="accountComputedData.lovelive.tweets" year="2021"/>
                 <heat-map-chart title="转推热力图" :data="accountComputedData.lovelive.retweet" year="2021" class="mb-2"/>
@@ -180,7 +180,7 @@
                 <h4>官推</h4>
                 <p class="text-muted">包括 Love Live! 和 BanG Dream!</p>
                 <div class="my-1">
-                  <span type="button" @click="swapGroupStatus('official', group)" :class="{'badge': true, 'mr-1': true, 'text-white': true}" :style="{'background-color': selected ?( group === 'BanGDream!' ? '#E4003DD9' : '#1DA1F2FF') : '#6c757d'}" v-for="(selected, group) in accountListFilter.official" :key="group">{{group}}</span>
+                  <span type="button" @click="swapGroupStatus('official', group)" :class="{'badge': true, 'me-1': true, 'text-white': true}" :style="{'background-color': selected ?( group === 'BanGDream!' ? '#E4003DD9' : '#1DA1F2FF') : '#6c757d'}" v-for="(selected, group) in accountListFilter.official" :key="group">{{group}}</span>
                 </div>
                 <heat-map-chart title="发推热力图（包含发推转推）" :data="accountComputedData.official.tweets" year="2021"/>
                 <heat-map-chart title="转推热力图" :data="accountComputedData.official.retweet" year="2021" class="mb-2"/>

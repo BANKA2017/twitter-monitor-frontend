@@ -23,7 +23,7 @@
         <a v-else :href="`//twitter.com/` + tweet.retweet_from_name" class="text-dark" target="_blank"><full-text :entities="[]" :full_text_origin="tweet.retweet_from" /></a>
         | <small>@{{ tweet.retweet_from ? tweet.retweet_from_name : tweet.name }}</small>
         <!--media-->
-        <span v-if="tweet.media === 1" class="ml-1" style="cursor:pointer" @click="swapDisplayPictureStatus">
+        <span v-if="tweet.media === 1" class="ms-1" style="cursor:pointer" @click="swapDisplayPictureStatus">
           <image-icon height="2em" status="text-success" width="2em"/>
         </span>
         <camera-video-icon v-if="tweet.video === 1" height="2em" status="text-danger" width="2em"/>

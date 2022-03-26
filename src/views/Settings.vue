@@ -6,43 +6,37 @@
       <div class="row">
         <div class="col-md-8 offset-md-2">
           <div class="input-group mb-3">
-            <div class="input-group-prepend">
-              <span class="input-group-text" id="api_path">{{ t("settings.api_path") }}</span>
-            </div>
+            <span class="input-group-text" id="api_path">{{ t("settings.api_path") }}</span>
             <input v-model="basePath" aria-describedby="api_path" aria-label="Sizing example input" class="form-control" type="text">
           </div>
-          <label class="mb-3 text-muted" for="api_path">{{ t("settings.default_api_path", [defaultBasePath]) }}</label>
+          <label class="mb-3 text-muted form-label" for="api_path">{{ t("settings.default_api_path", [defaultBasePath]) }}</label>
           <div class="input-group mb-3">
-            <div class="input-group-prepend">
-              <span class="input-group-text" id="media_path">{{ t("settings.media_path") }}</span>
-            </div>
+            <span class="input-group-text" id="media_path">{{ t("settings.media_path") }}</span>
             <input v-model="mediaPath" aria-describedby="media_path" aria-label="Sizing example input" class="form-control" type="text">
           </div>
-          <label class="mb-3 text-muted" for="media_path">{{ t("settings.default_media_path", [defaultMediaPath]) }}</label>
+          <label class="mb-3 text-muted form-label" for="media_path">{{ t("settings.default_media_path", [defaultMediaPath]) }}</label>
           <div class="input-group mb-3">
-            <div class="input-group-prepend">
-              <label class="input-group-text" for="select-language">{{ t("settings.language") }}</label>
-            </div>
-            <select id="select-language" v-model="language" class="custom-select">
+            <label class="input-group-text" for="select-language">{{ t("settings.language") }}</label>
+            <select id="select-language" v-model="language" class="form-select">
               <option v-for="languageInfo in languageList" :key="languageInfo.code" :selected="language === languageInfo.code" :value="languageInfo.code">{{ languageInfo.local_name }}
               </option>
             </select>
           </div>
-          <!--<div class="custom-control custom-checkbox mb-3">
-            <input type="checkbox" class="custom-control-input" id="auto-refresh" v-model="autoRefresh">
+          <!--<div class="form-check mb-3">
+            <input type="checkbox" class="form-check-input" id="auto-refresh" v-model="autoRefresh">
             <label class="custom-control-label" for="auto-refresh">{{ t("settings.auto_refresh") }}</label>
           </div>-->
-          <div class="custom-control custom-checkbox mb-3">
-            <input type="checkbox" class="custom-control-input" id="auto-load-more" v-model="autoLoadMore">
-            <label class="custom-control-label" for="auto-load-more">{{ t("settings.auto_load_tweets") }}</label>
+          <div class="form-check mb-3">
+            <input type="checkbox" class="form-check-input" id="auto-load-more" v-model="autoLoadMore">
+            <label class="custom-control-label form-label" for="auto-load-more">{{ t("settings.auto_load_tweets") }}</label>
           </div>
-          <div class="custom-control custom-checkbox mb-3">
-            <input type="checkbox" class="custom-control-input" id="load-conversation" v-model="loadConversation">
-            <label class="custom-control-label" for="load-conversation">{{ t("settings.load_conversation") }}</label>
+          <div class="form-check mb-3">
+            <input type="checkbox" class="form-check-input" id="load-conversation" v-model="loadConversation">
+            <label class="custom-control-label form-label" for="load-conversation">{{ t("settings.load_conversation") }}</label>
           </div>
-          <div class="custom-control custom-checkbox mb-3" v-if="adminMode">
-            <input type="checkbox" class="custom-control-input" id="online-mode" v-model="onlineMode">
-            <label class="custom-control-label" for="online-mode">{{ t("settings.online_mode") }}</label>
+          <div class="form-check mb-3" v-if="adminMode">
+            <input type="checkbox" class="form-check-input" id="online-mode" v-model="onlineMode">
+            <label class="custom-control-label form-label" for="online-mode">{{ t("settings.online_mode") }}</label>
           </div>
           <div class="text-center my-4">
             <el-button circle @click="$router.go(-1)"><arrow-left height="1em" status="" width="1em"/></el-button>

@@ -3,7 +3,9 @@
     <navigation display-name="Twitter Monitor Online" display-type="online" />
     <div class="container">
       <div class="row">
-        <el-skeleton v-if="load" :rows="5" animated class="mt-3 col-md-8 offset-md-2"></el-skeleton>
+        <div v-if="load" class="mt-3 col-md-8 offset-md-2">
+          <el-skeleton :rows="5" animated></el-skeleton>
+        </div>
         <div v-else-if="!load && media.length === 0" class="col-md-8 offset-md-2">
           <div class="my-4" />
           <div v-once id="tmolTips">
@@ -38,9 +40,9 @@
           <span class="lead">Download</span>
           <div class="list-group my-2">
             <template v-for="(mediaInfo, order) in (video ? rawData.video_info.variants : media)" :key="order">
-              <a :href="(video ? '' : `https://`) + mediaInfo.url + (video ? '' : `:orig`)" class="text-muted text-decoration-none list-group-item list-group-item-action d-flex justify-content-between align-items-center" target="_blank">
+              <a :href="(video ? '' : `https://`) + mediaInfo.url + (video || mediaInfo.source !== 'tweets' ? '' : `:orig`)" class="text-muted text-decoration-none list-group-item list-group-item-action d-flex justify-content-between align-items-center" target="_blank">
                 {{ video ? mediaInfo.content_type === 'video/mp4' ? mediaInfo.url.replace(/.*vid\/([0-9]+x[0-9]+).*/, `$1`) : 'm3u8' : mediaInfo.basename}}
-                <span v-if="!video || mediaInfo.content_type === 'video/mp4'" class="badge badge-primary badge-pill">{{ video ? mediaInfo.bitrate / 1000 + ' kbps' : mediaInfo.origin_info_height + 'x' +mediaInfo.origin_info_width }}</span>
+                <span v-if="!video || mediaInfo.content_type === 'video/mp4'" class="badge bg-primary rounded-pill">{{ video ? mediaInfo.bitrate / 1000 + ' kbps' : mediaInfo.origin_info_height + 'x' +mediaInfo.origin_info_width }}</span>
               </a>
             </template>
           </div>

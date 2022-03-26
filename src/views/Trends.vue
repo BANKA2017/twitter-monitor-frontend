@@ -8,7 +8,7 @@
             <ul class="list-group">
               <router-link v-for="(hashtagInfo, order) in hashTagsRank24" :key="order" :to="`/hashtag/` + hashtagInfo.text" class="col-md-12 text-muted text-decoration-none list-group-item list-group-item-action d-flex justify-content-between align-items-center">
                 #{{ hashtagInfo.text }}
-                <span class="badge badge-primary badge-pill">{{ hashtagInfo.count }}</span>
+                <span class="badge bg-primary rounded-pill">{{ hashtagInfo.count }}</span>
               </router-link>
             </ul>
           </el-skeleton>
@@ -23,7 +23,7 @@
                     <el-image :src="settings.mediaPath + (data.header.replace(/https:\/\/|http:\/\//, ''))" class="rounded-circle img-fluid" lazy style="max-height: 50px; max-width: 50px"></el-image>
                     <div class="d-flex w-100 justify-content-between">
                       <h5 class="mb-1 d-inline-block text-truncate">{{ data.display_name }}</h5>
-                      <small><span class="badge badge-primary badge-pill">{{ data.count }}</span></small>
+                      <small><span class="badge bg-primary rounded-pill">{{ data.count }}</span></small>
                     </div>
                     <p class="mb-1">@{{ data.name }}</p>
                   </router-link>

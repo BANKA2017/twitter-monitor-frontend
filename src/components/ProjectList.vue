@@ -3,7 +3,9 @@
   <button class="btn navbar-toggler" data-toggle="collapse" type="button" v-if="onNav" @click="state.projectS = !state.projectS">
     <span class="navbar-toggler-icon"></span>
   </button>
-  <button v-else-if="!onNav && !onMain" class="btn btn-outline-primary btn-block btn-sm mb-4" @click="state.projectS = !state.projectS">{{t("public.user_list") }}</button>
+  <div class="d-grid gap-2" v-else-if="!onNav && !onMain">
+    <button class="btn btn-outline-primary btn-sm mb-4" @click="state.projectS = !state.projectS">{{t("public.user_list") }}</button>
+  </div>
 
   <div v-if="onMain" >
     <template v-for="(projectName, s) in projects" :key="s">

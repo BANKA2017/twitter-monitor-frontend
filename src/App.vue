@@ -149,4 +149,6 @@
 .plyr {
   border-radius: 14px;
 }
+a:link {text-decoration: none}
+a:hover {text-decoration: underline}
 </style>

@@ -12,7 +12,7 @@
           </a>
         </div>
         <div class="my-4"></div>
-        <p class='card-text' ref="quote_text">{{ quoteObject.full_text }}</p>
+        <p class='card-text' ref="quote_text">{{ quoteObject.full_text.replaceAll("&amp;amp;", "&") }}</p>
         <div id="quotefoot">
           <small class="text-muted">{{ timeGap(quoteObject.time, now, settings.language) }}</small>
         </div>

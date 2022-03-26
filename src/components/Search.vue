@@ -6,47 +6,40 @@
       <search-tips class="my-4"/>
     </template>
   </div>
-  <button v-if="tweetModeValue === 'search'" :class="{'btn': true, 'btn-sm': true, 'btn-block': true, 'btn-outline-primary': true, 'mb-4': state.mode === 2, 'my-4': state.mode !== 2, 'active': state.mode === 2,}" @click="state.mode = ((state.mode === 2) ? 0 : 2)" role="button">{{ t('search.normal_search.advanced_search') }}
-  </button>
+  <div class="d-grid gap-2" v-if="tweetModeValue === 'search'" >
+    <button :class="{'btn': true, 'btn-sm': true, 'btn-outline-primary': true, 'mb-4': state.mode === 2, 'my-4': state.mode !== 2, 'active': state.mode === 2,}" @click="state.mode = ((state.mode === 2) ? 0 : 2)" role="button">{{ t('search.normal_search.advanced_search') }}</button>
+  </div>
   <template v-if="tweetModeValue === 'search' && state.mode === 2">
     <!-- advancedSearch -->
     <!--text-->
     <div class="input-group mb-1" id="searchInclude">
-      <div class="input-group-prepend">
-        <div class="input-group-text">
-          <div class="custom-control custom-checkbox">
-            <input type="checkbox" class="custom-control-input" id="searchTextOrMode" v-model="state.advancedSearch.keywords.orMode">
-            <label class="custom-control-label" for="searchTextOrMode">OR</label>
-          </div>
+      <div class="input-group-text">
+        <div class="form-check">
+          <input type="checkbox" class="form-check-input" id="searchTextOrMode" v-model="state.advancedSearch.keywords.orMode">
+          <label class="custom-control-label" for="searchTextOrMode">OR</label>
         </div>
       </div>
-      <div class="input-group-prepend">
-        <div class="input-group-text">
-          <div class="custom-control custom-checkbox">
-            <input type="checkbox" class="custom-control-input" id="searchTextNotMode" v-model="state.advancedSearch.keywords.notMode">
-            <label class="custom-control-label" for="searchTextNotMode">NOT</label>
-          </div>
+      <div class="input-group-text">
+        <div class="form-check">
+          <input type="checkbox" class="form-check-input" id="searchTextNotMode" v-model="state.advancedSearch.keywords.notMode">
+          <label class="custom-control-label" for="searchTextNotMode">NOT</label>
         </div>
       </div>
       <input type="text" class="form-control" aria-label="Text input with checkbox" :placeholder="t('search.advanced_search.all_of_these_words')" v-model="state.advancedSearch.keywords.text">
     </div>
-    <label for="searchInclude" class="text-muted my-2 mb-4">{{ t('search.advanced_search.example_text_include') }}</label>
+    <label for="searchInclude" class="text-muted my-2 mb-4 form-label">{{ t('search.advanced_search.example_text_include') }}</label>
     <!--user include-->
     <div class="input-group mb-1" id="searchUserInclude">
-      <div class="input-group-prepend">
-        <div class="input-group-text">
-          <div class="custom-control custom-checkbox">
-            <input type="checkbox" class="custom-control-input" id="searchUserOrMode" v-model="state.advancedSearch.user.andMode">
-            <label class="custom-control-label" for="searchUserOrMode">AND</label>
-          </div>
+      <div class="input-group-text">
+        <div class="form-check">
+          <input type="checkbox" class="form-check-input" id="searchUserOrMode" v-model="state.advancedSearch.user.andMode">
+          <label class="custom-control-label" for="searchUserOrMode">AND</label>
         </div>
       </div>
-      <div class="input-group-prepend">
-        <div class="input-group-text">
-          <div class="custom-control custom-checkbox">
-            <input type="checkbox" class="custom-control-input" id="searchUserNotMode" v-model="state.advancedSearch.user.notMode">
-            <label class="custom-control-label" for="searchUserNotMode">NOT</label>
-          </div>
+      <div class="input-group-text">
+        <div class="form-check">
+          <input type="checkbox" class="form-check-input" id="searchUserNotMode" v-model="state.advancedSearch.user.notMode">
+          <label class="custom-control-label" for="searchUserNotMode">NOT</label>
         </div>
       </div>
       <input type="text" class="form-control" aria-label="Text input with checkbox" :placeholder="t('search.advanced_search.from_this_accounts')" v-model="state.advancedSearch.user.text">
@@ -55,21 +48,19 @@
     <!-- time -->
     <div class="input-group" id="searchTime">
       <input v-model="state.advancedSearch.start" :max="now.getFullYear() + '-' + (now.getMonth() < 9 ? '0' : '') + (now.getMonth() + 1) + '-' + (now.getDate() < 10 ? '0' : '') + now.getDate()" class="form-control" placeholder="since" type="date">
-      <div id="searchTimeTo" class="input-group-append"><span class="input-group-text">-></span></div>
-      <input v-model="state.advancedSearch.end" :max="now.getFullYear() + '-' + (now.getMonth() < 9 ? '0' : '') + (now.getMonth() + 1) + '-' + (now.getDate() < 10 ? '0' : '') + now.getDate()" :min="state.advancedSearch.start" class="form-control input-group-append" placeholder="to" type="date">
-      <div id="searchTimeDel" class="input-group-append">
-        <button class="btn btn-outline-danger" type="button" @click="() => {state.advancedSearch.start = ''; state.advancedSearch.end = ''}">
-          {{ t('search.advanced_search.clean') }}
-        </button>
-      </div>
+      <span id="searchTimeTo" class="input-group-text">-></span>
+      <input v-model="state.advancedSearch.end" :max="now.getFullYear() + '-' + (now.getMonth() < 9 ? '0' : '') + (now.getMonth() + 1) + '-' + (now.getDate() < 10 ? '0' : '') + now.getDate()" :min="state.advancedSearch.start" class="form-control" placeholder="to" type="date">
+      <button id="searchTimeDel" class="btn btn-outline-danger" type="button" @click="() => {state.advancedSearch.start = ''; state.advancedSearch.end = ''}">
+        {{ t('search.advanced_search.clean') }}
+      </button>
     </div>
-    <label for="searchTime" class="text-muted my-2">{{ t('search.advanced_search.example_search_time') }}</label>
+    <label for="searchTime" class="text-muted my-2 form-label">{{ t('search.advanced_search.example_search_time') }}</label>
 
-    <div class="btn-group btn-block" role="group">
+    <div class="btn-group" role="group" style="width: 100%">
       <button type="button" :class="{'btn': true, 'btn-outline-primary': true, 'btn-sm': true, 'active': state.advancedSearch.tweetType.type === 0}" @click="state.advancedSearch.tweetType.type = 0">{{ t('search.advanced_search.nav_bar.all') }}</button>
       <button type="button" :class="{'btn': true, 'btn-outline-primary': true, 'btn-sm': true, 'active': state.advancedSearch.tweetType.type === 1}" @click="state.advancedSearch.tweetType.type = 1">{{ t('search.advanced_search.nav_bar.origin') }}</button>
       <button type="button" :class="{'btn': true, 'btn-outline-primary': true, 'btn-sm': true, 'active': state.advancedSearch.tweetType.type === 2}" @click="state.advancedSearch.tweetType.type = 2">{{ t('search.advanced_search.nav_bar.retweet') }}</button>
-      <button :class="{'btn': true, 'btn-outline-primary': true, 'btn-sm': true, 'active': state.advancedSearch.tweetType.media}" type="button" @click="state.advancedSearch.tweetType.media = !state.advancedSearch.tweetType.media">{{ t('search.advanced_search.nav_bar.media_only') }}</button>
+      <button type="button" :class="{'btn': true, 'btn-outline-primary': true, 'btn-sm': true, 'active': state.advancedSearch.tweetType.media}" @click="state.advancedSearch.tweetType.media = !state.advancedSearch.tweetType.media">{{ t('search.advanced_search.nav_bar.media_only') }}</button>
       <button role="button" :class="{'btn': true, 'btn-outline-primary': true, 'btn-sm': true, 'active': state.advancedSearch.order}" @click="state.advancedSearch.order = !state.advancedSearch.order" >{{ t('search.advanced_search.nav_bar.reverse') }}</button>
     </div>
     <!--<div class="btn-group btn-block" role="group">
@@ -78,7 +69,9 @@
          <button type="button" :class="{'btn': true, 'btn-outline-primary': true, 'btn-sm': true, 'active': search.advancedSearch.tweetType.media !== 0}" @click="search.advancedSearch.tweetType.media = ((search.advancedSearch.tweetType.media === 0) ? 1 : 0)">含有链接</button>
          <button type="button" :class="{'btn': true, 'btn-outline-primary': true, 'btn-sm': true, 'active': search.advancedSearch.tweetType.media !== 0}" @click="search.advancedSearch.tweetType.media = ((search.advancedSearch.tweetType.media === 0) ? 1 : 0)">含有引用</button>
        </div>-->
-    <button v-if="adminMode" :class="{'btn': true, 'btn-outline-dark': true, 'btn-sm': true, 'btn-block': true, 'active': state.advancedSearch.hidden}" role="button" @click="state.advancedSearch.hidden = !state.advancedSearch.hidden">{{ t('search.advanced_search.nav_bar.hidden') }}</button>
+    <div class="d-grid gap-2 mt-2" v-if="adminMode">
+      <button :class="{'btn': true, 'btn-outline-dark': true, 'btn-sm': true, 'active': state.advancedSearch.hidden}" role="button" @click="state.advancedSearch.hidden = !state.advancedSearch.hidden">{{ t('search.advanced_search.nav_bar.hidden') }}</button>
+    </div>
     <div class="my-1"></div>
     <i18n-t class="text-muted" keypath="search.advanced_search.tips.line1.text" tag="label">
       <template #:or_mode>
@@ -91,7 +84,7 @@
         <code>{{ t('search.advanced_search.tips.line1.not_mode') }}</code>
       </template>
     </i18n-t>
-    <label class="text-muted">{{ t('search.advanced_search.tips.line2') }}</label>
+    <label class="text-muted form-label">{{ t('search.advanced_search.tips.line2') }}</label>
     <div class="my-1"></div>
     <router-link :to="{path: '/search/', query: queryObject}" type="button" class="btn btn-primary text-right">{{ t('search.advanced_search.search') }}</router-link>
   </template>

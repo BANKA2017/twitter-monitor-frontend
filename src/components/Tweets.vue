@@ -9,7 +9,7 @@
           <router-link v-else :to="`./`+value[1]" class="nav-link">{{ value[0] }}</router-link>
         </li>
       </template>
-      <li class="nav-item">
+      <li class="nav-item" style="z-index: 1500">
         <div :class="{'nav-link': true, 'active': settings.displayPicture, 'text-primary': !settings.displayPicture}" role="button" @click="swapDisplayPictureStatus">{{ t("timeline.nav_bar.no_image") }}</div>
       </li>
     </nav>
@@ -29,9 +29,12 @@
           </el-divider>
           <el-divider v-else />
         </div>
-        <button v-if="state.moreTweets && !state.loadingBottom && !settings.autoLoadTweets" class="btn btn-primary btn-lg btn-block mb-3" type="button" @click="loading(false)">
-          <span>{{ t("timeline.message.load_more") }}</span>
-        </button>
+        <div class="d-grid gap-2" v-if="state.moreTweets && !state.loadingBottom && !settings.autoLoadTweets">
+          <button class="btn btn-primary btn-lg mb-3" type="button" @click="loading(false)">
+            <span>{{ t("timeline.message.load_more") }}</span>
+          </button>
+        </div>
+
         <el-skeleton v-else-if="state.moreTweets && (state.loadingBottom || settings.autoLoadTweets)" :rows="1" animated class="mb-2"/>
         <div v-else-if="!(tweetModeValue === 'status')">
           <h5 class="text-center">{{ t("timeline.message.no_more") }}</h5>

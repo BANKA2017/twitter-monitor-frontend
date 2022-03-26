@@ -7,7 +7,7 @@
         <div class="col-md-10 offset-md-1">
           <h3>前言</h3>
           <p>2020年，是不平凡的一年，疫情使得我有更多的机会和精力处理本站的事务。那么 Twitter Monitor 究竟做了些什么呢？</p>
-          <ul class="ml-3">
+          <ul class="ms-3">
             <li>进行了 1 次大更，前端改用 Webpack ，重新设计了数据库和api，更新了爬虫</li>
             <li>进行了 2 次迁移，由于旧服务器即将到期，本站进行了两次迁移，同时与<a href="https://bangdream.fun" target="_blank">主站</a>拆分，现运行于 kimsufi
               独服
