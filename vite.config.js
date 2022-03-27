@@ -37,7 +37,7 @@ export default defineConfig({
       manifest: {
         name: "Twitter Monitor",
         short_name: "tmv2",
-        start_url: '.',
+        start_url: '/',
         display: 'standalone',
         theme_color: "#ffffff",
         icons: [{

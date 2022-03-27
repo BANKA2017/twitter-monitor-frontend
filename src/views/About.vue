@@ -15,25 +15,25 @@
           <h3>碰过的坑</h3>
           <p>坑肯定碰过不少，我能想到的、能整理的暂时都总结在下面，希望能对后来者有所帮助</p>
           <a class="text-decoration-none" href="https://blog.nest.moe/2020/02/26/how-to-crawl-twitter/" target="_blank">
-            <el-button class="mx-1 my-1" round size="mini">怎么爬 Twitter</el-button>
+            <el-button class="mx-1 my-1" round size="small">怎么爬 Twitter</el-button>
           </a>
           <a class="text-decoration-none" href="https://blog.nest.moe/2021/05/12/how-to-crawl-twitter-with-graphql/" target="_blank">
-            <el-button class="mx-1 my-1" round size="mini">怎么爬 Twitter （GraphQL）</el-button>
+            <el-button class="mx-1 my-1" round size="small">怎么爬 Twitter （GraphQL）</el-button>
           </a>
           <a class="text-decoration-none" href="https://blog.nest.moe/2020/03/08/about-element-ui/" target="_blank">
-            <el-button class="mx-1 my-1" round size="mini">使用Element-ui遇到的坑</el-button>
+            <el-button class="mx-1 my-1" round size="small">使用Element-ui遇到的坑</el-button>
           </a>
           <el-divider class="my-4" />
           <h3>关于旧版（v1）</h3>
           <p>虽然旧的版本的数据不再更新，但还是可以访问的，<a href="https://tm.bangdream.fun/tmv1/" target="_blank">回到旧版</a>，即将合并旧版数据</p>
           <a class="text-decoration-none" href="https://github.com/BANKA2017/twitter-monitor/tree/8f7aad304f4a2377e40ac8b0db9b0801d6a01751" target="_blank">
-            <el-button class="mx-1" round size="mini">GitHub</el-button>
+            <el-button class="mx-1" round size="small">GitHub</el-button>
           </a>
           <el-divider class="my-4" />
           <h3>数据公开</h3>
           <a class="text-decoration-none" href="https://5my-my.sharepoint.com/:f:/g/personal/kasumi_bangdream_fun/En34oC5-535Eng8isHx5XqwB5-Di45HavsLVUEMCLUBC0w"
              target="_blank">
-            <el-button class="mx-1" round size="mini">数据库备份</el-button>
+            <el-button class="mx-1" round size="small">数据库备份</el-button>
           </a>
           <ul >
             <li>tmv1（每帐号早于2019-05-12的约800条推文 ~ 2020-02-28）</li>
@@ -64,10 +64,10 @@
           <h3>开源</h3>
           <p>前端，后端与爬虫均以 <code>MIT</code> 协议开源</p>
           <a class="text-decoration-none" href="https://github.com/BANKA2017/twitter-monitor-frontend" target="_blank">
-            <el-button class="mx-1 my-1" round size="mini">前端</el-button>
+            <el-button class="mx-1 my-1" round size="small">前端</el-button>
           </a>
           <a class="text-decoration-none" href="https://github.com/BANKA2017/twitter-monitor" target="_blank">
-            <el-button class="mx-1 my-1" round size="mini">后端 & 爬虫</el-button>
+            <el-button class="mx-1 my-1" round size="small">后端 & 爬虫</el-button>
           </a>
           <p class="my-1">本项目使用或参考了以下项目</p>
           <ul>

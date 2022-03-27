@@ -1,7 +1,11 @@
 <template>
   <div id="app">
     <div style="position: absolute"></div>
-    <el-backtop style="z-index: 1500" />
+    <transition name="el-fade-in" v-show="height > 200">
+      <div class="el-backtop" style="right: 40px; bottom: 40px; z-index: 1500" @click="ScrollTo">
+        <el-icon size="1em"><caret-top /></el-icon>
+      </div>
+    </transition>
     <router-view/>
     <div v-if="devmode" class="bg-dark text-white" style="left: 0; bottom: 0; position: fixed; z-index: 9999; padding: 5px">
       <span style="align-content: end">{{width + 'x' + viewportHeight}}</span>
@@ -17,8 +21,12 @@
   import {ApiAccounts} from "@/type/Api";
   import {Notice} from "@/share/Tools";
   import {useI18n} from "vue-i18n";
+  import {ScrollTo} from "@/share/Tools";
+  import {CaretTop} from "@element-plus/icons-vue";
+
   export default {
     name: 'App',
+    components: {CaretTop},
     setup() {
       const {locale} = useI18n()
       const store = useStore()
@@ -125,7 +133,7 @@
         }
       })
 
-      return {devmode, viewportHeight, width}
+      return {devmode, viewportHeight, width, height, ScrollTo}
     },
   }
 </script>
