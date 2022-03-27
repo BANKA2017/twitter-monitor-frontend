@@ -71,7 +71,7 @@
                   <p class="mt-2">这227跑路的还挺多啊……</p>
                 </div>
               </div>
-              <hr class="my-4">
+              <el-divider class="my-4" />
               <h3 class="my-3">数据变动</h3>
               <el-table v-loading="!userData.length" :data="userData" :default-sort="{prop: 'followers_add', order: 'descending'}" style="width: 100%">
                 <el-table-column label="用户名" prop="display_name"></el-table-column>
@@ -88,14 +88,14 @@
                   </template>
                 </el-table-column>
               </el-table>
-              <hr class="my-4">
+              <el-divider class="my-4" />
               <h3>标签排行</h3>
               <p class="text-muted">没有任何悬念，这玩意有什么存在的必要吗</p>
               <el-table v-loading="!hashTagList.length" :data="hashTagList" :default-sort="{prop: 'count', order: 'descending'}" style="width: 100%">
                 <el-table-column label="名称" prop="text"></el-table-column>
                 <el-table-column label="统计" prop="count" show-overflow-tooltip sortable></el-table-column>
               </el-table>
-              <hr class="my-4">
+              <el-divider class="my-4" />
               <h3>质量</h3>
               <p class="text-muted">例行公事，去年玩过了今年就不再重复介绍了</p>
               <p>我们优化了整个流程，使用异步获取图片的<a href="https://blurha.sh/" target="_blank">blurhash</a>，使绝大多数的爬取都能压缩到<code>20s</code>左右（注意 <code>08-14</code> 的那个下折）</p>
@@ -114,7 +114,7 @@
                           :label-map="serverStatusLabel.successRate" chart-type="line"></tmv2-chart>
               <tmv2-chart :chart-rows="serverStatusChartMeta.serverStatusTotalOnline"
                           :label-map="serverStatusLabel.onlineRate" chart-type="line" :y-axis-index="[0, 1]" :y-axis="[{type: 'value', scale: true, minInterval: 1}, {type: 'value', scale: true, minInterval: 1}]"></tmv2-chart>
-              <hr class="my-4">
+              <el-divider class="my-4" />
               <h3>独立数据</h3>
               <p class="text-muted">川普篇和马斯克篇待定</p>
               <!--<h4>川普 <small class="text-muted">@realdonaldtrump</small> </h4>

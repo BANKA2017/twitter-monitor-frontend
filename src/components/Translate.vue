@@ -8,7 +8,7 @@
       <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
     </div>
     <div v-else>
-      <hr class="my-4">
+      <el-divider class="my-4" />
       <p class='card-text'><small class="text-muted">{{ t("translate.message.translate_by", [state.translate_source]) }}</small></p>
       <full-text class="card-text" :entities="[]" :full_text_origin="state.text" />
       <div class="text-decoration-none" role="button"><small style="color:#1DA1F2; font-size: 0.8rem" @click="state.status = 0">{{ t("translate.message.hide_translated") }}</small></div>

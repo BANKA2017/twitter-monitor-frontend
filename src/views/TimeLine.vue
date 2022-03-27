@@ -31,7 +31,7 @@
         <div :style="{'position': 'sticky', 'top': '1.5rem'}">
           <project-list v-if="!settings.onlineMode"/>
           <local-router class="mb-1 col-10 col-md-12" style="padding-left: 0;" />
-          <hr class="my-4">
+          <el-divider class="my-4" />
           <link-list v-if="!settings.onlineMode"/>
           <div v-else class="mb-2 text-muted"><small>NEST.MOE</small></div>
         </div>

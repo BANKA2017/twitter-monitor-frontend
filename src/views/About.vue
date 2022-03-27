@@ -11,7 +11,7 @@
           <p>后来看到<a href="https://twi.lovelive.cx" target="_blank">愿光蓝鸟</a>上线，本来也有些想法的我，开始为本项目码下第一行代码并持续维护至今</p>
           <p class="small" style="color: white">
             做网页的想法其实是来自看到的一篇文章，提到某国前总统喜欢删推，所以我一直想记录下来</p>
-          <hr class="my-4">
+          <el-divider class="my-4" />
           <h3>碰过的坑</h3>
           <p>坑肯定碰过不少，我能想到的、能整理的暂时都总结在下面，希望能对后来者有所帮助</p>
           <a class="text-decoration-none" href="https://blog.nest.moe/2020/02/26/how-to-crawl-twitter/" target="_blank">
@@ -23,13 +23,13 @@
           <a class="text-decoration-none" href="https://blog.nest.moe/2020/03/08/about-element-ui/" target="_blank">
             <el-button class="mx-1 my-1" round size="mini">使用Element-ui遇到的坑</el-button>
           </a>
-          <hr class="my-4">
+          <el-divider class="my-4" />
           <h3>关于旧版（v1）</h3>
           <p>虽然旧的版本的数据不再更新，但还是可以访问的，<a href="https://tm.bangdream.fun/tmv1/" target="_blank">回到旧版</a>，即将合并旧版数据</p>
           <a class="text-decoration-none" href="https://github.com/BANKA2017/twitter-monitor/tree/8f7aad304f4a2377e40ac8b0db9b0801d6a01751" target="_blank">
             <el-button class="mx-1" round size="mini">GitHub</el-button>
           </a>
-          <hr class="my-4">
+          <el-divider class="my-4" />
           <h3>数据公开</h3>
           <a class="text-decoration-none" href="https://5my-my.sharepoint.com/:f:/g/personal/kasumi_bangdream_fun/En34oC5-535Eng8isHx5XqwB5-Di45HavsLVUEMCLUBC0w"
              target="_blank">
@@ -39,13 +39,13 @@
             <li>tmv1（每帐号早于2019-05-12的约800条推文 ~ 2020-02-28）</li>
             <li>tmv2（约2020年初 ~ 2021-05-12）</li>
           </ul>
-          <hr class="my-4">
+          <el-divider class="my-4" />
           <h3>中立性</h3>
           <p>本站仅对推文进行存档以及分析展示，展示的内容不应被视为对其中包含的观点或隐私政策的认可，如有必要，本站可能会对相关推文进行隐藏处理</p>
-          <hr class="my-4">
+          <el-divider class="my-4" />
           <h3>可信来源</h3>
           <p>尽管我们会尽我们所能确保数据的真实性，但您不应该将 Twitter Monitor 的内容视为可信来源</p>
-          <hr class="my-4">
+          <el-divider class="my-4" />
           <h3>用户数据</h3>
           <ul>
             <li>我们会保存来源的 <code>ip</code>、<code>国家/地区</code>、<code>user-agent</code>、<code>地址/状态</code>、<code>cf-ray</code>、<code>referer</code> 作为Log以及后续分析，如有需要可向我们发送删除请求</li>
@@ -54,13 +54,13 @@
             <li>我们使用 Vercel 进行前端的部署，因为使用的是免费版，我们无法从此得到可分析数据</li>
             <li class="text-danger">除此以外，我们没有再使用其他任何第三方分析工具，如果您发现有多余的请求或cookie，可能说明您正在遭受中间人攻击</li>
           </ul>
-          <hr class="my-4">
+          <el-divider class="my-4" />
           <h3>交流</h3>
           <p>有何意见，有何建议，畅所欲言，但请不要发出您认为不应该在群组作出的发言，<abbr title="Safe For Work">SFW</abbr>，谢绝色图，谢绝键政，谢绝梯子</p>
           <ul>
             <li>Telegram群：<a href="https://t.me/tmtg_cn" target="_blank">https://t.me/tmtg_cn</a></li>
           </ul>
-          <hr class="my-4">
+          <el-divider class="my-4" />
           <h3>开源</h3>
           <p>前端，后端与爬虫均以 <code>MIT</code> 协议开源</p>
           <a class="text-decoration-none" href="https://github.com/BANKA2017/twitter-monitor-frontend" target="_blank">
@@ -82,7 +82,7 @@
             <li>@vueuse/head（修改 header）</li>
             <li>blurhash（模糊化图片）</li>
           </ul>
-          <hr class="my-4">
+          <el-divider class="my-4" />
           <div class="text-center">
             <el-button circle @click="$router.go(-1)"><arrow-left height="1em" status="" width="1em"/></el-button>
           </div>

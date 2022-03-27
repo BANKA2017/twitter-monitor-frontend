@@ -13,7 +13,7 @@
         <div :class="{'nav-link': true, 'active': settings.displayPicture, 'text-primary': !settings.displayPicture}" role="button" @click="swapDisplayPictureStatus">{{ t("timeline.nav_bar.no_image") }}</div>
       </li>
     </nav>
-    <hr v-if="route.name !== 'main'" class="my-4">
+    <el-divider v-if="route.name !== 'main'" class="my-4" />
     <div class="text-center" element-loading-background="rgba(255, 255, 0, 0)" style="height: 60px" v-if="state.loadingTop" v-loading="state.loadingTop"></div>
 
     <el-skeleton :loading="state.loadingTimeline" :rows="5" animated class="mb-2">

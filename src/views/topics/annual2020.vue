@@ -15,7 +15,7 @@
             <li>收拾了一些历史遗留问题，比如未能正确进行索引导致数据库检索速度极慢，一度达到 20s/query</li>
             <li>收集了大量数据以后整点东西出来，比如本页</li>
           </ul>
-          <hr class="my-4">
+          <el-divider class="my-4" />
           <h3 class="mb-3">变动</h3>
           <h5>帐号</h5>
           <p>比起<router-link to="/i/events/2019/">2019年</router-link>，2020年站内共有86个帐号，其中85个是开放账号，可以直接在站内点击访问；1个是隐藏帐号，需要使用对应链接访问。新添加的帐号主要是两个企划在
@@ -91,7 +91,7 @@
             <el-table-column label="名称" prop="text"></el-table-column>
             <el-table-column label="统计" prop="count" show-overflow-tooltip sortable></el-table-column>
           </el-table>
-          <hr class="my-4">
+          <el-divider class="my-4" />
           <h3>质量</h3>
           <p>这是3月更新中新增加的服务状态监控，其中最近24小时的状态可以在
             <router-link to="/i/status">状态</router-link>
