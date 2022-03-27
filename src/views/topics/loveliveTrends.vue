@@ -4,7 +4,7 @@
     <div class="container">
       <div class="row">
         <div class="col-lg-2 mb-4">
-          <div class="d-grid gap-2">
+          <div class="d-grid gap-2" style="position: sticky; top: 1.5rem">
             <button role="button" :class="{'text-white': selectedTeams.has(name), 'btn': true}" :style="{'background-color': selectedTeams.has(name) ? colorInfo : '#ffffff'}" v-for="(colorInfo, name) in color" :key="name" @click="selectedTeams.has(name) ? selectedTeams.delete(name) : selectedTeams.add(name)">
               {{ name }}
             </button>
@@ -99,8 +99,13 @@
           </template>
         </div>
         <div class="col-lg-2">
+          <div class="list-group mb-2">
+            <button type="button" :class="{'list-group-item': true, 'list-group-item-action': true, active: year === status.year}" v-for="year in yearList" :key="year" @click="status.year = year">
+              {{ year }}
+            </button>
+          </div>
           <div class="list-group">
-            <button type="button" :class="{'list-group-item': true, 'list-group-item-action': true, active: order === status.dateOrder}" v-for="(date, order) in dateList" :key="date" @click="status.dateOrder = order">
+            <button type="button" :class="{'list-group-item': true, 'list-group-item-action': true, active: date === status.date}" v-for="date in dateList.filter(x => x.slice(0, 4) === status.year)" :key="date" @click="status.date = date">
               {{ date }}
             </button>
           </div>
@@ -132,7 +137,6 @@ import {ApiLoveLiveData, ApiLoveLiveDateList} from "@/type/Api";
 import SinglePageHeader from "@/components/SinglePageHeader.vue";
 
 export default defineComponent({
-  name: "loveliveTrends",
   setup () {
     useHead({
       title: 'LoveLive! Trends',
@@ -147,7 +151,7 @@ export default defineComponent({
     const selectedTeams = ref(new Set(["Aqours", "虹ヶ咲学園", "Liella!"]))
 
     const store = useStore()
-
+    const now = computed(() => store.state.now)
     const state = reactive<{
       dateList: Ref<ApiLoveLiveDateList>
       trendsData: Ref<ApiLoveLiveData>
@@ -155,16 +159,20 @@ export default defineComponent({
         userOrder: number
         value: string
         displayTips: boolean
-        dateOrder: number
+        date: string
+        year: string
       }>
+      yearList: string[]
     }>({
       trendsData: ref({data: [], range: {start: 0, end: 0}}),
       status: ref({
         userOrder: -1,
         value: "overview",
         displayTips: false,
-        dateOrder: 0,
+        date: '',
+        year: ""
       }),
+      yearList: [],
       dateList: ref([]),
     })
 
@@ -172,7 +180,9 @@ export default defineComponent({
       request<ApiLoveLiveDateList>(store.getters.getBasePath + '/static/lovelive_trends/date.json?' + Math.random()).then(response => {
         if (response.length) {
           state.dateList = response
-          getData()
+          state.yearList = getYearList(response)
+          state.status.year = state.yearList[0] || ""
+          state.status.date = state.dateList[0] || ""
         } else {
           Notice("没有数据", 'error')
         }
@@ -181,7 +191,7 @@ export default defineComponent({
       })
     }
     const getData = () => {
-      request<ApiLoveLiveData>(store.getters.getBasePath + '/static/lovelive_trends/' + state.dateList[state.status.dateOrder] + '.json').then(response => {
+      request<ApiLoveLiveData>(store.getters.getBasePath + '/static/lovelive_trends/' + state.status.date + '.json').then(response => {
         state.trendsData = response
       }).catch(e => {
         Notice(String(e), 'error')
@@ -244,6 +254,18 @@ export default defineComponent({
       let date = new Date(timestamp * 1000)
       return date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate()
     }
+    const getYearList = (dateList: ApiLoveLiveDateList): string[] => {
+      const tmpList: string[] = []
+      let tmpYear: string
+      dateList.map(x => {
+        tmpYear = x.slice(0, 4)
+        if (!tmpList.includes(tmpYear)) {
+          tmpList.push(tmpYear)
+        }
+      })
+
+      return tmpList
+    }
     //这哪来干嘛的
     //const splitData = computed((rawData) => {
     //  let categoryData = [];
@@ -259,7 +281,7 @@ export default defineComponent({
       getDateInfo()
     })
 
-    watch(() => state.status.dateOrder, () => {getData()}, {deep: true})
+    watch(() => state.status.date, () => {getData()})
 
     return {...toRefs(state), ScrollTo, Notice, color, teams, selectedTeams, createDate, userData, timeCountRows, tableData, store}
   },

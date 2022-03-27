@@ -240,6 +240,7 @@ const loading = (top: boolean = false, mute: boolean = false) => {
   if (state.topTweetId && state.bottomTweetId) {
     let tmpQueryObject = state.queryObject
     if (top) {
+      store.dispatch('setCoreValue', {key: 'updatedCharts', value: false})// update charts
       state.loadingTop = !mute
       tmpQueryObject.set("refresh", '1')
       tmpQueryObject.set("tweet_id", state.topTweetId)

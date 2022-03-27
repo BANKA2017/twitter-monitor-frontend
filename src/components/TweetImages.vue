@@ -29,9 +29,17 @@
         </el-image>
       </div>
     </div>
-    <div v-else>
-      <!--TODO support more images-->
-      <span>Too much images</span>
+    <div v-else class="row justify-content-around">
+      <div class="mx-1 mb-4 rounded-3" style="width: calc(100% / 3 - 15px); aspect-ratio: 1" v-for="(image, order) in realList" :key="order">
+        <el-image class="rounded-3" style="height: 100%; width: 100%" :alt="image.uid+'_'+image.tweet_id+'_'+0" :initial-index="order" :preview-src-list="previewList" :src="createRealMediaPath(realMediaPath, samePath.value,'tweets') +image.url+(realList[0].source !== 'tweets' ? '' : ':small')" fit="cover" lazy preview-teleported hide-on-click-modal>
+          <template #placeholder>
+            <blur-hash-canvas class="full" :hash-text="image.blurhash" v-if="image.blurhash && image.blurhash !== 'deleted'"/>
+          </template>
+          <template #error>
+            <blur-hash-canvas class="full" :hash-text="image.blurhash" v-if="image.blurhash && image.blurhash !== 'deleted'"/>
+          </template>
+        </el-image>
+      </div>
     </div>
   </div>
 </template>
@@ -76,17 +84,6 @@ const props = defineProps({
   },
 })
 
-//TODO create list style function up to 10 pictures
-//const createListStyle = (count: number): {
-//  width: string
-//  height: string
-//  position: 'absolute'
-//  'border-radius'?: string
-//  'margin-left'?: string
-//
-//}[] => {
-//
-//}
 const listStyle =  [
     [
       "width: 50%; height: 100%; position: absolute; border-radius: 14px 0 0 14px",
@@ -130,24 +127,26 @@ const ratio = computed(() => {
 const previewList = computed(() => realList.value.map(s => createRealMediaPath(realMediaPath.value, samePath.value,"tweets") + s.url + (s.source !== 'tweets' ? '' : (':' + props.size))))
 
 onMounted(() => {
-  new Plyr('#video' + realList.value[0].tweet_id,{
-    autoplay: false,
-    volume: 0.7,
-    iconUrl: '/static/img/plyr.svg',
-    blankVideo: '/static/video/blank.mp4',
-    controls: [
-      'play-large', // The large play button in the center
-      'play', // Play/pause playback
-      'progress', // The progress bar and scrubber for playback and buffering
-      'current-time', // The current time of playback
-      'duration', // The full duration of the media
-      'mute', // Toggle mute
-      'volume', // Volume control
-      'captions', // Toggle captions
-      'download',
-      'fullscreen', // Toggle fullscreen
-    ]
-  })
+  if (props.is_video) {
+    new Plyr('#video' + realList.value[0].tweet_id,{
+      autoplay: false,
+      volume: 0.7,
+      iconUrl: '/static/img/plyr.svg',
+      blankVideo: '/static/video/blank.mp4',
+      controls: [
+        'play-large', // The large play button in the center
+        'play', // Play/pause playback
+        'progress', // The progress bar and scrubber for playback and buffering
+        'current-time', // The current time of playback
+        'duration', // The full duration of the media
+        'mute', // Toggle mute
+        'volume', // Volume control
+        'captions', // Toggle captions
+        'download',
+        'fullscreen', // Toggle fullscreen
+      ]
+    })
+  }
 })
 </script>
 

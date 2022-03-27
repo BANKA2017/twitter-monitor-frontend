@@ -39,6 +39,7 @@ export interface Tweet {
   uid_str: string
   name: string
   display_name: string
+  avatar?: string //online mode only
   media: number
   video: number
   card: string

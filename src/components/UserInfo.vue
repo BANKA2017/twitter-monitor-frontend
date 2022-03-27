@@ -11,7 +11,7 @@
           <div :class="{'col-4': ((width > 768 && height > 50) || state.userInfo.banner === 0),}" v-if="!settings.displayPicture" style="width: calc(100% / 3); max-width: 110px; aspect-ratio: 1; align-items: center; display: flex; justify-content: center; margin: -50% 0">
             <el-image class="rounded-circle" :src="createRealMediaPath(realMediaPath, samePath, 'userinfo')+state.userInfo.header.replace(/([\w]+)\.([\w]+)$/gm, `$1_reasonably_small.$2`)" :preview-src-list="[createRealMediaPath(realMediaPath, samePath, 'userinfo')+state.userInfo.header]" alt="Avatar" preview-teleported hide-on-click-modal/>
           </div>
-          <div :class="{ 'col-8': ((width > 768 && height > 50) || state.userInfo.banner === 0), 'col-12': !((width > 768 && height > 50) || state.userInfo.banner === 0), 'my-2': (height > 50 || state.userInfo.banner === 0), 'mt-5': ((height <= 50 || width <= 768) && state.userInfo.banner !== 0), }" style=" justify-content: center;">
+          <div :class="{ 'col-8': ((width > 768 && height > 50) || state.userInfo.banner === 0), 'col-12': !((width > 768 && height > 50) || state.userInfo.banner === 0), 'my-4': (height > 50 || state.userInfo.banner === 0), 'mt-5': ((height <= 50 || width <= 768) && state.userInfo.banner !== 0), }" style=" justify-content: center;">
             <h5 class="card-title mb-1 align-middle"><b><full-text :entities="[]" :full_text_origin="state.userInfo.display_name"/></b><verified height="1em" status="text-primary" width="1.2em" class="ms-2 "/></h5>
             <small><a :href="`//twitter.com/`+state.userInfo.name" class="text-dark" target="_blank">@{{ state.userInfo.name }}</a></small>
           </div>
@@ -36,7 +36,7 @@
 </template>
 
 <script setup lang="ts">
-import {computed, onMounted, reactive, Ref, ref} from "vue";
+import {computed, onMounted, reactive, Ref, ref, watch} from "vue";
 import {useStore} from "@/store";
 import Verified from "@/icons/Verified.vue";
 import FullText from '@/components/FullText.vue'
@@ -60,16 +60,19 @@ const height = computed(() => store.state.height)
 const settings = computed(() => store.state.settings)
 const realMediaPath = computed(() => store.state.realMediaPath)
 const samePath = computed(() => store.state.samePath)
+const updatedCharts = computed(() => store.state.updatedCharts)
 
 const isMobileRatio = computed(() => width.value <= 768 || height.value <= 50)
 const isHideDescription = computed(() => width.value > 768 && height.value > 50)
+
+
 
 const state = reactive<{
   loading: boolean;
   chartExisted: boolean;
   userInfo: Ref<UserInfo>;
   chartData: Ref<LegacyChart[]>;
-  latestChartTimestamp: Ref<Number>;
+  latestChartTimestamp: Ref<number>;
   labelMap: {[p in 'timestamp' | 'followers' | 'following' | 'statuses_count']: string}
   title: Ref<string>
 }>({
@@ -151,7 +154,7 @@ const createChart = (time: number = 0, refresh: boolean = false) => {
     if (response.data.length) {
       state.latestChartTimestamp = Number(response.data.slice(-1)[0].timestamp)
     }
-    let  tmpRows = response.data.map(x => {
+    let tmpRows = response.data.map(x => {
       x.timestamp = (new Date(Number(x.timestamp) * 1000)).toLocaleString(settings.value.language)
       return x
     })
@@ -171,7 +174,12 @@ const createChart = (time: number = 0, refresh: boolean = false) => {
   })
 }
 
-const controller = new AbortController
+watch(updatedCharts, () => {
+  if (!updatedCharts.value) {
+    store.dispatch('setCoreValue', {key: 'updatedCharts', value: true})
+    createChart(state.latestChartTimestamp, true)
+  }
+})
 
 onMounted(() => {
   getUserInfo(route)

@@ -1,12 +1,14 @@
 <template>
   <div id="app">
     <div style="position: absolute"></div>
-    <transition name="el-fade-in" v-show="height > 200">
-      <div class="el-backtop" style="right: 40px; bottom: 40px; z-index: 1500" @click="ScrollTo">
-        <el-icon size="1em"><caret-top /></el-icon>
-      </div>
-    </transition>
-    <router-view/>
+    <el-config-provider :locale="settings.language">
+      <transition name="el-fade-in" v-show="height > 200">
+        <div class="el-backtop" style="right: 40px; bottom: 40px; z-index: 1500" @click="ScrollTo">
+          <el-icon size="1em"><caret-top /></el-icon>
+        </div>
+      </transition>
+      <router-view/>
+    </el-config-provider>
     <div v-if="devmode" class="bg-dark text-white" style="left: 0; bottom: 0; position: fixed; z-index: 9999; padding: 5px">
       <span style="align-content: end">{{width + 'x' + viewportHeight}}</span>
     </div>
@@ -133,7 +135,7 @@
         }
       })
 
-      return {devmode, viewportHeight, width, height, ScrollTo}
+      return {devmode, viewportHeight, width, height, settings, ScrollTo}
     },
   }
 </script>

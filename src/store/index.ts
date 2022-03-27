@@ -4,7 +4,6 @@ import {createStore, useStore as baseUseStore, Store, ActionContext} from 'vuex'
 import {State} from '@/type/State'
 import {isDark} from "@/share/Time";
 import language from '@/assets/language.json'
-import {i18n} from "@/i18n";
 
 const devmode = process.env.NODE_ENV === "development"
 const basePath = !devmode ? import.meta.env.VITE_PRO_BASE_PATH : import.meta.env.VITE_DEV_BASE_PATH
@@ -32,13 +31,14 @@ export const store = createStore<State>({
     userExists: true,
     tweetMode: 'timeline',
     tweetType: 'all',
+    updatedCharts: true,
     height: 0,
     width: 0,
     siteHeight: 0,
     viewportHeight: 0,
     altitudeDifference: 0,
     hasBeenSyncFromLocalStorage: false,
-    devmode: devmode,
+    devmode,
     settings: {
       language: "zh-cn",//简体中文
       cookie_accept: false,
@@ -74,7 +74,6 @@ export const store = createStore<State>({
     updateUserList: (state, payload) => state.userList = payload.users,
     updateNow: (state, payload) => state.now = payload.now,
     setTrueToHasBeenSyncFromLocalStorage: (state) => state.hasBeenSyncFromLocalStorage = true,
-    setSettings: (state: any, payload) => state.settings[payload.node] = payload.data,
     setUserTimeZone: (state, payload) => state.userTimeZone = payload.userTimeZone,
     //browser
     updateBrowserSize: (state, payload) => {
@@ -91,7 +90,7 @@ export const store = createStore<State>({
     checkSamePath: (state) =>state.samePath = (state.settings.basePath === state.settings.mediaPath),
     updateRealMediaPath: (state, payload) => state.realMediaPath = payload.realMediaPath,
     //set core data
-    setCoreValue: (state: any, payload) => state[payload.key] = payload.value,
+    setCoreValue: <K extends keyof State>(state: State, payload: {key: K; value: State[K]}) => state[payload.key] = payload.value,
     //pushCoreValue: (state, payload) => state[payload.key] = state[payload.key].concat(payload.value),
     updateTweetsTranslate: (state, payload) => state.translate[payload.tweet_id] = payload.translate,
   },
@@ -99,7 +98,7 @@ export const store = createStore<State>({
     setLanguage: function (context, payload: {lang: string}) {
       context.commit({
         type: 'setLanguage',
-        lang: ((lang) => {
+        lang: ((lang: string) => {
           if (/^(?:zh|zh-cn|zh-sg|zh-hans)$/.test(lang)) {
             return 'zh-cn'
           } else if (/^(?:zh-tw|zh-hk|zh-mo|zh-hant)$/.test(lang)) {
@@ -116,24 +115,22 @@ export const store = createStore<State>({
     },
     updateUserList: function (context) {
       let users: State["userList"] = [];
-      //TODO 更好的拍平技巧？
-      Object.keys(context.state.names).forEach(project => {
-        Object.keys(context.state.names[project]).forEach(group => {
-          context.state.names[project][group].map(member => {
+      for (let project in context.state.names) {
+        for (let group in context.state.names[project]) {
+          for (let member of context.state.names[project][group]) {
             users.push({
-              name: member["name"],
-              display_name: member["display_name"],
+              name: member.name,
+              display_name: member.display_name,
               project: project,
               tag: group
-            });
-          })
-        })
-      });
+            })
+          }
+        }
+      }
       context.commit({type: 'updateUserList', users})
     },
     updateNow: (context) => context.commit({type: 'updateNow', now: new Date()}),
     setTrueToHasBeenSyncFromLocalStorage: (context) => context.commit('setTrueToHasBeenSyncFromLocalStorage'),
-    setSettings: (context, payload) => context.commit({type: 'setSettings', node: payload.node, data: payload.data}),
     setUserTimeZone: (context) => {
       let timeValue = (new Date().getTimezoneOffset() / 60) * (-1);
       context.commit({type: 'setUserTimeZone', userTimeZone: (timeValue >= 0 ? '+' + timeValue.toString() : timeValue.toString())})
@@ -156,7 +153,7 @@ export const store = createStore<State>({
     checkSamePath: (context) => context.commit({type: 'checkSamePath'}),
     updateRealMediaPath: (context) => context.commit({type: 'updateRealMediaPath', realMediaPath: context.state.settings.mediaPath + (context.state.settings.mediaPath === context.state.settings.basePath ? '/api/v2/media/' : '')}),
     //set core data
-    setCoreValue: (context, payload) => context.commit({type: 'setCoreValue', key: payload.key, value: payload.value}),
+    setCoreValue: <K extends keyof State>(context: ActionContext<State, State>, payload: {key: K; value: State[K]}) => context.commit('setCoreValue', {key: payload.key, value: payload.value}),
     pushCoreValue: (context: any, payload) => context.commit({type: 'setCoreValue', key: payload.key, value: context.state[payload.key].concat(payload.value)}),
     //TODO fix all any type
     updateTweetsTranslate: (context, payload) => context.commit("updateTweetsTranslate", {tweet_id: payload.tweet_id, translate: payload.translate}),

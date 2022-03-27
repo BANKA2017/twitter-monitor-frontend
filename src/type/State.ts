@@ -23,6 +23,7 @@ export interface State {
   userExists: boolean
   tweetMode: TweetMode
   tweetType: TweetType
+  updatedCharts: boolean
 
   home: boolean
   project: string
