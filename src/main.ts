@@ -8,7 +8,9 @@ import 'bootstrap/js/src/util'
 import 'bootstrap/js/dist/button'
 import 'bootstrap/js/dist/dropdown'
 import 'bootstrap/js/dist/collapse'
-//import 'popper.js';
+
+//pwa
+import './pwa'
 
 //icons
 //TODO svg-loader
