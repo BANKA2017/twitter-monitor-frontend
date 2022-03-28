@@ -9,7 +9,7 @@
               {{ name }}
             </button>
             <button :class="{'btn': true, 'btn-outline-primary': true, 'active': status.displayTips}" @click="status.displayTips = !status.displayTips">说明 <info-circle-fill height="1em" status="" width="1em" /></button>
-            <a :href="store.getters.getBasePath + '/static/lovelive_trends/' + dateList[status.dateOrder] + '.json'" class="btn btn-outline-primary" target="_blank">下载数据 <download-icon height="1em" status="" width="1em" /></a>
+            <a :href="store.getters.getBasePath + '/static/lovelive_trends/' + status.date + '.json'" class="btn btn-outline-primary" target="_blank">下载数据 <download-icon height="1em" status="" width="1em" /></a>
           </div>
         </div>
         <div class="col-lg-8 mb-4">
