@@ -118,6 +118,7 @@ export interface Quote {
   time: number
   media: number
   video: number
+  entities: Entity[]
 }
 
 export interface PollItem {

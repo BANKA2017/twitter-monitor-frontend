@@ -12,7 +12,7 @@
           </a>
         </div>
         <div class="my-4"></div>
-        <p class='card-text' ref="quote_text">{{ quoteObject.full_text.replaceAll("&amp;amp;", "&") }}</p>
+        <full-text :full_text_origin="quoteObject.full_text" :entities="quoteObject.entities" />
         <div id="quotefoot">
           <small class="text-muted">{{ timeGap(quoteObject.time, now, settings.language) }}</small>
         </div>
@@ -33,6 +33,7 @@
   import {PropType, computed} from "vue";
   import {Media, Quote} from "@/type/Content";
   import {useI18n} from "vue-i18n";
+  import FullText from "@/components/FullText.vue";
 
   defineProps({
     quoteObject: {
@@ -61,14 +62,6 @@
       return (new Date(timestamp * 1000)).toLocaleString(language);
     }
   }
-  //emojiParse: function () {
-  //  twemoji.parse(this.$refs.quote_text, {
-  //    ext: '.svg',
-  //    folder: 'svg',
-  //    base: this.twemojiBasePath,
-  //    attributes: () => ({style: "height: 1em;width: 1em;margin: 0.05em 0.1em;vertical-align: -0.1em;",})
-  //  })
-  //}
 </script>
 
 <style scoped>
