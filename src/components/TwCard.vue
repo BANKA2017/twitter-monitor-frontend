@@ -1,14 +1,16 @@
 <template>
   <div id="twCard">
     <div class="card mb-3" style="border-radius: 14px 14px 14px 14px">
-      <a v-if="object?.url && object.type !== 'unified_card'" :href="(object.type === 'audiospace' ? 'https://twitter.com/i/spaces/' : '') + object.url" class="stretched-link text-decoration-none" target="_blank"></a>
-      <template v-if="object.type === 'summary' || object.type === 'audio' || object.type === 'app' || object.type === 'moment'">
+      <a v-if="object?.url && (object.secondly_type === 'media_with_details_horizontal' || object.type !== 'unified_card')" :href="(object.type === 'audiospace' ? 'https://twitter.com/i/spaces/' : '') + object.url" class="stretched-link text-decoration-none" target="_blank"></a>
+      <template v-if="object.type === 'summary' || object.type === 'audio' || object.type === 'app' || object.type === 'moment' || object.secondly_type === 'media_with_details_horizontal'">
         <div class="row no-gutters">
-          <el-image v-if="object.media === 1 && mediaState" :preview-src-list="[createRealMediaPath(realMediaPath, samePath)+latestMedia.cover]" :src="createRealMediaPath(realMediaPath, samePath)+latestMedia.cover" alt="cardImage" class="col-4 card-img border-right" fit="cover" lazy style="border-radius: 14px 0 0 14px; aspect-ratio: 1" preview-teleported hide-on-click-modal></el-image>
+          <div class="col-4 border-right">
+            <el-image v-if="object.media === 1 && mediaState" :preview-src-list="[createRealMediaPath(realMediaPath, samePath)+latestMedia.cover]" :src="createRealMediaPath(realMediaPath, samePath)+latestMedia.cover" alt="cardImage" fit="cover" lazy style="border-radius: 14px 0 0 14px; height: 100%" preview-teleported hide-on-click-modal></el-image>
+          </div>
           <div class="col-8">
             <div class="card-body">
               <div class="row no-gutters">
-                <p class="col-12 text-truncate card-title" style="color: black">{{ object.title }}</p>
+                <p class="col-12 text-truncate card-title" style="color: black" v-if="object.title">{{ object.title }}</p>
                 <template v-if="object.description !== ''"><small class="text-muted text-truncate col-12">{{ object.description }}</small><br></template>
                 <small v-if="object.vanity_url !== ''" class="text-muted col-12"><link45deg height="1em" status="" width="1em" />{{ object.vanity_url }}</small>
               </div>
@@ -41,7 +43,7 @@
             </el-carousel-item>
           </el-carousel>
         </div>
-        <span v-else class="text-center">{{ $t("tw_card.text.not_supported_type") }}</span>
+        <span v-else class="text-center">{{ t("tw_card.text.not_supported_type") }}</span>
         <div v-if="object.secondly_type === 'image_multi_dest_carousel_website' || object.secondly_type === 'video_multi_dest_carousel_website'" class="card-body position-relative">
           <a v-if="multiDestCarouselData && !object.app" :href="multiDestCarouselData[state.multiDestCarouselOrder].url" class="stretched-link text-decoration-none" target="_blank"></a>
           <template v-if="multiDestCarouselData[state.multiDestCarouselOrder].description !== ''"><small class="text-muted">{{ multiDestCarouselData[state.multiDestCarouselOrder].description }}</small><br></template>
@@ -55,7 +57,7 @@
         <div v-else-if="object.secondly_type === 'twitter_list_details'">
           <a v-if="userListData.url" :href="userListData.url" class="stretched-link text-decoration-none" target="_blank"></a>
           <div class="card-title text-muted ">
-            <List class="ml-1" height="1em" status="text-dark" width="1em" /> <small>{{ $t("tw_card.text.list") }} · {{ $tc("tw_card.text.members_count", userListData.membersCount > 1 ? 2 : 1, [userListData.membersCount]) }}</small>
+            <List class="ml-1" height="1em" status="text-dark" width="1em" /> <small>{{ t("tw_card.text.list") }} · {{ t("tw_card.text.members_count", userListData.membersCount > 1 ? 2 : 1, [userListData.membersCount]) }}</small>
           </div>
           <div class="mb-1">
             <span class="font-weight-bolder ml-1">{{ userListData.content }}</span><br>
@@ -101,6 +103,7 @@ import {useStore} from "@/store"
 import {computed, PropType, reactive, ref, Ref} from "vue"
 import {Card, Media} from "@/type/Content"
 import {createRealMediaPath} from "@/share/Tools"
+import {useI18n} from "vue-i18n";
 
 const props = defineProps({
   object: {
@@ -140,6 +143,7 @@ const state = reactive<{
   load: ref(false),
   multiDestCarouselOrder: ref(0)
 })
+const {t} = useI18n()
 const store = useStore()
 const settings = computed(() => store.state.settings)
 const realMediaPath = computed(() => store.state.realMediaPath)

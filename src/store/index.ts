@@ -17,7 +17,7 @@ export const key: InjectionKey<Store<State>> = Symbol()
 export const store = createStore<State>({
   state: {
     now: new Date(),
-    darkMode: isDark(new Date()),
+    darkMode: isDark(),
     projects: [],
     names: {},
     topTweetId: "0",
@@ -61,7 +61,7 @@ export const store = createStore<State>({
     //path
     samePath: false,
     realMediaPath: '',
-    twemojiBasePath: twemojiBasePath,
+    twemojiBasePath,
     //onlinePath,
   },
   getters: {
