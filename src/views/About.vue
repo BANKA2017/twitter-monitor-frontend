@@ -23,6 +23,9 @@
           <a class="text-decoration-none" href="https://blog.nest.moe/2020/03/08/about-element-ui/" target="_blank">
             <el-button class="mx-1 my-1" round size="small">使用Element-ui遇到的坑</el-button>
           </a>
+          <a class="text-decoration-none" href="https://blog.nest.moe/2022/04/22/about-snowflakes/" target="_blank">
+            <el-button class="mx-1 my-1" round size="small">讲讲雪花算法</el-button>
+          </a>
           <el-divider class="my-4" />
           <h3>关于旧版（v1）</h3>
           <p>虽然旧的版本的数据不再更新，但还是可以访问的，<a href="https://tm.bangdream.fun/tmv1/" target="_blank">回到旧版</a>，即将合并旧版数据</p>
