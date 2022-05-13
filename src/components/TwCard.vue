@@ -35,7 +35,7 @@
             <video id="videoPlayer" :poster="createRealMediaPath(realMediaPath, samePath) +media[0].cover" :src="createRealMediaPath(realMediaPath, samePath) +media[0].url" :type="media[0].content_type" class="border" controls loop playsinline preload="none" style="width: 100%; height: 100%; border-radius: 14px 14px 0 0; background-color: black"></video>
           </div>
         </template>
-        <div v-else-if="object.secondly_type === 'image_carousel_website' || object.secondly_type === 'image_carousel_app' || object.secondly_type === 'image_multi_dest_carousel_website' || object.secondly_type === 'video_carousel_website' || object.secondly_type === 'video_carousel_app' || object.secondly_type === 'video_multi_dest_carousel_website' || object.secondly_type === 'mixed_media_single_dest_carousel_website' || object.secondly_type === 'mixed_media_single_dest_carousel_app'" :style="{width: '100%', height: '100%', 'border-radius': '14px 14px 0 0'}">
+        <div v-else-if="object.secondly_type === 'image_carousel_website' || object.secondly_type === 'image_carousel_app' || object.secondly_type === 'image_multi_dest_carousel_website' || object.secondly_type === 'mixed_media_multi_dest_carousel_website' || object.secondly_type === 'video_carousel_website' || object.secondly_type === 'video_carousel_app' || object.secondly_type === 'video_multi_dest_carousel_website' || object.secondly_type === 'mixed_media_single_dest_carousel_website' || object.secondly_type === 'mixed_media_single_dest_carousel_app'" :style="{width: '100%', height: '100%', 'border-radius': '14px 14px 0 0'}">
           <el-carousel v-if="mediaState" style="border-radius: 14px 14px 0 0" indicator-position="outside" trigger="click" @change="changeMultiDestCarouselOrder">
             <el-carousel-item v-for="(mediaInfo, key) in media" :key="key" :name="key.toString()">
               <video v-if="mediaInfo.extension === 'mp4'" id="carouselVideoPlayer" :poster="createRealMediaPath(realMediaPath, samePath) +mediaInfo.cover" :src="createRealMediaPath(realMediaPath, samePath) +mediaInfo.url" :type="mediaInfo.content_type" class="border" controls loop playsinline preload="none" style="width: 100%; height: 100%; border-radius: 14px 14px 0 0; background-color: black"></video>
@@ -45,7 +45,7 @@
           </el-carousel>
         </div>
         <span v-else class="text-center">{{ t("tw_card.text.not_supported_type") }}</span>
-        <div v-if="object.secondly_type === 'image_multi_dest_carousel_website' || object.secondly_type === 'video_multi_dest_carousel_website'" class="card-body position-relative">
+        <div v-if="object.secondly_type === 'image_multi_dest_carousel_website' || object.secondly_type === 'video_multi_dest_carousel_website' || object.secondly_type === 'mixed_media_multi_dest_carousel_website'" class="card-body position-relative">
           <a v-if="multiDestCarouselData && !object.app" :href="multiDestCarouselData[state.multiDestCarouselOrder].url" class="stretched-link text-decoration-none" target="_blank"></a>
           <template v-if="multiDestCarouselData[state.multiDestCarouselOrder].description !== ''"><small class="text-muted">{{ multiDestCarouselData[state.multiDestCarouselOrder].description }}</small><br></template>
           <!--<div v-if="object.app" class="mx-auto mt-2" >
@@ -159,11 +159,11 @@ const latestMedia = computed((): Media | {} => {
 
 const ratio = computed(() => props.media[0].origin_info_width / props.media[0].origin_info_height)
 const multiDestCarouselData = computed(() => {
-  if (props.object?.secondly_type === 'image_multi_dest_carousel_website' || props.object?.secondly_type === 'video_multi_dest_carousel_website') {
+  if (props.object?.secondly_type === 'image_multi_dest_carousel_website' || props.object?.secondly_type === 'video_multi_dest_carousel_website' || props.object?.secondly_type === 'mixed_media_multi_dest_carousel_website') {
     let tmpData = []
-    let tmpDescription = props.object.description.split('\\t')
-    let tmpVanityUrl = props.object.vanity_url.split('\\t')
-    let tmpUrl = props.object.url.split('\\t')
+    let tmpDescription = props.object.description.split("\t")
+    let tmpVanityUrl = props.object.vanity_url.split("\t")
+    let tmpUrl = props.object.url.split("\t")
     let tmpOffset = 0
     for (; tmpOffset < tmpDescription.length; tmpOffset++) {
       tmpData.push({
@@ -172,6 +172,7 @@ const multiDestCarouselData = computed(() => {
         url: tmpUrl[tmpOffset]
       })
     }
+    console.log(tmpData)
     return tmpData
   }
   return []
