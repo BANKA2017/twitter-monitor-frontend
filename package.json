@@ -21,7 +21,7 @@
     "lodash": "^4.17.21",
     "plyr": "^3.6.12",
     "print-js": "^1.6.0",
-    "twemoji-parser": "^13.1.0",
+    "twemoji-parser": "^14.0.0",
     "vue": "^3.1.0",
     "vue-echarts": "^6.0.0-rc.6",
     "vue-gtag-next": "^1.14.0",

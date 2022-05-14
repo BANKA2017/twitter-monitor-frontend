@@ -172,7 +172,6 @@ const multiDestCarouselData = computed(() => {
         url: tmpUrl[tmpOffset]
       })
     }
-    console.log(tmpData)
     return tmpData
   }
   return []
