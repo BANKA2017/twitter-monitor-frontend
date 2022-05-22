@@ -57,6 +57,8 @@ export default defineComponent({
         "bang_dream_gbp",
         "bangdreamgbp_EN",
       ],
+      "MyGO!!!!!": ["bang_dream_mygo"],
+      "ARGONAVIS": ["ARGONAVIS_info"],
       "LoveLive!": [
         "LoveLive_staff",
         "lovelive_SIF",
