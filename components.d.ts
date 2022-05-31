@@ -22,6 +22,7 @@ declare module '@vue/runtime-core' {
     ElTableColumn: typeof import('element-plus/es')['ElTableColumn']
     ElTag: typeof import('element-plus/es')['ElTag']
     FullText: typeof import('./src/components/FullText.vue')['default']
+    HashTagList: typeof import('./src/components/HashTagList.vue')['default']
     HeatMapChart: typeof import('./src/components/HeatMapChart.vue')['default']
     LinkList: typeof import('./src/components/LinkList.vue')['default']
     Loading: typeof import('element-plus/es')['ElLoadingDirective']

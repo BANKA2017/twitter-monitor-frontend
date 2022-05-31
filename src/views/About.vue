@@ -74,7 +74,7 @@
           </a>
           <p class="my-1">本项目使用或参考了以下项目</p>
           <ul>
-            <li>bootstrap v4 | jquery | popper.js | bootstrap-icon（bootstrap四件套）</li>
+            <li>bootstrap v5 | popper.js | bootstrap-icon（bootstrap三件套）</li>
             <li>element-plus（不断吐槽但还得用）</li>
             <li>vue3 | vue-router | vuex | vue-i18n | vue-gtag（vue工具包）</li>
             <li>vite | typescript | vite-plugin-pwa（打包）</li>

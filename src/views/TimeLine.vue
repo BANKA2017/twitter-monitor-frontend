@@ -15,6 +15,10 @@
             </h3>
           </template>
         </div>
+        <!--TODO hashtag list-->
+        <!--<div class="my-2" v-if="$route.name === 'search'">
+          <hash-tag-list />
+        </div>-->
       </div>
       <div id="user-info" class="col-sm-12 col-md-4" v-else-if="userExists">
         <user-info class="mb-4"/>
@@ -55,8 +59,11 @@ import { useRoute } from "vue-router";
 import BoxArrowUpRight from "@/icons/BoxArrowUpRight.vue";
 import LocalRouter from "@/components/LocalRouter.vue";
 import router from "@/router";
+import HashTagList from "@/components/HashTagList.vue";
 export default defineComponent({
-  components: {LocalRouter, BoxArrowUpRight, Tweets, Search, UserInfo, ArrowClockwise, LinkList, ProjectList, Navigation},
+  components: {
+    HashTagList,
+    LocalRouter, BoxArrowUpRight, Tweets, Search, UserInfo, ArrowClockwise, LinkList, ProjectList, Navigation},
   setup() {
     const { t } = useI18n()
     const store = useStore()
