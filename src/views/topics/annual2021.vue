@@ -101,7 +101,7 @@
               <p>我们优化了整个流程，使用异步获取图片的<a href="https://blurha.sh/" target="_blank">blurhash</a>，使绝大多数的爬取都能压缩到<code>20s</code>左右（注意 <code>08-14</code> 的那个下折）</p>
               <ul>
                 <li>最严重的是一次配置错误导致直接自动跳过所有任务（检查账号信息除外，所以我们还是正常记录下了所有关注数、发推数变化），由于错误推送系统并未恢复（*注：即使后来恢复了此事仍不会推送，因为推送系统运作的前提是代码可运行），我们无从得知问题的出现，直到数天后进行的例行检查中修复（2021-11-02 ~ 2021-11-14）</li>
-                <li>次之的是5月12日的那次强制启用 GraphQL api 事件导致在线率到了<code><abbr title="0.4898">50%</abbr></code>以下，关于这件事，我写了<a href="https://blog.nest.moe/2021/05/12/how-to-crawl-twitter-with-graphql/" target="_blank">一篇文章</a>作为记录</li>
+                <li>次之的是5月12日的那次强制启用 GraphQL api 事件导致在线率到了<code><abbr title="0.4898">50%</abbr></code>以下，关于这件事，我写了<a href="https://blog.nest.moe/posts/how-to-crawl-twitter-with-graphql" target="_blank">一篇文章</a>作为记录</li>
               </ul>
               <tmv2-chart :chart-rows="serverStatusChartMeta.serverStatusTotalTweets"
                           :colors="serverStatusColor.serverStatusTotalTweets" :label-map="serverStatusLabel.totalTweets"

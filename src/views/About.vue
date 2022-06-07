@@ -14,16 +14,16 @@
           <el-divider class="my-4" />
           <h3>碰过的坑</h3>
           <p>坑肯定碰过不少，我能想到的、能整理的暂时都总结在下面，希望能对后来者有所帮助</p>
-          <a class="text-decoration-none" href="https://blog.nest.moe/2020/02/26/how-to-crawl-twitter/" target="_blank">
+          <a class="text-decoration-none" href="https://blog.nest.moe/posts/how-to-crawl-twitter" target="_blank">
             <el-button class="mx-1 my-1" round size="small">怎么爬 Twitter</el-button>
           </a>
-          <a class="text-decoration-none" href="https://blog.nest.moe/2021/05/12/how-to-crawl-twitter-with-graphql/" target="_blank">
+          <a class="text-decoration-none" href="https://blog.nest.moe/posts/how-to-crawl-twitter-with-graphql" target="_blank">
             <el-button class="mx-1 my-1" round size="small">怎么爬 Twitter （GraphQL）</el-button>
           </a>
-          <a class="text-decoration-none" href="https://blog.nest.moe/2020/03/08/about-element-ui/" target="_blank">
+          <a class="text-decoration-none" href="https://blog.nest.moe/posts/about-element-ui" target="_blank">
             <el-button class="mx-1 my-1" round size="small">使用Element-ui遇到的坑</el-button>
           </a>
-          <a class="text-decoration-none" href="https://blog.nest.moe/2022/04/22/about-snowflakes/" target="_blank">
+          <a class="text-decoration-none" href="https://blog.nest.moe/posts/about-snowflakes" target="_blank">
             <el-button class="mx-1 my-1" round size="small">讲讲雪花算法</el-button>
           </a>
           <el-divider class="my-4" />
