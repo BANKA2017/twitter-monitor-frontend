@@ -10,14 +10,12 @@
         <div>
           <small class="text-muted" v-if="tweet.retweet_from">
             <retweet height="1em" status="" width="1em"/>
-            <router-link v-if="!settings.onlineMode" :to="`/`+(tweetModeValue === 'status' ? tweet.name + `/all` : `i/status/`+tweet.tweet_id_str)" class="text-muted">
+            <router-link :to="`/`+(tweetModeValue === 'status' ? tweet.name + `/all` : `i/status/`+tweet.tweet_id_str)" class="text-muted">
               <full-text :entities="[]" :full_text_origin="tweet.display_name" />
             </router-link>
-            <span class="text-muted" v-else><full-text :entities="[]" :full_text_origin="tweet.display_name" /></span>
           </small>
         </div>
-        <span v-if="settings.onlineMode"> <full-text :entities="[]" :full_text_origin="tweet.retweet_from ? tweet.retweet_from : tweet.display_name" /></span>
-        <router-link v-else-if="!tweet.retweet_from_name || (tweet.retweet_from_name && userList.map(x => x.name).includes(tweet.retweet_from_name))" :to="`/`+ (tweetModeValue === 'status' ? ((tweet.retweet_from_name && tweet.retweet_from_name === tweet.name) ? `i/status/`+tweet.tweet_id_str : ((tweet.retweet_from ? tweet.retweet_from_name : tweet.name) + '/all')) : `i/status/`+tweet.tweet_id_str)" class="card-title text-dark">
+        <router-link v-if="settings.onlineMode || !tweet.retweet_from_name || (tweet.retweet_from_name && userList.map(x => x.name).includes(tweet.retweet_from_name))" :to="`/`+ (tweetModeValue === 'status' ? ((tweet.retweet_from_name && tweet.retweet_from_name === tweet.name) ? `i/status/`+tweet.tweet_id_str : ((tweet.retweet_from ? tweet.retweet_from_name : tweet.name) + '/all')) : `i/status/`+tweet.tweet_id_str)" class="card-title text-dark">
           <full-text :entities="[]" :full_text_origin="tweet.retweet_from ? tweet.retweet_from : tweet.display_name" />
         </router-link>
         <a v-else :href="`//twitter.com/` + tweet.retweet_from_name" class="text-dark" target="_blank"><full-text :entities="[]" :full_text_origin="tweet.retweet_from" /></a>

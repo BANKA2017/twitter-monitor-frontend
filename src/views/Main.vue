@@ -2,13 +2,13 @@
   <single-page-header title="Twitter Monitor" height="230px" />
   <div class="container">
     <div class="row">
-      <div class="col-md-6">
+      <div :class="{'col-md-6': !settings.onlineMode, 'col-md-8': settings.onlineMode, 'offset-md-2': settings.onlineMode}">
         <project-list :on-main="true" class="mb-3"/>
         <local-router class="mb-3" style="padding-left: 5px" />
         <link-list style="padding-left: 5px" class="mb-2" />
         <search :style="{position: 'sticky', top: '2rem'}" class="mb-3" />
       </div>
-      <div class="col-md-6">
+      <div class="col-md-6" v-if="!settings.onlineMode">
         <tweets class="my-4"/>
       </div>
     </div>
@@ -30,7 +30,8 @@ export default defineComponent({
     const store = useStore()
     const width = computed(() => store.state.width)
     const height = computed(() => store.state.height)
-    return {width, height}
+    const settings = computed(() => store.state.settings)
+    return {width, height, settings}
   }
 })
 </script>

@@ -58,10 +58,10 @@
 
     <div class="btn-group" role="group" style="width: 100%">
       <button type="button" :class="{'btn': true, 'btn-outline-primary': true, 'btn-sm': true, 'active': state.advancedSearch.tweetType.type === 0}" @click="state.advancedSearch.tweetType.type = 0">{{ t('search.advanced_search.nav_bar.all') }}</button>
-      <button type="button" :class="{'btn': true, 'btn-outline-primary': true, 'btn-sm': true, 'active': state.advancedSearch.tweetType.type === 1}" @click="state.advancedSearch.tweetType.type = 1">{{ t('search.advanced_search.nav_bar.origin') }}</button>
+      <button type="button" v-if="!settings.onlineMode" :class="{'btn': true, 'btn-outline-primary': true, 'btn-sm': true, 'active': state.advancedSearch.tweetType.type === 1}" @click="state.advancedSearch.tweetType.type = 1">{{ t('search.advanced_search.nav_bar.origin') }}</button>
       <button type="button" :class="{'btn': true, 'btn-outline-primary': true, 'btn-sm': true, 'active': state.advancedSearch.tweetType.type === 2}" @click="state.advancedSearch.tweetType.type = 2">{{ t('search.advanced_search.nav_bar.retweet') }}</button>
       <button type="button" :class="{'btn': true, 'btn-outline-primary': true, 'btn-sm': true, 'active': state.advancedSearch.tweetType.media}" @click="state.advancedSearch.tweetType.media = !state.advancedSearch.tweetType.media">{{ t('search.advanced_search.nav_bar.media_only') }}</button>
-      <button role="button" :class="{'btn': true, 'btn-outline-primary': true, 'btn-sm': true, 'active': state.advancedSearch.order}" @click="state.advancedSearch.order = !state.advancedSearch.order" >{{ t('search.advanced_search.nav_bar.reverse') }}</button>
+      <button role="button" v-if="!settings.onlineMode" :class="{'btn': true, 'btn-outline-primary': true, 'btn-sm': true, 'active': state.advancedSearch.order}" @click="state.advancedSearch.order = !state.advancedSearch.order" >{{ t('search.advanced_search.nav_bar.reverse') }}</button>
     </div>
     <!--<div class="btn-group btn-block" role="group">
          <button type="button" :class="{'btn': true, 'btn-outline-primary': true, 'btn-sm': true, 'active': search.advancedSearch.tweetType.media !== 0}" @click="search.advancedSearch.tweetType.media = ((search.advancedSearch.tweetType.media === 0) ? 1 : 0)">视频</button>
@@ -74,13 +74,13 @@
     </div>
     <div class="my-1"></div>
     <i18n-t class="text-muted" keypath="search.advanced_search.tips.line1.text" tag="label">
-      <template #:or_mode>
+      <template #or_mode>
         <code>{{ t('search.advanced_search.tips.line1.or_mode') }}</code>
       </template>
-      <template #:and_mode>
+      <template #and_mode>
         <code>{{ t('search.advanced_search.tips.line1.and_mode') }}</code>
       </template>
-      <template #:not_mode>
+      <template #not_mode>
         <code>{{ t('search.advanced_search.tips.line1.not_mode') }}</code>
       </template>
     </i18n-t>
@@ -146,7 +146,7 @@ const state = reactive<{
     user: {"text": "", "andMode": false, "notMode": false,},
     keywords: {"text": "", "orMode": false, "notMode": false,},
     tweetType: {
-      type: 0,//0-> all, 1-> origin, 2-> retweet
+      type: 0,//0-> all, 1-> origin, 2-> retweet//online mode couldn't use mode '1' -> origin
       media: false,//media
     },
     start: "",
@@ -162,7 +162,7 @@ const router = useRouter()
 const store = useStore()
 const tweetModeValue = computed(() => store.state.tweetMode)
 const now = computed(() => store.state.now)
-const settings = computed(() => store.state.now)
+const settings = computed(() => store.state.settings)
 const project = computed(() => store.state.project)
 const userList = computed(() => store.state.userList)
 const adminMode = computed(() => store.state.adminMode)

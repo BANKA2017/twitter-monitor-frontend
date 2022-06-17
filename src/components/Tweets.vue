@@ -3,7 +3,7 @@
     <nav v-if="route.name !== 'main'" :style="{'position': 'sticky', 'top': '1.5rem', 'z-index': 1, 'background-color': 'rgba(255, 255, 255, 0.9)', 'border-radius': '0.25rem'}" class="nav nav-pills nav-fill border">
       <!--v-if="tweetStatus.displayType === 'timeline' && !load.leftCard"-->
       <template v-if="route.name === 'name-display'">
-        <li v-for="(value, s) in displayMode" :key="s" class="nav-item">
+        <li v-for="(value, s) in displayMode.filter(x => settings.onlineMode ? (x[1] !== 'self') : true)" :key="s" class="nav-item">
           <!--tweetStatus.display-->
           <div v-if="value[1] === tweetTypeValue" class="nav-link active" role="button" @click="loading(true)">{{ value[0] }}</div>
           <router-link v-else :to="`./`+value[1]" class="nav-link">{{ value[0] }}</router-link>
@@ -224,7 +224,12 @@ const update = () => {
     if (response.data.bottom_tweet_id !== "0") {
       state.bottomTweetId = response.data.bottom_tweet_id;
     }
-    state.reload = (![200, 404, 403].includes(response.code))
+    if (![200, 404, 403].includes(response.code)) {
+      state.reload = true
+      Notice(response.message, 'error')
+    } else {
+      state.reload = false
+    }
     state.loadingTimeline = false
   }).catch(e => {
     if (controllerList.update.afterAbortSignal.aborted) {
