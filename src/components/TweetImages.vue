@@ -1,5 +1,5 @@
 <template>
-  <div id="imageList">
+  <div id="imageList" class="mb-2">
     <div v-if="is_video" style="height: 100%">
       <video :id="'video' + realList[0].tweet_id" controls playsinline crossorigin :poster="createRealMediaPath(realMediaPath, samePath.value,'tweets') + realList[0].cover" :preload="preload" style="width: 100%; height: 100%;">
         <source :src="createRealMediaPath(realMediaPath, samePath.value,'tweets') +realList[0].url">
@@ -41,6 +41,11 @@
         </el-image>
       </div>
     </div>
+    <template v-if="realList[0].title || realList[0].description">
+      <hr class="my-4">
+      <p class="fw-bold my-1" v-if="realList[0].title">{{realList[0].title}}</p>
+      <p v-if="realList[0].description">{{realList[0].description}}</p>
+    </template>
   </div>
 </template>
 

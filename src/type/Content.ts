@@ -86,6 +86,8 @@ export interface Media {
   content_type: string
   origin_info_height: number
   origin_info_width: number
+  title?: string | null
+  description?: string | null
   blurhash: string | null
 }
 
@@ -101,6 +103,8 @@ export interface OnlineMedia {
   origin_info_height: number
   origin_info_width: number
   origin_type: string
+  title?: string | null
+  description?: string | null
   source: string
   tweet_id: string
   uid: string
