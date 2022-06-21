@@ -152,6 +152,11 @@
             "pinned_tweet": "置頂推文",
             "this_is_a_dispute_tweet": "則是以一條有爭議的推文",
             "learn_more": "瞭解更多"
+        },
+        "interactive": {
+            "retweet": "轉推 | 轉推",
+            "quote": "引用推文 | 引用推文",
+            "favorite": "喜歡 | 喜歡"
         }
     },
     "polls": {

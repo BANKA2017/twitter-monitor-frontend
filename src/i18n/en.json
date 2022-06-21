@@ -152,6 +152,11 @@
             "pinned_tweet": "Pinned tweet",
             "this_is_a_dispute_tweet": "This is a dispute tweet",
             "learn_more": "Learn more"
+        },
+        "interactive": {
+            "retweet": "Retweet | Retweets",
+            "quote": "Quote Tweet | Quote Tweets",
+            "favorite": "Like | Likes"
         }
     },
     "polls": {

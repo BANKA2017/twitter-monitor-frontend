@@ -318,7 +318,9 @@ const routeRun = (to: RouteLocationNormalized, from: RouteLocationNormalized | {
   routeCase(to)
   emptyTranslateList()
   if (!(to.name === 'search' && !to.query.q && to.query.advanced !== '1')) {
-    update()
+    if (!(to.name === 'main' && settings.value.onlineMode)) {
+      update()
+    }
   } else {
     state.loadingTimeline = false
   }

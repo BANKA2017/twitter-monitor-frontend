@@ -10,7 +10,7 @@
         <div>
           <small class="text-muted" v-if="tweet.retweet_from">
             <retweet height="1em" status="" width="1em"/>
-            <router-link :to="`/`+(tweetModeValue === 'status' ? tweet.name + `/all` : `i/status/`+tweet.tweet_id_str)" class="text-muted">
+            <router-link :to="`/`+(tweetModeValue === 'status' ? (settings.onlineMode ? tweet.retweet_from_name : tweet.name) + `/all` : `i/status/`+tweet.tweet_id_str)" class="text-muted">
               <full-text :entities="[]" :full_text_origin="tweet.display_name" />
             </router-link>
           </small>
@@ -57,6 +57,12 @@
         <!--time && source-->
         <div id="foot">
           <small class="text-muted">{{ timeGap(tweet.time, now, settings.language) }} · <span style="color: #1DA1F2">{{ tweet.source }}</span></small>
+        </div>
+        <div class="mt-2" v-if="settings.onlineMode && (tweet.retweet_count + tweet.quote_count + tweet.favorite_count) > 0">
+          <hr class="my-2" />
+          <small class="me-2 text-muted" v-if="tweet.retweet_count > 0"><span class="fw-bold">{{tweet.retweet_count}}</span> {{t("tweet.interactive.retweet", tweet.retweet_count > 1 ? 2 : 1)}}</small>
+          <small class="me-2 text-muted" v-if="tweet.quote_count > 0"><span class="fw-bold">{{tweet.quote_count}}</span> {{t("tweet.interactive.quote", tweet.quote_count > 1 ? 2 : 1)}}</small>
+          <small class="me-2 text-muted" v-if="tweet.favorite_count > 0"><span class="fw-bold">{{tweet.favorite_count}}</span> {{t("tweet.interactive.favorite", tweet.favorite_count > 1 ? 2 : 1)}}</small>
         </div>
       </div>
     </div>

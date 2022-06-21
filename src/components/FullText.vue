@@ -10,7 +10,7 @@
       </template>
       <router-link v-if="obj.type === 'hashtag' || obj.type === 'symbol'" :to="(obj.type === 'hashtag' ? `/hashtag/` : `/cashtag/`) + obj.tag_text">#{{ obj.tag_text }}</router-link>
       <router-link
-        v-else-if="settings.onlineMode || (obj.type === 'user_mention' && userList.map(x => x.name).includes(obj.tag_text.substring(1)))"
+        v-else-if="(obj.type === 'user_mention' && (settings.onlineMode || userList.map(x => x.name).includes(obj.tag_text.substring(1))))"
         :to="`/`+obj.tag_text.substring(1)+`/all`">{{ obj.tag_text }}
       </router-link>
       <a v-else id="url" :href="obj.url" target="_blank">{{ obj.tag_text }}</a>

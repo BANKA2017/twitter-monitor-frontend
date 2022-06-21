@@ -54,6 +54,9 @@ export interface Tweet {
   dispute: number
   time: number
   type: string
+  favorite_count?: number
+  retweet_count?: number
+  quote_count?: number
   entities: Entity[]
   pollObject: PollItem[]
   cardObject?: Card
