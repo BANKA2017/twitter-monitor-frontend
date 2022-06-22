@@ -34,7 +34,7 @@
             <input type="checkbox" class="form-check-input" id="load-conversation" v-model="loadConversation">
             <label class="custom-control-label form-label" for="load-conversation">{{ t("settings.load_conversation") }}</label>
           </div>
-          <div class="form-check mb-3" v-if="adminMode">
+          <div class="form-check mb-3">
             <input type="checkbox" class="form-check-input" id="online-mode" v-model="onlineMode">
             <label class="custom-control-label form-label" for="online-mode">{{ t("settings.online_mode") }}</label>
           </div>

@@ -13,7 +13,7 @@
           </div>
           <div :class="{ 'col-8': ((width > 768 && height > 50) || state.userInfo.banner === 0), 'col-12': !((width > 768 && height > 50) || state.userInfo.banner === 0), 'my-4': (height > 50 || state.userInfo.banner === 0), 'mt-5': ((height <= 50 || width <= 768) && state.userInfo.banner !== 0), }" style=" justify-content: center;">
             <h5 class="card-title mb-1 align-middle"><b><full-text :entities="[]" :full_text_origin="state.userInfo.display_name"/></b><verified v-if="state.userInfo.verified" height="1em" status="text-primary" width="1.2em" class="ms-2 "/></h5>
-            <small><a :href="`//twitter.com/`+state.userInfo.name" class="text-dark" target="_blank">@{{ state.userInfo.name }}</a></small>
+            <small style="display: block"><a :href="`//twitter.com/`+state.userInfo.name" class="text-dark" target="_blank">@{{ state.userInfo.name }}</a></small>
           </div>
           <el-collapse-transition>
             <div v-show="!isHideDescription" class="margin-3">

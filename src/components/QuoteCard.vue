@@ -1,5 +1,5 @@
 <template>
-  <div class="no-gutters card" id="quote" style="border-radius: 14px 14px 14px 14px">
+  <div class="no-gutters card mb-2" id="quote" style="border-radius: 14px 14px 14px 14px">
     <div class='card-body'>
       <span class="card-text" v-if="!quoteObject.full_text">{{ t("quote_card.card.this_tweet_is_not_available") }}</span>
       <template v-else>

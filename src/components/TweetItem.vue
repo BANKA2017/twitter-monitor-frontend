@@ -2,12 +2,12 @@
   <div id="tweet">
     <div v-if="false">{{ tweet }}</div>
     <div v-else :id="tweet.tweet_id_str" :class="{'card': true, 'card-border': true, 'border-danger': tweet.dispute === 1, 'border-primary': tweet.tweet_id_str === topTweetId || (settings.loadConversation && $route.name === 'name-status' && $route.params.status === tweet.tweet_id_str)}">
-      <div class='card-body'>
+      <div class='card-body' >
         <p v-if="tweetModeValue === 'timeline' && tweet.tweet_id_str === topTweetId"><small class="text-muted">{{ t("tweet.text.pinned_tweet") }}</small></p>
         <p v-if="tweet.dispute === 1"><small class="text-muted"><exclamation-circle height="1em" status="" width="1em" /> {{ t("tweet.text.this_is_a_dispute_tweet") }}
           <router-link to="/about">{{ t("tweet.text.learn_more") }}</router-link>
         </small></p>
-        <div>
+        <div :dir="tweet.rtl ? 'rtl' : 'ltr'">
           <small class="text-muted" v-if="tweet.retweet_from">
             <retweet height="1em" status="" width="1em"/>
             <router-link :to="`/`+(tweetModeValue === 'status' ? (settings.onlineMode ? tweet.retweet_from_name : tweet.name) + `/all` : `i/status/`+tweet.tweet_id_str)" class="text-muted">
@@ -15,25 +15,27 @@
             </router-link>
           </small>
         </div>
-        <router-link v-if="settings.onlineMode || !tweet.retweet_from_name || (tweet.retweet_from_name && userList.map(x => x.name).includes(tweet.retweet_from_name))" :to="`/`+ (tweetModeValue === 'status' ? ((tweet.retweet_from_name && tweet.retweet_from_name === tweet.name) ? `i/status/`+tweet.tweet_id_str : ((tweet.retweet_from ? tweet.retweet_from_name : tweet.name) + '/all')) : `i/status/`+tweet.tweet_id_str)" class="card-title text-dark">
-          <full-text :entities="[]" :full_text_origin="tweet.retweet_from ? tweet.retweet_from : tweet.display_name" />
-        </router-link>
-        <a v-else :href="`//twitter.com/` + tweet.retweet_from_name" class="text-dark" target="_blank"><full-text :entities="[]" :full_text_origin="tweet.retweet_from" /></a>
-        | <small>@{{ tweet.retweet_from ? tweet.retweet_from_name : tweet.name }}</small>
-        <!--media-->
-        <span v-if="tweet.media === 1" class="ms-1" style="cursor:pointer" @click="swapDisplayPictureStatus">
-          <image-icon height="2em" status="text-success" width="2em"/>
-        </span>
-        <camera-video-icon v-if="tweet.video === 1" height="2em" status="text-danger" width="2em"/>
-        <a :href="`//twitter.com/i/status/`+tweet.tweet_id_str" target="_blank">
-          <box-arrow-up-right height="2em" status="text-primary" width="2em"/>
-        </a>
+        <div :dir="tweet.rtl ? 'rtl' : 'ltr'">
+          <router-link v-if="settings.onlineMode || !tweet.retweet_from_name || (tweet.retweet_from_name && userList.map(x => x.name).includes(tweet.retweet_from_name))" :to="`/`+ (tweetModeValue === 'status' ? ((tweet.retweet_from_name && tweet.retweet_from_name === tweet.name) ? `i/status/`+tweet.tweet_id_str : ((tweet.retweet_from ? tweet.retweet_from_name : tweet.name) + '/all')) : `i/status/`+tweet.tweet_id_str)" class="card-title text-dark">
+            <full-text :entities="[]" :full_text_origin="tweet.retweet_from ? tweet.retweet_from : tweet.display_name" />
+          </router-link>
+          <a v-else :href="`//twitter.com/` + tweet.retweet_from_name" class="text-dark" target="_blank"><full-text :entities="[]" :full_text_origin="tweet.retweet_from" /></a>
+          <el-divider direction="vertical" /> <small>@{{ tweet.retweet_from ? tweet.retweet_from_name : tweet.name }}</small>
+          <!--media-->
+          <span v-if="tweet.media === 1" class="ms-1" style="cursor:pointer" @click="swapDisplayPictureStatus">
+            <image-icon height="2em" status="text-success" width="2em"/>
+          </span>
+          <camera-video-icon v-if="tweet.video === 1" height="2em" status="text-danger" width="2em"/>
+          <a :href="`//twitter.com/i/status/`+tweet.tweet_id_str" target="_blank">
+            <box-arrow-up-right height="2em" status="text-primary" width="2em"/>
+          </a>
+        </div>
         <!--save for image-->
         <!--<span role="button" @click="h2c">gggg</span>-->
         <div class="my-4"></div>
         <!--<div v-html="`<p class='card-text'>`+tweet.full_text+`</p>`"></div>-->
         <!--excited!-->
-        <full-text class="card-text" :entities="tweet.entities" :full_text_origin="tweet.full_text_origin"/>
+        <div :dir="tweet.rtl ? 'rtl' : 'ltr'"><full-text class="card-text" :entities="tweet.entities" :full_text_origin="tweet.full_text_origin"/></div>
         <translate v-if="!settings.onlineMode && tweet.full_text_origin" :id="tweet.tweet_id_str" :to="settings.language" type="0"/>
         <!--media-->
         <template v-if="tweet.media === 1&&!settings.displayPicture && tweet.mediaObject.filter(x => x.source === 'tweets').length">
