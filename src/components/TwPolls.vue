@@ -3,19 +3,18 @@
     <div class="my-4"></div>
     <div class="container text-decoration-none">
       <div class="row no-gutters">
-        <div class="card mx-auto" v-if="media.length">
+        <div class="card mx-auto my-3" v-if="media.length">
           <div class="row no-gutters">
             <el-image alt="pollImage" :preview-src-list="[createRealMediaPath(realMediaPath, samePath, 'tweets')+media[0].url+'']" :src="createRealMediaPath(realMediaPath, samePath, 'tweets')+media[0].url+''" class="col-12 card-img-top" fit="cover" lazy style="height: 300px"></el-image>
           </div>
         </div>
-        <div v-if="etaSeconds <= 0 && polls[0].checked" class="col-12">
+        <div v-if="!settings.onlineMode && etaSeconds <= 0 && polls[0].checked" class="col-12">
           <el-progress class="mb-1" :percentage="Math.ceil((poll.count/pollCount)*100)" v-for="poll in polls" :format="() => poll.choice_label+' (' + Math.ceil((poll.count/pollCount)*100) + '%)'" :key="poll.poll_order"></el-progress>
         </div>
         <template v-else>
           <el-button round class="btn-block mx-auto mb-1" v-for="poll in polls" :key="poll.poll_order">{{ poll.choice_label }}</el-button>
         </template>
-        <div class="col-12"><small class="text-muted">{{ eta }}</small></div>
-        <div class="my-4"></div>
+        <div class="col-12 my-4" v-if="!settings.onlineMode"><small class="text-muted">{{ eta }}</small></div>
       </div>
     </div>
   </div>
