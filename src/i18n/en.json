@@ -42,6 +42,7 @@
             "no_image": "No image"
         },
         "side_tags": {
+            "trends": "Trends",
             "search": "Search",
             "settings": "Settings",
             "about": "About",

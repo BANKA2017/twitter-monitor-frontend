@@ -5,6 +5,7 @@
       <div class="row">
         <div class="col-md-6 mb-2">
           <el-skeleton :loading="hashTagsRank24.length === 0" :rows="7" animated>
+            <word-cloud-chart-for-annual2021 :data="hashTagsRank24.map(data => ({name: data.text, value: data.count}))" height="210px" class="mb-2" />
             <ul class="list-group">
               <router-link v-for="(hashtagInfo, order) in hashTagsRank24" :key="order" :to="`/hashtag/` + hashtagInfo.text" class="col-md-12 text-muted text-decoration-none list-group-item list-group-item-action d-flex justify-content-between align-items-center">
                 #{{ hashtagInfo.text }}
@@ -56,8 +57,9 @@ import {useStore} from "@/store"
 import {request} from "@/share/Fetch"
 import {ApiTrends} from "@/type/Api"
 import {Notice} from "@/share/Tools"
+import WordCloudChartForAnnual2021 from "@/views/topics/modules/wordCloudChartForAnnual2021.vue";
 export default defineComponent({
-  components: {SinglePageHeader, ArrowClockwise, Tmv2Chart},
+  components: {WordCloudChartForAnnual2021, SinglePageHeader, ArrowClockwise, Tmv2Chart},
   setup () {
     useHead({
       title: '趋势',
