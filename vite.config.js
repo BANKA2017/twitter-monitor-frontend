@@ -10,7 +10,7 @@ import { VitePWA } from 'vite-plugin-pwa'
 //import { visualizer } from 'rollup-plugin-visualizer';
 // https://vitejs.dev/config/
 export default defineConfig({
-  server: {host: true},
+  server: {host: true, port: 3000},
   build: {
     assetsDir: 'static',
     rollupOptions: {
@@ -22,7 +22,7 @@ export default defineConfig({
   },
   plugins: [
     vue(),
-    vueI18n({include: path.resolve(__dirname, './src/i18n/*.json')}),
+    vueI18n({include: resolve(__dirname, './src/i18n/*.json')}),
     //visualizer({open: true, gzipSize: true, brotliSize: true, template: 'treemap'}),
     AutoImport({
       resolvers: [ElementPlusResolver()],
@@ -68,8 +68,8 @@ export default defineConfig({
   ],
   resolve: {
     alias: {
-      "@": path.resolve(__dirname, "./src"),
-      "public": path.resolve(__dirname, "./public"),
+      "@": resolve(__dirname, "./src"),
+      "public": resolve(__dirname, "./public"),
     },
   },
 })

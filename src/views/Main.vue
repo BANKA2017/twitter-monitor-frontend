@@ -3,13 +3,13 @@
   <div class="container">
     <div class="row">
       <div :class="{'col-md-6': !settings.onlineMode, 'col-md-8': settings.onlineMode, 'offset-md-2': settings.onlineMode}">
-        <project-list :on-main="true" class="mb-3"/>
-        <local-router class="mb-3" style="padding-left: 5px" />
-        <link-list style="padding-left: 5px" class="mb-2" />
-        <search :style="{position: 'sticky', top: '2rem'}" class="mb-3" />
+        <div class="mb-3"><project-list :on-main="true"/></div>
+        <div class="mb-3" style="padding-left: 5px"><local-router /></div>
+        <div style="padding-left: 5px" class="mb-2"><link-list /></div>
+        <div :style="{position: 'sticky', top: '2rem'}" class="mb-3"><search /></div>
       </div>
       <div class="col-md-6" v-if="!settings.onlineMode">
-        <tweets class="my-4"/>
+        <div class="my-4"><tweets/></div>
       </div>
     </div>
   </div>

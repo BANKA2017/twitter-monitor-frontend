@@ -1,6 +1,6 @@
 <template id="time-line">
   <!--TODO add type for navigation-->
-  <navigation display-type="timeline" class="mb-4" />
+  <div class="mb-4"><navigation display-type="timeline" /></div>
   <div class="container" >
     <div class="row">
       <div id="global-left-card" class="col-sm-12 col-md-4 mb-4" v-if="$route.name === 'search' || $route.name === 'hashtag' || $route.name === 'cashtag'">
@@ -21,20 +21,20 @@
         </div>-->
       </div>
       <div id="user-info" class="col-sm-12 col-md-4" v-else-if="userExists">
-        <user-info class="mb-4"/>
+        <div class="mb-4"><user-info/></div>
       </div>
       <div class="col-md-10" v-else>
         <h5 class="text-center mb-4">{{ t("timeline.message.not_exist", [$route.params.name]) }}</h5>
       </div>
       <div id="tweets" class="col-sm-12 col-md-6" v-if="userExists">
         <!--TODO update display-type-->
-        <search display-type="timeline" :name="($route.params.name && userExists) ? $route.params.name : ''" class="mb-4" />
+        <div class="mb-4"><search display-type="timeline" :name="($route.params.name && userExists) ? $route.params.name : ''" /></div>
         <tweets />
       </div>
       <div id="links" class="col-sm-12 col-md-2">
         <div :style="{'position': 'sticky', 'top': '1.5rem'}">
           <project-list v-if="!settings.onlineMode"/>
-          <local-router class="mb-1 col-10 col-md-12" style="padding-left: 0;" />
+          <div class="mb-1 col-10 col-md-12"><local-router style="padding-left: 0;" /></div>
           <el-divider class="my-4" />
           <link-list v-if="!settings.onlineMode"/>
           <div v-else class="mb-2 text-muted"><small>NEST.MOE</small></div>
