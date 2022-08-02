@@ -58,7 +58,7 @@
         </template>
         <!--time && source-->
         <div id="foot">
-          <small class="text-muted">{{ timeGap(tweet.time, now, settings.language) }} · <span style="color: #1DA1F2">{{ tweet.source }}</span></small>
+          <small class="text-muted">{{ timeGap(tweet.time, now, settings.language) }} · <span class="text-primary">{{ tweet.source }}</span></small>
         </div>
         <div class="mt-2" v-if="settings.onlineMode && (tweet.retweet_count + tweet.quote_count + tweet.favorite_count) > 0">
           <hr class="my-2" />

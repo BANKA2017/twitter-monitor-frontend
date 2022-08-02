@@ -63,6 +63,8 @@ export interface Tweet {
   cardObject?: Card
   quoteObject?: Quote
   mediaObject: Media[]
+  user_info?: UserInfo
+  retweet_user_info?: UserInfo
 }
 
 export interface Translate {
