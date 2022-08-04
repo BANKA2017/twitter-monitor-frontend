@@ -32,39 +32,45 @@
         </div>
         <!--save for image-->
         <!--<span role="button" @click="h2c">gggg</span>-->
-        <div class="my-4"></div>
-        <!--<div v-html="`<p class='card-text'>`+tweet.full_text+`</p>`"></div>-->
-        <!--excited!-->
-        <div :dir="tweet.rtl ? 'rtl' : 'ltr'"><full-text class="card-text" :entities="tweet.entities" :full_text_origin="tweet.full_text_origin"/></div>
-        <translate v-if="!settings.onlineMode && tweet.full_text_origin" :id="tweet.tweet_id_str" :to="settings.language" type="0"/>
-        <!--media-->
-        <template v-if="tweet.media === 1&&!settings.displayPicture && tweet.mediaObject.filter(x => x.source === 'tweets').length">
-          <div class="my-4"></div>
-          <image-list :is_video="tweet.video" :list="tweet.mediaObject.filter(x => x.source === 'tweets')" :unlimited="tweetModeValue === 'status'"/>
-        </template>
-        <!--quote-->
-        <template v-if="tweet.quote_status !== 0">
-          <div class="my-4"></div>
-          <quote-card :quote-media="tweet.mediaObject.filter(x => x.source === 'quote_status')" :quote-object="tweet.quoteObject"/>
-        </template>
-        <!--polls-->
-        <template v-if="tweet.poll !== 0">
-          <tw-polls :media="tweet.mediaObject.filter(x => x.source === 'cards')" :polls="tweet.pollObject"/>
-        </template>
-        <!--card-->
-        <template v-else-if="tweet.card !== '' && Object.keys(tweet.cardObject).length">
-          <div class="my-4"></div>
-          <tw-card :media="tweet.mediaObject.filter(x => x.source === 'cards')" :mediaState="!settings.displayPicture" :object="tweet.cardObject" :tweet-text="tweet.full_text_origin.split(`\n`)[0]" :user-name="tweet.retweet_from ? tweet.retweet_from : tweet.display_name"></tw-card>
-        </template>
-        <!--time && source-->
-        <div id="foot">
-          <small class="text-muted">{{ timeGap(tweet.time, now, settings.language) }} · <span class="text-primary">{{ tweet.source }}</span></small>
-        </div>
-        <div class="mt-2" v-if="settings.onlineMode && (tweet.retweet_count + tweet.quote_count + tweet.favorite_count) > 0">
-          <hr class="my-2" />
-          <small class="me-2 text-muted" v-if="tweet.retweet_count > 0"><span class="fw-bold">{{tweet.retweet_count}}</span> {{t("tweet.interactive.retweet", tweet.retweet_count > 1 ? 2 : 1)}}</small>
-          <small class="me-2 text-muted" v-if="tweet.quote_count > 0"><span class="fw-bold">{{tweet.quote_count}}</span> {{t("tweet.interactive.quote", tweet.quote_count > 1 ? 2 : 1)}}</small>
-          <small class="me-2 text-muted" v-if="tweet.favorite_count > 0"><span class="fw-bold">{{tweet.favorite_count}}</span> {{t("tweet.interactive.favorite", tweet.favorite_count > 1 ? 2 : 1)}}</small>
+        <div class="row my-4">
+          <div class="col-md-1 ps-1 pe-0" v-if="settings.onlineMode && width > 768">
+            <el-image class="rounded-circle" :src="createRealMediaPath(realMediaPath, samePath, 'userinfo')+ (tweet.retweet_from_name ? tweet.retweet_user_info.header : tweet.user_info.header).replace(/([\w]+)\.([\w]+)$/gm, `$1_reasonably_small.$2`)" :preview-src-list="[createRealMediaPath(realMediaPath, samePath, 'userinfo')+(tweet.retweet_from_name ? tweet.retweet_user_info.header : tweet.user_info.header)]" alt="Avatar" preview-teleported hide-on-click-modal/>
+          </div>
+          <div :class="{'col-md-11': settings.onlineMode, 'col-12': true}">
+            <!--<div v-html="`<p class='card-text'>`+tweet.full_text+`</p>`"></div>-->
+            <!--excited!-->
+            <div :dir="tweet.rtl ? 'rtl' : 'ltr'"><full-text class="card-text" :entities="tweet.entities" :full_text_origin="tweet.full_text_origin"/></div>
+            <translate v-if="!settings.onlineMode && tweet.full_text_origin" :id="tweet.tweet_id_str" :to="settings.language" type="0"/>
+            <!--media-->
+            <template v-if="tweet.media === 1&&!settings.displayPicture && tweet.mediaObject.filter(x => x.source === 'tweets').length">
+              <div class="my-4"></div>
+              <image-list :is_video="tweet.video" :list="tweet.mediaObject.filter(x => x.source === 'tweets')" :unlimited="tweetModeValue === 'status'"/>
+            </template>
+            <!--quote-->
+            <template v-if="tweet.quote_status !== 0">
+              <div class="my-4"></div>
+              <quote-card :quote-media="tweet.mediaObject.filter(x => x.source === 'quote_status')" :quote-object="tweet.quoteObject"/>
+            </template>
+            <!--polls-->
+            <template v-if="tweet.poll !== 0">
+              <tw-polls :media="tweet.mediaObject.filter(x => x.source === 'cards')" :polls="tweet.pollObject"/>
+            </template>
+            <!--card-->
+            <template v-else-if="tweet.card !== '' && Object.keys(tweet.cardObject).length">
+              <div class="my-4"></div>
+              <tw-card :media="tweet.mediaObject.filter(x => x.source === 'cards')" :mediaState="!settings.displayPicture" :object="tweet.cardObject" :tweet-text="tweet.full_text_origin.split(`\n`)[0]" :user-name="tweet.retweet_from ? tweet.retweet_from : tweet.display_name"></tw-card>
+            </template>
+            <!--time && source-->
+            <div id="foot">
+              <small class="text-muted">{{ timeGap(tweet.time, now, settings.language) }} · <span class="text-primary">{{ tweet.source }}</span></small>
+            </div>
+            <div class="mt-2" v-if="settings.onlineMode && (tweet.retweet_count + tweet.quote_count + tweet.favorite_count) > 0">
+              <hr class="my-2" />
+              <small class="me-2 text-muted" v-if="tweet.retweet_count > 0"><span class="fw-bold">{{tweet.retweet_count}}</span> {{t("tweet.interactive.retweet", tweet.retweet_count > 1 ? 2 : 1)}}</small>
+              <small class="me-2 text-muted" v-if="tweet.quote_count > 0"><span class="fw-bold">{{tweet.quote_count}}</span> {{t("tweet.interactive.quote", tweet.quote_count > 1 ? 2 : 1)}}</small>
+              <small class="me-2 text-muted" v-if="tweet.favorite_count > 0"><span class="fw-bold">{{tweet.favorite_count}}</span> {{t("tweet.interactive.favorite", tweet.favorite_count > 1 ? 2 : 1)}}</small>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -91,6 +97,7 @@ import {useRoute, useRouter} from "vue-router";
 import {request} from "@/share/Fetch";
 import {ApiUserInfo} from "@/type/Api";
 import {Notice} from "@/share/Tools";
+import {createRealMediaPath} from "@/share/Tools";
 //import html2canvas from 'html2canvas';
 
 const props = defineProps({
@@ -105,9 +112,12 @@ const route = useRoute()
 const router = useRouter()
 const store = useStore()
 const now = computed(() => store.state.now)
+const width = computed(() => store.state.width)
 const settings = computed(() => store.state.settings)
 const userList = computed(() => store.state.userList)
 const topTweetId = computed(() => store.state.topTweetId)
+const realMediaPath = computed(() => store.state.realMediaPath)
+const samePath = computed(() => store.state.samePath)
 
 const tweetModeValue = computed(() => store.state.tweetMode)
 const tweetTypeValue = computed(() => store.state.tweetType)

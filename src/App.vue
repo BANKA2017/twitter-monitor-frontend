@@ -16,7 +16,7 @@
 <script lang="ts">
   import {useHead} from "@vueuse/head";
   import {useStore} from "@/store";
-  import {computed, onMounted, watch} from "vue";
+  import {computed, onMounted, reactive, watch} from "vue";
   import {request} from "@/share/Fetch";
   import {ApiAccounts} from "@/type/Api";
   import {Notice} from "@/share/Tools";
@@ -57,11 +57,18 @@
         }
       })
 
+      const state = reactive<{
+        updateHeightFlag: boolean
+      }>({
+        updateHeightFlag: false
+      })
+
       const updateNow = () => {
         store.dispatch('updateNow')
-        setTimeout(updateNow, 500)
       }
+
       const updateHeight = () => {
+        if (state.updateHeightFlag) {return}
         let tmpDocument = document
         store.dispatch({
           type: 'updateBrowserSize',
@@ -71,8 +78,7 @@
           siteHeight: tmpDocument.body.scrollHeight,
           viewportHeight: window.innerHeight,
         })
-
-        setTimeout(updateHeight, 500)
+        state.updateHeightFlag = true
       }
       const setLanguage = () => {
         store.dispatch({
@@ -117,7 +123,15 @@
       onMounted(() => {
         //time
         updateNow()
+        // height
         updateHeight()
+
+        setInterval(() => {
+          updateNow()
+          updateHeight()
+        }, 500)
+        addEventListener('scroll', () => {state.updateHeightFlag = false})
+        addEventListener('resize', () => {state.updateHeightFlag = false})
         //updateHeightStatus
         //this.isUp();
         konamiCode()

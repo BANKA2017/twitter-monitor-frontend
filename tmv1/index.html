@@ -578,6 +578,7 @@
                 //this.name = this.projects[this.project].name;
                 this.update();
                 this.re();
+                setInterval(this.re, 500);
                 if(Date.now() - startTime > 1000){
                     this.settings.data.displayPicture = true;
                     this.noty('当前网速较慢，已关闭图片显示', 'information');
@@ -858,9 +859,6 @@
             re: function() {
                 let n_top = document.documentElement.scrollTop;
                 this.clientHeight = n_top;
-                setTimeout(() => {
-                    this.re();
-                }, 500);
             },
             createSVG: function(width, height, text = '') {
                 let newSVG = '<svg width="' + width + '" height="' + height + '" xmlns="http://www.w3.org/2000/svg" role="img"><rect width="100%" height="100%" fill="#868e96"></rect>';

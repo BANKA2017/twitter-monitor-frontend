@@ -20,8 +20,8 @@
           <hash-tag-list />
         </div>-->
       </div>
-      <div id="user-info" class="col-sm-12 col-md-4" v-else-if="userExists">
-        <div class="mb-4"><user-info/></div>
+      <div id="user-info" class="col-sm-12 col-md-4 mb-4" v-else-if="userExists">
+        <user-info/>
       </div>
       <div class="col-md-10" v-else>
         <h5 class="text-center mb-4">{{ t("timeline.message.not_exist", [$route.params.name]) }}</h5>
