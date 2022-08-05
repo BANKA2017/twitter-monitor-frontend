@@ -14,7 +14,6 @@ import {
   VisualMapComponent, TitleComponentOption, VisualMapComponentOption
 } from 'echarts/components';
 import { HeatmapChart } from 'echarts/charts';
-import { SVGRenderer } from 'echarts/renderers';
 
 echarts.use([
   TitleComponent,
@@ -22,7 +21,6 @@ echarts.use([
   TooltipComponent,
   VisualMapComponent,
   HeatmapChart,
-  SVGRenderer
 ]);
 import VChart from "vue-echarts";
 import {computed, PropType, reactive} from "vue";
@@ -47,38 +45,41 @@ const props = defineProps({
   },
 })
 
-const option: {
-  title: TitleComponentOption
-  tooltip: {}
-  visualMap: VisualMapComponentOption
-  calendar: CalendarComponentOption
-  series: {
-    type: string
-    coordinateSystem: string
-    data: [string, number][]
+const state = reactive<{
+  option: {
+    title: TitleComponentOption
+    tooltip: {}
+    visualMap: VisualMapComponentOption
+    calendar: CalendarComponentOption
+    series: {
+      type: string
+      coordinateSystem: string
+      data: [string, number][]
+    }
   }
-} = {
-  title: {top: 30, left: 'center', text: ''},
-  tooltip: {},
-  visualMap: {min: 0, max: 10, calculable: true, orient: 'horizontal', left: 'center', top: 65, type: 'continuous'},
-  calendar: {top: 120, left: 30, right: 30, cellSize: ['auto', 13], range: '0', itemStyle: {borderWidth: 0.5}, yearLabel: { show: false }},
-  series: {
-    type: 'heatmap',
-    coordinateSystem: 'calendar',
-    data: []
+}>({
+  option: {
+    title: {top: 30, left: 'center', text: ''},
+    tooltip: {},
+    visualMap: {min: 0, max: 10, calculable: true, orient: 'horizontal', left: 'center', top: 65, type: 'continuous'},
+    calendar: {top: 120, left: 30, right: 30, cellSize: ['auto', 13], range: '0', itemStyle: {borderWidth: 0.5}, yearLabel: { show: false }},
+    series: {
+      type: 'heatmap',
+      coordinateSystem: 'calendar',
+      data: []
+    }
   }
-}
-
+})
 
 const computedOptions = computed(() => {
-  let tmpOption = option
+  let tmpOption = state.option
   let tmpMax = 0, tmpMin = 10000
   props.data.map(singleData => {
     tmpMax = singleData[1] > tmpMax ? singleData[1] : tmpMax
     tmpMin = singleData[1] < tmpMin ? singleData[1] : tmpMin
   })
-  tmpOption.visualMap.max = (tmpMax => tmpMax + 10 - tmpMax % 10)(tmpMax)
-  tmpOption.visualMap.min = (tmpMin => tmpMin - tmpMin % 10)(tmpMin)
+  tmpOption.visualMap.max = tmpMax + 10 - tmpMax % 10
+  tmpOption.visualMap.min = tmpMin - tmpMin % 10
   tmpOption.calendar.range = props.year.toString()
   tmpOption.title.text = props.title
   tmpOption.series.data = props.data

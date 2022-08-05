@@ -283,7 +283,8 @@ export default {
         serverStatusTotalTime: { date: string; total_time_cost: number; max_time_cost: number; min_time_cost: number; avg_time_cost: number; }[]
         serverStatusTotalSuccessRate: { date: string; success_rate: number }[]
         serverStatusTotalOnline: { date: string; online_rate: number; down_time_count: number }[]
-      }
+      },
+      renderFlag: ReturnType<typeof setTimeout>
     }>({
       accountListFilter: ref({
         bangdream: {"Poppin'Party": true, "Afterglow": true, "Pastel*Palettes": true, "Roselia":  true, "Hello, Happy World!": true, "Morfonica": true, "RAISE A SUILEN": true,},
@@ -303,6 +304,7 @@ export default {
       projectHashtagList: {},
       displayNameList: {},
       serverStatusChartMeta: {serverStatusTotalTweets: [], serverStatusTotalTime: [], serverStatusTotalSuccessRate: [], serverStatusTotalOnline: [],},
+      renderFlag: setTimeout(() => {}, 0)
     })
 
     const filterTag = (value: string, row: any) => {
@@ -361,14 +363,13 @@ export default {
       state.accountColor = data.account_color
       state.projectHashtagList = data.single_project_hashtag
       setupCharts()
-      renderAll()
-      state.loading = false
+      generateData()
       ScrollTo()
     }
 
     let latestAccountListFilter: {[p in string]: {[q in string]: boolean}} = {}
-
-    const renderAll = () => {
+    const tmpProjectGenerate = (projectName: string, organization: boolean): 'official' | 'bangdream' | 'lovelive' =>  organization ? 'official': (projectName === 'BanGDream!' ? 'bangdream' : 'lovelive')
+    const generateData = () => {
       //TODO fix type {[p in 'bangdream' | 'lovelive' | 'official']: dataTemplate}
       let tmpData: any = Object.values(state.accountComputedData).length === 0 ? {
         bangdream: tmpDataTemplate(),
@@ -395,18 +396,17 @@ export default {
       for (let account of state.accountData) {
         //break
         let breakRender = false
-        account.projects.map(projectMeta => {
-          let tmpProject = account.organization ? 'official': (projectMeta[0] === 'BanGDream!' ? 'bangdream' : 'lovelive')
-          if (!tmpUpdateList.has(tmpProject)) {
+        for (let projectMeta of account.projects) {
+          let tmpProject = tmpProjectGenerate(projectMeta[0], account.organization)
+          if (!tmpUpdateList.has(tmpProject) || (!account.organization && !state.accountListFilter[tmpProject][projectMeta[1]]) || (account.organization && !state.accountListFilter[tmpProject][projectMeta[0]])) {
             breakRender = true
+            break
           }
-          if ((!account.organization && !state.accountListFilter[tmpProject][projectMeta[1]]) || (account.organization && !state.accountListFilter[tmpProject][projectMeta[0]])) {
-            breakRender = true
-          }
-        })
+        }
         if (breakRender) {
           continue
         }
+        //console.log(account)
         let tmpPersonData = tmpUserDataTemplate()
         //每日数据
         for (let date in account.daily_data) {
@@ -415,10 +415,10 @@ export default {
           let tmpRetweetCount = typeof(account.daily_data[date].origin) === 'undefined' ? 0 : tmpDailyTweetCount - (account.daily_data[date].origin)
           tmpPersonData.tweets[tmpDate] ? tmpPersonData.tweets[tmpDate] += tmpDailyTweetCount : tmpPersonData.tweets[tmpDate] = tmpDailyTweetCount
           tmpPersonData.retweet[tmpDate] ? tmpPersonData.retweet[tmpDate] += tmpRetweetCount : tmpPersonData.retweet[tmpDate] = tmpRetweetCount
-          account.daily_data[date].hour_count.map((count, time) => {
+          account.daily_data[date].hour_count.forEach((count, time) => {
             tmpPersonData.hourCount[time] += count
           })
-          account.daily_data[date].media.map((count, time) => {
+          account.daily_data[date].media.forEach((count, time) => {
             tmpPersonData.mediaCount[time] += count
           })
 
@@ -432,8 +432,9 @@ export default {
         //tmpPersonData.tweets = Object.keys(tmpPersonData.tweets).map(day => [day, tmpPersonData.tweets[day]])
         //tmpPersonData.retweet = Object.keys(tmpPersonData.retweet).map(day => [day, tmpPersonData.retweet[day]])
 
-        account.projects.map(projectMeta => {
-          let tmpProject: 'official' | 'bangdream' | 'lovelive' = account.organization ? 'official': (projectMeta[0] === 'BanGDream!' ? 'bangdream' : 'lovelive')
+        account.projects.forEach(projectMeta => {
+          let tmpProject = tmpProjectGenerate(projectMeta[0], account.organization)
+          //console.log(new Date(), tmpProject)
           //break
           if ((!account.organization && !state.accountListFilter[tmpProject][projectMeta[1]]) || (account.organization && !state.accountListFilter[tmpProject][projectMeta[0]])) {
             return
@@ -442,8 +443,12 @@ export default {
           tmpData[tmpProject].trendsData.label[account.name] = state.displayNameList[account.name]
           tmpData[tmpProject].trendsData.color.push(state.accountColor.member[account.name])
           //合并数据
-          Object.keys(tmpPersonData.tweets).map(date => tmpData[tmpProject].tweets[date] ? tmpData[tmpProject].tweets[date] += tmpPersonData.tweets[date] : tmpData[tmpProject].tweets[date] = tmpPersonData.tweets[date])
-          Object.keys(tmpPersonData.retweet).map(date => tmpData[tmpProject].retweet[date] ? tmpData[tmpProject].retweet[date] += tmpPersonData.retweet[date] : tmpData[tmpProject].retweet[date] = tmpPersonData.retweet[date])
+          Object.keys(tmpPersonData.tweets).forEach(date => {
+            tmpData[tmpProject].tweets[date] ? tmpData[tmpProject].tweets[date] += tmpPersonData.tweets[date] : tmpData[tmpProject].tweets[date] = tmpPersonData.tweets[date]
+          })
+          Object.keys(tmpPersonData.retweet).forEach(date => {
+            tmpData[tmpProject].retweet[date] ? tmpData[tmpProject].retweet[date] += tmpPersonData.retweet[date] : tmpData[tmpProject].retweet[date] = tmpPersonData.retweet[date]
+          })
           for (let time in tmpPersonData.hourCount) {
             tmpData[tmpProject].hourCount[time] += tmpPersonData.hourCount[time]
           }
@@ -452,7 +457,7 @@ export default {
           }
 
           let baseFollowers: number | string = tmpPersonData.trendsData.followers["2021-01-01"]//only bangdream
-          Object.keys(tmpPersonData.trendsData.followers).map(date => {
+          Object.keys(tmpPersonData.trendsData.followers).forEach(date => {
             if (!tmpData[tmpProject].trendsData.followers[date]) {
               tmpData[tmpProject].trendsData.followers[date] = {date}
             }
@@ -460,13 +465,13 @@ export default {
           })
 
           let baseStatusesCount: number | string = tmpPersonData.trendsData.statuses_count["2021-01-01"]//only bangdream
-          Object.keys(tmpPersonData.trendsData.statuses_count).map(date => {
+          Object.keys(tmpPersonData.trendsData.statuses_count).forEach(date => {
             if (!tmpData[tmpProject].trendsData.statuses_count[date]) {
               tmpData[tmpProject].trendsData.statuses_count[date] = {date}
             }
             tmpData[tmpProject].trendsData.statuses_count[date][account.name] = Number(tmpPersonData.trendsData.statuses_count[date]) - Number(baseStatusesCount)// (tmpProject === 'bangdream' ? baseStatusesCount : 0)
           })
-          //改名部
+          // 改名部
           let tmpChildren = {
             name: account.name,
             itemStyle: {color: state.accountColor.member[account.name]},
@@ -475,14 +480,17 @@ export default {
               itemStyle: {color: state.accountColor.member[account.name]},
               value: 1,
             }))}
-          tmpData[tmpProject].renameDepartment[projectMeta[Number(!account.organization)]] ? tmpData[tmpProject].renameDepartment[projectMeta[Number(!account.organization)]].push(tmpChildren) : tmpData[tmpProject].renameDepartment[projectMeta[Number(!account.organization)]] = [tmpChildren]
+          if(tmpData[tmpProject].renameDepartment[projectMeta[Number(!account.organization)]]) {
+            tmpData[tmpProject].renameDepartment[projectMeta[Number(!account.organization)]].push(tmpChildren)
+          } else {
+            tmpData[tmpProject].renameDepartment[projectMeta[Number(!account.organization)]] = [tmpChildren]
+          }
         })
       }
       for (let projectName of ['bangdream', 'lovelive', 'official']) {
-        if (!tmpUpdateList.has(projectName)) {
+        if (!tmpUpdateList.has(projectName) || tmpData[projectName] === undefined) {
           continue
         }
-        if (tmpData[projectName] === undefined) {continue}
         //改名部
         tmpData[projectName].renameDepartment = (Object.keys(tmpData[projectName].renameDepartment).map(groupName => ({
           name: groupName,
@@ -490,8 +498,8 @@ export default {
           children: tmpData[projectName].renameDepartment[groupName]
         })))
         //三大件
-        tmpData[projectName].trendsData.followers = Object.keys(tmpData[projectName].trendsData.followers).map(date => tmpData[projectName].trendsData.followers[date])
-        tmpData[projectName].trendsData.statuses_count = Object.keys(tmpData[projectName].trendsData.statuses_count).map(date => tmpData[projectName].trendsData.statuses_count[date])
+        tmpData[projectName].trendsData.followers = Object.values(tmpData[projectName].trendsData.followers)
+        tmpData[projectName].trendsData.statuses_count = Object.values(tmpData[projectName].trendsData.statuses_count)
         //热力图
         tmpData[projectName].tweets = Object.keys(tmpData[projectName].tweets).map(date => [date, tmpData[projectName].tweets[date]])
         tmpData[projectName].retweet = Object.keys(tmpData[projectName].retweet).map(date => [date, tmpData[projectName].retweet[date]])
@@ -500,6 +508,12 @@ export default {
       //tmpData.mediaCount = tmpData.mediaCount.map((count, time) => ({name: time + '时', value: count}))
       latestAccountListFilter = _.cloneDeep(state.accountListFilter)
       state.accountComputedData = tmpData
+      //console.log(tmpData)
+      state.loading = false
+    }
+    const renderAll = () => {
+      clearTimeout(state.renderFlag)
+      state.renderFlag = setTimeout(generateData, 0)
     }
 
     const setupCharts = () => {

@@ -11,7 +11,7 @@ import {TitleComponent, TitleComponentOption, TooltipComponentOption} from 'echa
 import { SunburstChart } from 'echarts/charts';
 import { CanvasRenderer } from 'echarts/renderers';
 import VChart from "vue-echarts";
-import {computed, PropType} from "vue";
+import {computed, PropType, reactive} from "vue";
 import {renameDepartmentItem} from "@/type/Content";
 import {SunburstSeriesOption} from "echarts";
 
@@ -35,61 +35,64 @@ const props = defineProps({
     default: "820px"
   },
 })
-
-const option: {
-  title: TitleComponentOption
-  tooltip: TooltipComponentOption
-  series: SunburstSeriesOption
-} = {
-  title: {text: '', subtext: '', subtextStyle: {align: 'center'},},
-  tooltip: {},
-  series: {
-    type: 'sunburst',
-    data: [],
-    radius: [0, '95%'],
-    sort: undefined,
-    emphasis: {
-      focus: 'ancestor'
-    },
-    levels: [
-      {},
-      {
-        r0: '10%',
-        r: '27%',
-        itemStyle: {
-          borderWidth: 2
-        },
-        label: {
-          align: 'right',
-          //color: '#FFFFFF'
-          //rotate: 'tangential'
-        }
-      },
-      {
-        r0: '27%',
-        r: '52%',
-        label: {
-          align: 'right'
-        }
-      },
-      {
-        r0: '52%',
-        r: '54%',
-        label: {
-          position: 'outside',
-          padding: 3,
-          silent: false
-        },
-        itemStyle: {
-          borderWidth: 3
-        }
-      }
-    ]
+const state = reactive<{
+  option: {
+    title: TitleComponentOption
+    tooltip: TooltipComponentOption
+    series: SunburstSeriesOption
   }
-}
+}>({
+  option: {
+    title: {text: '', subtext: '', subtextStyle: {align: 'center'},},
+    tooltip: {},
+    series: {
+      type: 'sunburst',
+      data: [],
+      radius: [0, '95%'],
+      sort: undefined,
+      emphasis: {
+        focus: 'ancestor'
+      },
+      levels: [
+        {},
+        {
+          r0: '10%',
+          r: '27%',
+          itemStyle: {
+            borderWidth: 2
+          },
+          label: {
+            align: 'right',
+            //color: '#FFFFFF'
+            //rotate: 'tangential'
+          }
+        },
+        {
+          r0: '27%',
+          r: '52%',
+          label: {
+            align: 'right'
+          }
+        },
+        {
+          r0: '52%',
+          r: '54%',
+          label: {
+            position: 'outside',
+            padding: 3,
+            silent: false
+          },
+          itemStyle: {
+            borderWidth: 3
+          }
+        }
+      ]
+    }
+  }
+})
 
 const computedOptions = computed(() => {
-  let tmpOption = option
+  let tmpOption = state.option
   tmpOption.title.text = props.title
   tmpOption.title.subtext = props.subtitle
   tmpOption.series.data = props.data
