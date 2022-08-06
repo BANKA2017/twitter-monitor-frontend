@@ -5,7 +5,7 @@
   "license": "MIT",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "yarn patch-package && vite build",
     "preview": "vite preview"
   },
   "dependencies": {
@@ -15,7 +15,7 @@
     "@vueuse/head": "^0.7.8",
     "blurhash": "^1.1.5",
     "bootstrap": "5.2.0",
-    "echarts": "^5.3.3",
+    "echarts": "5.3.3",
     "echarts-wordcloud": "^2.0.0",
     "element-plus": "^2.2.11",
     "highlight.js": "^11.6.0",
@@ -47,6 +47,7 @@
     "@vue/compiler-sfc": "^3.2.37",
     "eslint": "^8.20.0",
     "eslint-plugin-vue": "^9.3.0",
+    "patch-package": "^6.4.7",
     "rollup-plugin-visualizer": "^5.7.1",
     "sass": "^1.54.0",
     "typescript": "^4.7.4",

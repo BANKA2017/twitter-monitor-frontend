@@ -50,7 +50,7 @@ const props = defineProps({
   },
   height: {
     type: [String, Number],
-    default: "700px"
+    default: "800px"
   },
 })
 
@@ -69,7 +69,7 @@ const state = reactive<{
       tooltip: {}
       grid: GridComponentOption
       xAxis: XAXisComponentOption
-      yAxis: { max: number; type: string; inverse: boolean; data: string[]; axisLabel: { show: boolean; fontSize: number; interval: number; } }[]
+      yAxis: { max: number | string; type: string; inverse: boolean; data: string[]; axisLabel: { show: boolean; fontSize: number; interval: number; } }[]
       series: {
         name: string
         realtimeSort: boolean
@@ -120,7 +120,7 @@ const state = reactive<{
         name: '关注增量'
       },
       yAxis: [{
-        max: 25,
+        max: 'dataMax',
         type: 'category',
         inverse: true,
         data: [],

@@ -412,7 +412,7 @@ export default {
         let tmpPersonData = tmpUserDataTemplate()
         if (state.accountDataCache.has(account.name)) {
           let tmpCache = state.accountDataCache.get(account.name)
-          if (tmpCache === undefined) {continue}
+          if (typeof tmpCache === 'undefined') {continue}
           tmpPersonData = tmpCache
         } else {
           //每日数据
@@ -430,11 +430,13 @@ export default {
             })
 
             //三大件
-            tmpPersonData.trendsData.followers[tmpDate] = account.daily_data[date].followers ? account.daily_data[date].followers : NaN
-            tmpPersonData.trendsData.statuses_count[tmpDate] = account.daily_data[date].statuses_count ? account.daily_data[date].statuses_count : NaN
-            //following: account.daily_data[date].following ? account.daily_data[date].following : NaN,
-            //statuses_count: account.daily_data[date].statuses_count ? account.daily_data[date].statuses_count : NaN,
-            //name: account.name,
+            if ((account.name !== 'homoto_akina') && (account.name !== 'uchida_shu0524')) {
+              tmpPersonData.trendsData.followers[tmpDate] = account.daily_data[date].followers ? account.daily_data[date].followers : NaN
+              tmpPersonData.trendsData.statuses_count[tmpDate] = account.daily_data[date].statuses_count ? account.daily_data[date].statuses_count : NaN
+              //following: account.daily_data[date].following ? account.daily_data[date].following : NaN,
+              //statuses_count: account.daily_data[date].statuses_count ? account.daily_data[date].statuses_count : NaN,
+              //name: account.name,
+            }
           }
           //tmpPersonData.tweets = Object.keys(tmpPersonData.tweets).map(day => [day, tmpPersonData.tweets[day]])
           //tmpPersonData.retweet = Object.keys(tmpPersonData.retweet).map(day => [day, tmpPersonData.retweet[day]])
@@ -463,22 +465,23 @@ export default {
           for (let time in tmpPersonData.mediaCount) {
             tmpData[tmpProject].mediaCount[time] += tmpPersonData.mediaCount[time]
           }
+          if ((account.name !== 'homoto_akina') && (account.name !== 'uchida_shu0524')) {
+            let baseFollowers: number | string = tmpPersonData.trendsData.followers["2021-01-01"]//only bangdream
+            Object.keys(tmpPersonData.trendsData.followers).forEach(date => {
+              if (!tmpData[tmpProject].trendsData.followers[date]) {
+                tmpData[tmpProject].trendsData.followers[date] = {date}
+              }
+              tmpData[tmpProject].trendsData.followers[date][account.name] = Number(tmpPersonData.trendsData.followers[date]) - Number(baseFollowers)// (tmpProject === 'bangdream' ? baseFollowers : 0)
+            })
 
-          let baseFollowers: number | string = tmpPersonData.trendsData.followers["2021-01-01"]//only bangdream
-          Object.keys(tmpPersonData.trendsData.followers).forEach(date => {
-            if (!tmpData[tmpProject].trendsData.followers[date]) {
-              tmpData[tmpProject].trendsData.followers[date] = {date}
-            }
-            tmpData[tmpProject].trendsData.followers[date][account.name] = Number(tmpPersonData.trendsData.followers[date]) - Number(baseFollowers)// (tmpProject === 'bangdream' ? baseFollowers : 0)
-          })
-
-          let baseStatusesCount: number | string = tmpPersonData.trendsData.statuses_count["2021-01-01"]//only bangdream
-          Object.keys(tmpPersonData.trendsData.statuses_count).forEach(date => {
-            if (!tmpData[tmpProject].trendsData.statuses_count[date]) {
-              tmpData[tmpProject].trendsData.statuses_count[date] = {date}
-            }
-            tmpData[tmpProject].trendsData.statuses_count[date][account.name] = Number(tmpPersonData.trendsData.statuses_count[date]) - Number(baseStatusesCount)// (tmpProject === 'bangdream' ? baseStatusesCount : 0)
-          })
+            let baseStatusesCount: number | string = tmpPersonData.trendsData.statuses_count["2021-01-01"]//only bangdream
+            Object.keys(tmpPersonData.trendsData.statuses_count).forEach(date => {
+              if (!tmpData[tmpProject].trendsData.statuses_count[date]) {
+                tmpData[tmpProject].trendsData.statuses_count[date] = {date}
+              }
+              tmpData[tmpProject].trendsData.statuses_count[date][account.name] = Number(tmpPersonData.trendsData.statuses_count[date]) - Number(baseStatusesCount)// (tmpProject === 'bangdream' ? baseStatusesCount : 0)
+            })
+          }
           // 改名部
           let tmpChildren = {
             name: account.name,
