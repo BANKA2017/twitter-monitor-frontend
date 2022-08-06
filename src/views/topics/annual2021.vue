@@ -141,7 +141,7 @@
 
                 <word-cloud-chart-for-annual2021 :data="projectHashtagList.bangdream" title="标签云" subtitle="片假地狱" />
 
-                <bar-race-for-annual2021 :data="accountComputedData.bangdream.trendsData.followers" :colors="accountColor.member" title="关注增量排序" :label-map="accountComputedData.bangdream.trendsData.label" />
+                <bar-race-for-annual2021 v-if="accountComputedData.bangdream.trendsData.followers.length" :data="accountComputedData.bangdream.trendsData.followers" :colors="accountColor.member" title="关注增量排序" :label-map="accountComputedData.bangdream.trendsData.label" />
 
                 <tmv2-chart class="mb-2" :chart-rows="accountComputedData.bangdream.trendsData.followers" :label-map="accountComputedData.bangdream.trendsData.label"
                             chart-type="line" chart-height="600px" :colors="accountComputedData.bangdream.trendsData.color" :set-option="{notMerge: true}" title="关注增量"></tmv2-chart>
@@ -164,7 +164,7 @@
 
                 <word-cloud-chart-for-annual2021 :data="projectHashtagList.lovelive" title="标签云" subtitle="片假地狱" />
 
-                <bar-race-for-annual2021 :data="accountComputedData.lovelive.trendsData.followers" :colors="accountColor.member" title="关注增量排序" :label-map="accountComputedData.lovelive.trendsData.label" />
+                <bar-race-for-annual2021 v-if="accountComputedData.lovelive.trendsData.followers.length" :data="accountComputedData.lovelive.trendsData.followers" :colors="accountColor.member" title="关注增量排序" :label-map="accountComputedData.lovelive.trendsData.label" />
 
                 <tmv2-chart class="mb-2" :chart-rows="accountComputedData.lovelive.trendsData.followers" :label-map="accountComputedData.lovelive.trendsData.label"
                             chart-type="line" chart-height="600px" :colors="accountComputedData.lovelive.trendsData.color" :set-option="{notMerge: true}" title="关注增量"></tmv2-chart>
@@ -283,8 +283,9 @@ export default {
         serverStatusTotalTime: { date: string; total_time_cost: number; max_time_cost: number; min_time_cost: number; avg_time_cost: number; }[]
         serverStatusTotalSuccessRate: { date: string; success_rate: number }[]
         serverStatusTotalOnline: { date: string; online_rate: number; down_time_count: number }[]
-      },
+      }
       renderFlag: ReturnType<typeof setTimeout>
+      accountDataCache: Map<string, Annual2021TmpDataTemplate>
     }>({
       accountListFilter: ref({
         bangdream: {"Poppin'Party": true, "Afterglow": true, "Pastel*Palettes": true, "Roselia":  true, "Hello, Happy World!": true, "Morfonica": true, "RAISE A SUILEN": true,},
@@ -304,7 +305,8 @@ export default {
       projectHashtagList: {},
       displayNameList: {},
       serverStatusChartMeta: {serverStatusTotalTweets: [], serverStatusTotalTime: [], serverStatusTotalSuccessRate: [], serverStatusTotalOnline: [],},
-      renderFlag: setTimeout(() => {}, 0)
+      renderFlag: setTimeout(() => {}, 0),
+      accountDataCache: new Map()
     })
 
     const filterTag = (value: string, row: any) => {
@@ -408,30 +410,36 @@ export default {
         }
         //console.log(account)
         let tmpPersonData = tmpUserDataTemplate()
-        //每日数据
-        for (let date in account.daily_data) {
-          let tmpDate = date.slice(0, 4) + '-' + date.slice(4, 6) + '-' + date.slice(6, 8)
-          let tmpDailyTweetCount = account.daily_data[date].hour_count.length === 0 ? 0 : account.daily_data[date].hour_count.reduce((acr, cur) => acr + cur)
-          let tmpRetweetCount = typeof(account.daily_data[date].origin) === 'undefined' ? 0 : tmpDailyTweetCount - (account.daily_data[date].origin)
-          tmpPersonData.tweets[tmpDate] ? tmpPersonData.tweets[tmpDate] += tmpDailyTweetCount : tmpPersonData.tweets[tmpDate] = tmpDailyTweetCount
-          tmpPersonData.retweet[tmpDate] ? tmpPersonData.retweet[tmpDate] += tmpRetweetCount : tmpPersonData.retweet[tmpDate] = tmpRetweetCount
-          account.daily_data[date].hour_count.forEach((count, time) => {
-            tmpPersonData.hourCount[time] += count
-          })
-          account.daily_data[date].media.forEach((count, time) => {
-            tmpPersonData.mediaCount[time] += count
-          })
+        if (state.accountDataCache.has(account.name)) {
+          let tmpCache = state.accountDataCache.get(account.name)
+          if (tmpCache === undefined) {continue}
+          tmpPersonData = tmpCache
+        } else {
+          //每日数据
+          for (let date in account.daily_data) {
+            let tmpDate = date.slice(0, 4) + '-' + date.slice(4, 6) + '-' + date.slice(6, 8)
+            let tmpDailyTweetCount = account.daily_data[date].hour_count.length === 0 ? 0 : account.daily_data[date].hour_count.reduce((acr, cur) => acr + cur)
+            let tmpRetweetCount = typeof(account.daily_data[date].origin) === 'undefined' ? 0 : tmpDailyTweetCount - (account.daily_data[date].origin)
+            tmpPersonData.tweets[tmpDate] ? tmpPersonData.tweets[tmpDate] += tmpDailyTweetCount : tmpPersonData.tweets[tmpDate] = tmpDailyTweetCount
+            tmpPersonData.retweet[tmpDate] ? tmpPersonData.retweet[tmpDate] += tmpRetweetCount : tmpPersonData.retweet[tmpDate] = tmpRetweetCount
+            account.daily_data[date].hour_count.forEach((count, time) => {
+              tmpPersonData.hourCount[time] += count
+            })
+            account.daily_data[date].media.forEach((count, time) => {
+              tmpPersonData.mediaCount[time] += count
+            })
 
-          //三大件
-          tmpPersonData.trendsData.followers[tmpDate] = account.daily_data[date].followers ? account.daily_data[date].followers : NaN
-          tmpPersonData.trendsData.statuses_count[tmpDate] = account.daily_data[date].statuses_count ? account.daily_data[date].statuses_count : NaN
-          //following: account.daily_data[date].following ? account.daily_data[date].following : NaN,
-          //statuses_count: account.daily_data[date].statuses_count ? account.daily_data[date].statuses_count : NaN,
-          //name: account.name,
+            //三大件
+            tmpPersonData.trendsData.followers[tmpDate] = account.daily_data[date].followers ? account.daily_data[date].followers : NaN
+            tmpPersonData.trendsData.statuses_count[tmpDate] = account.daily_data[date].statuses_count ? account.daily_data[date].statuses_count : NaN
+            //following: account.daily_data[date].following ? account.daily_data[date].following : NaN,
+            //statuses_count: account.daily_data[date].statuses_count ? account.daily_data[date].statuses_count : NaN,
+            //name: account.name,
+          }
+          //tmpPersonData.tweets = Object.keys(tmpPersonData.tweets).map(day => [day, tmpPersonData.tweets[day]])
+          //tmpPersonData.retweet = Object.keys(tmpPersonData.retweet).map(day => [day, tmpPersonData.retweet[day]])
+          state.accountDataCache.set(account.name, tmpPersonData)
         }
-        //tmpPersonData.tweets = Object.keys(tmpPersonData.tweets).map(day => [day, tmpPersonData.tweets[day]])
-        //tmpPersonData.retweet = Object.keys(tmpPersonData.retweet).map(day => [day, tmpPersonData.retweet[day]])
-
         account.projects.forEach(projectMeta => {
           let tmpProject = tmpProjectGenerate(projectMeta[0], account.organization)
           //console.log(new Date(), tmpProject)
