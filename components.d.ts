@@ -27,7 +27,6 @@ declare module '@vue/runtime-core' {
     HashTagList: typeof import('./src/components/HashTagList.vue')['default']
     HeatMapChart: typeof import('./src/components/HeatMapChart.vue')['default']
     LinkList: typeof import('./src/components/LinkList.vue')['default']
-    Loading: typeof import('element-plus/es')['ElLoadingDirective']
     LocalRouter: typeof import('./src/components/LocalRouter.vue')['default']
     Navigation: typeof import('./src/components/Navigation.vue')['default']
     PieChart: typeof import('./src/components/modules/pieChart.vue')['default']

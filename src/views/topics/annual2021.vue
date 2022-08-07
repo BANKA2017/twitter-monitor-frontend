@@ -14,8 +14,11 @@
         <div class="container">
           <div class="row">
             <div class="col-12">
-              <p class="text-muted"><small>* 如无特殊注明，统计所使用的时区为东九区(GMT+9)</small></p>
-              <p class="text-muted"><small>* 建议使用宽屏浏览，否则可能会出现图表显示不全</small></p>
+              <p class="text-muted">
+                <small>* 如无特殊注明，统计所使用的时区为东九区(GMT+9)</small><br>
+                <small>* 建议使用宽屏并缩放到<code class="fw-bold">90%</code>浏览，否则可能会出现图表显示不全</small><br>
+                <small>* 本页对设备性能要求较高，使用性能不足的设备浏览可能会在处理数据时有卡顿感，处理完成后即可正常浏览</small>
+              </p>
               <h3>前言</h3>
               <p class="text-muted">在平淡无奇的日子里又过了一年</p>
               <ul class="ms-3">
@@ -232,7 +235,7 @@ import {Notice, ScrollTo} from "@/share/Tools";
 import {useStore} from "@/store";
 import {onMounted, reactive, Ref, ref, toRefs, watch} from "vue";
 import {ApiAnnual2021} from "@/type/Api";
-import {Annual2021DataTemplate, Annual2021TmpDataTemplate} from "@/type/Content";
+import {Annual2021DataTemplate, Annual2021Template, Annual2021TmpDataTemplate} from "@/type/Content";
 import _ from 'lodash'
 
 export default {
@@ -286,6 +289,7 @@ export default {
       }
       renderFlag: ReturnType<typeof setTimeout>
       accountDataCache: Map<string, Annual2021TmpDataTemplate>
+      groupDataCache: Map<string, Annual2021Template<{[p in string]: number}, {[p: string]: { [q: string]: string | number }}>>
     }>({
       accountListFilter: ref({
         bangdream: {"Poppin'Party": true, "Afterglow": true, "Pastel*Palettes": true, "Roselia":  true, "Hello, Happy World!": true, "Morfonica": true, "RAISE A SUILEN": true,},
@@ -306,7 +310,8 @@ export default {
       displayNameList: {},
       serverStatusChartMeta: {serverStatusTotalTweets: [], serverStatusTotalTime: [], serverStatusTotalSuccessRate: [], serverStatusTotalOnline: [],},
       renderFlag: setTimeout(() => {}, 0),
-      accountDataCache: new Map()
+      accountDataCache: new Map(),
+      groupDataCache: new Map(),
     })
 
     const filterTag = (value: string, row: any) => {
@@ -315,12 +320,27 @@ export default {
       }
       return false
     }
+
+    const tmpDataTemplateGenerator = <U, V>(defaultU: U, defaultV: V): Annual2021Template<U, V> => ({
+      tweets: defaultU,
+      retweet: defaultU,
+      hourCount: new Array(24).fill(0),
+      mediaCount: new Array(24).fill(0),
+      renameDepartment: {},
+      trendsData: {
+        label: {date: '日期'},
+        color: [],
+        followers: defaultV,
+        statuses_count: defaultV,
+      }
+    })
+
     const tmpDataTemplate = (): Annual2021DataTemplate => ({
       tweets: [],
       retweet: [],
       hourCount: new Array(24).fill(0),
       mediaCount: new Array(24).fill(0),
-      renameDepartment: [],
+      renameDepartment: {},
       trendsData: {
         label: {date: '日期'},
         color: [],
@@ -334,7 +354,7 @@ export default {
       retweet: {},
       hourCount: new Array(24).fill(0),
       mediaCount: new Array(24).fill(0),
-      renameDepartment: [],
+      renameDepartment: {},
       trendsData: {
         label: {date: '日期'},
         color: [],
@@ -365,13 +385,13 @@ export default {
       state.accountColor = data.account_color
       state.projectHashtagList = data.single_project_hashtag
       setupCharts()
-      generateData()
+      generateData(true)
       ScrollTo()
     }
 
     let latestAccountListFilter: {[p in string]: {[q in string]: boolean}} = {}
     const tmpProjectGenerate = (projectName: string, organization: boolean): 'official' | 'bangdream' | 'lovelive' =>  organization ? 'official': (projectName === 'BanGDream!' ? 'bangdream' : 'lovelive')
-    const generateData = () => {
+    const generateData = (firstGenerate: boolean = false) => {
       //TODO fix type {[p in 'bangdream' | 'lovelive' | 'official']: dataTemplate}
       let tmpData: any = Object.values(state.accountComputedData).length === 0 ? {
         bangdream: tmpDataTemplate(),
@@ -410,7 +430,7 @@ export default {
         }
         //console.log(account)
         let tmpPersonData = tmpUserDataTemplate()
-        if (state.accountDataCache.has(account.name)) {
+        if (!firstGenerate) {
           let tmpCache = state.accountDataCache.get(account.name)
           if (typeof tmpCache === 'undefined') {continue}
           tmpPersonData = tmpCache
@@ -449,58 +469,107 @@ export default {
           if ((!account.organization && !state.accountListFilter[tmpProject][projectMeta[1]]) || (account.organization && !state.accountListFilter[tmpProject][projectMeta[0]])) {
             return
           }
+          let group = account.organization ? projectMeta[0] : projectMeta[1]
           //label
           tmpData[tmpProject].trendsData.label[account.name] = state.displayNameList[account.name]
           tmpData[tmpProject].trendsData.color.push(state.accountColor.member[account.name])
-          //合并数据
-          Object.keys(tmpPersonData.tweets).forEach(date => {
-            tmpData[tmpProject].tweets[date] ? tmpData[tmpProject].tweets[date] += tmpPersonData.tweets[date] : tmpData[tmpProject].tweets[date] = tmpPersonData.tweets[date]
-          })
-          Object.keys(tmpPersonData.retweet).forEach(date => {
-            tmpData[tmpProject].retweet[date] ? tmpData[tmpProject].retweet[date] += tmpPersonData.retweet[date] : tmpData[tmpProject].retweet[date] = tmpPersonData.retweet[date]
-          })
-          for (let time in tmpPersonData.hourCount) {
-            tmpData[tmpProject].hourCount[time] += tmpPersonData.hourCount[time]
-          }
-          for (let time in tmpPersonData.mediaCount) {
-            tmpData[tmpProject].mediaCount[time] += tmpPersonData.mediaCount[time]
-          }
-          if ((account.name !== 'homoto_akina') && (account.name !== 'uchida_shu0524')) {
-            let baseFollowers: number | string = tmpPersonData.trendsData.followers["2021-01-01"]//only bangdream
-            Object.keys(tmpPersonData.trendsData.followers).forEach(date => {
-              if (!tmpData[tmpProject].trendsData.followers[date]) {
-                tmpData[tmpProject].trendsData.followers[date] = {date}
-              }
-              tmpData[tmpProject].trendsData.followers[date][account.name] = Number(tmpPersonData.trendsData.followers[date]) - Number(baseFollowers)// (tmpProject === 'bangdream' ? baseFollowers : 0)
-            })
 
-            let baseStatusesCount: number | string = tmpPersonData.trendsData.statuses_count["2021-01-01"]//only bangdream
-            Object.keys(tmpPersonData.trendsData.statuses_count).forEach(date => {
-              if (!tmpData[tmpProject].trendsData.statuses_count[date]) {
-                tmpData[tmpProject].trendsData.statuses_count[date] = {date}
-              }
-              tmpData[tmpProject].trendsData.statuses_count[date][account.name] = Number(tmpPersonData.trendsData.statuses_count[date]) - Number(baseStatusesCount)// (tmpProject === 'bangdream' ? baseStatusesCount : 0)
+          // 仅在首次处理时使用
+          if (firstGenerate) {
+            let tmpGroupData = tmpDataTemplateGenerator<{[p in string]: number}, {[p: string]: { [q: string]: string | number }}>({}, {})
+            if (state.groupDataCache.has(group)) {
+              let tmpGroupCache = state.groupDataCache.get(group)
+              if (typeof tmpGroupCache === 'undefined') {return}
+              tmpGroupData = tmpGroupCache
+            }
+            //合并数据
+            Object.keys(tmpPersonData.tweets).forEach(date => {
+              tmpGroupData.tweets[date] ? tmpGroupData.tweets[date] += tmpPersonData.tweets[date] : tmpGroupData.tweets[date] = tmpPersonData.tweets[date]
             })
-          }
-          // 改名部
-          let tmpChildren = {
-            name: account.name,
-            itemStyle: {color: state.accountColor.member[account.name]},
-            children: account.display_name_list.map(name => ({
-              name,
+            Object.keys(tmpPersonData.retweet).forEach(date => {
+              tmpGroupData.retweet[date] ? tmpGroupData.retweet[date] += tmpPersonData.retweet[date] : tmpGroupData.retweet[date] = tmpPersonData.retweet[date]
+            })
+            for (let time in tmpPersonData.hourCount) {
+              tmpGroupData.hourCount[time] += tmpPersonData.hourCount[time]
+            }
+            for (let time in tmpPersonData.mediaCount) {
+              tmpGroupData.mediaCount[time] += tmpPersonData.mediaCount[time]
+            }
+            if ((account.name !== 'homoto_akina') && (account.name !== 'uchida_shu0524')) {
+              let baseFollowers: number | string = tmpPersonData.trendsData.followers["2021-01-01"]//only bangdream
+              Object.keys(tmpPersonData.trendsData.followers).forEach(date => {
+                if (!tmpGroupData.trendsData.followers[date]) {
+                  tmpGroupData.trendsData.followers[date] = {}
+                }
+                tmpGroupData.trendsData.followers[date][account.name] = Number(tmpPersonData.trendsData.followers[date]) - Number(baseFollowers)// (tmpProject === 'bangdream' ? baseFollowers : 0)
+              })
+
+              let baseStatusesCount: number | string = tmpPersonData.trendsData.statuses_count["2021-01-01"]//only bangdream
+              Object.keys(tmpPersonData.trendsData.statuses_count).forEach(date => {
+                if (!tmpGroupData.trendsData.statuses_count[date]) {
+                  tmpGroupData.trendsData.statuses_count[date] = {}
+                }
+                tmpGroupData.trendsData.statuses_count[date][account.name] = Number(tmpPersonData.trendsData.statuses_count[date]) - Number(baseStatusesCount)// (tmpProject === 'bangdream' ? baseStatusesCount : 0)
+              })
+            }
+            // 改名部
+            let tmpChildren = {
+              name: account.name,
               itemStyle: {color: state.accountColor.member[account.name]},
-              value: 1,
-            }))}
-          if(tmpData[tmpProject].renameDepartment[projectMeta[Number(!account.organization)]]) {
-            tmpData[tmpProject].renameDepartment[projectMeta[Number(!account.organization)]].push(tmpChildren)
-          } else {
-            tmpData[tmpProject].renameDepartment[projectMeta[Number(!account.organization)]] = [tmpChildren]
+              children: account.display_name_list.map(name => ({
+                name,
+                itemStyle: {color: state.accountColor.member[account.name]},
+                value: 1,
+              }))}
+            if(tmpGroupData.renameDepartment[projectMeta[Number(!account.organization)]]) {
+              tmpGroupData.renameDepartment[projectMeta[Number(!account.organization)]].push(tmpChildren)
+            } else {
+              tmpGroupData.renameDepartment[projectMeta[Number(!account.organization)]] = [tmpChildren]
+            }
+            state.groupDataCache.set(group, tmpGroupData)
           }
         })
       }
+      //console.log(state.groupDataCache)
       for (let projectName of ['bangdream', 'lovelive', 'official']) {
         if (!tmpUpdateList.has(projectName) || tmpData[projectName] === undefined) {
           continue
+        }
+        // merge data from group cache
+        for(let group of Object.keys(state.accountListFilter[projectName]).filter(groupName => state.accountListFilter[projectName][groupName])) {
+          const tmpGroupData = state.groupDataCache.get(group)
+          if (typeof tmpGroupData === 'undefined') {
+            continue
+          }
+          // merge tweets and retweet
+          Object.keys(tmpGroupData.tweets).forEach(date => {
+            tmpData[projectName].tweets[date] ? tmpData[projectName].tweets[date] += tmpGroupData.tweets[date] : tmpData[projectName].tweets[date] = tmpGroupData.tweets[date]
+          })
+          Object.keys(tmpGroupData.retweet).forEach(date => {
+            tmpData[projectName].retweet[date] ? tmpData[projectName].retweet[date] += tmpGroupData.retweet[date] : tmpData[projectName].retweet[date] = tmpGroupData.retweet[date]
+          })
+          // hour count
+          for (let time in tmpGroupData.hourCount) {
+            tmpData[projectName].hourCount[time] += tmpGroupData.hourCount[time]
+          }
+          for (let time in tmpGroupData.mediaCount) {
+            tmpData[projectName].mediaCount[time] += tmpGroupData.mediaCount[time]
+          }
+          // trends
+          Object.keys(tmpGroupData.trendsData.followers).forEach(date => {
+            if (!tmpData[projectName].trendsData.followers[date]) {
+              tmpData[projectName].trendsData.followers[date] = {date}
+            }
+            tmpData[projectName].trendsData.followers[date] = {...tmpData[projectName].trendsData.followers[date], ...tmpGroupData.trendsData.followers[date]}
+          })
+          Object.keys(tmpGroupData.trendsData.statuses_count).forEach(date => {
+            if (!tmpData[projectName].trendsData.statuses_count[date]) {
+              tmpData[projectName].trendsData.statuses_count[date] = {date}
+            }
+            tmpData[projectName].trendsData.statuses_count[date] = {...tmpData[projectName].trendsData.statuses_count[date], ...tmpGroupData.trendsData.statuses_count[date]}
+          })
+          // rename
+          tmpData[projectName].renameDepartment = {...tmpData[projectName].renameDepartment, ...tmpGroupData.renameDepartment}
         }
         //改名部
         tmpData[projectName].renameDepartment = (Object.keys(tmpData[projectName].renameDepartment).map(groupName => ({
