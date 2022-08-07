@@ -17,6 +17,7 @@ const loveliveTrends = () => import("@/views/topics/loveliveTrends.vue")
 const staffCandleStickPage = () => import("@/views/topics/staffCandleStickPage.vue")
 const NotFound = () => import("@/views/NotFound.vue")
 const Settings = () => import("@/views/Settings.vue")
+//const Tools = () => import("@/views/Tools.vue")
 //const PhotoPreview = () => import('@/views/TO_DEL_PhotoPreview.vue')
 
 export default createRouter({
@@ -32,7 +33,7 @@ export default createRouter({
                 {path: '2019', component: Annual2019, name: '2019'},
                 {path: '2020', component: Annual2020, name: '2020'},
                 {path: '2021', component: Annual2021, name: '2021'},
-                {path: 'lovelive_trends', component: loveliveTrends, name: 'lovelive_trends'},
+                {path: 'lovelive_trends/:name?', component: loveliveTrends, name: 'lovelive_trends'},
                 {path: 'staff_data_page', component: staffCandleStickPage, name: 'staff_data_page'}
             ]
         },
@@ -48,6 +49,7 @@ export default createRouter({
             children: [{path: ':tweet_id', component: Online, name: 'online-status'}]
         },
         { path: '/settings', component: Settings, name: 'settings'},
+        //{ path: '/tools', component: Tools, name: 'tools'},
         { path: '/hashtag/:tag?', component: TimeLine, name: 'hashtag'},
         { path: '/cashtag/:tag?', component: TimeLine, name: 'cashtag'},
         {

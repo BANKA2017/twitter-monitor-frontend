@@ -12,14 +12,14 @@ import { SunburstChart } from 'echarts/charts';
 import { CanvasRenderer } from 'echarts/renderers';
 import VChart from "vue-echarts";
 import {computed, PropType, reactive} from "vue";
-import {renameDepartmentItem} from "@/type/Content";
+import {sunBurstType} from "@/type/Content";
 import {SunburstSeriesOption} from "echarts";
 
 echarts.use([TitleComponent, SunburstChart, CanvasRenderer]);
 
 const props = defineProps({
   data: {
-    type: Array as PropType<renameDepartmentItem[]>,
+    type: Array as PropType<sunBurstType[]>,
     default: () => ([])
   },
   title: {
@@ -34,6 +34,10 @@ const props = defineProps({
     type: [String, Number],
     default: "820px"
   },
+  levels: {
+    type: Array as PropType<SunburstSeriesOption["levels"]>,
+    default: []
+  }
 })
 const state = reactive<{
   option: {
@@ -96,6 +100,9 @@ const computedOptions = computed(() => {
   tmpOption.title.text = props.title
   tmpOption.title.subtext = props.subtitle
   tmpOption.series.data = props.data
+  if (props.levels?.length) {
+    tmpOption.series.levels = props.levels
+  }
   return tmpOption
 })
 

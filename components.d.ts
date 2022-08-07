@@ -7,6 +7,8 @@ export {}
 
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
+    BarRaceCharts: typeof import('./src/components/Charts/BarRaceCharts.vue')['default']
+    BarStackChart: typeof import('./src/components/Charts/BarStackChart.vue')['default']
     BlurHashCanvas: typeof import('./src/components/BlurHashCanvas.vue')['default']
     CandlestickChart: typeof import('./src/components/modules/candlestickChart.vue')['default']
     ElButton: typeof import('element-plus/es')['ElButton']
@@ -25,7 +27,8 @@ declare module '@vue/runtime-core' {
     ElTag: typeof import('element-plus/es')['ElTag']
     FullText: typeof import('./src/components/FullText.vue')['default']
     HashTagList: typeof import('./src/components/HashTagList.vue')['default']
-    HeatMapChart: typeof import('./src/components/HeatMapChart.vue')['default']
+    HeatMapChart: typeof import('./src/components/Charts/HeatMapChart.vue')['default']
+    LineRaceChart: typeof import('./src/components/Charts/LineRaceChart.vue')['default']
     LinkList: typeof import('./src/components/LinkList.vue')['default']
     LocalRouter: typeof import('./src/components/LocalRouter.vue')['default']
     Navigation: typeof import('./src/components/Navigation.vue')['default']
@@ -37,10 +40,11 @@ declare module '@vue/runtime-core' {
     Search: typeof import('./src/components/Search.vue')['default']
     SearchTips: typeof import('./src/components/SearchTips.vue')['default']
     SinglePageHeader: typeof import('./src/components/SinglePageHeader.vue')['default']
-    Tmv2ChartWithoutDataSet: typeof import('./src/components/Tmv2ChartWithoutDataSet.vue')['default']
+    SunBurstChart: typeof import('./src/components/Charts/SunBurstChart.vue')['default']
+    Tmv2ChartWithoutDataSet: typeof import('./src/components/Charts/Tmv2ChartWithoutDataSet.vue')['default']
     Tmv2Image: typeof import('./src/components/Tmv2Image.vue')['default']
     Tmv2Table: typeof import('./src/components/Tmv2Table.vue')['default']
-    TO_FIX_Tmv2Chart: typeof import('./src/components/TO_FIX_Tmv2Chart.vue')['default']
+    TO_FIX_Tmv2Chart: typeof import('./src/components/Charts/TO_FIX_Tmv2Chart.vue')['default']
     Translate: typeof import('./src/components/Translate.vue')['default']
     TwCard: typeof import('./src/components/TwCard.vue')['default']
     TweetImages: typeof import('./src/components/TweetImages.vue')['default']
@@ -48,6 +52,7 @@ declare module '@vue/runtime-core' {
     Tweets: typeof import('./src/components/Tweets.vue')['default']
     TwPolls: typeof import('./src/components/TwPolls.vue')['default']
     UserInfo: typeof import('./src/components/UserInfo.vue')['default']
+    WordCloudChart: typeof import('./src/components/Charts/WordCloudChart.vue')['default']
   }
   export interface ComponentCustomProperties {
     vLoading: typeof import('element-plus/es')['ElLoadingDirective']

@@ -114,7 +114,7 @@
 
 <script lang="ts">
 import Tweet from "@/components/TweetItem.vue"
-import Tmv2Chart from "@/components/Tmv2ChartWithoutDataSet.vue"
+import Tmv2Chart from "@/components/Charts/Tmv2ChartWithoutDataSet.vue"
 import {useHead} from "@vueuse/head";
 import {ScrollTo, Notice} from "@/share/Tools";
 import SinglePageHeader from "@/components/SinglePageHeader.vue";

@@ -20,7 +20,7 @@
 </template>
 
 <script lang="ts">
-import Tmv2Chart from "@/components/Tmv2ChartWithoutDataSet.vue"
+import Tmv2Chart from "@/components/Charts/Tmv2ChartWithoutDataSet.vue"
 import {computed, defineComponent, onMounted, reactive, Ref, ref, toRefs} from "vue"
 import {useHead} from "@vueuse/head"
 import ArrowLeft from "@/icons/ArrowLeft.vue"

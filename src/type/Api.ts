@@ -117,7 +117,7 @@ export interface ApiLoveLiveData {
     name: string
     name_cn: string
     project: string
-    team: string
+    team: "Aqours"  | "虹ヶ咲学園" | "Liella!"
     uid: string
     tweets: {
       card: string[]

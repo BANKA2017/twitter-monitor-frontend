@@ -223,13 +223,13 @@
 
 <script lang="ts">
 import {useHead} from "@vueuse/head";
-import Tmv2Chart from "@/components/Tmv2ChartWithoutDataSet.vue";
-import HeatMapChart from "@/components/HeatMapChart.vue";
+import Tmv2Chart from "@/components/Charts/Tmv2ChartWithoutDataSet.vue";
+import HeatMapChart from "@/components/Charts/HeatMapChart.vue";
 import PieChart from "@/components/modules/pieChart.vue";
-import BarStackChartForAnnual2021 from "@/views/topics/modules/barStackChartForAnnual2021.vue";
-import SunBurstChartForAnnual2021 from "@/views/topics/modules/sunBurstChartForAnnual2021.vue";
-import WordCloudChartForAnnual2021 from "@/views/topics/modules/wordCloudChartForAnnual2021.vue";
-import BarRaceForAnnual2021 from "@/views/topics/modules/barRaceForAnnual2021.vue";
+import BarStackChartForAnnual2021 from "@/components/Charts/BarStackChart.vue";
+import SunBurstChartForAnnual2021 from "@/components/Charts/SunBurstChart.vue";
+import WordCloudChartForAnnual2021 from "@/components/Charts/WordCloudChart.vue";
+import BarRaceForAnnual2021 from "@/components/Charts/BarRaceCharts.vue";
 import SinglePageHeader from "@/components/SinglePageHeader.vue";
 import {Notice, ScrollTo} from "@/share/Tools";
 import {useStore} from "@/store";

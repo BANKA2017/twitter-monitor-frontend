@@ -35,34 +35,38 @@
           <template v-if="selectedTeams.length === 0" >
             <p class="text-center">请选中一个组合</p>
           </template>
-          <template v-else-if="status.userOrder !== -1" >
-            <p class="display-4">{{ trendsData.data[status.userOrder].name_cn }}</p>
-            <p>
-              <router-link :to="`/`+ trendsData.data[status.userOrder].name +`/all`" class="text-decoration-none text-muted">@{{ trendsData.data[status.userOrder].name }}</router-link> <span :style="{'background-color': trendsData.data[status.userOrder].color}" class="badge rounded-pill text-white">{{ trendsData.data[status.userOrder].color }}</span> <span :style="{'background-color': color[trendsData.data[status.userOrder].team]}" class="badge rounded-pill text-white">{{ trendsData.data[status.userOrder].team }}</span>
-            </p>
-            <div class="container-fluid">
-              <div class="row">
-                <div class="col-md-6 mb-4">
-                  <candlestick-chart :set-option="{notMerge: true}" :data-array="trendsData.data[status.userOrder].followers.map(x => [x.start, x.end, x.lowest, x.highest])" :x-axis-data="['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六']" title="关注数K线图"/>
-                </div>
-                <div class="col-md-6 mb-4">
-                  <tmv2-chart :chart-rows="trendsData.data[status.userOrder].tweets.hour_count.map((count, time) => ({time: time, count: count}))" :label-map="{time: '发推时间', count: '数量'}" :y-axis="{type: 'value', name: '推文数量'}" chartHeight="260px" class="col-md-12" title="发推时间段"/>
-                </div>
-                <div class="col-md-6 mb-4">
-                  <label class="text-muted" for="tag-list">Tag 统计</label>
-                  <div id="tag-list" class="list-group">
-                    <router-link v-for="(count, tagName) in trendsData.data[status.userOrder].tweets.tag" :key="tagName" :to="`/hashtag/` + tagName" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-                      #{{ tagName }}
-                      <span class="badge bg-primary rounded-pill">{{ count }}</span>
-                    </router-link>
+          <template v-else-if="status.name !== ''" >
+            <el-skeleton :loading="trendsData === {}" animated v-if="trendsData === {}" />
+            <p v-else-if="selectedAccountData.length === 0" >没有这个帐号</p>
+            <div v-else>
+              <p class="display-4">{{ selectedAccountData[0].name_cn }}</p>
+              <p>
+                <router-link :to="`/`+ selectedAccountData[0].name +`/all`" class="text-decoration-none text-muted">@{{ selectedAccountData[0].name }}</router-link> <span :style="{'background-color': selectedAccountData[0].color}" class="badge rounded-pill text-white">{{ selectedAccountData[0].color }}</span> <span :style="{'background-color': color[selectedAccountData[0].team]}" class="badge rounded-pill text-white">{{ selectedAccountData[0].team }}</span>
+              </p>
+              <div class="container-fluid">
+                <div class="row">
+                  <div class="col-md-6 mb-4">
+                    <candlestick-chart :set-option="{notMerge: true}" :data-array="selectedAccountData[0].followers.map(x => [x.start, x.end, x.lowest, x.highest])" :x-axis-data="['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六']" title="关注数K线图"/>
                   </div>
-                </div>
-                <div class="col-md-6 mb-4">
-                  <label class="text-muted" for="link-list">链接统计</label>
-                  <div id="link-list" class="list-group">
-                    <div v-for="(count, linkName) in trendsData.data[status.userOrder].tweets.link" :key="linkName" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-                      {{ linkName }}
-                      <span class="badge bg-danger rounded-pill">{{ count }}</span>
+                  <div class="col-md-6 mb-4">
+                    <tmv2-chart :chart-rows="selectedAccountData[0].tweets.hour_count.map((count, time) => ({time: time, count: count}))" :label-map="{time: '发推时间', count: '数量'}" :y-axis="{type: 'value', name: '推文数量'}" chartHeight="260px" class="col-md-12" title="发推时间段"/>
+                  </div>
+                  <div class="col-md-6 mb-4">
+                    <label class="text-muted" for="tag-list">Tag 统计</label>
+                    <div id="tag-list" class="list-group">
+                      <router-link v-for="(count, tagName) in selectedAccountData[0].tweets.tag" :key="tagName" :to="`/hashtag/` + tagName" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                        #{{ tagName }}
+                        <span class="badge bg-primary rounded-pill">{{ count }}</span>
+                      </router-link>
+                    </div>
+                  </div>
+                  <div class="col-md-6 mb-4">
+                    <label class="text-muted" for="link-list">链接统计</label>
+                    <div id="link-list" class="list-group">
+                      <div v-for="(count, linkName) in selectedAccountData[0].tweets.link" :key="linkName" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                        {{ linkName }}
+                        <span class="badge bg-danger rounded-pill">{{ count }}</span>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -73,11 +77,12 @@
             <template v-if="status.value === 'overview'" >
               <tmv2-chart :chart-rows="userData.data" :colors="userData.color" :label-map="userData.label" chart-type="line" chartHeight="500px" title="关注数变动" :set-option="{notMerge: true}"/>
               <tmv2-chart :chart-rows="userData.count_data" :colors="userData.color" :label-map="userData.label" chart-type="line" chartHeight="500px" title="关注数" :set-option="{notMerge: true}"/>
+              <sun-burst-chart-for-annual2021 class="mb-2" title="涨粉占比" height="500px" :data="accountDataForSunBurst" :levels="sunBurstLevels" />
               <el-table ref="accountData" v-loading="!trendsData.data.length" :data="tableData" :default-sort="{prop: 'followers_add', order: 'descending'}" style="width: 100%">
                 <el-table-column label="名称">
                   <template #default="scope">
                     <!--<el-button @click="() => {status.name = scope.row.name; status.value = 'info'}" type="text" size="small">详情</el-button>-->
-                    <el-button size="small" type="text" @click="() => {ScrollTo();status.userOrder = scope.row.order}">{{ scope.row.display_name[0] }}</el-button>
+                    <el-button size="small" @click="() => {ScrollTo();$router.push('/i/topics/lovelive_trends/' + scope.row.name)}">{{ scope.row.display_name[0] }}</el-button>
                   </template>
                 </el-table-column>
                 <el-table-column label="关注者数" prop="followers" show-overflow-tooltip sortable></el-table-column>
@@ -114,8 +119,8 @@
       </div>
     </div>
     <transition name="el-fade-in">
-      <div v-if="status.userOrder !== -1" class="el-backtop" style="right: 40px; bottom: 90px"
-           @click="()=>{ScrollTo();status.userOrder = -1}">
+      <div v-if="status.name !== ''" class="el-backtop" style="right: 40px; bottom: 90px"
+           @click="()=>{ScrollTo(0);$router.go(-1)}">
         <arrow-left height="1em" status="" width="1em"/>
       </div>
     </transition>
@@ -123,7 +128,7 @@
 </template>
 
 <script lang="ts">
-import Tmv2Chart from "@/components/Tmv2ChartWithoutDataSet.vue";
+import Tmv2Chart from "@/components/Charts/Tmv2ChartWithoutDataSet.vue";
 import CandlestickChart from "@/components/modules/candlestickChart.vue";
 import {useHead} from "@vueuse/head";
 import ArrowLeft from "@/icons/ArrowLeft.vue";
@@ -131,10 +136,13 @@ import InfoCircleFill from "@/icons/InfoCircleFill.vue";
 import DownloadIcon from "@/icons/DownloadIcon.vue";
 import {ScrollTo, Notice} from "@/share/Tools";
 import {useStore} from "@/store";
-import {computed, onMounted, reactive, Ref, ref, toRefs, watch, defineComponent} from "vue";
+import {computed, reactive, Ref, ref, toRefs, watch, defineComponent} from "vue";
 import {request} from "@/share/Fetch";
 import {ApiLoveLiveData, ApiLoveLiveDateList} from "@/type/Api";
 import SinglePageHeader from "@/components/SinglePageHeader.vue";
+import {sunBurstType} from "@/type/Content";
+import SunBurstChartForAnnual2021 from "@/components/Charts/SunBurstChart.vue";
+import {onBeforeRouteUpdate, useRoute, useRouter} from "vue-router";
 
 export default defineComponent({
   setup () {
@@ -146,17 +154,30 @@ export default defineComponent({
       }]
     })
 
-    const color = {"Aqours": "#1AB1F6", "虹ヶ咲学園": "#F8B657", "Liella!": "#DA57D8",}
+    const color: {[p: string]: string} = {"Aqours": "#1AB1F6", "虹ヶ咲学園": "#F8B657", "Liella!": "#DA57D8",}
     const teams = [{"text": "Aqours", "value": "Aqours"},{"text": "虹ヶ咲学園", "value": "虹ヶ咲学園"},{"text": "Liella!", "value": "Liella!"},]
     const selectedTeams = ref(new Set(["Aqours", "虹ヶ咲学園", "Liella!"]))
+    const sunBurstLevels = [
+      {},
+      {
+        r0: '10%',
+        r: '37%',
+        itemStyle: {borderWidth: 2},
+        label: {align: 'right',}
+      },
+      {
+        r0: '37%',
+        r: '57%',
+        label: {position: 'outside', silent: false},
+        itemStyle: {borderWidth: 3}
+      }]
 
     const store = useStore()
-    const now = computed(() => store.state.now)
     const state = reactive<{
       dateList: Ref<ApiLoveLiveDateList>
       trendsData: Ref<ApiLoveLiveData>
       status: Ref<{
-        userOrder: number
+        name: string
         value: string
         displayTips: boolean
         date: string
@@ -166,7 +187,7 @@ export default defineComponent({
     }>({
       trendsData: ref({data: [], range: {start: 0, end: 0}}),
       status: ref({
-        userOrder: -1,
+        name: '',
         value: "overview",
         displayTips: false,
         date: '',
@@ -207,7 +228,7 @@ export default defineComponent({
           followers_growth_rate: string
           tweets_count: number
           origin_ratio: string
-          team: string
+          team: "Aqours"  | "虹ヶ咲学園" | "Liella!"
         }[] => state.trendsData.data.filter(y => selectedTeams.value.has(y.team)).map((x, order) => ({
         order,
         name: x.name,
@@ -220,6 +241,26 @@ export default defineComponent({
         team: x.team
       }))
     )
+
+    const accountDataForSunBurst = computed(() => {
+      let tmpSunBurstData: { [p: string]: sunBurstType } = {"Aqours": {}, "虹ヶ咲学園": {}, "Liella!": {},}
+      for (const key in tableData.value) {
+        const accountData = tableData.value[key]
+        if (Object.keys(tmpSunBurstData[accountData.team]).length === 0) {
+          tmpSunBurstData[accountData.team] = {
+            name: accountData.team,
+            itemStyle: {color: color[accountData.team]},
+            children: []
+          }
+        }
+        tmpSunBurstData[accountData.team].children.push({
+          name: accountData.display_name[0],
+          itemStyle: {color: userData.value.color[key]},
+          value: accountData.followers_add
+        })
+      }
+      return Object.values(tmpSunBurstData)
+    })
 
     const timeCountRows = computed(() => {
       let data: {time: number, count: number}[] = []
@@ -266,6 +307,24 @@ export default defineComponent({
 
       return tmpList
     }
+
+    const selectedAccountData = computed(() => {
+      if (state.status.name === '') {return []}
+      return state.trendsData.data.filter(account => account.name === state.status.name)
+    })
+
+    const route = useRoute()
+    const router = useRouter()
+    onBeforeRouteUpdate((to) => {
+      if (to.params.name && to.params.name !== '') {
+        state.status.name = to.params.name.toString()
+      } else {
+        state.status.name = ''
+      }
+    })
+    if (route.params.name && route.params.name !== '') {
+      state.status.name = route.params.name.toString()
+    }
     //这哪来干嘛的
     //const splitData = computed((rawData) => {
     //  let categoryData = [];
@@ -277,15 +336,15 @@ export default defineComponent({
     //  return {categoryData, values};
     //})
 
-    onMounted(() => {
-      getDateInfo()
-    })
+    getDateInfo()
 
     watch(() => state.status.date, () => {getData()})
 
-    return {...toRefs(state), ScrollTo, Notice, color, teams, selectedTeams, createDate, userData, timeCountRows, tableData, store}
+    return {...toRefs(state), ScrollTo, Notice, color, teams, selectedTeams, createDate, userData, timeCountRows, tableData, store, accountDataForSunBurst, sunBurstLevels, selectedAccountData}
   },
-  components: {SinglePageHeader, DownloadIcon, InfoCircleFill, ArrowLeft, CandlestickChart, Tmv2Chart},
+  components: {
+    SunBurstChartForAnnual2021,
+    SinglePageHeader, DownloadIcon, InfoCircleFill, ArrowLeft, CandlestickChart, Tmv2Chart},
 })
 </script>
 

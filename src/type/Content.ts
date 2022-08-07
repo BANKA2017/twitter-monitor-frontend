@@ -201,8 +201,17 @@ export interface AdvancedSearchQuery {
   hidden?: string
 }
 
-export interface renameDepartmentChildItem {name: string; value: number; itemStyle: {color: string}}
-export interface renameDepartmentItem {name: string; itemStyle: {color: string}; children: renameDepartmentChildItem[] | {[p in string]: renameDepartmentChildItem}}
+export interface sunBurstType {
+  name?: string
+  itemStyle?: {color: string}
+  value?: number
+  children?: sunBurstType | sunBurstType[]
+  _custom?: {
+    type: string
+    objectType: string
+    value: sunBurstType | sunBurstType[]
+  }
+}
 export interface Annual2021Template<U, V> {
   tweets: U
   retweet: U
@@ -214,7 +223,7 @@ export interface Annual2021Template<U, V> {
     label: {[p in string]: string}
     color: string[]
   }
-  renameDepartment: {[q in string]: renameDepartmentItem[]}
+  renameDepartment: {[q in string]: sunBurstType[]}
 }
 export interface Annual2021DataTemplate extends Annual2021Template<[string, number][], {[index: string]: number | string; date: string;}[]> {}
 
