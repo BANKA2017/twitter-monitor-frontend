@@ -3,8 +3,8 @@
     <el-skeleton :loading="state.loading" animated>
       <div class="card mb-4">
         <el-collapse-transition v-if="state.userInfo.banner !== 0">
-          <div class="row no-gutters" v-show="isMobileRatio" :style="{'position': 'relative', 'aspect-ratio': !settings.displayPicture ? '3 / 1' : ''}">
-            <el-image v-if="!settings.displayPicture" :src="createRealMediaPath(realMediaPath, samePath, 'userinfo')+`pbs.twimg.com/profile_banners/`+state.userInfo.uid_str+`/`+state.userInfo.banner+`/banner.jpg`" :preview-src-list="[createRealMediaPath(realMediaPath, samePath, 'userinfo')+`pbs.twimg.com/profile_banners/`+state.userInfo.uid_str+`/`+state.userInfo.banner+`/banner.jpg`]" alt="Banner" style="position: absolute; max-height: 100%" class="col-12 card-img-top banner" fit="cover" lazy preview-teleported hide-on-click-modal/>
+          <div v-show="isMobileRatio" :style="{'position': 'relative', 'aspect-ratio': !settings.displayPicture ? '3 / 1' : ''}">
+            <el-image v-if="!settings.displayPicture" :src="createRealMediaPath(realMediaPath, samePath, 'userinfo')+`pbs.twimg.com/profile_banners/`+state.userInfo.uid_str+`/`+state.userInfo.banner+`/banner.jpg`" :preview-src-list="[createRealMediaPath(realMediaPath, samePath, 'userinfo')+`pbs.twimg.com/profile_banners/`+state.userInfo.uid_str+`/`+state.userInfo.banner+`/banner.jpg`]" alt="Banner" style="position: absolute; max-height: 100%;  " class="col-12 card-img-top banner" fit="cover" lazy preview-teleported hide-on-click-modal/>
           </div>
         </el-collapse-transition>
         <div class="row mx-2">
@@ -47,7 +47,7 @@ import {Notice, createRealMediaPath} from "@/share/Tools";
 import {LegacyChart, UserInfo} from "@/type/Content";
 import {useI18n} from "vue-i18n";
 import {onBeforeRouteLeave, onBeforeRouteUpdate, RouteLocationNormalized, useRoute, useRouter} from "vue-router";
-import Tmv2Chart from "@/components/Tmv2ChartWithoutDataSet.vue";
+import Tmv2Chart from "@/components/Charts/Tmv2ChartWithoutDataSet.vue";
 import {useHead} from "@vueuse/head";
 
 const { t } = useI18n()
@@ -61,11 +61,10 @@ const settings = computed(() => store.state.settings)
 const realMediaPath = computed(() => store.state.realMediaPath)
 const samePath = computed(() => store.state.samePath)
 const updatedCharts = computed(() => store.state.updatedCharts)
+const altitudeDifference = computed(() => store.state.altitudeDifference)
 
-const isMobileRatio = computed(() => width.value <= 768 || height.value <= 50)
+const isMobileRatio = computed(() => width.value <= 768 || height.value <= 50 || altitudeDifference.value > 0)
 const isHideDescription = computed(() => width.value > 768 && height.value > 50)
-
-
 
 const state = reactive<{
   loading: boolean;
