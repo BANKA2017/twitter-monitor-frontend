@@ -1,7 +1,6 @@
 <template>
   <div id="lovelive-trends">
-    <single-page-header title="LoveLive! Trends" :sub-title="state.trendsData.range.start ? (createDate(state.trendsData.range.start) + '~' + createDate(state.trendsData.range.end)) : ''" />
-    <div class="container">
+    <div class="container mt-5">
       <div class="row">
         <div class="col-lg-2 mb-4">
           <div class="d-grid gap-2" style="position: sticky; top: 1.5rem">
@@ -9,6 +8,7 @@
               {{ name }}
             </button>
             <button :class="{'btn': true, 'btn-outline-primary': true, 'active': state.status.displayTips}" @click="state.status.displayTips = !state.status.displayTips">说明 <info-circle-fill height="1em" status="" width="1em" /></button>
+            <button class="btn btn-outline-primary" @click="H2C(overview, 'lovelive_trends.png')">保存图片</button>
             <a :href="store.getters.getBasePath + '/static/lovelive_trends/' + state.status.date + '.json'" class="btn btn-outline-primary" target="_blank">下载数据 <download-icon height="1em" status="" width="1em" /></a>
           </div>
         </div>
@@ -38,9 +38,9 @@
           <template v-else-if="state.status.name !== ''" >
             <el-skeleton :loading="Object.values(state.trendsData).length === 0" animated v-if="Object.values(state.trendsData).length === 0" />
             <p v-else-if="selectedAccountData.length === 0" >没有这个帐号</p>
-            <div v-else>
-              <p class="display-4">{{ selectedAccountData[0].name_cn }}</p>
-              <p>
+            <div v-else ref="overview">
+              <p class="display-4 mx-2">{{ selectedAccountData[0].name_cn }}</p>
+              <p class="mx-2">
                 <router-link :to="`/`+ selectedAccountData[0].name +`/all`" class="text-decoration-none text-muted">@{{ selectedAccountData[0].name }}</router-link> <span :style="{'background-color': selectedAccountData[0].color}" class="badge rounded-pill text-white">{{ selectedAccountData[0].color }}</span> <span :style="{'background-color': color[selectedAccountData[0].team]}" class="badge rounded-pill text-white">{{ selectedAccountData[0].team }}</span>
               </p>
               <div class="container-fluid">
@@ -71,36 +71,43 @@
                   </div>
                 </div>
               </div>
+              <p class="text-small fst-italic">
+                <span class="text-muted">Project Twitter Monitor</span><br>
+                <a class="text-small fst-italic" href="https://tm.bangdream.fun" target="_blank">https://tm.bangdream.fun</a>
+              </p>
             </div>
           </template>
           <template v-else>
-            <template v-if="state.status.value === 'overview'" >
+            <div v-if="state.status.value === 'overview'" ref="overview">
+              <single-page-header title="LoveLive! Trends" :sub-title="state.trendsData.range.start ? (createDate(state.trendsData.range.start) + '~' + createDate(state.trendsData.range.end)) : ''" padding="5vw" />
               <tmv2-chart :chart-rows="userData.data" :colors="userData.color" :label-map="userData.label" chart-type="line" chartHeight="500px" title="关注数变动" :set-option="{notMerge: true}"/>
               <tmv2-chart :chart-rows="userData.count_data" :colors="userData.color" :label-map="userData.label" chart-type="line" chartHeight="500px" title="关注数" :set-option="{notMerge: true}"/>
               <sun-burst-chart class="mb-2" title="涨粉占比" height="500px" :data="accountDataForSunBurst" :levels="sunBurstLevels" />
               <word-cloud-chart class="mb-2" title="Tags" :data="wordCloud" height="470px" />
-              <el-table ref="accountData" v-loading="!state.trendsData.data.length" :data="tableData" :default-sort="{prop: 'followers_add', order: 'descending'}" style="width: 100%">
+              <el-table class="mb-2" ref="accountData" v-loading="!state.trendsData.data.length" :data="tableData" :default-sort="{prop: 'followers_add', order: 'descending'}" style="cursor: pointer; width: 100%" @row-click="(row) => {ScrollTo();$router.push('/i/topics/lovelive_trends/' + row.name)}">
                 <el-table-column label="名称">
                   <template #default="scope">
                     <!--<el-button @click="() => {state.status.name = scope.row.name; state.status.value = 'info'}" type="text" size="small">详情</el-button>-->
-                    <el-button size="small" @click="() => {ScrollTo();$router.push('/i/topics/lovelive_trends/' + scope.row.name)}">{{ scope.row.display_name[0] }}</el-button>
+                    <span style="font-size: 12px" class="text-muted"><full-text :full_text_origin="scope.row.display_name[0]" :entities="[]" /></span>
                   </template>
                 </el-table-column>
                 <el-table-column label="关注者数" prop="followers" show-overflow-tooltip sortable></el-table-column>
                 <el-table-column label="关注变化量" prop="followers_add" show-overflow-tooltip sortable></el-table-column>
                 <el-table-column label="关注增长率" prop="followers_growth_rate" show-overflow-tooltip sortable></el-table-column>
                 <el-table-column label="发推数" prop="tweets_count" show-overflow-tooltip sortable></el-table-column>
-                <el-table-column label="组" prop="team">
+                <el-table-column label="组" prop="team" style="">
                   <template #default="scope">
-                    <el-tag :color="color[scope.row.team]" class="text-white" disable-transitions>
+                    <span :style="{'background-color': color[scope.row.team], padding: '5px 11px', 'font-size': '12px', 'border-radius': '3px',}" class="text-white">
                       {{ scope.row.team }}
-                    </el-tag>
+                    </span>
                   </template>
                 </el-table-column>
               </el-table>
-            </template>
-            <div class="row no-gutters my-4">
-              <tmv2-chart :chart-rows="timeCountRows" :label-map="{time: '发推时间', count: '数量'}" :y-axis="{type: 'value', name: '推文数量'}" chartHeight="260px" class="col-md-12" title="发推时间段"/>
+              <tmv2-chart :chart-rows="timeCountRows" :label-map="{time: '发推时间', count: '数量'}" :y-axis="{type: 'value', name: '推文数量'}" chartHeight="260px" class="mb-2" title="发推时间段"/>
+              <p class="text-small fst-italic">
+                <span class="text-muted">Project Twitter Monitor</span><br>
+                <a class="text-small fst-italic" href="https://tm.bangdream.fun" target="_blank">https://tm.bangdream.fun</a>
+              </p>
             </div>
           </template>
         </div>
@@ -135,25 +142,23 @@ import {useHead} from "@vueuse/head";
 import ArrowLeft from "@/icons/ArrowLeft.vue";
 import InfoCircleFill from "@/icons/InfoCircleFill.vue";
 import DownloadIcon from "@/icons/DownloadIcon.vue";
-import {ScrollTo, Notice} from "@/share/Tools";
+import {ScrollTo, Notice, H2C} from "@/share/Tools";
 import {useStore} from "@/store";
-import {computed, reactive, Ref, ref, toRefs, watch, defineComponent} from "vue";
+import {computed, reactive, Ref, ref, watch} from "vue";
 import {request} from "@/share/Fetch";
 import {ApiLoveLiveData, ApiLoveLiveDateList} from "@/type/Api";
 import SinglePageHeader from "@/components/SinglePageHeader.vue";
 import {sunBurstType} from "@/type/Content";
 import SunBurstChart from "@/components/Charts/SunBurstChart.vue";
-import {onBeforeRouteUpdate, useRoute, useRouter} from "vue-router";
+import {onBeforeRouteUpdate, useRoute} from "vue-router";
 import WordCloudChart from "@/components/Charts/WordCloudChart.vue";
+import FullText from "@/components/FullText.vue";
 
 useHead({
   title: 'LoveLive! Trends',
-  meta: [{
-    name: "theme-color",
-    content: "#1da1f2"
-  }]
 })
 
+const overview = ref<HTMLElement>()
 const color: {[p: string]: string} = {"Aqours": "#1AB1F6", "虹ヶ咲学園": "#F8B657", "Liella!": "#DA57D8",}
 const teams = [{"text": "Aqours", "value": "Aqours"},{"text": "虹ヶ咲学園", "value": "虹ヶ咲学園"},{"text": "Liella!", "value": "Liella!"},]
 const selectedTeams = ref(new Set(["Aqours", "虹ヶ咲学園", "Liella!"]))
@@ -351,7 +356,6 @@ if (route.params.name && route.params.name !== '') {
 //})
 
 getDateInfo()
-
 watch(() => state.status.date, () => {getData()})
 
 </script>

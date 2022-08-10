@@ -1,4 +1,5 @@
 import {ElNotification} from "element-plus";
+import html2canvas from "html2canvas";
 
 const ScrollTo = (top: number = 0): void => {
   window.scrollTo({
@@ -28,4 +29,15 @@ const NullSafeParams = <T>(content: T | undefined, defaultValue: T): T => {
 
 const Equal = (to: boolean): '0' | '1' => to ? '1' : '0'
 
-export {ScrollTo, Notice, createRealMediaPath, NullSafeParams, Equal}
+const H2C = (node: HTMLElement, fileName: string) => {
+  html2canvas(node, {useCORS: true}).then(function(canvas) {
+    let element = document.createElement('a');
+    element.setAttribute('href', canvas.toDataURL());
+    element.setAttribute('download', fileName);
+    element.style.display = 'none';
+    document.body.appendChild(element);
+    element.click();
+    document.body.removeChild(element);
+  });
+}
+export {ScrollTo, Notice, createRealMediaPath, NullSafeParams, Equal, H2C}

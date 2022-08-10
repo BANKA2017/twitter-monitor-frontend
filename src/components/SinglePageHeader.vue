@@ -1,7 +1,7 @@
 <template>
-  <div class="bg-twitter-blue mb-5" :style="{'height': height ? height : (subTitle === '' ? '180px' : '240px')}">
-    <h1 class="display-1" style="color: white; padding: 60px 0 0 10vw">{{ title }}</h1>
-    <p class="lead text-break" style="color: white; padding: 10px 0 0 10vw">{{ subTitle }}</p>
+  <div class="bg-twitter-blue mb-5 ps-5" :style="{'height': height ? height : (subTitle === '' ? '180px' : '240px')}">
+    <h1 class="display-1 text-white pt-5">{{ title }}</h1>
+    <p class="lead text-white text-break pt-2">{{ subTitle }}</p>
   </div>
 </template>
 
