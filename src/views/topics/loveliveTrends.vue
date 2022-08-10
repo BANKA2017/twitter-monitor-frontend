@@ -29,14 +29,14 @@
               </ul>
             </div>
           </div>
-          <template v-if="state.trendsData === {}" >
+          <template v-if="Object.values(state.trendsData).length === 0" >
             <p class="text-center">Please wait...</p>
           </template>
-          <template v-if="selectedTeams.length === 0" >
+          <template v-if="selectedTeams.size === 0" >
             <p class="text-center">请选中一个组合</p>
           </template>
           <template v-else-if="state.status.name !== ''" >
-            <el-skeleton :loading="state.trendsData === {}" animated v-if="state.trendsData === {}" />
+            <el-skeleton :loading="Object.values(state.trendsData).length === 0" animated v-if="Object.values(state.trendsData).length === 0" />
             <p v-else-if="selectedAccountData.length === 0" >没有这个帐号</p>
             <div v-else>
               <p class="display-4">{{ selectedAccountData[0].name_cn }}</p>
