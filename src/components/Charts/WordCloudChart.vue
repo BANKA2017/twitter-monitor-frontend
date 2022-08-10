@@ -1,5 +1,5 @@
 <template>
-  <div id="word-cloud-chart-for-annual-2021">
+  <div id="word-cloud-chart">
     <el-skeleton :loading="!computedOptions.series[0].data.length" :rows="4" animated></el-skeleton>
     <v-chart v-if="computedOptions.series[0].data.length" :option="computedOptions" :style="{width: '100%', height: (typeof(height) === 'number' ? (height + 'px') : height)}" autoresize></v-chart>
   </div>
@@ -14,7 +14,7 @@ import VChart from "vue-echarts";
 
 echarts.use([TitleComponent, CanvasRenderer]);
 export default {
-  name: "wordCloudChartForAnnual2021",
+  name: "wordCloudChart",
   components: {
     VChart
   },

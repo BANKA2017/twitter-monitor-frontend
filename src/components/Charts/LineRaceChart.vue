@@ -1,5 +1,5 @@
 <template>
-  <div id="line-race-chart-for-annual-2021">
+  <div id="line-race-chart">
     <el-skeleton :loading="!computedOptions.dataset[0].source.length" :rows="4" animated></el-skeleton>
     <v-chart v-if="computedOptions.dataset[0].source.length" :option="computedOptions" :style="{width: '100%', height: (typeof(height) === 'number' ? (height + 'px') : height)}" autoresize></v-chart>
   </div>
@@ -31,7 +31,7 @@ echarts.use([
   UniversalTransition
 ]);
 export default {
-  name: "lineRaceChartForAnnual2021",
+  name: "lineRaceChart",
   components: {
     VChart
   },

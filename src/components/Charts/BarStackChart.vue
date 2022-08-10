@@ -1,5 +1,5 @@
 <template>
-  <div id="bar-stack-chart-for-annual-2021">
+  <div id="bar-stack-chart">
     <el-skeleton :loading="!computedOptions.series[0].data.length" :rows="4" animated></el-skeleton>
     <v-chart v-if="computedOptions.series[0].data.length" :option="computedOptions" :style="{width: '100%', height: (typeof(height) === 'number' ? (height + 'px') : height)}" autoresize></v-chart>
   </div>
@@ -27,7 +27,7 @@ echarts.use([
 ]);
 
 export default {
-  name: "barStackChartForAnnual2021",
+  name: "barStackChart",
   components: {
     VChart
   },

@@ -1,5 +1,5 @@
 <template>
-  <div id="sun-burst-chart-for-annual-2021">
+  <div id="sun-burst-chart">
     <el-skeleton :loading="!computedOptions.series.data.length" :rows="4" animated></el-skeleton>
     <v-chart v-if="computedOptions.series.data.length" :option="computedOptions" :style="{width: '100%', height: (typeof(height) === 'number' ? (height + 'px') : height)}" autoresize></v-chart>
   </div>
