@@ -1,5 +1,12 @@
 <template>
   <span class="text-break" id="full-text">
+    <p v-if="checkReply && state.replyNameList.length > 0" style="font-size: 0.8em">
+      回复
+      <template v-for="(name, index) in state.replyNameList" :key="name">
+        <span v-if="index > 0" class="text-primary"> 和 </span>
+        <router-link :to="'/' + name.replace('@', '') +'/all'" class="text-primary">{{name}}</router-link>
+      </template>
+    </p>
     <template v-for="(obj, order) in textObject(full_text_origin, entities, true)" :key="order">
       <template v-for="(text, ord) in x = spreadText(obj.text)">
         <template v-for="(textData, textOrder) in textObject(text, emojiObject(text))">
@@ -22,7 +29,7 @@
 import {EmojiEntity, parse} from 'twemoji-parser'
 import type {Entity} from "@/type/Content"
 import {useStore} from "@/store";
-import {computed, PropType} from "vue";
+import {computed, PropType, reactive, ref, Ref} from "vue";
 const props = defineProps({
   full_text_origin: {
     type: String,
@@ -31,8 +38,21 @@ const props = defineProps({
   entities: {
     type: Array as PropType<Entity[]>,
     default: () => ([])
+  },
+  checkReply: {
+    type: Boolean,
+    default: false
   }
 })
+
+const state = reactive<{
+  replyNameList: Ref<string[]>
+  breakCheckFlag: Ref<boolean>
+}>({
+  replyNameList: ref([]),
+  breakCheckFlag: ref(false)
+})
+
 const store = useStore()
 const userList = computed(() => store.state.userList)
 const twemojiBasePath = computed(() => store.state.twemojiBasePath)
@@ -51,8 +71,17 @@ const textObject = (text: string = "", entities: Entity[] = [], arrayMode: boole
   let tmpText: {text: string; type: Entity["type"]; tag_text: string; url: string}[] = [];
   if (arrayMode) {
     let full_text_origin_array = [...props.full_text_origin];
-    entities.map(entity => {
-      tmpText.push({text: full_text_origin_array.slice(lastEnd, entity.indices_start).join(''), type: entity.type, tag_text: entity.text, url: entity.expanded_url,});
+    entities.forEach((entity, key) => {
+      if (!props.checkReply || (key === 0 && entity.indices_start !== 0) || (entity.type !== 'user_mention')) {
+        state.breakCheckFlag = true
+      }
+      if (!state.breakCheckFlag && entity.type === 'user_mention') {
+        if (!state.replyNameList.includes(entity.text)) {
+          state.replyNameList.push(entity.text)
+        }
+      } else {
+        tmpText.push({text: full_text_origin_array.slice(lastEnd, entity.indices_start).join(''), type: entity.type, tag_text: entity.text, url: entity.expanded_url,});
+      }
       lastEnd = entity.indices_end;
     })
     //处理最后一段
@@ -61,7 +90,7 @@ const textObject = (text: string = "", entities: Entity[] = [], arrayMode: boole
       tmpText.push({text: tmpLastText, type: "", tag_text: "", url: "",});
     }
   } else {
-    entities.map(entity => {
+    entities.forEach(entity => {
       tmpText.push({text: text.substring(lastEnd, entity.indices_start), type: entity.type, tag_text: entity.text, url: entity.expanded_url,});
       lastEnd = entity.indices_end;
     })
