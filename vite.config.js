@@ -11,7 +11,7 @@ import { VitePWA } from 'vite-plugin-pwa'
 // for proxy
 process.env = {...process.env, ...loadEnv('development', process.cwd())}
 let proxy = {}
-if (process.env.NODE_ENV !== 'development') {
+if (process.env.NODE_ENV === 'development') {
   proxy[process.env.VITE_DEV_BASE_PATH.replace('https://', '') + '/static/.*'] = {target: process.env.VITE_DEV_BASE_PATH}
 }
 
