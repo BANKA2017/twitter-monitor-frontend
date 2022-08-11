@@ -155,22 +155,3 @@
 <style lang="scss">
 @import "assets/style";
 </style>
-
-<style>
-.light-mode {
-  background-color: #ffffff;
-  color: #011100;
-}
-.dark-mode {
-  background-color: #011100;
-  color: #ffffff;
-}
-.bg-twitter-blue {
-  background-color: #1da1f2;
-}
-.plyr {
-  border-radius: 14px;
-}
-a:link {text-decoration: none}
-a:hover {text-decoration: underline}
-</style>

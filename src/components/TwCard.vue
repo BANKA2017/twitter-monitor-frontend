@@ -1,6 +1,6 @@
 <template>
   <div id="twCard">
-    <div class="card mb-3" style="border-radius: 14px 14px 14px 14px">
+    <div class="card mb-3 background-second" style="border-radius: 14px 14px 14px 14px">
       <a v-if="object?.url && (object.secondly_type === 'media_with_details_horizontal' || object.type !== 'unified_card')" :href="(object.type === 'audiospace' ? 'https://twitter.com/i/spaces/' : '') + object.url" class="stretched-link text-decoration-none" target="_blank"></a>
       <template v-if="object.type === 'summary' || object.type === 'audio' || object.type === 'app' || object.type === 'moment' || object.secondly_type === 'media_with_details_horizontal'">
         <div class="row no-gutters">

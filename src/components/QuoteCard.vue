@@ -1,12 +1,13 @@
 <template>
-  <div class="no-gutters card mb-2" id="quote" style="border-radius: 14px 14px 14px 14px">
+  <div class="no-gutters card mb-2 background-second" id="quote" style="border-radius: 14px 14px 14px 14px">
     <div class='card-body'>
       <span class="card-text" v-if="!quoteObject.full_text">{{ t("quote_card.card.this_tweet_is_not_available") }}</span>
       <template v-else>
-        <div>
-          <span class="text-muted">{{ quoteObject.display_name }}</span>
-          <el-divider direction="vertical"></el-divider>
-          <small>@{{ quoteObject.name }}</small>
+        <div class="d-flex justify-content-between">
+          <div class="d-inline-block text-truncate" style="max-width: 95%;">
+            <full-text class="text-muted" :entities="[]" :full_text_origin="quoteObject.display_name" /><br>
+            <span style="font-size: 0.75em">@{{ quoteObject.name }}</span>
+          </div>
           <a :href="`//twitter.com/i/status/`+quoteObject.id_str" target="_blank">
             <box-arrow-up-right status="text-primary" width="2em" height="2em" />
           </a>

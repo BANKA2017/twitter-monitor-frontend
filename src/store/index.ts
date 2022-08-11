@@ -9,7 +9,7 @@ const devmode = process.env.NODE_ENV === "development"
 const basePath = !devmode ? import.meta.env.VITE_PRO_BASE_PATH : import.meta.env.VITE_DEV_BASE_PATH
 const mediaPath = import.meta.env.VITE_MEDIA_PATH ? import.meta.env.VITE_MEDIA_PATH : basePath + '/api/v2/media/'
 const twemojiBasePath = import.meta.env.VITE_TW_EMOJI_PATH//twemoji
-//const onlinePath = import.meta.env.VITE_ONLINE_PATH
+const onlinePath = import.meta.env.VITE_ONLINE_PATH ? import.meta.env.VITE_ONLINE_PATH : ''
 
 
 export const key: InjectionKey<Store<State>> = Symbol()
@@ -62,7 +62,7 @@ export const store = createStore<State>({
     samePath: false,
     realMediaPath: '',
     twemojiBasePath,
-    //onlinePath,
+    onlinePath,
   },
   getters: {
     getBasePath: (state): string => state.settings.basePath,

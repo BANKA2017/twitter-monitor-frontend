@@ -59,5 +59,5 @@ export interface State {
   samePath: boolean
   realMediaPath: string
   twemojiBasePath: string
-  //onlinePath: string
+  onlinePath: string
 }

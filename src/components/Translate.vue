@@ -2,7 +2,7 @@
   <div id="translate">
     <!--translate-->
     <div v-if="state.status === 0" class='card-text'>
-      <span role="button" class="text-decoration-none"><small class="text-primary" style="font-size: 0.8rem" @click="runTranslate(props.id)">{{ type === '1' ? t("translate.message.translate_profile") : t("translate.message.translate_tweet") }}</small></span>
+      <span role="button" class="text-decoration-none" @click="e => {e.stopPropagation()}"><small class="text-primary clickable-text" style="font-size: 0.8rem" @click="runTranslate(props.id)">{{ type === '1' ? t("translate.message.translate_profile") : t("translate.message.translate_tweet") }}</small></span>
     </div>
     <div v-else-if="state.status === 1">
       <span class="spinner-grow spinner-grow-sm text-primary" role="status" aria-hidden="true"></span>
@@ -11,7 +11,7 @@
       <el-divider class="my-4" />
       <p class='card-text'><small class="text-muted">{{ t("translate.message.translate_by", [state.translate_source]) }}</small></p>
       <full-text class="card-text" :entities="[]" :full_text_origin="state.text" />
-      <div class="text-decoration-none" role="button"><small style="font-size: 0.8rem" class="text-primary" @click="state.status = 0">{{ t("translate.message.hide_translated") }}</small></div>
+      <div class="text-decoration-none" role="button" @click="e => {e.stopPropagation()}"><small style="font-size: 0.8rem" class="text-primary clickable-text" @click="state.status = 0">{{ t("translate.message.hide_translated") }}</small></div>
     </div>
   </div>
 </template>

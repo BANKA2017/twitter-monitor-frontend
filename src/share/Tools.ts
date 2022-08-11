@@ -31,13 +31,18 @@ const Equal = (to: boolean): '0' | '1' => to ? '1' : '0'
 
 const H2C = (node: HTMLElement, fileName: string) => {
   html2canvas(node, {useCORS: true}).then(function(canvas) {
-    let element = document.createElement('a');
-    element.setAttribute('href', canvas.toDataURL());
-    element.setAttribute('download', fileName);
-    element.style.display = 'none';
-    document.body.appendChild(element);
-    element.click();
-    document.body.removeChild(element);
+    Download(canvas.toDataURL(), fileName)
   });
 }
+
+const Download = (url: string, fileName: string) => {
+  let element = document.createElement('a');
+  element.setAttribute('href', url);
+  element.setAttribute('download', fileName);
+  element.style.display = 'none';
+  document.body.appendChild(element);
+  element.click();
+  document.body.removeChild(element);
+}
+
 export {ScrollTo, Notice, createRealMediaPath, NullSafeParams, Equal, H2C}

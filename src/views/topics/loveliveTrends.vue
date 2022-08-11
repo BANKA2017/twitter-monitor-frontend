@@ -88,7 +88,7 @@
                 <el-table-column label="名称">
                   <template #default="scope">
                     <!--<el-button @click="() => {state.status.name = scope.row.name; state.status.value = 'info'}" type="text" size="small">详情</el-button>-->
-                    <span style="font-size: 12px" class="text-muted"><full-text :full_text_origin="scope.row.display_name[0]" :entities="[]" /></span>
+                    <span style="font-size: 12px" class="text-muted">{{ scope.row.display_name[0] }}</span>
                   </template>
                 </el-table-column>
                 <el-table-column label="关注者数" prop="followers" show-overflow-tooltip sortable></el-table-column>

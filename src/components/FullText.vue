@@ -3,17 +3,17 @@
     <template v-for="(obj, order) in textObject(full_text_origin, entities, true)" :key="order">
       <template v-for="(text, ord) in x = spreadText(obj.text)">
         <template v-for="(textData, textOrder) in textObject(text, emojiObject(text))">
-          <span v-if="textData.text" :key="'span'+ord+order+textOrder+text" class="mb-1">{{ textData.text.replaceAll("&amp;amp;", "&") }}</span>
-          <img v-if="textData.tag_text" :src="textData.url" style="height: 1em; width: 1em;" :alt="textData.tag_text" :key="'img'+ord+order+textOrder+text" class="mx-1 mb-1">
+          <span v-if="textData.text" :key="'span'+ord+order+textOrder+text" class="mb-1">{{ textData.text.replaceAll("&amp;", "&").replaceAll('&gt;', '>') }}</span>
+          <img v-if="textData.tag_text" :src="textData.url" style="height: 1em; width: 1em;" :alt="textData.tag_text" :key="'img'+ord+order+textOrder+text" class="margin-for-inner-text-svg">
         </template>
         <br v-if="ord !== x.length - 1">
       </template>
-      <router-link v-if="obj.type === 'hashtag' || obj.type === 'symbol'" :to="(obj.type === 'hashtag' ? `/hashtag/` : `/cashtag/`) + obj.tag_text">#{{ obj.tag_text }}</router-link>
-      <router-link
+      <router-link @click="e => {e.stopPropagation()}" v-if="obj.type === 'hashtag' || obj.type === 'symbol'" :to="(obj.type === 'hashtag' ? `/hashtag/` : `/cashtag/`) + obj.tag_text">#{{ obj.tag_text }}</router-link>
+      <router-link @click="e => {e.stopPropagation()}"
         v-else-if="(obj.type === 'user_mention' && (settings.onlineMode || userList.map(x => x.name).includes(obj.tag_text.substring(1))))"
         :to="`/`+obj.tag_text.substring(1)+`/all`">{{ obj.tag_text }}
       </router-link>
-      <a v-else id="url" :href="obj.url" target="_blank">{{ obj.tag_text }}</a>
+      <a v-else @click="e => {e.stopPropagation()}" id="url" :href="obj.url" target="_blank">{{ obj.tag_text }}</a>
     </template>
   </span>
 </template>

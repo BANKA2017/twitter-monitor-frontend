@@ -4,7 +4,6 @@ const About = () => import("@/views/About.vue")
 const Api = () => import("@/views/Api.vue")
 const Stats = () => import("@/views/Stats.vue")
 const Status = () => import("@/views/Status.vue")
-const Online = () => import("@/views/Online.vue")
 const TimeLine = () => import("@/views/TimeLine.vue")
 const Main = () => import('@/views/Main.vue')
 const Trends = () => import("@/views/Trends.vue")
@@ -17,7 +16,9 @@ const loveliveTrends = () => import("@/views/topics/loveliveTrends.vue")
 const staffCandleStickPage = () => import("@/views/topics/staffCandleStickPage.vue")
 const NotFound = () => import("@/views/NotFound.vue")
 const Settings = () => import("@/views/Settings.vue")
-//const Tools = () => import("@/views/Tools.vue")
+const Tools = () => import("@/views/tools/Index.vue")
+const Media = () => import("@/views/tools/Media.vue")
+const SnowFlakeTool = () => import("@/views/tools/SnowFlakeTool.vue")
 //const PhotoPreview = () => import('@/views/TO_DEL_PhotoPreview.vue')
 
 export default createRouter({
@@ -37,16 +38,23 @@ export default createRouter({
                 {path: 'staff_data_page', component: staffCandleStickPage, name: 'staff_data_page'}
             ]
         },
+        {
+            path: '/i/tools',
+            component: Tools,
+            name: 'Tools',
+            children: [
+                {path: '', component: Tools, name: 'ToolMainPage'},
+                {path: 'media', component: Media, name: 'MediaDownloader'},
+                {path: 'snowflake_tool', component: SnowFlakeTool, name: 'SnowFlakeTool'}
+            ]
+        },
         { path: '/api', component: Api, name: 'api'},
         { path: '/i/stats', component: Stats, name: 'stats'},
         { path: '/i/status', component: Status, name: 'status'},
         { path: '/i/trends', component: Trends, name: 'trends'},
-        //will split to another project
         {
             path: '/i/online',
-            name: 'online',
-            component: Online,
-            children: [{path: ':tweet_id', component: Online, name: 'online-status'}]
+            redirect: () => ({ path: '/i/tools/media'})
         },
         { path: '/settings', component: Settings, name: 'settings'},
         //{ path: '/tools', component: Tools, name: 'tools'},

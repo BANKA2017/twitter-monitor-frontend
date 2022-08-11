@@ -327,7 +327,6 @@ const routeRun = (to: RouteLocationNormalized, from: RouteLocationNormalized | {
 }
 //auto refresh
 const AutoRefresh = () => {
-  console.log(now.value, state.refreshFlag)
   if (settings.value.autoRefresh && (Number(now.value) - Number(state.refreshFlag)) > 30000) {
     loading(true, true)
     state.refreshFlag = now.value

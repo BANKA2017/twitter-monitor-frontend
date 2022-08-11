@@ -1,16 +1,27 @@
-import { defineConfig } from 'vite'
+import {defineConfig, loadEnv} from 'vite'
 const { resolve } = require('path')
 import vue from '@vitejs/plugin-vue'
 import {vueI18n} from "@intlify/vite-plugin-vue-i18n";
-import path from 'path'
 import AutoImport from 'unplugin-auto-import/vite'
 import Components from 'unplugin-vue-components/vite'
 import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
 import { VitePWA } from 'vite-plugin-pwa'
 //import { visualizer } from 'rollup-plugin-visualizer';
+
+// for proxy
+process.env = {...process.env, ...loadEnv('development', process.cwd())}
+let proxy = {}
+if (process.env.NODE_ENV !== 'development') {
+  proxy[process.env.VITE_DEV_BASE_PATH.replace('https://', '') + '/static/.*'] = {target: process.env.VITE_DEV_BASE_PATH}
+}
+
 // https://vitejs.dev/config/
 export default defineConfig({
-  server: {host: true, port: 3000},
+  server: {
+    host: true,
+    port: 3000,
+    proxy
+  },
   build: {
     assetsDir: 'static',
     rollupOptions: {

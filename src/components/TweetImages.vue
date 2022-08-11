@@ -1,5 +1,5 @@
 <template>
-  <div id="imageList" class="mb-2">
+  <div id="imageList" class="mb-2" @click="e => {e.stopPropagation()}">
     <div v-if="is_video" style="height: 100%">
       <video :id="'video' + realList[0].tweet_id" controls playsinline crossorigin :poster="createRealMediaPath(realMediaPath, samePath.value,'tweets') + realList[0].cover" :preload="preload" style="width: 100%; height: 100%;">
         <source :src="createRealMediaPath(realMediaPath, samePath.value,'tweets') +realList[0].url">

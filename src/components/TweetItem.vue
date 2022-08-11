@@ -1,74 +1,86 @@
 <template>
   <div id="tweet">
     <div v-if="false">{{ tweet }}</div>
-    <div v-else :id="tweet.tweet_id_str" :class="{'card': true, 'card-border': true, 'border-danger': tweet.dispute === 1, 'border-primary': tweet.tweet_id_str === topTweetId || (settings.loadConversation && $route.name === 'name-status' && $route.params.status === tweet.tweet_id_str)}">
-      <div class='card-body' >
-        <p v-if="tweetModeValue === 'timeline' && tweet.tweet_id_str === topTweetId"><small class="text-muted">{{ t("tweet.text.pinned_tweet") }}</small></p>
+    <div v-else ref="tweetItem" :id="tweet.tweet_id_str" :class="{'card': true, 'card-border': true, 'border-danger': tweet.dispute === 1, 'border-primary': tweet.tweet_id_str === topTweetId || (settings.loadConversation && $route.name === 'name-status' && $route.params.status === tweet.tweet_id_str), 'tweet-background': ($route.name !== 'name-status' || $route.params.status !== tweet.tweet_id_str)}" @click="clickEvent">
+      <div class='card-body'>
+        <p v-if="tweetModeValue === 'timeline' && tweet.tweet_id_str === topTweetId"><small class="text-muted">
+          <pinned height="1em" width="1em" status="text-muted" class="me-1" />{{ t("tweet.text.pinned_tweet") }}
+        </small></p>
         <p v-if="tweet.dispute === 1"><small class="text-muted"><exclamation-circle height="1em" status="" width="1em" /> {{ t("tweet.text.this_is_a_dispute_tweet") }}
           <router-link to="/about">{{ t("tweet.text.learn_more") }}</router-link>
         </small></p>
-        <div :dir="tweet.rtl ? 'rtl' : 'ltr'">
-          <small class="text-muted" v-if="tweet.retweet_from">
+        <div :dir="tweet.rtl ? 'rtl' : 'ltr'" class="mb-1" @click="(e) => {e.stopPropagation()}">
+          <span style="font-size: 0.75em" class="text-muted" v-if="tweet.retweet_from">
             <retweet height="1em" status="" width="1em"/>
-            <router-link :to="`/`+(tweetModeValue === 'status' ? (settings.onlineMode ? tweet.retweet_from_name : tweet.name) + `/all` : `i/status/`+tweet.tweet_id_str)" class="text-muted">
+            <router-link :to="`/`+(settings.onlineMode ? tweet.retweet_from_name : tweet.name) + `/all`" class="text-muted">
               <full-text :entities="[]" :full_text_origin="tweet.display_name" />
             </router-link>
-          </small>
+          </span>
         </div>
-        <div :dir="tweet.rtl ? 'rtl' : 'ltr'">
-          <router-link v-if="settings.onlineMode || !tweet.retweet_from_name || (tweet.retweet_from_name && userList.map(x => x.name).includes(tweet.retweet_from_name))" :to="`/`+ (tweetModeValue === 'status' ? ((tweet.retweet_from_name && tweet.retweet_from_name === tweet.name) ? `i/status/`+tweet.tweet_id_str : ((tweet.retweet_from ? tweet.retweet_from_name : tweet.name) + '/all')) : `i/status/`+tweet.tweet_id_str)" class="card-title text-dark">
-            <full-text :entities="[]" :full_text_origin="tweet.retweet_from ? tweet.retweet_from : tweet.display_name" />
-          </router-link>
-          <a v-else :href="`//twitter.com/` + tweet.retweet_from_name" class="text-dark" target="_blank"><full-text :entities="[]" :full_text_origin="tweet.retweet_from" /></a>
-          <el-divider direction="vertical" /> <small>@{{ tweet.retweet_from ? tweet.retweet_from_name : tweet.name }}</small>
+        <div @click="(e) => {e.stopPropagation()}" class="position-absolute" style="right: 1em">
           <!--media-->
           <span v-if="tweet.media === 1" class="ms-1" style="cursor:pointer" @click="swapDisplayPictureStatus">
-            <image-icon height="2em" status="text-success" width="2em"/>
-          </span>
+              <image-icon height="2em" status="text-success" width="2em"/>
+            </span>
           <camera-video-icon v-if="tweet.video === 1" height="2em" status="text-danger" width="2em"/>
           <a :href="`//twitter.com/i/status/`+tweet.tweet_id_str" target="_blank">
             <box-arrow-up-right height="2em" status="text-primary" width="2em"/>
           </a>
         </div>
-        <!--save for image-->
-        <!--<span role="button" @click="h2c">gggg</span>-->
-        <div class="row my-4">
-          <div class="col-md-1 ps-1 pe-0" v-if="settings.onlineMode && width > 768">
-            <el-image class="rounded-circle" :src="createRealMediaPath(realMediaPath, samePath, 'userinfo')+ (tweet.retweet_from_name ? tweet.retweet_user_info.header : tweet.user_info.header).replace(/([\w]+)\.([\w]+)$/gm, `$1_reasonably_small.$2`)" :preview-src-list="[createRealMediaPath(realMediaPath, samePath, 'userinfo')+(tweet.retweet_from_name ? tweet.retweet_user_info.header : tweet.user_info.header)]" alt="Avatar" preview-teleported hide-on-click-modal/>
+        <div class="row">
+          <div class="col-1 ps-1 pe-0" v-if="settings.onlineMode" @click="(e) => {e.stopPropagation()}">
+            <router-link :to="'/' + (tweet.retweet_from_name ? tweet.retweet_user_info.name : tweet.user_info.name) + '/all'">
+              <el-image class="rounded-circle " :src="createRealMediaPath(realMediaPath, samePath, 'userinfo')+ (tweet.retweet_from_name ? tweet.retweet_user_info.header : tweet.user_info.header).replace(/([\w]+)\.([\w]+)$/gm, `$1_reasonably_small.$2`)" alt="Avatar" />
+            </router-link>
           </div>
-          <div :class="{'col-md-11': settings.onlineMode, 'col-12': true}">
+          <div :class="{'col-11': settings.onlineMode, 'd-inline-block': true, 'text-truncate': true, }" style="max-width: 75%;" :dir="tweet.rtl ? 'rtl' : 'ltr'" @click="(e) => {e.stopPropagation()}">
+            <router-link v-if="settings.onlineMode || !tweet.retweet_from_name || (tweet.retweet_from_name && userList.map(x => x.name).includes(tweet.retweet_from_name))" :to="`/`+ (tweet.retweet_from ? tweet.retweet_from_name : tweet.name) + '/all'" class="card-title text-dark fw-bold">
+              <full-text :entities="[]" :full_text_origin="tweet.retweet_from ? tweet.retweet_from : tweet.display_name" />
+            </router-link>
+            <a v-else :href="`//twitter.com/` + tweet.retweet_from_name" class="card-title text-dark fw-bold" target="_blank"><full-text :entities="[]" :full_text_origin="tweet.retweet_from" /></a>
+            <verified v-if="settings.onlineMode && (tweet.retweet_from_name ? tweet.retweet_user_info.verified : tweet.user_info.verified)" height="1em" status="text-primary" width="1.2em" class="ms-2 "/>
+            <br><span style="font-size: 0.75em">@{{ tweet.retweet_from ? tweet.retweet_from_name : tweet.name }}</span>
+          </div>
+        </div>
+        <div class="row my-4">
+          <div :class="{'offset-md-1': settings.onlineMode, 'col-md-11': settings.onlineMode, 'col-12': true}">
             <!--<div v-html="`<p class='card-text'>`+tweet.full_text+`</p>`"></div>-->
             <!--excited!-->
             <div :dir="tweet.rtl ? 'rtl' : 'ltr'"><full-text class="card-text" :entities="tweet.entities" :full_text_origin="tweet.full_text_origin"/></div>
             <translate v-if="!settings.onlineMode && tweet.full_text_origin" :id="tweet.tweet_id_str" :to="settings.language" type="0"/>
             <!--media-->
-            <template v-if="tweet.media === 1&&!settings.displayPicture && tweet.mediaObject.filter(x => x.source === 'tweets').length">
-              <div class="my-4"></div>
+            <div class="mt-4" v-if="tweet.media === 1&&!settings.displayPicture && tweet.mediaObject.filter(x => x.source === 'tweets').length">
               <image-list :is_video="tweet.video" :list="tweet.mediaObject.filter(x => x.source === 'tweets')" :unlimited="tweetModeValue === 'status'"/>
-            </template>
+            </div>
             <!--quote-->
-            <template v-if="tweet.quote_status !== 0">
-              <div class="my-4"></div>
+            <div class="mt-4" v-if="tweet.quote_status !== 0">
               <quote-card :quote-media="tweet.mediaObject.filter(x => x.source === 'quote_status')" :quote-object="tweet.quoteObject"/>
-            </template>
+            </div>
             <!--polls-->
             <template v-if="tweet.poll !== 0">
               <tw-polls :media="tweet.mediaObject.filter(x => x.source === 'cards')" :polls="tweet.pollObject"/>
             </template>
             <!--card-->
-            <template v-else-if="tweet.card !== '' && Object.keys(tweet.cardObject).length">
-              <div class="my-4"></div>
+            <div class="mt-4" v-else-if="tweet.card !== '' && Object.keys(tweet.cardObject).length">
               <tw-card :media="tweet.mediaObject.filter(x => x.source === 'cards')" :mediaState="!settings.displayPicture" :object="tweet.cardObject" :tweet-text="tweet.full_text_origin.split(`\n`)[0]" :user-name="tweet.retweet_from ? tweet.retweet_from : tweet.display_name"></tw-card>
-            </template>
+            </div>
             <!--time && source-->
             <div id="foot">
               <small class="text-muted">{{ timeGap(tweet.time, now, settings.language) }} · <span class="text-primary">{{ tweet.source }}</span></small>
             </div>
             <div class="mt-2" v-if="settings.onlineMode && (tweet.retweet_count + tweet.quote_count + tweet.favorite_count) > 0">
               <hr class="my-2" />
-              <small class="me-2 text-muted" v-if="tweet.retweet_count > 0"><span class="fw-bold">{{tweet.retweet_count}}</span> {{t("tweet.interactive.retweet", tweet.retweet_count > 1 ? 2 : 1)}}</small>
-              <small class="me-2 text-muted" v-if="tweet.quote_count > 0"><span class="fw-bold">{{tweet.quote_count}}</span> {{t("tweet.interactive.quote", tweet.quote_count > 1 ? 2 : 1)}}</small>
-              <small class="me-2 text-muted" v-if="tweet.favorite_count > 0"><span class="fw-bold">{{tweet.favorite_count}}</span> {{t("tweet.interactive.favorite", tweet.favorite_count > 1 ? 2 : 1)}}</small>
+              <div class="d-flex justify-content-between">
+                <div class="d-inline-block">
+                  <small class="me-2 text-muted" v-if="tweet.retweet_count > 0"><span class="fw-bold">{{tweet.retweet_count}}</span> {{t("tweet.interactive.retweet", tweet.retweet_count > 1 ? 2 : 1)}}</small>
+                  <small class="me-2 text-muted" v-if="tweet.quote_count > 0"><span class="fw-bold">{{tweet.quote_count}}</span> {{t("tweet.interactive.quote", tweet.quote_count > 1 ? 2 : 1)}}</small>
+                  <small class="me-2 text-muted" v-if="tweet.favorite_count > 0"><span class="fw-bold">{{tweet.favorite_count}}</span> {{t("tweet.interactive.favorite", tweet.favorite_count > 1 ? 2 : 1)}}</small>
+                </div>
+                <!--<div class="d-inline-block" >-->
+                  <!--save for image-->
+                <!--<small class="text-muted"><span role="button" @click="h2c">保存截图</span></small>-->
+                <!--</div>-->
+              </div>
             </div>
           </div>
         </div>
@@ -90,7 +102,7 @@ import CameraVideoIcon from "@/icons/CameraVideoIcon.vue";
 import BoxArrowUpRight from "@/icons/BoxArrowUpRight.vue";
 import ExclamationCircle from "@/icons/ExclamationCircle.vue";
 import {useStore} from "@/store";
-import {computed, onMounted, PropType} from "vue";
+import {computed, onMounted, PropType, ref} from "vue";
 import {useI18n} from "vue-i18n";
 import {Tweet} from "@/type/Content";
 import {useRoute, useRouter} from "vue-router";
@@ -98,7 +110,9 @@ import {request} from "@/share/Fetch";
 import {ApiUserInfo} from "@/type/Api";
 import {Notice} from "@/share/Tools";
 import {createRealMediaPath} from "@/share/Tools";
-//import html2canvas from 'html2canvas';
+import html2canvas from "html2canvas";
+import Pinned from "@/icons/Pinned.vue";
+import Verified from "@/icons/Verified.vue";
 
 const props = defineProps({
   tweet: {
@@ -139,7 +153,23 @@ const timeGap = (timestamp: number, now: number, language: string) => {
   }
 }
 
+const clickEvent = (e: Event) => {
+  let selectionObject = window.getSelection()
+  if (route.params.status !== props.tweet.tweet_id_str && selectionObject && selectionObject.isCollapsed) {
+    if (route.name !== 'name-status' || route.params.status !== props.tweet.tweet_id_str) {
+      router.push(`/`+ `i/status/` + props.tweet.tweet_id_str)
+    }
+  }
+}
+
+const tweetItem = ref<HTMLElement>()
+
 onMounted(() => {
+  //if (tweetItem.value) {
+  //  tweetItem.value.addEventListener('pointerup', e => {
+  //    console.log(e)
+  //  })
+  //}
   if (route.name === 'no-name-status' && route.params.status === props.tweet.tweet_id_str) {
     request<ApiUserInfo>(settings.value.basePath + '/api/v2/data/userinfo/?uid=' + props.tweet.uid_str).then(response => {
       if (response.code === 200) {
@@ -153,14 +183,11 @@ onMounted(() => {
   }
 })
 
-//h2c: function () {
-//  html2canvas(document.getElementById(this.tweet.tweet_id_str), {useCORS: true}).then(function(canvas) {
+//const h2c = (e: Event) => {
+//  if (!e?.target) {return}
+//  html2canvas(e.target.offsetParent, {useCORS: true}).then(function(canvas) {
 //    document.body.appendChild(canvas);
 //  });
 //}
 
 </script>
-
-<style scoped>
-
-</style>
