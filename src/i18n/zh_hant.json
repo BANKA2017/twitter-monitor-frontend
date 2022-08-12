@@ -19,6 +19,7 @@
         "username": "用戶名",
         "group": "組",
         "user_list": "用戶列表",
+        "and": "和",
         "time": {
             "second": "秒 | 秒",
             "minute": "分鐘 | 分鐘",
@@ -152,7 +153,8 @@
         "text": {
             "pinned_tweet": "置頂推文",
             "this_is_a_dispute_tweet": "則是以一條有爭議的推文",
-            "learn_more": "瞭解更多"
+            "learn_more": "瞭解更多",
+            "replying_to": "回復"
         },
         "interactive": {
             "retweet": "轉推 | 轉推",

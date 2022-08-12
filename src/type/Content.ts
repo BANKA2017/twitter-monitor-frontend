@@ -58,6 +58,7 @@ export interface Tweet {
   retweet_count?: number
   quote_count?: number
   rtl?: boolean
+  display_text_range?: number[]
   entities: Entity[]
   pollObject: PollItem[]
   cardObject?: Card

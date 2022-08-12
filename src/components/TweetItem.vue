@@ -46,7 +46,7 @@
           <div :class="{'offset-md-1': settings.onlineMode, 'col-md-11': settings.onlineMode, 'col-12': true}">
             <!--<div v-html="`<p class='card-text'>`+tweet.full_text+`</p>`"></div>-->
             <!--excited!-->
-            <div :dir="tweet.rtl ? 'rtl' : 'ltr'"><full-text class="card-text" :entities="tweet.entities" :full_text_origin="tweet.full_text_origin" :check-reply="route.name === 'name-status' || route.name === 'no-name-status'"/></div>
+            <div :dir="tweet.rtl ? 'rtl' : 'ltr'"><full-text class="card-text" :entities="tweet.entities" :full_text_origin="tweet.full_text_origin" :display-range="(settings.onlineMode && (route.name === 'name-status' || route.name === 'no-name-status')) ? tweet.display_text_range : [0, 0]"/></div>
             <translate v-if="!settings.onlineMode && tweet.full_text_origin" :id="tweet.tweet_id_str" :to="settings.language" type="0"/>
             <!--media-->
             <div class="mt-4" v-if="tweet.media === 1&&!settings.displayPicture && tweet.mediaObject.filter(x => x.source === 'tweets').length">
@@ -110,7 +110,6 @@ import {request} from "@/share/Fetch";
 import {ApiUserInfo} from "@/type/Api";
 import {Notice} from "@/share/Tools";
 import {createRealMediaPath} from "@/share/Tools";
-import html2canvas from "html2canvas";
 import Pinned from "@/icons/Pinned.vue";
 import Verified from "@/icons/Verified.vue";
 
@@ -165,11 +164,6 @@ const clickEvent = (e: Event) => {
 const tweetItem = ref<HTMLElement>()
 
 onMounted(() => {
-  //if (tweetItem.value) {
-  //  tweetItem.value.addEventListener('pointerup', e => {
-  //    console.log(e)
-  //  })
-  //}
   if (route.name === 'no-name-status' && route.params.status === props.tweet.tweet_id_str) {
     request<ApiUserInfo>(settings.value.basePath + '/api/v2/data/userinfo/?uid=' + props.tweet.uid_str).then(response => {
       if (response.code === 200) {
@@ -183,11 +177,5 @@ onMounted(() => {
   }
 })
 
-//const h2c = (e: Event) => {
-//  if (!e?.target) {return}
-//  html2canvas(e.target.offsetParent, {useCORS: true}).then(function(canvas) {
-//    document.body.appendChild(canvas);
-//  });
-//}
 
 </script>

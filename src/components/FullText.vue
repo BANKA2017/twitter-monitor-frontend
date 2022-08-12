@@ -1,16 +1,16 @@
 <template>
   <span class="text-break" id="full-text">
-    <p v-if="checkReply && state.replyNameList.length > 0" style="font-size: 0.8em">
-      回复
+    <div class="mb-2" v-if="state.replyNameList.length > 0" style="font-size: 0.8em">
+      {{ t("tweet.text.replying_to") }}
       <template v-for="(name, index) in state.replyNameList" :key="name">
-        <span v-if="index > 0" class="text-primary"> 和 </span>
+        <span v-if="index > 0" class="text-primary"> {{ t("public.and") }} </span>
         <router-link :to="'/' + name.replace('@', '') +'/all'" class="text-primary">{{name}}</router-link>
       </template>
-    </p>
+    </div>
     <template v-for="(obj, order) in textObject(full_text_origin, entities, true)" :key="order">
       <template v-for="(text, ord) in x = spreadText(obj.text)">
         <template v-for="(textData, textOrder) in textObject(text, emojiObject(text))">
-          <span v-if="textData.text" :key="'span'+ord+order+textOrder+text" class="mb-1">{{ textData.text.replaceAll("&amp;", "&").replaceAll('&gt;', '>') }}</span>
+          <span v-if="textData.text" :key="'span'+ord+order+textOrder+text" class="mb-1">{{ textData.text }}</span>
           <img v-if="textData.tag_text" :src="textData.url" style="height: 1em; width: 1em;" :alt="textData.tag_text" :key="'img'+ord+order+textOrder+text" class="margin-for-inner-text-svg">
         </template>
         <br v-if="ord !== x.length - 1">
@@ -30,6 +30,7 @@ import {EmojiEntity, parse} from 'twemoji-parser'
 import type {Entity} from "@/type/Content"
 import {useStore} from "@/store";
 import {computed, PropType, reactive, ref, Ref} from "vue";
+import {useI18n} from "vue-i18n";
 const props = defineProps({
   full_text_origin: {
     type: String,
@@ -39,9 +40,9 @@ const props = defineProps({
     type: Array as PropType<Entity[]>,
     default: () => ([])
   },
-  checkReply: {
-    type: Boolean,
-    default: false
+  displayRange: {
+    type: Array as PropType<number[]>,
+    default: [0, 0]
   }
 })
 
@@ -53,6 +54,7 @@ const state = reactive<{
   breakCheckFlag: ref(false)
 })
 
+const { t } = useI18n()
 const store = useStore()
 const userList = computed(() => store.state.userList)
 const twemojiBasePath = computed(() => store.state.twemojiBasePath)
@@ -72,7 +74,7 @@ const textObject = (text: string = "", entities: Entity[] = [], arrayMode: boole
   if (arrayMode) {
     let full_text_origin_array = [...props.full_text_origin];
     entities.forEach((entity, key) => {
-      if (!props.checkReply || (key === 0 && entity.indices_start !== 0) || (entity.type !== 'user_mention')) {
+      if (!state.breakCheckFlag && ((lastEnd + 1 > props.displayRange[0]) || (key === 0 && entity.indices_start !== 0) || (entity.type !== 'user_mention'))) {
         state.breakCheckFlag = true
       }
       if (!state.breakCheckFlag && entity.type === 'user_mention') {
@@ -80,7 +82,7 @@ const textObject = (text: string = "", entities: Entity[] = [], arrayMode: boole
           state.replyNameList.push(entity.text)
         }
       } else {
-        tmpText.push({text: full_text_origin_array.slice(lastEnd, entity.indices_start).join(''), type: entity.type, tag_text: entity.text, url: entity.expanded_url,});
+        tmpText.push({text: full_text_origin_array.slice(lastEnd, entity.indices_start).join('').replaceAll('&gt;', '>').replaceAll('&lt;', '<').replaceAll("&amp;", "&"), type: entity.type, tag_text: entity.text, url: entity.expanded_url,});
       }
       lastEnd = entity.indices_end;
     })

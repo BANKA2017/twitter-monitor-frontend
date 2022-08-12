@@ -19,6 +19,7 @@
         "username": "Username",
         "group": "Group",
         "user_list": "User list",
+        "and": "and",
         "time": {
             "second": "second | seconds",
             "minute": "minute | minutes",
@@ -152,7 +153,8 @@
         "text": {
             "pinned_tweet": "Pinned tweet",
             "this_is_a_dispute_tweet": "This is a dispute tweet",
-            "learn_more": "Learn more"
+            "learn_more": "Learn more",
+            "replying_to": "Replying to"
         },
         "interactive": {
             "retweet": "Retweet | Retweets",
