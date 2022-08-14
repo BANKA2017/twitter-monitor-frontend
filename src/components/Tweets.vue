@@ -1,6 +1,6 @@
 <template>
   <div id="tweets">
-    <nav v-if="route.name !== 'main'" :style="{'position': 'sticky', 'top': '1.5rem', 'z-index': 1, 'background-color': 'rgba(255, 255, 255, 0.9)', 'border-radius': '0.25rem'}" class="nav nav-pills nav-fill border">
+    <nav v-if="route.name !== 'main' || !translatorMode" :style="{'position': 'sticky', 'top': '1.5rem', 'z-index': 1, 'background-color': 'rgba(255, 255, 255, 0.9)', 'border-radius': '0.25rem'}" class="nav nav-pills nav-fill border">
       <!--v-if="tweetStatus.displayType === 'timeline' && !load.leftCard"-->
       <template v-if="route.name === 'name-display'">
         <li v-for="(value, s) in displayMode.filter(x => settings.onlineMode ? (x[1] !== 'self') : true)" :key="s" class="nav-item">
@@ -13,7 +13,7 @@
         <div :class="{'nav-link': true, 'active': settings.displayPicture, 'text-primary': !settings.displayPicture}" role="button" @click="swapDisplayPictureStatus">{{ t("timeline.nav_bar.no_image") }}</div>
       </li>
     </nav>
-    <el-divider v-if="route.name !== 'main'" class="my-4" />
+    <el-divider v-if="route.name !== 'main' || !translatorMode" class="my-4" />
     <div class="text-center" element-loading-background="rgba(255, 255, 0, 0)" style="height: 60px" v-if="state.loadingTop" v-loading="state.loadingTop"></div>
 
     <el-skeleton :loading="state.loadingTimeline" :rows="5" animated class="mb-2">
@@ -24,10 +24,12 @@
       <div v-if="!state.reload && tweets.length">
         <div v-for="(tweet, order) in tweets" :key="order">
           <tweet-item :tweet="tweet"/>
-          <el-divider v-if="order < tweets.length - 1 && tweet.conversation_id_str === tweets[order + 1].conversation_id_str">
-            <svg class="icon" width="1rem" height="1rem" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" data-v-4194ce60=""><path fill="currentColor" d="M192 384l320 384 320-384z"></path></svg>
-          </el-divider>
-          <el-divider v-else />
+          <template v-if="!translatorMode">
+            <el-divider v-if="order < tweets.length - 1 && tweet.conversation_id_str === tweets[order + 1].conversation_id_str">
+              <svg class="icon" width="1rem" height="1rem" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" data-v-4194ce60=""><path fill="currentColor" d="M192 384l320 384 320-384z"></path></svg>
+            </el-divider>
+            <el-divider v-else />
+          </template>
         </div>
         <div class="d-grid gap-2" v-if="state.moreTweets && !state.loadingBottom && !settings.autoLoadTweets">
           <button class="btn btn-primary btn-lg mb-3" type="button" @click="loading(false)">
@@ -81,6 +83,8 @@ const tweets = computed((): Tweet[] => store.state.tweets)
 const height = computed(() => store.state.height)
 const siteHeight = computed(() => store.state.siteHeight)
 const viewportHeight = computed(() => store.state.viewportHeight)
+const translatorMode = computed(() => store.state.translatorMode)
+
 const displayMode = [
   [t("timeline.nav_bar.all"), 'all', 0],
   [t("timeline.nav_bar.origin"), 'self', 0],
@@ -141,7 +145,7 @@ const routeCase = (to: RouteLocationNormalized) => {
   let displayIndex = ["all", "self", "retweet", "media"].indexOf(<string>NullSafeParams(to.params.display, ''))
   if (displayIndex !== -1 && (to.name !== 'name-status' && to.name !== 'no-name-status')) {
     setTweetType(["all", "self", "retweet", "media"][displayIndex])
-  } else if (to.name === 'name-status' || to.name === 'no-name-status') {
+  } else if (to.name === 'name-status' || to.name === 'no-name-status' || to.name === 'translator-name-status') {
     setTweetType('status')
   } else {
     setTweetType('all')
@@ -183,6 +187,7 @@ const routeCase = (to: RouteLocationNormalized) => {
       break
     case "no-name-status"://TODO then fetch user data
     case "name-status":
+    case "translator-name-status":
       url += 'tweets/'
       queryStringObject.set('is_status', '1')
       queryStringObject.set('load_conversation', Equal(settings.value.loadConversation))
@@ -197,7 +202,7 @@ const routeCase = (to: RouteLocationNormalized) => {
     default:
       url += 'tweets/'
       queryStringObject.set('name', <string>NullSafeParams(to.params.name, ''))
-      queryStringObject.set('display', <string>NullSafeParams(to.params.display, ''))
+      queryStringObject.set('display', <string>NullSafeParams(to.params.display, 'all'))
       setTweetMode('timeline')
   }
   state.url = url
@@ -303,6 +308,7 @@ const emptyTranslateList = () => {
 //TODO fix repeated request
 const routeRun = (to: RouteLocationNormalized, from: RouteLocationNormalized | {name: string}) => {
   if ((from.name === 'no-name-status' && to.name === 'name-status') || (!RouterNameList.timeline.has(typeof to.name === 'string' ? to.name : '') && to.name !== 'main')) {return}
+
   //if ( || (RouterNameList.timeline.has(typeof to.name === 'string' ? to.name : '') && from.name === 'search')) {
   //  return
   //}
@@ -318,7 +324,7 @@ const routeRun = (to: RouteLocationNormalized, from: RouteLocationNormalized | {
   routeCase(to)
   emptyTranslateList()
   if (!(to.name === 'search' && !to.query.q && to.query.advanced !== '1')) {
-    if (!(to.name === 'main' && settings.value.onlineMode)) {
+    if (!(to.name === 'main' && settings.value.onlineMode) || translatorMode) {
       update()
     }
   } else {

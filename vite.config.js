@@ -1,4 +1,4 @@
-import {defineConfig, loadEnv} from 'vite'
+import {defineConfig} from 'vite'
 const { resolve } = require('path')
 import vue from '@vitejs/plugin-vue'
 import {vueI18n} from "@intlify/vite-plugin-vue-i18n";
@@ -8,19 +8,11 @@ import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
 import { VitePWA } from 'vite-plugin-pwa'
 //import { visualizer } from 'rollup-plugin-visualizer';
 
-// for proxy
-process.env = {...process.env, ...loadEnv('development', process.cwd())}
-let proxy = {}
-if (process.env.NODE_ENV === 'development') {
-  proxy[process.env.VITE_DEV_BASE_PATH.replace('https://', '') + '/static/.*'] = {target: process.env.VITE_DEV_BASE_PATH}
-}
-
 // https://vitejs.dev/config/
 export default defineConfig({
   server: {
     host: true,
     port: 3000,
-    proxy
   },
   build: {
     assetsDir: 'static',
@@ -43,7 +35,7 @@ export default defineConfig({
     }),
     VitePWA({
       includeAssets: ['favicon.ico'],
-      registerType: "autoUpdate",
+      registerType: "prompt",
       filename: 'service-worker.js',
       manifest: {
         name: "Twitter Monitor",

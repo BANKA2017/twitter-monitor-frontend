@@ -9,7 +9,7 @@
             <span class="input-group-text" id="api_path">{{ t("settings.api_path") }}</span>
             <input v-model="basePath" aria-describedby="api_path" aria-label="Sizing example input" class="form-control" type="text">
           </div>
-          <label class="mb-3 text-muted form-label" for="api_path">{{ t("settings.default_api_path", [defaultBasePath]) }}</label>
+          <label class="mb-3 text-muted form-label" for="api_path">{{ t("settings.default_api_path", [settings.onlineMode ? defaultOnlinePath : defaultBasePath]) }}</label>
           <div class="input-group mb-3">
             <span class="input-group-text" id="media_path">{{ t("settings.media_path") }}</span>
             <input v-model="mediaPath" aria-describedby="media_path" aria-label="Sizing example input" class="form-control" type="text">
@@ -47,59 +47,59 @@
   </div>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 import Navigation from "@/components/Navigation.vue"
 import ArrowLeft from "@/icons/ArrowLeft.vue"
 import {computed, defineComponent, watch} from "vue"
 import {useStore} from "@/store"
 import {useI18n} from "vue-i18n";
-export default defineComponent({
-  components: {ArrowLeft, Navigation},
-  setup() {
 
-    const { t } = useI18n()
-    const defaultBasePath = process.env.NODE_ENV !== "development" ? import.meta.env.VITE_PRO_BASE_PATH : import.meta.env.VITE_DEV_BASE_PATH
-    const defaultMediaPath = import.meta.env.VITE_MEDIA_PATH ? import.meta.env.VITE_MEDIA_PATH : defaultBasePath + '/api/v2/media/'
+const { t } = useI18n()
+const defaultBasePath = process.env.NODE_ENV !== "development" ? import.meta.env.VITE_PRO_BASE_PATH : import.meta.env.VITE_DEV_BASE_PATH
+const defaultMediaPath = import.meta.env.VITE_MEDIA_PATH ? import.meta.env.VITE_MEDIA_PATH : defaultBasePath + '/api/v2/media/'
+const defaultOnlinePath = import.meta.env.VITE_ONLINE_PATH ? import.meta.env.VITE_ONLINE_PATH : ''
 
-    const store = useStore()
-    const languageList = computed(() => store.state.languageList)
-    const adminMode = computed(() => store.state.adminMode)
-    const basePath = computed({
-      get () {return store.getters.getBasePath},
-      set (value: string) {store.dispatch("updateSettingsItem", {key: "basePath", value})}
-    })
-    const mediaPath = computed({
-      get () {return store.state.settings.mediaPath},
-      set (value: string) {store.dispatch("updateSettingsItem", {key: "mediaPath", value})}
-    })
+const store = useStore()
+const settings = computed(() => store.state.settings)
+const languageList = computed(() => store.state.languageList)
+const adminMode = computed(() => store.state.adminMode)
+const basePath = computed({
+  get () {return store.getters.getBasePath},
+  set (value: string) {store.dispatch("updateSettingsItem", {key: "basePath", value})}
+})
+const mediaPath = computed({
+  get () {return store.state.settings.mediaPath},
+  set (value: string) {store.dispatch("updateSettingsItem", {key: "mediaPath", value})}
+})
 
-    const language = computed({
-      get () {return store.state.settings.language},
-      set (value: string) {store.dispatch("updateSettingsItem", {key: "language", value})}
-    })
+const language = computed({
+  get () {return store.state.settings.language},
+  set (value: string) {store.dispatch("updateSettingsItem", {key: "language", value})}
+})
 
-    const autoRefresh = computed({
-      get () {return store.state.settings.autoRefresh},
-      set (value: boolean) {store.dispatch("updateSettingsItem", {key: "autoRefresh", value})}
-    })
+const autoRefresh = computed({
+  get () {return store.state.settings.autoRefresh},
+  set (value: boolean) {store.dispatch("updateSettingsItem", {key: "autoRefresh", value})}
+})
 
-    const autoLoadMore = computed({
-      get () {return store.state.settings.autoLoadTweets},
-      set (value: boolean) {store.dispatch("updateSettingsItem", {key: "autoLoadTweets", value})}
-    })
+const autoLoadMore = computed({
+  get () {return store.state.settings.autoLoadTweets},
+  set (value: boolean) {store.dispatch("updateSettingsItem", {key: "autoLoadTweets", value})}
+})
 
-    const loadConversation = computed({
-      get () {return store.state.settings.loadConversation},
-      set (value: boolean) {store.dispatch("updateSettingsItem", {key: "loadConversation", value})}
-    })
+const loadConversation = computed({
+  get () {return store.state.settings.loadConversation},
+  set (value: boolean) {store.dispatch("updateSettingsItem", {key: "loadConversation", value})}
+})
 
-    const onlineMode = computed({
-      get () {return store.state.settings.onlineMode},
-      set (value: boolean) {store.dispatch("updateSettingsItem", {key: "onlineMode", value})}
-    })
-    return {defaultBasePath, defaultMediaPath, languageList, basePath, mediaPath, language, autoRefresh, autoLoadMore, loadConversation, onlineMode, adminMode, t}
+const onlineMode = computed({
+  get () {return store.state.settings.onlineMode},
+  set (value: boolean) {
+    store.dispatch('updateSettingsItem', {key: 'basePath', value: value ? defaultOnlinePath : defaultBasePath})
+    store.dispatch("updateSettingsItem", {key: "onlineMode", value})
   }
 })
+
 </script>
 
 <style scoped>

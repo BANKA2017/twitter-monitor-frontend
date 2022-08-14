@@ -63,6 +63,7 @@ export const store = createStore<State>({
     realMediaPath: '',
     twemojiBasePath,
     onlinePath,
+    translatorMode: false
   },
   getters: {
     getBasePath: (state): string => state.settings.basePath,

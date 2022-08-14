@@ -24,20 +24,20 @@ a {
 .tweet-background {
   cursor: pointer;
   &:hover {
-    background-color: rgba(0, 0, 0, 0.01);
+    background-color: rgba(0, 0, 0, 0.02);
     & .background-second {
       background-color: transparent;
     }
   }
   & .background-second {
     &:hover {
-      background-color: rgba(0, 0, 0, 0.02);
+      background-color: rgba(0, 0, 0, 0.03);
     }
   }
 }
 .background-second {
   &:hover {
-    background-color: rgba(0, 0, 0, 0.02);
+    background-color: rgba(0, 0, 0, 0.03);
   }
 }
 .clickable-text {

@@ -19,6 +19,7 @@ const Settings = () => import("@/views/Settings.vue")
 const Tools = () => import("@/views/tools/Index.vue")
 const Media = () => import("@/views/tools/Media.vue")
 const SnowFlakeTool = () => import("@/views/tools/SnowFlakeTool.vue")
+const Translator = () => import("@/views/tools/Translator.vue")
 //const PhotoPreview = () => import('@/views/TO_DEL_PhotoPreview.vue')
 
 export default createRouter({
@@ -41,11 +42,21 @@ export default createRouter({
         {
             path: '/i/tools',
             component: Tools,
-            name: 'Tools',
+            name: 'tools',
             children: [
-                {path: '', component: Tools, name: 'ToolMainPage'},
-                {path: 'media', component: Media, name: 'MediaDownloader'},
-                {path: 'snowflake_tool', component: SnowFlakeTool, name: 'SnowFlakeTool'}
+                {path: '', component: Tools, name: 'tool-main-page'},
+                {path: 'media', component: Media, name: 'media-downloader'},
+                {path: 'snowflake_tool', component: SnowFlakeTool, name: 'snowflake-tool'},
+                {
+                    path: 'translator/:status(\\d+)?',
+                    component: Translator,
+                    name: 'translator',
+                    children:[
+                      {path: '', component: Translator, name: 'translator-empty'},
+                      {path: ':name', component: Translator, name: 'translator-name'},
+                      {path: ':name/status/:status(\\d+)', component: Translator, name: 'translator-name-status'}
+                    ]
+                }
             ]
         },
         { path: '/api', component: Api, name: 'api'},

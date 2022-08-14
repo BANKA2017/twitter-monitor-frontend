@@ -52,7 +52,8 @@
             "api": "API",
             "media_download_tool": "Media tools",
             "rss": "RSS",
-            "backstage": "Backstage"
+            "backstage": "Backstage",
+            "tools": "Tools"
         },
         "scripts": {
             "time": "Time",
@@ -182,5 +183,8 @@
         "auto_load_tweets": "Auto load more tweets on bottom",
         "load_conversation": "Load conversation in tweet status",
         "online_mode": "Use online api"
+    },
+    "pwa": {
+        "need_refresh": "New content available, refresh this page to reload"
     }
 }

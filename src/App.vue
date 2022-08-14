@@ -6,7 +6,9 @@
         <el-icon size="1em"><caret-top /></el-icon>
       </div>
     </transition>
+    <pwa />
     <router-view/>
+
     <div v-if="devmode" class="bg-dark text-white" style="left: 0; bottom: 0; position: fixed; z-index: 9999; padding: 5px">
       <span style="align-content: end">{{width + 'x' + viewportHeight}}</span>
     </div>
@@ -23,10 +25,11 @@
   import {useI18n} from "vue-i18n";
   import {ScrollTo} from "@/share/Tools";
   import {CaretTop} from "@element-plus/icons-vue";
+  import Pwa from "@/pwa.vue";
 
   export default {
     name: 'App',
-    components: {CaretTop},
+    components: {Pwa, CaretTop},
     setup() {
       const {locale} = useI18n()
       const store = useStore()

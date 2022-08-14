@@ -1,5 +1,5 @@
 <template>
-  <span class="text-break" id="full-text">
+  <div class="text-break d-inline-block" id="full-text">
     <div class="mb-2" v-if="state.replyNameList.length > 0" style="font-size: 0.8em">
       {{ t("tweet.text.replying_to") }}
       <template v-for="(name, index) in state.replyNameList" :key="name">
@@ -22,7 +22,7 @@
       </router-link>
       <a v-else @click="e => {e.stopPropagation()}" id="url" :href="obj.url" target="_blank">{{ obj.tag_text }}</a>
     </template>
-  </span>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -59,8 +59,8 @@ const store = useStore()
 const userList = computed(() => store.state.userList)
 const twemojiBasePath = computed(() => store.state.twemojiBasePath)
 const settings = computed(() => store.state.settings)
-const buildUrl = (codepoints: string, assetType: string): string => twemojiBasePath.value + `svg/${codepoints}.${assetType}`
-const emojiObject = (text: string = ''): Entity[] => parse(text, {buildUrl: buildUrl, assetType: 'svg'}).map((x: EmojiEntity): Entity => ({
+const buildUrl = (codepoints: string, assetType: string): string => twemojiBasePath.value + `72x72/${codepoints}.${assetType}`
+const emojiObject = (text: string = ''): Entity[] => parse(text, {buildUrl: buildUrl, assetType: 'png'}).map((x: EmojiEntity): Entity => ({
   expanded_url: x.url,
   indices_end: x.indices[1],
   indices_start: x.indices[0],

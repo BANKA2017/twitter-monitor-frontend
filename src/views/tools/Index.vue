@@ -1,25 +1,15 @@
 <template>
-  <template v-if="$route.name === 'ToolMainPage'">
+  <template v-if="$route.name === 'tool-main-page'">
     <div ref="tools">
       <navigation display-name="Twitter Monitor Online" display-type="online" class="mb-5" />
       <div class="container">
         <div class="row">
-          <div class="col-md-6">
-            <router-link to="/i/tools/media" style="text-decoration: none">
+          <div class="col-md-6 mb-4" v-for="item in linkList" :key="item.name">
+            <router-link :to="item.link" style="text-decoration: none">
               <div class="card">
                 <div class="card-body text-black">
-                  <h2>媒体下载工具</h2>
-                  <p >下载推文的图片或视频</p>
-                </div>
-              </div>
-            </router-link>
-          </div>
-          <div class="col-md-6">
-            <router-link to="/i/tools/snowflake_tool" style="text-decoration: none">
-              <div class="card">
-                <div class="card-body text-black">
-                  <h2>SnowFlake Tool</h2>
-                  <p >雪花算法相关的工具</p>
+                  <h2>{{ item.name }}</h2>
+                  <p >{{ item.description }}</p>
                 </div>
               </div>
             </router-link>
@@ -32,8 +22,22 @@
 </template>
 
 <script setup lang="ts">
-
 import Navigation from "@/components/Navigation.vue";
+
+const linkList = [{
+  link: "/i/tools/media",
+  name: "媒体下载工具",
+  description: "下载推文的图片或视频"
+},{
+  link: "/i/tools/snowflake_tool",
+  name: "SnowFlake Tool",
+  description: "雪花算法相关的工具"
+},]
+//{
+//  link: "/i/tools/translator",
+//  name: "烤推机",
+//  description: "人工翻译工具"
+//}
 </script>
 
 <style scoped>

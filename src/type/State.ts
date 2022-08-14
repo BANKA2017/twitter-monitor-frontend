@@ -60,4 +60,5 @@ export interface State {
   realMediaPath: string
   twemojiBasePath: string
   onlinePath: string
+  translatorMode: boolean
 }

@@ -9,9 +9,6 @@ import 'bootstrap/js/dist/button'
 import 'bootstrap/js/dist/dropdown'
 import 'bootstrap/js/dist/collapse'
 
-//pwa
-import './pwa'
-
 //icons
 //TODO svg-loader
 //import "bootstrap-icons/font/bootstrap-icons.css";

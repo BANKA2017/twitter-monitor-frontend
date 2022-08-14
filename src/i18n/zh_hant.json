@@ -52,7 +52,8 @@
             "api": "API",
             "media_download_tool": "媒體下載",
             "rss": "RSS",
-            "backstage": "管理"
+            "backstage": "管理",
+            "tools": "工具"
         },
         "scripts": {
             "time": "時間",
@@ -182,5 +183,8 @@
         "auto_load_tweets": "到達底部自動加載更多",
         "load_conversation": "在狀態中加載對話",
         "online_mode": "使用在綫 Api"
+    },
+    "pwa": {
+        "need_refresh": "已加載新内容，請刷新或重新打開頁面"
     }
 }

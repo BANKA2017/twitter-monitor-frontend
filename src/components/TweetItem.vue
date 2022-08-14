@@ -1,7 +1,7 @@
 <template>
   <div id="tweet">
     <div v-if="false">{{ tweet }}</div>
-    <div v-else ref="tweetItem" :id="tweet.tweet_id_str" :class="{'card': true, 'card-border': true, 'border-danger': tweet.dispute === 1, 'border-primary': tweet.tweet_id_str === topTweetId || (settings.loadConversation && $route.name === 'name-status' && $route.params.status === tweet.tweet_id_str), 'tweet-background': ($route.name !== 'name-status' || $route.params.status !== tweet.tweet_id_str)}" @click="clickEvent">
+    <div v-else ref="tweetItem" :id="tweet.tweet_id_str" :class="{'card': true, 'card-border': true, 'border-danger': tweet.dispute === 1, 'border-primary': tweet.tweet_id_str === topTweetId || (settings.loadConversation && $route.name === 'name-status' && $route.params.status === tweet.tweet_id_str), 'tweet-background': ($route.name !== 'name-status' || $route.params.status !== tweet.tweet_id_str)}" @click="clickEvent" :style="translatorMode ? 'border: none' : ''">
       <div class='card-body'>
         <p v-if="tweetModeValue === 'timeline' && tweet.tweet_id_str === topTweetId"><small class="text-muted">
           <pinned height="1em" width="1em" status="text-muted" class="me-1" />{{ t("tweet.text.pinned_tweet") }}
@@ -17,7 +17,7 @@
             </router-link>
           </span>
         </div>
-        <div @click="(e) => {e.stopPropagation()}" class="position-absolute" style="right: 1em">
+        <div @click="(e) => {e.stopPropagation()}" class="position-absolute" style="right: 1em" v-if="!translatorMode">
           <!--media-->
           <span v-if="tweet.media === 1" class="ms-1" style="cursor:pointer" @click="swapDisplayPictureStatus">
               <image-icon height="2em" status="text-success" width="2em"/>
@@ -38,7 +38,7 @@
               <full-text :entities="[]" :full_text_origin="tweet.retweet_from ? tweet.retweet_from : tweet.display_name" />
             </router-link>
             <a v-else :href="`//twitter.com/` + tweet.retweet_from_name" class="card-title text-dark fw-bold" target="_blank"><full-text :entities="[]" :full_text_origin="tweet.retweet_from" /></a>
-            <verified v-if="settings.onlineMode && (tweet.retweet_from_name ? tweet.retweet_user_info.verified : tweet.user_info.verified)" height="1em" status="text-primary" width="1.2em" class="ms-2 "/>
+            <verified v-if="settings.onlineMode && (tweet.retweet_from_name ? tweet.retweet_user_info.verified : tweet.user_info.verified)" height="1em" status="text-primary" width="2em" class="mx-2 "/>
             <br><span style="font-size: 0.75em">@{{ tweet.retweet_from ? tweet.retweet_from_name : tweet.name }}</span>
           </div>
         </div>
@@ -46,8 +46,8 @@
           <div :class="{'offset-md-1': settings.onlineMode, 'col-md-11': settings.onlineMode, 'col-12': true}">
             <!--<div v-html="`<p class='card-text'>`+tweet.full_text+`</p>`"></div>-->
             <!--excited!-->
-            <div :dir="tweet.rtl ? 'rtl' : 'ltr'"><full-text class="card-text" :entities="tweet.entities" :full_text_origin="tweet.full_text_origin" :display-range="(settings.onlineMode && (route.name === 'name-status' || route.name === 'no-name-status')) ? tweet.display_text_range : [0, 0]"/></div>
-            <translate v-if="!settings.onlineMode && tweet.full_text_origin" :id="tweet.tweet_id_str" :to="settings.language" type="0"/>
+            <div :dir="tweet.rtl ? 'rtl' : 'ltr'"><full-text class="card-text" :entities="tweet.entities" :full_text_origin="tweet.full_text_origin" :display-range="(settings.onlineMode && (route.name === 'name-status' || route.name === 'no-name-status' || translatorMode)) ? tweet.display_text_range : [0, 0]"/></div>
+            <translate v-if="translatorMode || (!settings.onlineMode && tweet.full_text_origin)" :id="tweet.tweet_id_str" :to="settings.language" type="0"/>
             <!--media-->
             <div class="mt-4" v-if="tweet.media === 1&&!settings.displayPicture && tweet.mediaObject.filter(x => x.source === 'tweets').length">
               <image-list :is_video="tweet.video" :list="tweet.mediaObject.filter(x => x.source === 'tweets')" :unlimited="tweetModeValue === 'status'"/>
@@ -78,8 +78,8 @@
                 </div>
                 <!--<div class="d-inline-block" >-->
                   <!--save for image-->
-                <!--<small class="text-muted"><span role="button" @click="h2c">保存截图</span></small>-->
-                <!--</div>-->
+                <!--<small class="text-muted"><span role="button" @click="H2C(tweetItem, 'tweet-' + tweet.tweet_id_str + '.png')">Screenshot</span></small>-->
+              <!--</div>-->
               </div>
             </div>
           </div>
@@ -108,7 +108,7 @@ import {Tweet} from "@/type/Content";
 import {useRoute, useRouter} from "vue-router";
 import {request} from "@/share/Fetch";
 import {ApiUserInfo} from "@/type/Api";
-import {Notice} from "@/share/Tools";
+import {Notice, H2C} from "@/share/Tools";
 import {createRealMediaPath} from "@/share/Tools";
 import Pinned from "@/icons/Pinned.vue";
 import Verified from "@/icons/Verified.vue";
@@ -117,7 +117,7 @@ const props = defineProps({
   tweet: {
     type: Object as PropType<Tweet>,
     default: () => ({})
-  },
+  }
 })
 
 const { t } = useI18n()
@@ -134,6 +134,8 @@ const samePath = computed(() => store.state.samePath)
 
 const tweetModeValue = computed(() => store.state.tweetMode)
 const tweetTypeValue = computed(() => store.state.tweetType)
+
+const translatorMode = computed(() => store.state.translatorMode)
 
 const swapDisplayPictureStatus = () => {
   store.dispatch('swapDisplayPictureStatus')
