@@ -18,10 +18,9 @@
           <small class="text-muted">{{ timeGap(quoteObject.time, now, settings.language) }}</small>
         </div>
         <!--media-->
-        <template v-if="quoteObject.media === 1&&!settings.displayPicture">
-          <div class="my-4"></div>
+        <div class="mt-4" v-if="quoteObject.media === 1&&!settings.displayPicture">
           <image-list :basePath="store.getters.getBasePath" :bottom="true" :is_video="quoteObject.video" :list="quoteMedia"/>
-        </template>
+        </div>
       </template>
     </div>
   </div>
@@ -36,10 +35,10 @@
   import {useI18n} from "vue-i18n";
   import FullText from "@/components/FullText.vue";
 
-  defineProps({
+  const props = defineProps({
     quoteObject: {
-      type: Object as PropType<Quote | {}>,
-      default: () => {}
+      type: Object as PropType<Quote>,
+      default: () => ({})
     },
     quoteMedia: {
       type: Array as PropType<Media[]>,
@@ -50,6 +49,11 @@
   const store = useStore()
   const now = computed(() => store.state.now)
   const settings = computed(() => store.state.settings)
+
+  //const quoteMediaList = computed(() => {
+  //  if (Object.keys(props.quoteObject).length === 0) {return []}
+  //  return props.quoteMedia.filter(x => x.tweet_id === props.quoteObject.tweet_id)
+  //})
 
   const timeGap = (timestamp: number, now: Date, language: string) => {
     let gap = (Number(now) - (timestamp * 1000))/1000;

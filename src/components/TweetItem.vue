@@ -53,7 +53,7 @@
               <image-list :is_video="tweet.video" :list="tweet.mediaObject.filter(x => x.source === 'tweets')" :unlimited="tweetModeValue === 'status'"/>
             </div>
             <!--quote-->
-            <div class="mt-4" v-if="tweet.quote_status !== 0">
+            <div class="mt-4" v-if="tweet.quote_status !== 0 && Object.keys(tweet.quoteObject).length !== 0">
               <quote-card :quote-media="tweet.mediaObject.filter(x => x.source === 'quote_status')" :quote-object="tweet.quoteObject"/>
             </div>
             <!--polls-->

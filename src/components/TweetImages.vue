@@ -17,7 +17,7 @@
         </el-image>
       </div>
     </div>
-    <div v-else-if="realList.length >= 2 && realList.length <= 4">
+    <div v-else-if="realList.length >= 2 && realList.length <= 6">
       <div class="card no-gutters" :style="{'width': '100%', 'padding-bottom': '56.25%', 'height': '100%', 'border-radius': '14px 14px 14px 14px'}">
         <el-image v-for="(image, order) in realList" :key="order" :alt="image.uid+'_'+image.tweet_id+'_'+0" :initial-index="order" :preview-src-list="previewList" :src="createRealMediaPath(realMediaPath, samePath.value,'tweets') +image.url+(realList[0].source !== 'tweets' ? '' : ':small')" :style="listStyle[realList.length-2][order]" class="border border-white" fit="cover" lazy preview-teleported hide-on-click-modal>
           <template #placeholder>
@@ -106,6 +106,19 @@ const listStyle =  [
       "width: 50%; height: 50%; margin-left: 50%; position: absolute; border-top-right-radius: 14px 14px",
       "width: 50%; height: 50%; margin-top: calc( 9 / 16 * 50% ); position: absolute; border-bottom-left-radius: 14px 14px",
       "width: 50%; height: 50%; margin-left: 50%; margin-top: calc( 9 / 16 * 50% ); position: absolute; border-bottom-right-radius: 14px 14px"
+    ],[
+      "width: calc(100% / 3); height: 50%; position: absolute; border-top-left-radius: 14px 14px",
+      "width: calc(100% / 3); height: 50%; margin-left: calc(100% / 3); position: absolute;",
+      "width: calc(100% / 3); height: 50%; margin-left: calc(100% / 3 * 2); position: absolute; border-top-right-radius: 14px 14px",
+      "width: 50%; height: 50%; margin-top: calc( 9 / 16 * 50% ); position: absolute; border-bottom-left-radius: 14px 14px",
+      "width: 50%; height: 50%; margin-left: 50%; margin-top: calc( 9 / 16 * 50% ); position: absolute; border-bottom-right-radius: 14px 14px"
+    ],[
+      "width: calc(100% / 3); height: 50%; position: absolute; border-top-left-radius: 14px 14px",
+      "width: calc(100% / 3); height: 50%; margin-left: calc(100% / 3); position: absolute;",
+      "width: calc(100% / 3); height: 50%; margin-left: calc(100% / 3 * 2); position: absolute; border-top-right-radius: 14px 14px",
+      "width: calc(100% / 3); height: 50%; margin-top: calc( 9 / 16 * 50% ); position: absolute; border-bottom-left-radius: 14px 14px",
+      "width: calc(100% / 3); height: 50%; margin-left: calc(100% / 3); margin-top: calc( 9 / 16 * 50% ); position: absolute;",
+      "width: calc(100% / 3); height: 50%; margin-left: calc(100% / 3 * 2); margin-top: calc( 9 / 16 * 50% ); position: absolute; border-bottom-right-radius: 14px 14px"
     ],
 ]
 
