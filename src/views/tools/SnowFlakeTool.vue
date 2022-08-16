@@ -33,7 +33,6 @@ const state = reactive<{
 }>({
   snowFlake: '0'
 })
-const snowFlakeSample = " +----------------------   Snowflake IDs  64bits   ----------------------+\n |                                                                       |\n |                                                Machine id             |\n |                                                  10 bits              |\n |                                               +---------+             |\n v                                               v         v             v\n 0 0000000000 0000000000 0000000000 0000000000 0 00000 00000 0000000000 00\n ^ ^                                           ^ ^   ^ ^   ^ ^           ^\n | |                                           | |   | |   | |           |\n | +-------------------------------------------+ +---+ +---+ +-----------+\nSign                      Time                    DCID   SID   Sequence number\n1bit                     41bits                   5bits  5bits      12 bits\n\nDCID = Datacenter id\n SID = Server id\n"
 const convertSnowFlakes = (snowFlake: string) => {
   let tmpSnowFlakeInfo: {
     creation_time_milli: Date
@@ -61,7 +60,7 @@ const convertSnowFlakes = (snowFlake: string) => {
     tmpSnowFlake >>= BigInt(10)
 
     // Time
-    tmpSnowFlakeInfo.creation_time_milli = new Date(Number(BigInt(1288834974657) + (tmpSnowFlake & BigInt(0b0111111111111111111111111111111111111111111111111111))))
+    tmpSnowFlakeInfo.creation_time_milli = new Date(Number(BigInt(1288834974657) + (tmpSnowFlake & BigInt(0b011111111111111111111111111111111111111111))))
 
   } catch (e) {
   }

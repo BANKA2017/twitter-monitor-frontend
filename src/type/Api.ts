@@ -6,7 +6,7 @@ import {
   Stats,
   Status,
   Tweet,
-  UserInfo,
+  UserInfo, AudioSpace,
 } from "@/type/Content";
 
 export interface Api<T> {
@@ -63,7 +63,7 @@ export interface ApiTrends extends Api<{
   statuses: {name: string; display_name: string; header: string; count: number}[]
 }> {}
 
-export interface ApiOnline extends Api<{
+export interface ApiOnlineMedia extends Api<{
   media_info: OnlineMedia[]
   video: boolean
   video_info: {
@@ -76,6 +76,9 @@ export interface ApiOnline extends Api<{
     }[]
   } | {}
 }> {}
+
+export interface ApiAudioSpace extends Api<AudioSpace> {}
+export interface ApiPolls extends Api<number[]> {}
 
 export interface ApiHashtagList extends Api<{
   list: HashtagList[]
@@ -117,7 +120,7 @@ export interface ApiLoveLiveData {
     name: string
     name_cn: string
     project: string
-    team: "Aqours"  | "虹ヶ咲学園" | "Liella!"
+    team: string
     uid: string
     tweets: {
       card: string[]

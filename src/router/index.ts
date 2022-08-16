@@ -13,6 +13,7 @@ const Annual2019 = () => import("@/views/topics/annual2019.vue")
 const Annual2020 = () => import("@/views/topics/annual2020.vue")
 const Annual2021 = () => import("@/views/topics/annual2021.vue")
 const loveliveTrends = () => import("@/views/topics/loveliveTrends.vue")
+const bangdreamTrends = () => import("@/views/topics/bangDreamTrends.vue")
 const staffCandleStickPage = () => import("@/views/topics/staffCandleStickPage.vue")
 const NotFound = () => import("@/views/NotFound.vue")
 const Settings = () => import("@/views/Settings.vue")
@@ -36,6 +37,7 @@ export default createRouter({
                 {path: '2020', component: Annual2020, name: '2020'},
                 {path: '2021', component: Annual2021, name: '2021'},
                 {path: 'lovelive_trends/:name?', component: loveliveTrends, name: 'lovelive_trends'},
+                {path: 'bangdream_trends/:name?', component: bangdreamTrends, name: 'bangdream_trends'},
                 {path: 'staff_data_page', component: staffCandleStickPage, name: 'staff_data_page'}
             ]
         },
@@ -45,16 +47,23 @@ export default createRouter({
             name: 'tools',
             children: [
                 {path: '', component: Tools, name: 'tool-main-page'},
-                {path: 'media', component: Media, name: 'media-downloader'},
+                {
+                    path: 'media',
+                    component: Media,
+                    children: [
+                        {path: '', component: Media, name: 'media-downloader'},
+                        {path: ':tweet_id(\\d+)', component: Media, name: 'media-downloader-status'}
+                    ]
+                },
                 {path: 'snowflake_tool', component: SnowFlakeTool, name: 'snowflake-tool'},
                 {
-                    path: 'translator/:status(\\d+)?',
+                    path: 'translator',
                     component: Translator,
                     name: 'translator',
                     children:[
                       {path: '', component: Translator, name: 'translator-empty'},
                       {path: ':name', component: Translator, name: 'translator-name'},
-                      {path: ':name/status/:status(\\d+)', component: Translator, name: 'translator-name-status'}
+                      {path: 'status/:status(\\d+)', component: Translator, name: 'translator-name-status'}
                     ]
                 }
             ]

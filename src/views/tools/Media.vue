@@ -26,14 +26,14 @@
           <div class="my-4" />
           <el-input v-model="tweet_id" clearable placeholder="tweet id" @change="inputChange">
             <template #append>
-              <router-link is="el-button" :to="`/i/online/` + tweet_id"><search-icon height="1em" status="" width="1em" /></router-link>
+              <router-link is="el-button" :to="`/i/tools/media/` + tweet_id"><search-icon height="1em" status="" width="1em" /></router-link>
             </template>
           </el-input>
         </div>
         <div v-else class="col-md-8 offset-md-2">
           <el-input v-model="tweet_id" class="mt-4" clearable placeholder="tweet id" @change="inputChange">
             <template #append>
-              <router-link is="el-button" :to="`/i/online/` + tweet_id"><search-icon height="1em" status="" width="1em" /></router-link>
+              <router-link is="el-button" :to="`/i/tools/media/` + tweet_id"><search-icon height="1em" status="" width="1em" /></router-link>
             </template>
           </el-input>
           <image-list :is_video="Number(video)" :list="media" class="my-4" preload="metadata" size="orig" style="width:100%" unlimited/>
@@ -68,7 +68,7 @@ import SearchIcon from "@/icons/SearchIcon.vue"
 import {useStore} from "@/store";
 import {OnlineMedia} from "@/type/Content";
 import {Controller, request} from "@/share/Fetch";
-import {ApiOnline} from "@/type/Api";
+import {ApiOnlineMedia} from "@/type/Api";
 import {Notice} from "@/share/Tools";
 import {onBeforeRouteUpdate, useRoute, useRouter} from "vue-router";
 import {RouterNameList} from "@/share/Content";
@@ -107,7 +107,7 @@ export default defineComponent({
       state.video = false
       state.rawData = {}
       //https://tm.bangdream.fun/tmv2/api/v2/online/info/?tweet_id=1355686950640836609
-      request<ApiOnline>(settings.value.basePath + '/api/v2/online/media/?tweet_id=' + state.tweet_id, controller).then(response => {
+      request<ApiOnlineMedia>(settings.value.basePath + '/api/v2/online/media/?tweet_id=' + state.tweet_id, controller).then(response => {
         if (response.code === 200) {
           state.rawData = response.data
           state.media = response.data.media_info
@@ -182,7 +182,7 @@ export default defineComponent({
       }
 
       if (state.tweet_id) {
-        router.push('/i/online/' + state.tweet_id)
+        router.push('/i/tools/media/' + state.tweet_id)
       }
     }
 

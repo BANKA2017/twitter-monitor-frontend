@@ -140,6 +140,30 @@ export interface PollItem {
   checked: boolean
 }
 
+export interface AudioSpace {
+  id: string
+  avatar: string
+  name: string
+  display_name: string
+  start: number
+  end: number
+  title: string
+  total: number
+  verified: boolean
+  admins: AudioUsersItem[]
+  listeners: AudioUsersItem[]
+  speakers: AudioUsersItem[]
+}
+
+export interface AudioUsersItem {
+  uid: number
+  uid_str: string
+  name: string
+  display_name: string
+  avatar: string
+  start: number
+}
+
 export interface Card {
   title: string
   description: string

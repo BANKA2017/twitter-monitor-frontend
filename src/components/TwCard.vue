@@ -21,8 +21,19 @@
       <template v-else-if="object.type === 'audiospace'">
         <div style="border-radius: 14px 14px 14px 14px; background-image: linear-gradient(61.63deg, rgb(45, 66, 255) -15.05%, rgb(156, 99, 250) 104.96%);">
           <div class="card-body">
-            <p style="color: #ffffff">{{ userName }} · audiospace · <box-arrow-up-right height="1em" width="1em"/></p>
-            <span style="color: #ffffff; font-weight: 500; font-size: 1.2rem">{{ tweetText }}</span>
+            <div >
+              <el-image v-if="settings.onlineMode && state.audioSpaceObject.avatar" class="rounded-circle me-1" :src="createRealMediaPath(realMediaPath, samePath, 'userinfo')+state.audioSpaceObject.avatar.replace('https://', '')" alt="Avatar" style="height: 1em; width: 1em" />
+              <p class="text-white d-inline-block"><full-text :full_text_origin="userName" :entities="[]" />
+                <template v-if="state.audioSpaceObject.verified">
+                  <verified height="1em" width="1em" status="text-primary" class="ms-1"/> ·
+                </template>
+                <template v-else>
+                  · <span >audiospace</span> ·
+                </template>
+                <box-arrow-up-right height="1em" width="1em"/>
+              </p>
+            </div>
+            <full-text style="font-size: 1.2rem" class="text-white fw-semibold mb-2" :full_text_origin="state.audioSpaceObject.title ? state.audioSpaceObject.title : (object.description ? object.description : t('tw_card.text.someone_s_space', {someone: userName}))" :entities="[]" />
           </div>
         </div>
       </template>
@@ -102,9 +113,12 @@ import BoxArrowUpRight from "@/icons/BoxArrowUpRight.vue"
 import Link45deg from "@/icons/Link45deg.vue"
 import {useStore} from "@/store"
 import {computed, PropType, reactive, ref, Ref} from "vue"
-import {Card, Media} from "@/type/Content"
-import {createRealMediaPath} from "@/share/Tools"
+import {AudioSpace, AudioUsersItem, Card, Media} from "@/type/Content"
+import {createRealMediaPath, Notice} from "@/share/Tools"
 import {useI18n} from "vue-i18n";
+import FullText from "@/components/FullText.vue";
+import {request} from "@/share/Fetch";
+import {ApiAudioSpace} from "@/type/Api";
 
 const props = defineProps({
   object: {
@@ -138,11 +152,27 @@ const state = reactive<{
   load: Ref<boolean>
   //height: number
   //position: string//'absolute'
-
   multiDestCarouselOrder: Ref<number>
+  updateAudioSpaceFlag: boolean
+  audioSpaceObject: Ref<AudioSpace>
 }>({
   load: ref(false),
-  multiDestCarouselOrder: ref(0)
+  multiDestCarouselOrder: ref(0),
+  updateAudioSpaceFlag: false,
+  audioSpaceObject: ref({
+    id: '',
+    avatar: '',
+    name: '',
+    display_name: '',
+    start: 0,
+    end: 0,
+    title: '',
+    total: 0,
+    verified: false,
+    admins: [],
+    listeners: [],
+    speakers: [],
+  })
 })
 const {t} = useI18n()
 const store = useStore()
@@ -218,6 +248,20 @@ const paddingBottom = (link: string, height = 0, width = 0) => {
 const changeMultiDestCarouselOrder = (callback: number) => {
   state.multiDestCarouselOrder = callback
 }
+
+if (props.object?.type === 'audiospace' && settings.value.onlineMode) {
+  state.updateAudioSpaceFlag = true
+  request<ApiAudioSpace>(settings.value.basePath + '/api/v2/data/audiospace/?id=' + props.object.url).then(response => {
+    if (response.code === 200) {
+      state.audioSpaceObject = response.data
+    } else {
+      Notice(response.message, "error")
+    }
+  }).catch(e => {
+    Notice(String(e), "error")
+  })
+}
+
 //loadEvent: function () {
 //  this.load = true
 //  this.height = '100%'

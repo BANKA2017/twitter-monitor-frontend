@@ -147,7 +147,8 @@
         "text": {
             "not_supported_type": "不支持的类型",
             "list": "列表",
-            "members_count": "{0} 成员 | {0} 成员"
+            "members_count": "{0} 成员 | {0} 成员",
+            "someone_s_space": "{someone} 的空间"
         }
     },
     "tweet": {

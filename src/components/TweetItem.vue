@@ -58,7 +58,7 @@
             </div>
             <!--polls-->
             <template v-if="tweet.poll !== 0">
-              <tw-polls :media="tweet.mediaObject.filter(x => x.source === 'cards')" :polls="tweet.pollObject"/>
+              <tw-polls :media="tweet.mediaObject.filter(x => x.source === 'cards')" :polls="tweet.pollObject" :tweet-id="tweet.tweet_id_str"/>
             </template>
             <!--card-->
             <div class="mt-4" v-else-if="tweet.card !== '' && Object.keys(tweet.cardObject).length">
