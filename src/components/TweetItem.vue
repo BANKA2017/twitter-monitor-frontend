@@ -33,11 +33,11 @@
               <el-image class="rounded-circle " :src="createRealMediaPath(realMediaPath, samePath, 'userinfo')+ (tweet.retweet_from_name ? tweet.retweet_user_info.header : tweet.user_info.header).replace(/([\w]+)\.([\w]+)$/gm, `$1_reasonably_small.$2`)" alt="Avatar" />
             </router-link>
           </div>
-          <div :class="{'col-11': settings.onlineMode, 'd-inline-block': true, 'text-truncate': true, }" style="max-width: 75%;" :dir="tweet.rtl ? 'rtl' : 'ltr'" @click="(e) => {e.stopPropagation()}">
+          <div :class="{'col-11': settings.onlineMode}" :dir="tweet.rtl ? 'rtl' : 'ltr'" @click="(e) => {e.stopPropagation()}">
             <router-link v-if="settings.onlineMode || !tweet.retweet_from_name || (tweet.retweet_from_name && userList.map(x => x.name).includes(tweet.retweet_from_name))" :to="`/`+ (tweet.retweet_from ? tweet.retweet_from_name : tweet.name) + '/all'" class="card-title text-dark fw-bold">
-              <full-text :entities="[]" :full_text_origin="tweet.retweet_from ? tweet.retweet_from : tweet.display_name" />
+              <full-text class="d-inline-block text-truncate" :style="{'max-width': '' + (tweet.media ? 70 : 75) + '%'}" :entities="[]" :full_text_origin="tweet.retweet_from ? tweet.retweet_from : tweet.display_name" />
             </router-link>
-            <a v-else :href="`//twitter.com/` + tweet.retweet_from_name" class="card-title text-dark fw-bold" target="_blank"><full-text :entities="[]" :full_text_origin="tweet.retweet_from" /></a>
+            <a v-else :href="`//twitter.com/` + tweet.retweet_from_name" class="card-title text-dark fw-bold" target="_blank"><full-text class="d-inline-block text-truncate" :style="{'max-width': '' + (tweet.media ? 70 : 75) + '%'}" :entities="[]" :full_text_origin="tweet.retweet_from" /></a>
             <verified v-if="settings.onlineMode && (tweet.retweet_from_name ? tweet.retweet_user_info.verified : tweet.user_info.verified)" height="1em" status="text-primary" width="2em" class="mx-2 "/>
             <br><span style="font-size: 0.75em">@{{ tweet.retweet_from ? tweet.retweet_from_name : tweet.name }}</span>
           </div>
