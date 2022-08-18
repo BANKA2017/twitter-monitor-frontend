@@ -236,7 +236,7 @@ import {useStore} from "@/store";
 import {onMounted, reactive, Ref, ref, toRefs, watch} from "vue";
 import {ApiAnnual2021} from "@/type/Api";
 import {Annual2021DataTemplate, Annual2021Template, Annual2021TmpDataTemplate} from "@/type/Content";
-import _ from 'lodash'
+import {cloneDeep} from "lodash-es";
 
 export default {
   name: "annual2021",
@@ -397,7 +397,7 @@ export default {
         bangdream: tmpDataTemplate(),
         lovelive: tmpDataTemplate(),
         official: tmpDataTemplate()
-      } : _.cloneDeep(state.accountComputedData)
+      } : cloneDeep(state.accountComputedData)
       //pre check
       let tmpUpdateList = new Set()
       for (let projectName of ['bangdream', 'lovelive', 'official']) {
@@ -586,7 +586,7 @@ export default {
       }
       //tmpData.hourCount = tmpData.hourCount.map((count, time) => ({name: time + '时', value: count}))
       //tmpData.mediaCount = tmpData.mediaCount.map((count, time) => ({name: time + '时', value: count}))
-      latestAccountListFilter = _.cloneDeep(state.accountListFilter)
+      latestAccountListFilter = cloneDeep(state.accountListFilter)
       state.accountComputedData = tmpData
       //console.log(tmpData)
       state.loading = false

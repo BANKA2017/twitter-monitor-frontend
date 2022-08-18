@@ -16,7 +16,6 @@ import {
 } from 'echarts/components';
 import { BarChart } from 'echarts/charts';
 import { CanvasRenderer } from 'echarts/renderers';
-import _ from 'lodash'
 
 echarts.use([
   TitleComponent,
@@ -30,6 +29,7 @@ echarts.use([
 import VChart from "vue-echarts";
 import {computed, PropType, reactive} from "vue";
 import {TimelineComponentOption, XAXisComponentOption, YAXisComponentOption} from "echarts";
+import {cloneDeep} from "lodash-es";
 
 const props = defineProps({
   data: {
@@ -149,7 +149,7 @@ const state = reactive<{
 })
 
 const computedOptions = computed(() => {
-  let tmpOption = _.cloneDeep(state.option)
+  let tmpOption = cloneDeep(state.option)
   let tmpSeries: BarRaceOptions[] = []
   state.dateList = []
   //let that = this
