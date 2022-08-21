@@ -87,7 +87,7 @@ const textObject = (text: string = "", entities: Entity[] = [], arrayMode: boole
       lastEnd = entity.indices_end;
     })
     //处理最后一段
-    let tmpLastText = full_text_origin_array.slice(lastEnd).join('');
+    let tmpLastText = full_text_origin_array.slice(lastEnd).join('').replace(/ https:\/\/t.co\/[\w]+/, '');
     if (tmpLastText.length) {
       tmpText.push({text: tmpLastText, type: "", tag_text: "", url: "",});
     }
