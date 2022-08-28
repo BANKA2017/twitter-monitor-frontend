@@ -3,7 +3,7 @@
     <el-skeleton :loading="state.loading" animated>
       <div class="card mb-4">
         <el-collapse-transition v-if="state.userInfo.banner !== 0">
-          <div v-show="isMobileRatio" :style="{'position': 'relative', 'aspect-ratio': !settings.displayPicture ? '3 / 1' : ''}">
+          <div class="transition-height" :style="{height: (isMobileRatio ? '100%' : 0), 'position': 'relative', 'aspect-ratio': !settings.displayPicture ? '3 / 1' : ''}">
             <el-image v-if="!settings.displayPicture" :src="createRealMediaPath(realMediaPath, samePath, 'userinfo')+`pbs.twimg.com/profile_banners/`+state.userInfo.uid_str+`/`+state.userInfo.banner+`/banner.jpg`" :preview-src-list="[createRealMediaPath(realMediaPath, samePath, 'userinfo')+`pbs.twimg.com/profile_banners/`+state.userInfo.uid_str+`/`+state.userInfo.banner+`/banner.jpg`]" alt="Banner" style="position: absolute; max-height: 100%;  " class="col-12 card-img-top banner" fit="cover" lazy preview-teleported hide-on-click-modal/>
           </div>
         </el-collapse-transition>
@@ -212,5 +212,10 @@ onBeforeRouteLeave((to, from) => {
 }
 .margin-3 {
   margin: 3%;
+}
+.transition-height {
+  transition-property: height;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
 }
 </style>

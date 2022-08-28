@@ -1,13 +1,13 @@
 <template>
   <div id="imageList" class="mb-2" @click="e => {e.stopPropagation()}">
     <div v-if="is_video" style="height: 100%">
-      <video :id="'video' + realList[0].tweet_id" controls playsinline crossorigin :poster="createRealMediaPath(realMediaPath, samePath.value,'tweets') + realList[0].cover" :preload="preload" style="width: 100%; height: 100%;">
-        <source :src="createRealMediaPath(realMediaPath, samePath.value,'tweets') +realList[0].url">
+      <video :id="'video' + realList[0].tweet_id" controls playsinline crossorigin :poster="createRealMediaPath(realMediaPath, samePath,'tweets') + realList[0].cover" :preload="preload" style="width: 100%; height: 100%;">
+        <source :src="createRealMediaPath(realMediaPath, samePath,'tweets') +realList[0].url">
       </video>
     </div>
     <div v-else-if="realList.length === 1" :style="{'height': '100%', 'aspect-ratio': aspect_ratio}">
       <div :style="`width: 100%; padding-bottom: ` + ( realList[0].origin_info_height / realList[0].origin_info_width * 100) +  `%; height: 100%; border-radius: 14px 14px 14px 14px`" class="no-gutters card">
-        <el-image :alt="realList[0].uid+'_'+realList[0].tweet_id+'_'+0" :initial-index="0" :preview-src-list="previewList" :src="createRealMediaPath(realMediaPath, samePath.value,'tweets') +realList[0].url+(realList[0].source !== 'tweets' ? '' : ':small')" class="border border-white" fit="cover" lazy style="width: 100%; height: 100%; position: absolute; border-radius: 14px 14px 14px 14px" preview-teleported hide-on-click-modal>
+        <el-image :alt="realList[0].uid+'_'+realList[0].tweet_id+'_'+0" :initial-index="0" :preview-src-list="previewList" :src="createRealMediaPath(realMediaPath, samePath,'tweets') +realList[0].url+(realList[0].source !== 'tweets' ? '' : ':small')" class="border border-white" fit="cover" lazy style="width: 100%; height: 100%; position: absolute; border-radius: 14px 14px 14px 14px" preview-teleported hide-on-click-modal>
           <template #placeholder>
             <blur-hash-canvas v-if="realList[0].blurhash && realList[0].blurhash !== 'deleted'" :hash-text="realList[0].blurhash" class="full"/>
           </template>
@@ -19,7 +19,7 @@
     </div>
     <div v-else-if="realList.length >= 2 && realList.length <= 6">
       <div class="card no-gutters" :style="{'width': '100%', 'padding-bottom': '56.25%', 'height': '100%', 'border-radius': '14px 14px 14px 14px'}">
-        <el-image v-for="(image, order) in realList" :key="order" :alt="image.uid+'_'+image.tweet_id+'_'+0" :initial-index="order" :preview-src-list="previewList" :src="createRealMediaPath(realMediaPath, samePath.value,'tweets') +image.url+(realList[0].source !== 'tweets' ? '' : ':small')" :style="listStyle[realList.length-2][order]" class="border border-white" fit="cover" lazy preview-teleported hide-on-click-modal>
+        <el-image v-for="(image, order) in realList" :key="order" :alt="image.uid+'_'+image.tweet_id+'_'+0" :initial-index="order" :preview-src-list="previewList" :src="createRealMediaPath(realMediaPath, samePath,'tweets') +image.url+(realList[0].source !== 'tweets' ? '' : ':small')" :style="listStyle[realList.length-2][order]" class="border border-white" fit="cover" lazy preview-teleported hide-on-click-modal>
           <template #placeholder>
             <blur-hash-canvas class="full" :hash-text="image.blurhash" v-if="image.blurhash && image.blurhash !== 'deleted'"/>
           </template>
@@ -31,7 +31,7 @@
     </div>
     <div v-else class="row justify-content-around">
       <div class="mx-1 mb-4 rounded-3" style="width: calc(100% / 3 - 15px); aspect-ratio: 1" v-for="(image, order) in realList" :key="order">
-        <el-image class="rounded-3" style="height: 100%; width: 100%" :alt="image.uid+'_'+image.tweet_id+'_'+0" :initial-index="order" :preview-src-list="previewList" :src="createRealMediaPath(realMediaPath, samePath.value,'tweets') +image.url+(realList[0].source !== 'tweets' ? '' : ':small')" fit="cover" lazy preview-teleported hide-on-click-modal>
+        <el-image class="rounded-3" style="height: 100%; width: 100%" :alt="image.uid+'_'+image.tweet_id+'_'+0" :initial-index="order" :preview-src-list="previewList" :src="createRealMediaPath(realMediaPath, samePath,'tweets') +image.url+(realList[0].source !== 'tweets' ? '' : ':small')" fit="cover" lazy preview-teleported hide-on-click-modal>
           <template #placeholder>
             <blur-hash-canvas class="full" :hash-text="image.blurhash" v-if="image.blurhash && image.blurhash !== 'deleted'"/>
           </template>

@@ -47,9 +47,9 @@
     <label class="text-muted my-2 mb-4" for="searchUserInclude">{{ t("search.advanced_search.example_from_this_accounts") }}</label>
     <!-- time -->
     <div class="input-group" id="searchTime">
-      <input v-model="state.advancedSearch.start" :max="now.getFullYear() + '-' + (now.getMonth() < 9 ? '0' : '') + (now.getMonth() + 1) + '-' + (now.getDate() < 10 ? '0' : '') + now.getDate()" class="form-control" placeholder="since" type="date">
+      <input v-model="state.advancedSearch.start" :max="now.getFullYear() + '-' + (now.getMonth() + 1).toString().padStart(2, '0') + '-' + now.getDate().toString().padStart(2, '0')" class="form-control" placeholder="since" type="date">
       <span id="searchTimeTo" class="input-group-text">-></span>
-      <input v-model="state.advancedSearch.end" :max="now.getFullYear() + '-' + (now.getMonth() < 9 ? '0' : '') + (now.getMonth() + 1) + '-' + (now.getDate() < 10 ? '0' : '') + now.getDate()" :min="state.advancedSearch.start" class="form-control" placeholder="to" type="date">
+      <input v-model="state.advancedSearch.end" :max="now.getFullYear() + '-' + (now.getMonth() + 1).toString().padStart(2, '0') + '-' + now.getDate().toString().padStart(2, '0')" :min="state.advancedSearch.start" class="form-control" placeholder="to" type="date">
       <button id="searchTimeDel" class="btn btn-outline-danger" type="button" @click="() => {state.advancedSearch.start = ''; state.advancedSearch.end = ''}">
         {{ t('search.advanced_search.clean') }}
       </button>

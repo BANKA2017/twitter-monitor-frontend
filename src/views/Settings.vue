@@ -26,15 +26,15 @@
             <input type="checkbox" class="form-check-input" id="auto-refresh" v-model="autoRefresh">
             <label class="custom-control-label" for="auto-refresh">{{ t("settings.auto_refresh") }}</label>
           </div>-->
-          <div class="form-check mb-3">
+          <div class="form-check mb-1">
             <input type="checkbox" class="form-check-input" id="auto-load-more" v-model="autoLoadMore">
             <label class="custom-control-label form-label" for="auto-load-more">{{ t("settings.auto_load_tweets") }}</label>
           </div>
-          <div class="form-check mb-3">
+          <div class="form-check mb-1">
             <input type="checkbox" class="form-check-input" id="load-conversation" v-model="loadConversation">
             <label class="custom-control-label form-label" for="load-conversation">{{ t("settings.load_conversation") }}</label>
           </div>
-          <div class="form-check mb-3">
+          <div class="form-check mb-1">
             <input type="checkbox" class="form-check-input" id="online-mode" v-model="onlineMode">
             <label class="custom-control-label form-label" for="online-mode">{{ t("settings.online_mode") }}</label>
           </div>

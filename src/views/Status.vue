@@ -90,7 +90,7 @@ const itemRows = computed(() => {
   })
   state.rows.map(x => {
     let date = new Date(x.time * 1000)
-    let time = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate() + ' ' + date.getHours() + ':' + date.getMinutes()
+    let time = date.getFullYear() + '-' + (date.getMonth() + 1).toString().padStart(2, '0') + '-' + date.getDate().toString().padStart(2, '0') + ' ' + date.getHours().toString().padStart(2, '0') + ':' + date.getMinutes().toString().padStart(2, '0')
     tmpItemRows.account.push({time: time, total_users: x.total_users})
     tmpItemRows.tweets.push({
       time: time,
