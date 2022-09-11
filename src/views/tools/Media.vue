@@ -39,7 +39,7 @@
           <image-list :is_video="Number(state.video)" :list="state.media" class="my-4" preload="metadata" size="orig" style="width:100%" unlimited/>
           <span class="lead">Download</span>
           <div class="list-group my-2">
-            <template v-for="(mediaInfo, order) in (state.video ? state.rawData.video_info.variants : state.media)" :key="order">
+            <template v-for="(mediaInfo, order) in (state.video ? state.rawData.video_info.variants.sort((a, b) => b.bitrate-a.bitrate) : state.media)" :key="order">
               <a :href="createRealMediaPath(realMediaPath, samePath,'tweets') + (state.video ? mediaInfo.url.replace('https://', '') : `https://` + mediaInfo.url) + (state.video || mediaInfo.source !== 'tweets' ? '' : `:orig`)" class="text-muted text-decoration-none list-group-item list-group-item-action d-flex justify-content-between align-items-center" target="_blank">
                 {{ state.video ? mediaInfo.content_type === 'video/mp4' ? mediaInfo.url.replace(/.*vid\/([0-9]+x[0-9]+).*/, `$1`) : 'm3u8' : mediaInfo.basename}}
                 <span v-if="!state.video || mediaInfo.content_type === 'video/mp4'" class="badge bg-primary rounded-pill">{{ state.video ? mediaInfo.bitrate / 1000 + ' kbps' : mediaInfo.origin_info_height + 'x' +mediaInfo.origin_info_width }}</span>
@@ -66,7 +66,7 @@ import {computed, defineComponent, onMounted, reactive, ref, Ref, toRefs} from "
 import {useHead} from "@vueuse/head"
 import SearchIcon from "@/icons/SearchIcon.vue"
 import {useStore} from "@/store";
-import {OnlineMedia} from "@/type/Content";
+import {OnlineMedia, OnlineMediaList} from "@/type/Content";
 import {Controller, request} from "@/share/Fetch";
 import {ApiOnlineMedia} from "@/type/Api";
 import {Notice, createRealMediaPath} from "@/share/Tools";
@@ -85,7 +85,7 @@ const realMediaPath = computed(() => store.state.realMediaPath)
 const samePath = computed(() => store.state.samePath)
 const state = reactive<{
   tweet_id: string
-  rawData: any
+  rawData: OnlineMediaList | {}
   media: OnlineMedia[]
   debug: boolean
   load: Ref<boolean>
@@ -109,8 +109,10 @@ const fetchMedia = () => {
   request<ApiOnlineMedia>(settings.value.basePath + '/api/v2/online/media/?tweet_id=' + state.tweet_id, controller).then(response => {
     if (response.code === 200) {
       state.rawData = response.data
-      state.media = response.data.media_info
-      state.video = response.data.video
+      if (state.rawData.video) {
+        state.media = response.data.media_info
+        state.video = response.data.video
+      }
       if (state.media.length > 0) {
         Notice("加载成功", "success")
       } else {

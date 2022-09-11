@@ -23,7 +23,7 @@
           <div class="card-body">
             <div >
               <el-image v-if="settings.onlineMode && state.audioSpaceObject.avatar" class="rounded-circle me-1" :src="createRealMediaPath(realMediaPath, samePath, 'userinfo')+state.audioSpaceObject.avatar.replace('https://', '')" alt="Avatar" style="height: 1em; width: 1em" />
-              <p class="text-white d-inline-block"><full-text :full_text_origin="userName" :entities="[]" />
+              <p class="text-white d-inline-block"><full-text :full_text_origin="state.audioSpaceObject.display_name ? state.audioSpaceObject.display_name : userName" :entities="[]" />
                 <template v-if="state.audioSpaceObject.verified">
                   <verified height="1em" width="1em" status="text-primary" class="ms-1"/> ·
                 </template>
@@ -47,7 +47,7 @@
           </div>
         </template>
         <div v-else-if="object.secondly_type === 'image_carousel_website' || object.secondly_type === 'image_carousel_app' || object.secondly_type === 'image_multi_dest_carousel_website' || object.secondly_type === 'mixed_media_multi_dest_carousel_website' || object.secondly_type === 'video_carousel_website' || object.secondly_type === 'video_carousel_app' || object.secondly_type === 'video_multi_dest_carousel_website' || object.secondly_type === 'mixed_media_single_dest_carousel_website' || object.secondly_type === 'mixed_media_single_dest_carousel_app'" :style="{width: '100%', height: '100%', 'border-radius': '14px 14px 0 0'}">
-          <el-carousel v-if="mediaState" style="border-radius: 14px 14px 0 0" indicator-position="outside" trigger="click" @change="changeMultiDestCarouselOrder">
+          <el-carousel v-if="mediaState" style="border-radius: 14px 14px 0 0" indicator-position="outside" trigger="click" :autoplay="false" @change="changeMultiDestCarouselOrder">
             <el-carousel-item v-for="(mediaInfo, key) in media" :key="key" :name="key.toString()">
               <video v-if="mediaInfo.extension === 'mp4'" id="carouselVideoPlayer" :poster="createRealMediaPath(realMediaPath, samePath) +mediaInfo.cover" :src="createRealMediaPath(realMediaPath, samePath) +mediaInfo.url" :type="mediaInfo.content_type" class="border" controls loop playsinline preload="none" style="width: 100%; height: 100%; border-radius: 14px 14px 0 0; background-color: black"></video>
               <el-image v-else :id="mediaInfo.filename" :preview-src-list="[createRealMediaPath(realMediaPath, samePath)+mediaInfo.cover]" :src="createRealMediaPath(realMediaPath, samePath)+mediaInfo.url" alt="cardImage" class="card-img-top" fit="cover" lazy preview-teleported hide-on-click-modal>

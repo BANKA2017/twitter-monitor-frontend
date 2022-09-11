@@ -1,7 +1,7 @@
 <template>
   <div id="imageList" class="mb-2" @click="e => {e.stopPropagation()}">
-    <div v-if="is_video" style="height: 100%">
-      <video :id="'video' + realList[0].tweet_id" controls playsinline crossorigin :poster="createRealMediaPath(realMediaPath, samePath,'tweets') + realList[0].cover" :preload="preload" style="width: 100%; height: 100%;">
+    <div v-if="is_video" style="height: 100%; ">
+      <video :id="'video' + realList[0].tweet_id" controls playsinline crossorigin :poster="createRealMediaPath(realMediaPath, samePath,'tweets') + realList[0].cover" :preload="preload" :style="{width: '100%', height: '100%', 'aspect-ratio': (realList[0].origin_info_width > realList[0].origin_info_height ? realList[0].origin_info_width / realList[0].origin_info_height : 1)}">
         <source :src="createRealMediaPath(realMediaPath, samePath,'tweets') +realList[0].url">
       </video>
     </div>

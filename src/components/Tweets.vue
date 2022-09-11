@@ -324,7 +324,7 @@ const routeRun = (to: RouteLocationNormalized, from: RouteLocationNormalized | {
   routeCase(to)
   emptyTranslateList()
   if (!(to.name === 'search' && !to.query.q && to.query.advanced !== '1')) {
-    if (!(to.name === 'main' && settings.value.onlineMode) || translatorMode) {
+    if (!(to.name === 'main' && settings.value.onlineMode) || translatorMode.value) {
       update()
     }
   } else {

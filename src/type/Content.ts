@@ -118,6 +118,20 @@ export interface OnlineMedia {
   url: string
 }
 
+export interface OnlineMediaList {
+  media_info: OnlineMedia[]
+  video: boolean
+  video_info: {
+    aspect_ratio: number[]
+    duration_millis: number
+    variants: {
+      bitrate?: number
+      content_type: string
+      url: string
+    }[]
+  }
+}
+
 export type MediaSize = 'large' | 'medium' | 'small' | 'thumb' | 'tiny' | 'orig'
 
 export interface Quote {

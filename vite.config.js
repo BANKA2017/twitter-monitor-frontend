@@ -52,6 +52,13 @@ export default defineConfig({
       workbox: {
         runtimeCaching: [
           {
+            urlPattern: /(.*?)\.(json)/,
+            handler: 'NetworkFirst',
+            options: {
+              cacheName: 'not-cache-json',
+            },
+          },
+          {
             urlPattern: /(.*?)\.(js|css|ts)/, // js /css /ts静态资源缓存
             handler: 'CacheFirst',
             options: {

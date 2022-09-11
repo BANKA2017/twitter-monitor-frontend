@@ -2,7 +2,7 @@ import {
   AccountList,
   LegacyChart,
   HashtagList,
-  OnlineMedia,
+  OnlineMediaList,
   Stats,
   Status,
   Tweet,
@@ -63,19 +63,7 @@ export interface ApiTrends extends Api<{
   statuses: {name: string; display_name: string; header: string; count: number}[]
 }> {}
 
-export interface ApiOnlineMedia extends Api<{
-  media_info: OnlineMedia[]
-  video: boolean
-  video_info: {
-    aspect_ratio: number[]
-    duration_millis: number
-    variants: {
-      bitrate?: number
-      content_type: string
-      url: string
-    }[]
-  } | {}
-}> {}
+export interface ApiOnlineMedia extends Api<OnlineMediaList | {}> {}
 
 export interface ApiAudioSpace extends Api<AudioSpace> {}
 export interface ApiPolls extends Api<number[]> {}
