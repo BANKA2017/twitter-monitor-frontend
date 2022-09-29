@@ -1,5 +1,5 @@
 <template>
-  <div class="text-break d-inline-block" id="full-text">
+  <div :class="{'text-break': true, 'd-inline-block': !inline, 'd-inline': inline}" id="full-text">
     <div class="mb-2" v-if="state.replyNameList.length > 0" style="font-size: 0.8em">
       {{ t("tweet.text.replying_to") }}
       <template v-for="(name, index) in state.replyNameList" :key="name">
@@ -15,7 +15,7 @@
         </template>
         <br v-if="ord !== x.length - 1">
       </template>
-      <router-link @click="e => {e.stopPropagation()}" v-if="obj.type === 'hashtag' || obj.type === 'symbol'" :to="(obj.type === 'hashtag' ? `/hashtag/` : `/cashtag/`) + obj.tag_text">#{{ obj.tag_text }}</router-link>
+      <router-link @click="e => {e.stopPropagation()}" v-if="obj.type === 'hashtag' || obj.type === 'symbol'" :to="(obj.type === 'hashtag' ? `/hashtag/` : `/cashtag/`) + obj.tag_text">{{(obj.type === 'hashtag' ? '#' : '$') + obj.tag_text }}</router-link>
       <router-link @click="e => {e.stopPropagation()}"
         v-else-if="(obj.type === 'user_mention' && (settings.onlineMode || userList.map(x => x.name).includes(obj.tag_text.substring(1))))"
         :to="`/`+obj.tag_text.substring(1)+`/all`">{{ obj.tag_text }}
@@ -43,6 +43,10 @@ const props = defineProps({
   displayRange: {
     type: Array as PropType<number[]>,
     default: [0, 0]
+  },
+  inline: {
+    type: Boolean,
+    default: false
   }
 })
 

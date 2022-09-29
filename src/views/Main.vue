@@ -15,8 +15,8 @@
   </div>
 </template>
 
-<script lang="ts">
-import {computed, defineComponent} from "vue";
+<script setup lang="ts">
+import {computed} from "vue";
 import SinglePageHeader from "@/components/SinglePageHeader.vue";
 import Tweets from "@/components/Tweets.vue";
 import ProjectList from "@/components/ProjectList.vue";
@@ -24,16 +24,12 @@ import LinkList from "@/components/LinkList.vue";
 import LocalRouter from "@/components/LocalRouter.vue";
 import Search from "@/components/Search.vue";
 import {useStore} from "@/store";
-export default defineComponent({
-  components: {Search, LocalRouter, LinkList, ProjectList, Tweets, SinglePageHeader},
-  setup() {
-    const store = useStore()
-    const width = computed(() => store.state.width)
-    const height = computed(() => store.state.height)
-    const settings = computed(() => store.state.settings)
-    return {width, height, settings}
-  }
-})
+
+const store = useStore()
+const width = computed(() => store.state.width)
+const height = computed(() => store.state.height)
+const settings = computed(() => store.state.settings)
+
 </script>
 
 <style scoped>

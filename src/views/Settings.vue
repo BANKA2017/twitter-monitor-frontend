@@ -7,12 +7,12 @@
         <div class="col-md-8 offset-md-2">
           <div class="input-group mb-3">
             <span class="input-group-text" id="api_path">{{ t("settings.api_path") }}</span>
-            <input v-model="basePath" aria-describedby="api_path" aria-label="Sizing example input" class="form-control" type="text">
+            <input v-model="settings.basePath" aria-describedby="api_path" aria-label="Sizing example input" class="form-control" type="text" disabled>
           </div>
           <label class="mb-3 text-muted form-label" for="api_path">{{ t("settings.default_api_path", [settings.onlineMode ? defaultOnlinePath : defaultBasePath]) }}</label>
           <div class="input-group mb-3">
             <span class="input-group-text" id="media_path">{{ t("settings.media_path") }}</span>
-            <input v-model="mediaPath" aria-describedby="media_path" aria-label="Sizing example input" class="form-control" type="text">
+            <input v-model="settings.mediaPath" aria-describedby="media_path" aria-label="Sizing example input" class="form-control" type="text" disabled>
           </div>
           <label class="mb-3 text-muted form-label" for="media_path">{{ t("settings.default_media_path", [defaultMediaPath]) }}</label>
           <div class="input-group mb-3">
@@ -56,21 +56,22 @@ import {useI18n} from "vue-i18n";
 
 const { t } = useI18n()
 const defaultBasePath = process.env.NODE_ENV !== "development" ? import.meta.env.VITE_PRO_BASE_PATH : import.meta.env.VITE_DEV_BASE_PATH
-const defaultMediaPath = import.meta.env.VITE_MEDIA_PATH ? import.meta.env.VITE_MEDIA_PATH : defaultBasePath + '/api/v2/media/'
+const defaultMediaPath = import.meta.env.VITE_MEDIA_PATH ? import.meta.env.VITE_MEDIA_PATH : defaultBasePath + '/api/v3/media/'
 const defaultOnlinePath = import.meta.env.VITE_ONLINE_PATH ? import.meta.env.VITE_ONLINE_PATH : ''
 
 const store = useStore()
 const settings = computed(() => store.state.settings)
 const languageList = computed(() => store.state.languageList)
 const adminMode = computed(() => store.state.adminMode)
-const basePath = computed({
-  get () {return store.getters.getBasePath},
-  set (value: string) {store.dispatch("updateSettingsItem", {key: "basePath", value})}
-})
-const mediaPath = computed({
-  get () {return store.state.settings.mediaPath},
-  set (value: string) {store.dispatch("updateSettingsItem", {key: "mediaPath", value})}
-})
+
+//const basePath = computed({
+//  get () {return store.getters.getBasePath},
+//  set (value: string) {store.dispatch("updateSettingsItem", {key: "basePath", value})}
+//})
+//const mediaPath = computed({
+//  get () {return store.state.settings.mediaPath},
+//  set (value: string) {store.dispatch("updateSettingsItem", {key: "mediaPath", value})}
+//})
 
 const language = computed({
   get () {return store.state.settings.language},

@@ -1,5 +1,7 @@
 # twitter-monitor-frontend v3 (DEV)
 
+⚠ NEXT GENERATION `API` WRITTEN BY `NODEJS` IS NOT YET AN OPEN SOURCE PROJECT, `PHP` VERSION WILL BE UPDATED SOON 
+
 ## How to
 
 - Create file `.env.local`
@@ -7,15 +9,15 @@
 
   ```dotenv
   #deploy https://github.com/BANKA2017/twitter-monitor in local
-  VITE_DEV_BASE_PATH="http://192.168.123.101/dev/bangdreamfunv2"
+  VITE_DEV_BASE_PATH="http://192.168.123.101:3000"
   
   VITE_PRO_BASE_PATH="https://example.com"
   
   #tw_emoji
   VITE_TW_EMOJI_PATH="https://twemoji.maxcdn.com/v/latest/"
   
-  #keep empty if not deployed media proxy
-  VITE_MEDIA_PATH="https://example.com/api/v2/media/"
+  #do not empty
+  VITE_MEDIA_PATH="https://example.com/media/"
   VITE_GA_ID=""//Google analytics
 
   ```
@@ -49,21 +51,23 @@ check more in `/src/i18n/`, base language is **Chinese simplified（zh-hans）**
 
 ## 中文
 
+⚠ 由`NodeJS`编写的下一代`API`还未开源，近期我将会更新`PHP`版的`API`
+
 ## 部署
 
 - 创建文件 `.env.local` 并编辑
 
   ```dotenv
   #我将 https://github.com/BANKA2017/twitter-monitor 部署在本地
-  VITE_DEV_BASE_PATH="http://192.168.123.101/dev/bangdreamfunv2"
+  VITE_DEV_BASE_PATH="http://192.168.123.101:3000"
   
   VITE_PRO_BASE_PATH="https://example.com"
   
   #tw_emoji
   VITE_TW_EMOJI_PATH="https://twemoji.maxcdn.com/v/latest/"
   
-  #有独立的媒体代理时使用
-  VITE_MEDIA_PATH="https://example.com/api/v2/media/"
+  #媒体文件代理请务必不要留空
+  VITE_MEDIA_PATH="https://example.com/media/"
   VITE_GA_ID=""//Google analytics
 
   ```

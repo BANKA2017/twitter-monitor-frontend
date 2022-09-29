@@ -73,7 +73,7 @@ if (settings.value.onlineMode) {
   watch(etaSeconds, () => {
     if (etaSeconds.value < 0 && state.polls.length === 0 && !state.updateFlag) {
       state.updateFlag = true
-      request<ApiPolls>(settings.value.basePath + '/api/v2/data/poll/?tweet_id=' + props.tweetId).then(response => {
+      request<ApiPolls>(settings.value.basePath + '/api/v3/data/poll/?tweet_id=' + props.tweetId).then(response => {
         if (response.code === 200) {
           state.polls = response.data
         } else {
@@ -90,7 +90,7 @@ const etaContent = (seconds: 1 | 60 | 3600 | 86400 = 1) => {
   return t("polls.vote", {count: pollCount.value}, pollCount.value > 1 ? 2 : 1) + ' · ' + t("polls.eta", [Math.ceil(etaSeconds.value / seconds) + ' ' + t('public.time.' + secondsToText[seconds], Math.ceil(etaSeconds.value / seconds) === 1 ? 1 : 2)])
 }
 const eta = computed(() => {
-  if (etaSeconds.value <= 0 && props.polls[0].checked) {
+  if (etaSeconds.value <= 0 && (props.polls[0].checked || settings.value.onlineMode)) {
     return t("polls.vote", {count: pollCount.value}, pollCount.value > 1 ? 2 : 1) + ' · ' + t("polls.final_results");
   } else if (etaSeconds.value <= 0) {
     return t("polls.vote", {count: pollCount.value}, pollCount.value > 1 ? 2 : 1) + ' · ' + t("polls.wait_for_sync");

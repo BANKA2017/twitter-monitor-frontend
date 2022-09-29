@@ -8,7 +8,7 @@
     <router-link v-if="!settings.onlineMode" to="/i/status/"><el-tag class="text-decoration-none me-1 mb-1">{{ t("timeline.side_tags.status") }}</el-tag></router-link>
     <router-link v-if="!settings.onlineMode" to="/api/"><el-tag class="text-decoration-none me-1 mb-1" >{{ t("timeline.side_tags.api") }}</el-tag></router-link>
     <router-link to="/i/tools"><el-tag class="text-decoration-none me-1 mb-1">{{ t("timeline.side_tags.tools") }}</el-tag></router-link>
-    <a :href="store.getters.getBasePath + `/api/v2/rss/` + $route.params.name.toString().toLowerCase() + `.xml`" target="_blank" v-if="!settings.onlineMode && ($route.name === 'name-display' || $route.name === 'name-status') && $route.params.name"><el-tag class="text-decoration-none me-1 mb-1">{{ t("timeline.side_tags.rss") }}</el-tag></a>
+    <a :href="store.getters.getBasePath + `/api/v3/rss/` + $route.params.name.toString().toLowerCase() + `.xml`" target="_blank" v-if="!settings.onlineMode && ($route.name === 'name-display' || $route.name === 'name-status') && $route.params.name"><el-tag class="text-decoration-none me-1 mb-1">{{ t("timeline.side_tags.rss") }}</el-tag></a>
   </div>
 </template>
 

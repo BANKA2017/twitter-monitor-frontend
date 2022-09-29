@@ -34,12 +34,16 @@
             </router-link>
           </div>
           <div :class="{'col-11': settings.onlineMode}" :dir="tweet.rtl ? 'rtl' : 'ltr'" @click="(e) => {e.stopPropagation()}">
-            <router-link v-if="settings.onlineMode || !tweet.retweet_from_name || (tweet.retweet_from_name && userList.map(x => x.name).includes(tweet.retweet_from_name))" :to="`/`+ (tweet.retweet_from ? tweet.retweet_from_name : tweet.name) + '/all'" class="card-title text-dark fw-bold">
-              <full-text class="d-inline-block text-truncate" :style="{'max-width': '' + (tweet.media ? 70 : 75) + '%'}" :entities="[]" :full_text_origin="tweet.retweet_from ? tweet.retweet_from : tweet.display_name" />
-            </router-link>
-            <a v-else :href="`//twitter.com/` + tweet.retweet_from_name" class="card-title text-dark fw-bold" target="_blank"><full-text class="d-inline-block text-truncate" :style="{'max-width': '' + (tweet.media ? 70 : 75) + '%'}" :entities="[]" :full_text_origin="tweet.retweet_from" /></a>
-            <verified v-if="settings.onlineMode && (tweet.retweet_from_name ? tweet.retweet_user_info.verified : tweet.user_info.verified)" height="1em" status="text-primary" width="2em" class="mx-2 "/>
-            <br><span style="font-size: 0.75em">@{{ tweet.retweet_from ? tweet.retweet_from_name : tweet.name }}</span>
+            <div class="d-block text-truncate" :style="{'max-width': '' + (tweet.media ? 69 : 74) + '%'}">
+              <router-link v-if="settings.onlineMode || !tweet.retweet_from_name || (tweet.retweet_from_name && userList.map(x => x.name).includes(tweet.retweet_from_name))" :to="`/`+ (tweet.retweet_from ? tweet.retweet_from_name : tweet.name) + '/all'" class="card-title text-dark fw-bold" :style="{'max-width': '' + (tweet.media ? 65 : 70) + '%'}">
+                <full-text :entities="[]" :full_text_origin="tweet.retweet_from ? tweet.retweet_from : tweet.display_name" :inline="true" />
+              </router-link>
+              <a v-else :href="`//twitter.com/` + tweet.retweet_from_name" class="card-title text-dark fw-bold" target="_blank" :style="{'max-width': '' + (tweet.media ? 65 : 70) + '%'}">
+                <full-text :entities="[]" :full_text_origin="tweet.retweet_from" :inline="true" />
+              </a>
+              <verified v-if="settings.onlineMode && (tweet.retweet_from_name ? tweet.retweet_user_info.verified : tweet.user_info.verified)" height="1em" status="text-primary" width="2em" class="d-inline"/>
+              <span style="font-size: 0.75em" class="d-block">@{{ tweet.retweet_from ? tweet.retweet_from_name : tweet.name }}</span>
+            </div>
           </div>
         </div>
         <div class="row my-4">
@@ -108,7 +112,7 @@ import {Tweet} from "@/type/Content";
 import {useRoute, useRouter} from "vue-router";
 import {request} from "@/share/Fetch";
 import {ApiUserInfo} from "@/type/Api";
-import {Notice, H2C} from "@/share/Tools";
+import {Notice} from "@/share/Tools";
 import {createRealMediaPath} from "@/share/Tools";
 import Pinned from "@/icons/Pinned.vue";
 import Verified from "@/icons/Verified.vue";
@@ -167,7 +171,7 @@ const tweetItem = ref<HTMLElement>()
 
 onMounted(() => {
   if (route.name === 'no-name-status' && route.params.status === props.tweet.tweet_id_str) {
-    request<ApiUserInfo>(settings.value.basePath + '/api/v2/data/userinfo/?uid=' + props.tweet.uid_str).then(response => {
+    request<ApiUserInfo>(settings.value.basePath + '/api/v3/data/userinfo/?uid=' + props.tweet.uid_str).then(response => {
       if (response.code === 200) {
         router.replace({path: '/' + response.data.name + '/status/' + props.tweet.tweet_id_str})
       } else {

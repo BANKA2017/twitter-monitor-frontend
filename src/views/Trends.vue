@@ -88,7 +88,7 @@ export default defineComponent({
     //}
 
     const getData = () => {
-      request<ApiTrends>(settings.value.basePath + '/api/v2/data/trends').then(response => {
+      request<ApiTrends>(settings.value.basePath + '/api/v3/data/trends').then(response => {
         state.hashTagsRank24 = response.data.hashtag_list
         state.timeCountOrigin = response.data.tweet_time_list
         response.data.following.push(response.data.statuses)

@@ -7,7 +7,7 @@ import language from '@/assets/language.json'
 
 const devmode = process.env.NODE_ENV === "development"
 const basePath = !devmode ? import.meta.env.VITE_PRO_BASE_PATH : import.meta.env.VITE_DEV_BASE_PATH
-const mediaPath = import.meta.env.VITE_MEDIA_PATH ? import.meta.env.VITE_MEDIA_PATH : basePath + '/api/v2/media/'
+const mediaPath = import.meta.env.VITE_MEDIA_PATH ? import.meta.env.VITE_MEDIA_PATH : basePath + '/api/v3/media/'
 const twemojiBasePath = import.meta.env.VITE_TW_EMOJI_PATH//twemoji
 const onlinePath = import.meta.env.VITE_ONLINE_PATH ? import.meta.env.VITE_ONLINE_PATH : ''
 
@@ -88,7 +88,7 @@ export const store = createStore<State>({
     swapDisplayPictureStatus: (state) => state.settings.displayPicture = !state.settings.displayPicture,
     //updateDisplayPictureStatus: (state, payload) => state.settings.displayPicture = payload.status,
     updateSettingsItem: (state: State, payload: {key: keyof State["settings"]; value: string & boolean}) => {state.settings[payload.key] = payload.value},
-    checkSamePath: (state) =>state.samePath = (state.settings.basePath === state.settings.mediaPath),
+    checkSamePath: (state) => state.samePath = (state.settings.basePath === state.settings.mediaPath),
     updateRealMediaPath: (state, payload) => state.realMediaPath = payload.realMediaPath,
     //set core data
     setCoreValue: <K extends keyof State>(state: State, payload: {key: K; value: State[K]}) => state[payload.key] = payload.value,
@@ -152,7 +152,7 @@ export const store = createStore<State>({
     //updateDisplayPictureStatus: (context, payload) => context.commit('updateDisplayPictureStatus', {status: payload.status}),
     updateSettingsItem: (context: ActionContext<State, State>, payload: {key: keyof State["settings"]; value: string & boolean}) => context.commit('updateSettingsItem', {key: payload.key, value: payload.value}),
     checkSamePath: (context) => context.commit({type: 'checkSamePath'}),
-    updateRealMediaPath: (context) => context.commit({type: 'updateRealMediaPath', realMediaPath: context.state.settings.mediaPath + (context.state.settings.mediaPath === context.state.settings.basePath ? '/api/v2/media/' : '')}),
+    updateRealMediaPath: (context) => context.commit({type: 'updateRealMediaPath', realMediaPath: context.state.settings.mediaPath + (context.state.settings.mediaPath === context.state.settings.basePath ? '/api/v3/media/' : '')}),
     //set core data
     setCoreValue: <K extends keyof State>(context: ActionContext<State, State>, payload: {key: K; value: State[K]}) => context.commit('setCoreValue', {key: payload.key, value: payload.value}),
     pushCoreValue: (context: any, payload) => context.commit({type: 'setCoreValue', key: payload.key, value: context.state[payload.key].concat(payload.value)}),

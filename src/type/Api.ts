@@ -13,7 +13,7 @@ export interface Api<T> {
   code: number
   message: string
   query?: string
-  version: 'v2' | 'v3' | 'test' | 'compat_v3' | 'online'
+  version: 'v2' | 'v3' | 'test' | 'compat_v3' | 'online' | 'album'
   data: T
 }
 

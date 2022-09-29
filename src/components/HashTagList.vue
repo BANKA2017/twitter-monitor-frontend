@@ -22,7 +22,7 @@ const state = reactive<{
 const controller = new Controller()
 const store = useStore()
 const settings = computed(() => store.state.settings)
-request<ApiHashtagList>(settings.value.basePath + '/api/v2/data/hashtag_rank/?count=20', controller).then(response => {
+request<ApiHashtagList>(settings.value.basePath + '/api/v3/data/hashtag_rank/?count=20', controller).then(response => {
   if (response.code === 200) {
     state.list = response.data.list
     state.display = true

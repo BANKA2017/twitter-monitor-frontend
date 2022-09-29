@@ -79,7 +79,7 @@ export default defineComponent({
     }
 
     onMounted(async () => {
-      await request<ApiStats>(settings.value.basePath + '/api/v2/data/stats/').then(response => {
+      await request<ApiStats>(settings.value.basePath + '/api/v3/data/stats/').then(response => {
         state.rawData = response.data
         if (!state.rawData.length) {
           Notice("chart: " + response.message, "warning");

@@ -28,11 +28,32 @@ const NullSafeParams = <T>(content: T | undefined, defaultValue: T): T => {
 }
 
 const Equal = (to: boolean): '0' | '1' => to ? '1' : '0'
+const VerifyQueryString = <T>(value: T | null | undefined, defaultValue: T | number | bigint) => {
+  if (!value || typeof value === 'object' || ((typeof defaultValue === 'number' || typeof defaultValue === 'bigint') && isNaN(Number(value)))) {
+    return defaultValue
+  }
 
-const H2C = (node: HTMLElement, fileName: string) => {
-  html2canvas(node, {useCORS: true}).then(function(canvas) {
-    Download(canvas.toDataURL(), fileName)
-  });
+  return value
+}
+
+const autoStopVideo = (handle: HTMLVideoElement) => {
+  if (!handle) {
+    return
+  }
+  (new IntersectionObserver((entries, observer) => {
+    if (handle.buffered) {
+      if (entries[0].intersectionRatio > 0) {
+        //plyrHandle.play()
+      } else {
+        //auto pause
+        handle.pause()
+      }
+    }
+  }, {
+    root: document,
+    rootMargin: '0px',
+    threshold: [0, 1]
+  })).observe(handle)
 }
 
 const Download = (url: string, fileName: string) => {
@@ -45,4 +66,4 @@ const Download = (url: string, fileName: string) => {
   document.body.removeChild(element);
 }
 
-export {ScrollTo, Notice, createRealMediaPath, NullSafeParams, Equal, H2C}
+export {ScrollTo, Notice, createRealMediaPath, NullSafeParams, Equal, VerifyQueryString, autoStopVideo, Download}

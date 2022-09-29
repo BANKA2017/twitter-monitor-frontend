@@ -41,6 +41,7 @@
       const viewportHeight = computed(() => store.state.viewportHeight)
       const width = computed(() => store.state.width)
       const title = computed(() => store.state.title)
+      const onlinePath = computed(() => store.state.onlinePath)
       useHead({
         title,
         meta: [
@@ -113,11 +114,28 @@
         localStorage.setItem('tm_settings', JSON.stringify(settings.value))//提前写入
         setLanguage()
       } else {
-        store.dispatch({
-          type: 'setCoreValue',
-          key: 'settings',
-          value: JSON.parse(tm_settings)
-        })
+        //TODO supported third-party interface
+        let tmpSettings = JSON.parse(tm_settings)
+        if (tmpSettings.basePath) {
+          delete tmpSettings.basePath
+        }
+        if (tmpSettings.mediaPath) {
+          delete tmpSettings.mediaPath
+        }
+        for (const key in tmpSettings) {
+          if (key === 'onlineMode' && tmpSettings.onlineMode) {
+            store.dispatch({
+              type: 'updateSettingsItem',
+              key: 'basePath',
+              value: onlinePath.value
+            })
+          }
+          store.dispatch({
+            type: 'updateSettingsItem',
+            key,
+            value: tmpSettings[key]
+          })
+        }
       }
       store.dispatch('setTrueToHasBeenSyncFromLocalStorage')
       store.dispatch('setUserTimeZone')
@@ -139,7 +157,7 @@
         //this.isUp();
         konamiCode()
         if (!settings.value.onlineMode) {
-          request<ApiAccounts>(settings.value.basePath + '/api/v2/data/accounts/').then(response => {
+          request<ApiAccounts>(settings.value.basePath + '/api/v3/data/accounts/').then(response => {
             store.dispatch({type: 'setCoreValue', key: 'names', value: response.data.account_info})
             store.dispatch("updateUserList")
             store.dispatch({type: 'setCoreValue', key: 'projects', value: response.data.projects})

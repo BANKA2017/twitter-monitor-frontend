@@ -6,8 +6,8 @@
       </video>
     </div>
     <div v-else-if="realList.length === 1" :style="{'height': '100%', 'aspect-ratio': aspect_ratio}">
-      <div :style="`width: 100%; padding-bottom: ` + ( realList[0].origin_info_height / realList[0].origin_info_width * 100) +  `%; height: 100%; border-radius: 14px 14px 14px 14px`" class="no-gutters card">
-        <el-image :alt="realList[0].uid+'_'+realList[0].tweet_id+'_'+0" :initial-index="0" :preview-src-list="previewList" :src="createRealMediaPath(realMediaPath, samePath,'tweets') +realList[0].url+(realList[0].source !== 'tweets' ? '' : ':small')" class="border border-white" fit="cover" lazy style="width: 100%; height: 100%; position: absolute; border-radius: 14px 14px 14px 14px" preview-teleported hide-on-click-modal>
+      <div :style="`width: 100%;` + (((ratio) => ratio > 100 ? ' aspect-ratio: 1; ' : ` padding-bottom: ${ratio}%; `)(realList[0].origin_info_height / realList[0].origin_info_width * 100)) + `height: 100%; border-radius: 14px 14px 14px 14px`" class="no-gutters card">
+        <el-image :alt="realList[0].description || realList[0].uid+'_'+realList[0].tweet_id+'_'+0" :initial-index="0" :preview-src-list="previewList" :src="createRealMediaPath(realMediaPath, samePath,'tweets') +realList[0].url+(realList[0].source !== 'tweets' ? '' : ':small')" class="border border-white" fit="scale-down" lazy style="width: 100%; height: 100%; position: absolute; border-radius: 14px 14px 14px 14px" preview-teleported hide-on-click-modal>
           <template #placeholder>
             <blur-hash-canvas v-if="realList[0].blurhash && realList[0].blurhash !== 'deleted'" :hash-text="realList[0].blurhash" class="full"/>
           </template>
@@ -19,7 +19,7 @@
     </div>
     <div v-else-if="realList.length >= 2 && realList.length <= 6">
       <div class="card no-gutters" :style="{'width': '100%', 'padding-bottom': '56.25%', 'height': '100%', 'border-radius': '14px 14px 14px 14px'}">
-        <el-image v-for="(image, order) in realList" :key="order" :alt="image.uid+'_'+image.tweet_id+'_'+0" :initial-index="order" :preview-src-list="previewList" :src="createRealMediaPath(realMediaPath, samePath,'tweets') +image.url+(realList[0].source !== 'tweets' ? '' : ':small')" :style="listStyle[realList.length-2][order]" class="border border-white" fit="cover" lazy preview-teleported hide-on-click-modal>
+        <el-image v-for="(image, order) in realList" :key="order" :alt="image.description || image.uid+'_'+image.tweet_id+'_'+0" :initial-index="order" :preview-src-list="previewList" :src="createRealMediaPath(realMediaPath, samePath,'tweets') +image.url+(realList[0].source !== 'tweets' ? '' : ':small')" :style="listStyle[realList.length-2][order]" class="border border-white" fit="cover" lazy preview-teleported hide-on-click-modal>
           <template #placeholder>
             <blur-hash-canvas class="full" :hash-text="image.blurhash" v-if="image.blurhash && image.blurhash !== 'deleted'"/>
           </template>
@@ -41,10 +41,11 @@
         </el-image>
       </div>
     </div>
-    <template v-if="realList[0].title || realList[0].description">
+    <template v-if="realList.some(item => item.title || item.description)">
       <hr class="my-4">
-      <p class="fw-bold my-1" v-if="realList[0].title">{{realList[0].title}}</p>
-      <p v-if="realList[0].description">{{realList[0].description}}</p>
+      <p class="fw-bold my-1" v-if="realList[0].title && realList[0].title === 'ALT'">ALT</p>
+      <full-text v-else-if="realList.some(item => item.title)" class="fw-bold my-1" :entities="[]" :full_text_origin='realList.filter(item => item.title).map(item => item.title).join("\n")' />
+      <full-text v-if="realList.some(item => item.description)" class="my-1" :entities="[]" :full_text_origin='realList.filter(item => item.description).map(item => item.description).join("\n\n")' />
     </template>
   </div>
 </template>
@@ -57,6 +58,7 @@ import {createRealMediaPath} from "@/share/Tools";
 import BlurHashCanvas from "@/components/BlurHashCanvas.vue";
 
 import Plyr from 'plyr'
+import FullText from "@/components/FullText.vue";
 
 const props = defineProps({
   list: {
@@ -150,7 +152,7 @@ const previewList = computed(() => realList.value.map(s => createRealMediaPath(r
 
 onMounted(() => {
   if (props.is_video) {
-    new Plyr('#video' + realList.value[0].tweet_id,{
+    const plyrHandle = new Plyr('#video' + realList.value[0].tweet_id,{
       autoplay: false,
       volume: 0.7,
       iconUrl: '/static/img/plyr.svg',
@@ -168,6 +170,25 @@ onMounted(() => {
         'fullscreen', // Toggle fullscreen
       ]
     })
+    const observer = new IntersectionObserver((entries, observer) => {
+      if (plyrHandle.buffered) {
+        if (entries[0].intersectionRatio > 0) {
+          //plyrHandle.play()
+        } else {
+          //auto pause
+          plyrHandle.pause()
+        }
+      }
+    }, {
+      root: document,
+      rootMargin: '0px',
+      threshold: [0, 1]
+    })
+    const video = document.getElementById('video' + realList.value[0].tweet_id)
+    if (video) {
+      observer.observe(video)
+    }
+
   }
 })
 </script>

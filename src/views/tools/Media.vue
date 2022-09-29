@@ -39,8 +39,8 @@
           <image-list :is_video="Number(state.video)" :list="state.media" class="my-4" preload="metadata" size="orig" style="width:100%" unlimited/>
           <span class="lead">Download</span>
           <div class="list-group my-2">
-            <template v-for="(mediaInfo, order) in (state.video ? state.rawData.video_info.variants.sort((a, b) => b.bitrate-a.bitrate) : state.media)" :key="order">
-              <a :href="createRealMediaPath(realMediaPath, samePath,'tweets') + (state.video ? mediaInfo.url.replace('https://', '') : `https://` + mediaInfo.url) + (state.video || mediaInfo.source !== 'tweets' ? '' : `:orig`)" class="text-muted text-decoration-none list-group-item list-group-item-action d-flex justify-content-between align-items-center" target="_blank">
+            <template v-for="(mediaInfo, order) in (state.video ? state.rawData.video_info.variants.sort((a, b) => (b.bitrate || 0) - (a.bitrate || 0)) : state.media)" :key="order">
+              <a :href="createRealMediaPath(realMediaPath, samePath,'tweets') + (state.video ? mediaInfo.url.replace('https://', '') : mediaInfo.url) + (state.video || mediaInfo.source !== 'tweets' ? '' : `:orig`)" class="text-muted text-decoration-none list-group-item list-group-item-action d-flex justify-content-between align-items-center" target="_blank">
                 {{ state.video ? mediaInfo.content_type === 'video/mp4' ? mediaInfo.url.replace(/.*vid\/([0-9]+x[0-9]+).*/, `$1`) : 'm3u8' : mediaInfo.basename}}
                 <span v-if="!state.video || mediaInfo.content_type === 'video/mp4'" class="badge bg-primary rounded-pill">{{ state.video ? mediaInfo.bitrate / 1000 + ' kbps' : mediaInfo.origin_info_height + 'x' +mediaInfo.origin_info_width }}</span>
               </a>
@@ -83,6 +83,7 @@ const store = useStore()
 const settings = computed(() => store.state.settings)
 const realMediaPath = computed(() => store.state.realMediaPath)
 const samePath = computed(() => store.state.samePath)
+const onlinePath = computed(() => store.state.onlinePath)
 const state = reactive<{
   tweet_id: string
   rawData: OnlineMediaList | {}
@@ -106,13 +107,14 @@ const fetchMedia = () => {
   state.video = false
   state.rawData = {}
   //https://tm.bangdream.fun/tmv2/api/v2/online/info/?tweet_id=1355686950640836609
-  request<ApiOnlineMedia>(settings.value.basePath + '/api/v2/online/media/?tweet_id=' + state.tweet_id, controller).then(response => {
+  request<ApiOnlineMedia>(onlinePath.value + '/api/v3/data/media/?tweet_id=' + state.tweet_id, controller).then(response => {
     if (response.code === 200) {
       state.rawData = response.data
-      if (state.rawData.video) {
-        state.media = response.data.media_info
+      state.media = response.data?.media_info ??[]
+      if (response.data.video) {
         state.video = response.data.video
       }
+
       if (state.media.length > 0) {
         Notice("加载成功", "success")
       } else {
@@ -131,33 +133,6 @@ const fetchMedia = () => {
     }
   })
 }
-
-//const fetchInfo = () => {
-//  this.tweets = {}
-//  this.users = {}
-//  //https://tm.bangdream.fun/tmv2/api/v2/online/info/?tweet_id=1355686950640836609
-//  this.controller.infoSignal[this.controller.infoSignal.length - 1].abort()
-//  this.controller.infoSignal.push(new AbortController())
-//  fetch(this.settings.data.basePath + '/api/v2/online/info/?tweet_id=' + this.tweet_id, {
-//    signal: this.controller.infoSignal[this.controller.infoSignal.length - 1].signal
-//  }).then(async response => {
-//    response = await response.json()
-//    if (response.code === 200) {
-//      this.notice("加载成功", "success");
-//      //this.getUserInfo();
-//      this.tweets = response.tweets
-//      this.users = response.data.users
-//    } else {
-//      this.notice(response.message, "error");
-//    }
-//    this.load = false
-//  }).catch(error => {
-//    if (!this.controller.infoSignal[this.controller.infoSignal.length - 1].signal.aborted) {
-//      this.notice(error, "error")
-//      this.load = false
-//    }
-//  });
-//}
 
 const routeCase = (to = route) => {
   state.rawData = {}

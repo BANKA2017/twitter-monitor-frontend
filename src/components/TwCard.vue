@@ -1,18 +1,18 @@
 <template>
-  <div id="twCard">
+  <div id="twCard" @click="(e) => {e.stopPropagation()}">
     <div class="card mb-3 background-second" style="border-radius: 14px 14px 14px 14px">
       <a v-if="object?.url && (object.secondly_type === 'media_with_details_horizontal' || object.type !== 'unified_card')" :href="(object.type === 'audiospace' ? 'https://twitter.com/i/spaces/' : '') + object.url" class="stretched-link text-decoration-none" target="_blank"></a>
       <template v-if="object.type === 'summary' || object.type === 'audio' || object.type === 'app' || object.type === 'moment' || object.secondly_type === 'media_with_details_horizontal'">
         <div class="row no-gutters">
-          <div class="col-4 border-right">
-            <el-image v-if="object.media === 1 && mediaState" :preview-src-list="[createRealMediaPath(realMediaPath, samePath)+latestMedia.cover]" :src="createRealMediaPath(realMediaPath, samePath)+latestMedia.cover" alt="cardImage" fit="cover" lazy style="border-radius: 14px 0 0 14px; height: 100%" preview-teleported hide-on-click-modal></el-image>
+          <div class="col-4 col-md-3 border-right">
+            <el-image v-if="object.media === 1 && mediaState" :preview-src-list="[createRealMediaPath(realMediaPath, samePath)+latestMedia.cover]" :src="createRealMediaPath(realMediaPath, samePath)+latestMedia.cover" alt="cardImage" fit="cover" lazy style="border-radius: 14px 0 0 14px; height: 100%;" class="ratio ratio-1x1" preview-teleported hide-on-click-modal></el-image>
           </div>
-          <div class="col-8">
-            <div class="card-body">
-              <div class="row no-gutters">
-                <p class="col-12 text-truncate card-title" style="color: black" v-if="object.title">{{ object.title }}</p>
-                <template v-if="object.description !== ''"><small class="text-muted text-truncate col-12">{{ object.description }}</small><br></template>
-                <small v-if="object.vanity_url !== ''" class="text-muted col-12"><link45deg height="1em" status="" width="1em" />{{ object.vanity_url }}</small>
+          <div class="col-8 col-md-9">
+            <div style="height: 100%; " class="d-flex align-items-center">
+              <div style="width: 100%;">
+                <p class="text-truncate card-title" style="color: black;" v-if="object.title">{{ object.title }}</p>
+                <small v-if="object.description !== ''" class="text-muted text-truncate d-block" style="width: 100%;">{{ object.description }}</small>
+                <small v-if="object.vanity_url !== ''" class="text-muted d-block"><link45deg height="1em" status="" width="1em" />{{ object.vanity_url }}</small>
               </div>
             </div>
           </div>
@@ -42,14 +42,14 @@
           <el-image :preview-src-list="[createRealMediaPath(realMediaPath, samePath)+latestMedia.cover]" :src="createRealMediaPath(realMediaPath, samePath)+latestMedia.cover" :style="{width: '100%', position: 'absolute', 'border-radius': '14px 14px 0 0'}" alt="cardImage" class="card-img-top" fit="cover" lazy @load="state.load = true" preview-teleported hide-on-click-modal></el-image>
         </div>
         <template v-else-if="object.secondly_type === 'video_website' || object.secondly_type === 'video_app'" >
-          <div v-if="mediaState" :class="`no-gutters embed-responsive embed-responsive-` + (ratio < 16 / 9 ? (ratio < 4 / 3 ? '1by1' : '4by3') :ratio > 16 / 9 ? '21by9' : '16by9')">
-            <video id="videoPlayer" :poster="createRealMediaPath(realMediaPath, samePath) +media[0].cover" :src="createRealMediaPath(realMediaPath, samePath) +media[0].url" :type="media[0].content_type" class="border" controls loop playsinline preload="none" style="width: 100%; height: 100%; border-radius: 14px 14px 0 0; background-color: black"></video>
+          <div v-if="mediaState" :class="`no-gutters ratio ratio-` + (ratio < 16 / 9 ? (ratio < 4 / 3 ? '1x1' : '4x3') :ratio > 16 / 9 ? '21x9' : '16x9')">
+            <video :id="`videoPlayer_${media[0].tweet_id}`" :poster="createRealMediaPath(realMediaPath, samePath) +media[0].cover" :src="createRealMediaPath(realMediaPath, samePath) +media[0].url" :type="media[0].content_type" class="border" controls loop playsinline preload="none" style="width: 100%; height: 100%; border-radius: 14px 14px 0 0; background-color: black"></video>
           </div>
         </template>
         <div v-else-if="object.secondly_type === 'image_carousel_website' || object.secondly_type === 'image_carousel_app' || object.secondly_type === 'image_multi_dest_carousel_website' || object.secondly_type === 'mixed_media_multi_dest_carousel_website' || object.secondly_type === 'video_carousel_website' || object.secondly_type === 'video_carousel_app' || object.secondly_type === 'video_multi_dest_carousel_website' || object.secondly_type === 'mixed_media_single_dest_carousel_website' || object.secondly_type === 'mixed_media_single_dest_carousel_app'" :style="{width: '100%', height: '100%', 'border-radius': '14px 14px 0 0'}">
           <el-carousel v-if="mediaState" style="border-radius: 14px 14px 0 0" indicator-position="outside" trigger="click" :autoplay="false" @change="changeMultiDestCarouselOrder">
             <el-carousel-item v-for="(mediaInfo, key) in media" :key="key" :name="key.toString()">
-              <video v-if="mediaInfo.extension === 'mp4'" id="carouselVideoPlayer" :poster="createRealMediaPath(realMediaPath, samePath) +mediaInfo.cover" :src="createRealMediaPath(realMediaPath, samePath) +mediaInfo.url" :type="mediaInfo.content_type" class="border" controls loop playsinline preload="none" style="width: 100%; height: 100%; border-radius: 14px 14px 0 0; background-color: black"></video>
+              <video v-if="mediaInfo.extension === 'mp4'" :id="`carouselVideoPlayer_${mediaInfo.tweet_id}_${key}`" :poster="createRealMediaPath(realMediaPath, samePath) +mediaInfo.cover" :src="createRealMediaPath(realMediaPath, samePath) +mediaInfo.url" :type="mediaInfo.content_type" class="border" controls loop playsinline preload="none" style="width: 100%; height: 100%; border-radius: 14px 14px 0 0; background-color: black"></video>
               <el-image v-else :id="mediaInfo.filename" :preview-src-list="[createRealMediaPath(realMediaPath, samePath)+mediaInfo.cover]" :src="createRealMediaPath(realMediaPath, samePath)+mediaInfo.url" alt="cardImage" class="card-img-top" fit="cover" lazy preview-teleported hide-on-click-modal>
               </el-image>
             </el-carousel-item>
@@ -112,9 +112,9 @@ import Verified from "@/icons/Verified.vue"
 import BoxArrowUpRight from "@/icons/BoxArrowUpRight.vue"
 import Link45deg from "@/icons/Link45deg.vue"
 import {useStore} from "@/store"
-import {computed, PropType, reactive, ref, Ref} from "vue"
+import {computed, onMounted, PropType, reactive, ref, Ref} from "vue"
 import {AudioSpace, AudioUsersItem, Card, Media} from "@/type/Content"
-import {createRealMediaPath, Notice} from "@/share/Tools"
+import {autoStopVideo, createRealMediaPath, Notice} from "@/share/Tools"
 import {useI18n} from "vue-i18n";
 import FullText from "@/components/FullText.vue";
 import {request} from "@/share/Fetch";
@@ -251,7 +251,7 @@ const changeMultiDestCarouselOrder = (callback: number) => {
 
 if (props.object?.type === 'audiospace' && settings.value.onlineMode) {
   state.updateAudioSpaceFlag = true
-  request<ApiAudioSpace>(settings.value.basePath + '/api/v2/data/audiospace/?id=' + props.object.url).then(response => {
+  request<ApiAudioSpace>(settings.value.basePath + '/api/v3/data/audiospace/?id=' + props.object.url).then(response => {
     if (response.code === 200) {
       state.audioSpaceObject = response.data
     } else {
@@ -261,7 +261,25 @@ if (props.object?.type === 'audiospace' && settings.value.onlineMode) {
     Notice(String(e), "error")
   })
 }
-
+onMounted(() => {
+  if (props.media.some(file => file.extension === 'mp4')) {
+    if (props.object.type === 'unified_card' && (props.object.secondly_type === 'video_website' || props.object.secondly_type === 'video_app')) {
+      const handle = document.getElementById(`videoPlayer_${props.media[0].tweet_id}`)
+      if (handle) {
+        autoStopVideo(handle)
+      }
+    } else {
+      for (const index in props.media) {
+        if (props.media[index].extension === 'mp4') {
+          const handle = document.getElementById(`carouselVideoPlayer_${props.media[index].tweet_id}_${index}`)
+          if (handle) {
+            autoStopVideo(handle)
+          }
+        }
+      }
+    }
+  }
+})
 //loadEvent: function () {
 //  this.load = true
 //  this.height = '100%'

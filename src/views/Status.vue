@@ -69,7 +69,7 @@ onMounted(() => {
   getStatus()
 })
 const getStatus = () => {
-  request<ApiStatusLegacy>(settings.value.basePath + '/api/v2/data/status/').then(response => {
+  request<ApiStatusLegacy>(settings.value.basePath + '/api/v3/data/status/').then(response => {
     state.rows = response.data
     if (!state.rows.length) {
       Notice("chart: " + response.message, "warning");

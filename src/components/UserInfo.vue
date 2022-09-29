@@ -12,7 +12,7 @@
             <el-image class="rounded-circle" :src="createRealMediaPath(realMediaPath, samePath, 'userinfo')+state.userInfo.header.replace(/([\w]+)\.([\w]+)$/gm, `$1_reasonably_small.$2`)" :preview-src-list="[createRealMediaPath(realMediaPath, samePath, 'userinfo')+state.userInfo.header]" alt="Avatar" preview-teleported hide-on-click-modal/>
           </div>
           <div :class="{ 'col-8': ((width > 768 && height > 50) || state.userInfo.banner === 0), 'col-12': !((width > 768 && height > 50) || state.userInfo.banner === 0), 'my-4': (height > 50 || state.userInfo.banner === 0), 'mt-5': ((height <= 50 || width <= 768) && state.userInfo.banner !== 0), }" style=" justify-content: center;">
-            <h5 class="card-title mb-1 align-middle fw-bold"><full-text :entities="[]" :full_text_origin="state.userInfo.display_name"/><verified v-if="state.userInfo.verified" height="1em" status="text-primary" width="1.2em" class="ms-2 "/></h5>
+            <h5 class="card-title mb-1 align-middle fw-bold"><full-text :entities="[]" :full_text_origin="state.userInfo.display_name" :inline="true"/><verified v-if="state.userInfo.verified" height="1em" status="text-primary" width="1.2em" class="ms-1 d-inline"/></h5>
             <small style="display: block"><a :href="`//twitter.com/`+state.userInfo.name" class="text-dark" target="_blank">@{{ state.userInfo.name }}</a></small>
           </div>
           <el-collapse-transition>
@@ -121,7 +121,7 @@ const getUserInfo = (to: RouteLocationNormalized) => {
   state.chartData = []
   if (to.name === 'no-name-status') {return}
   if (typeof name === "object") {Notice("Wrong name"); return}
-  request<ApiUserInfo>(settings.value.basePath + '/api/v2/data/userinfo/?name=' + name, controllerList.userInfo).then(response => {
+  request<ApiUserInfo>(settings.value.basePath + '/api/v3/data/userinfo/?name=' + name, controllerList.userInfo).then(response => {
     state.userInfo = response.data
     if (response.code === 200) {
       //this.chart.legendName = {
@@ -149,7 +149,7 @@ const getUserInfo = (to: RouteLocationNormalized) => {
 }
 
 const createChart = (time: number = 0, refresh: boolean = false) => {
-  request<ApiChartLegacy>(settings.value.basePath + '/api/v2/data/chart/?uid=' + state.userInfo.uid_str + (time > 0 ? '&end=' + time : '') + (refresh ? '&refresh=1' : ''), controllerList.chart).then(response => {
+  request<ApiChartLegacy>(settings.value.basePath + '/api/v3/data/chart/?uid=' + state.userInfo.uid_str + (time > 0 ? '&end=' + time : '') + (refresh ? '&refresh=1' : ''), controllerList.chart).then(response => {
     if (response.data.length) {
       state.latestChartTimestamp = Number(response.data.slice(-1)[0].timestamp)
     }

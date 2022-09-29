@@ -8,7 +8,7 @@
               {{ name }}
             </button>
             <button :class="{'btn': true, 'btn-outline-primary': true, 'active': state.status.displayTips}" @click="state.status.displayTips = !state.status.displayTips">说明 <info-circle-fill height="1em" status="" width="1em" /></button>
-            <button class="btn btn-outline-primary" @click="H2C(overview, 'lovelive_trends.png')">保存图片</button>
+            <!--<button class="btn btn-outline-primary" @click="H2C(overview, 'lovelive_trends.png')">保存图片</button>-->
             <a :href="store.getters.getBasePath + '/static/lovelive_trends/' + state.status.date + '.json'" class="btn btn-outline-primary" target="_blank">下载数据 <download-icon height="1em" status="" width="1em" /></a>
           </div>
         </div>
@@ -97,9 +97,9 @@
                 <el-table-column label="发推数" prop="tweets_count" show-overflow-tooltip sortable></el-table-column>
                 <el-table-column label="组" prop="team" style="">
                   <template #default="scope">
-                    <span :style="{'background-color': color[scope.row.team], padding: '5px 11px', 'font-size': '12px', 'border-radius': '3px',}" class="text-white">
+                    <div :style="{'background-color': color[scope.row.team], padding: '5px 11px', 'font-size': '12px', 'border-radius': '3px',}" class="text-white">
                       {{ scope.row.team }}
-                    </span>
+                    </div>
                   </template>
                 </el-table-column>
               </el-table>
@@ -142,7 +142,8 @@ import {useHead} from "@vueuse/head";
 import ArrowLeft from "@/icons/ArrowLeft.vue";
 import InfoCircleFill from "@/icons/InfoCircleFill.vue";
 import DownloadIcon from "@/icons/DownloadIcon.vue";
-import {ScrollTo, Notice, H2C} from "@/share/Tools";
+import {ScrollTo, Notice} from "@/share/Tools";
+//import {H2C} from "@/share/ScreenShot";
 import {useStore} from "@/store";
 import {computed, reactive, Ref, ref, watch} from "vue";
 import {request} from "@/share/Fetch";

@@ -61,7 +61,7 @@ import {useI18n} from "vue-i18n";
 import {onBeforeRouteLeave, onBeforeRouteUpdate, RouteLocationNormalized, useRoute, useRouter} from "vue-router";
 import {TweetType} from "@/type/State";
 import {TweetMode} from "@/type/State";
-import {Equal, Notice, NullSafeParams, ScrollTo} from "@/share/Tools";
+import {Equal, Notice, NullSafeParams, ScrollTo, VerifyQueryString} from "@/share/Tools";
 import {Controller, request} from "@/share/Fetch";
 import {ApiTweets} from "@/type/Api";
 import TweetItem from "@/components/TweetItem.vue";
@@ -153,7 +153,7 @@ const routeCase = (to: RouteLocationNormalized) => {
   //this.load.timeline = true;
   //拼装url
   //TODO fix real basePath
-  let url = settings.value.basePath + '/api/v2/data/';
+  let url = settings.value.basePath + '/api/v3/data/';
   let queryStringObject = new URLSearchParams()
   switch (to.name) {
     case "hashtag":
@@ -168,19 +168,20 @@ const routeCase = (to: RouteLocationNormalized) => {
       url += 'search/'
       queryStringObject.set('q', to.query.q ? <string>NullSafeParams(to.query.q, '') : <string>NullSafeParams(to.params.search, ''))
       if (to.query.advanced === '1') {
-        queryStringObject.set('text_or_mode', Equal(to.query.text_or_mode === '0'))
-        queryStringObject.set('text_not_mode', Equal(to.query.text_not_mode === '0'))
+        queryStringObject.set('text_or_mode', Equal(VerifyQueryString(to.query.text_or_mode, '0') !== '0'))
+        queryStringObject.set('text_not_mode', Equal(VerifyQueryString(to.query.text_not_mode, '0') !== '0'))
         queryStringObject.set('user', <string>NullSafeParams(to.query.user, ''))
-        queryStringObject.set('user_and_mode', Equal(to.query.user_and_mode === '0'))
-        queryStringObject.set('user_not_mode', Equal(to.query.user_not_mode === '0'))
-        queryStringObject.set('tweet_type', (to.query.text_or_mode && Number(to.query.text_or_mode) > -1 && Number(to.query.text_or_mode) < 3) ? String(Number(to.query.tweet_type)) : '0')//0-> all, 1-> origin, 2-> retweet
-        queryStringObject.set('tweet_media', Equal(to.query.tweet_media === '0'))//media
+        queryStringObject.set('user_and_mode', Equal(VerifyQueryString(to.query.user_and_mode, '0') !== '0'))
+        queryStringObject.set('user_not_mode', Equal(VerifyQueryString(to.query.user_not_mode, '0') !== '0'))
+        const tmpTweetType = Number(VerifyQueryString(to.query.tweet_type, 0))
+        queryStringObject.set('tweet_type', (tmpTweetType && tmpTweetType > -1 && tmpTweetType < 3) ? String(tmpTweetType) : '0')//0-> all, 1-> origin, 2-> retweet
+        queryStringObject.set('tweet_media', Equal(VerifyQueryString(to.query.tweet_media, '0') !== '0'))//media
         queryStringObject.set('start', (!to.query.start ? -1 : Date.parse(to.query.start + ' GMT' + userTimeZone.value) / 1000).toString())
         queryStringObject.set('end', (!to.query.end ? -1 : Date.parse(to.query.end + ' GMT' + userTimeZone.value) / 1000).toString())
-        queryStringObject.set('order', Equal(to.query.order === '1'))
+        queryStringObject.set('order', Equal(VerifyQueryString(to.query.order, '0') === '1'))
         queryStringObject.set('advanced', '1')
         if (adminMode) {
-          queryStringObject.set('hidden', Equal(to.query.hidden === '1'))
+          queryStringObject.set('hidden', Equal(VerifyQueryString(to.query.order, '0') === '1'))
         }
       }
       setTweetMode('search')
@@ -296,6 +297,7 @@ const loading = (top: boolean = false, mute: boolean = false) => {
       }
     })
   } else {
+    console.error(state.topTweetId, state.bottomTweetId)
     Notice(t("timeline.scripts.message.missing_parameter"), "error")
   }
 }

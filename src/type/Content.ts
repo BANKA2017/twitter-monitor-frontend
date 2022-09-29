@@ -5,7 +5,7 @@ export interface AccountList {
 }
 
 export interface UserInfo {
-  uid: number
+  uid: string
   uid_str: string
   name: string
   display_name: string
@@ -32,10 +32,10 @@ export interface LegacyChart {
 }
 
 export interface Tweet {
-  tweet_id: number
+  tweet_id: string | number
   tweet_id_str: string
   conversation_id_str: string
-  uid: number
+  uid: string
   uid_str: string
   name: string
   display_name: string
@@ -44,7 +44,7 @@ export interface Tweet {
   video: number
   card: string
   poll: number
-  quote_status: number
+  quote_status: string
   quote_status_str: string
   source: string
   full_text: string
@@ -82,8 +82,9 @@ export interface Entity {
 }
 
 export interface Media {
-  tweet_id: number
-  uid: number
+  tweet_id: string | number
+  id_str?: string
+  uid: string
   cover: string
   url: string
   extension: string
@@ -114,6 +115,7 @@ export interface OnlineMedia {
   description?: string | null
   source: string
   tweet_id: string
+  id_str?: string
   uid: string
   url: string
 }
@@ -135,7 +137,7 @@ export interface OnlineMediaList {
 export type MediaSize = 'large' | 'medium' | 'small' | 'thumb' | 'tiny' | 'orig'
 
 export interface Quote {
-  tweet_id: number
+  tweet_id: string | number
   id_str: string
   name: string
   display_name: string
@@ -170,7 +172,7 @@ export interface AudioSpace {
 }
 
 export interface AudioUsersItem {
-  uid: number
+  uid: string
   uid_str: string
   name: string
   display_name: string
@@ -210,7 +212,7 @@ export interface Status {
 }
 
 export interface Stats {
-  uid: number
+  uid: string
   name: string
   display_name: string
   following: number

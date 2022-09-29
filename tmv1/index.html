@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <link rel="shortcut icon" href="/static/img/icon.png">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="author" content="Banka2017 (https://bangdream.fun)">
+    <meta name="author" content="Banka2017 (https://nest.moe)">
     <meta name="description" content="Twitter Monitor v1">
     <meta name="keywords" content="Twitter Monitor, twitter监控, Twitter Monitor计划">
     <title>Twitter Monitor</title>
@@ -78,12 +78,12 @@
                     <div v-else-if="!hash && info!=null">
                         <div v-if="!init || $route.params.name == info.name">
                             <div class="card">
-                                <img v-if="info.banner!=0" class="card-img-top" :src="`https://tmv2media.bangdream.fun/api/v2/media/pbs.twimg.com/profile_banners/`+info.uid+`/`+info.banner+`.banner.jpg`" alt="Banner">
+                                <img v-if="info.banner!=0" class="card-img-top" :src="`https://tmapi.nest.moe/media/proxy/pbs.twimg.com/profile_banners/`+info.uid+`/`+info.banner+`.banner.jpg`" alt="Banner">
                                 <div class="card-body">
                                     <div class="container">
                                         <div class="row">
                                             <div class="col-4" style="max-height:100px;max-width:100px;">
-                                                <img v-if="info.header" class="rounded-circle img-fluid" :src="`https://tmv2media.bangdream.fun/api/v2/media/pbs.twimg.com/profile_images/`+info.header" alt="Header">
+                                                <img v-if="info.header" class="rounded-circle img-fluid" :src="`https://tmapi.nest.moe/media/proxy/pbs.twimg.com/profile_images/`+info.header" alt="Header">
                                                 <div class="my-4"></div>
                                             </div>
                                             <div class="col-8">
@@ -259,7 +259,7 @@
                                             <div v-if="!settings.data.displayPicture">
                                                 <div class="my-4" v-if="tweet.media.length"></div>
                                                 <div :class="tweet.media.length > 1 ? `card-columns` : ''">
-                                                    <el-image  v-for="(media, s) in tweet.media" :key="`https://tmv2media.bangdream.fun/api/v2/media/`+media.cover.thumb_img_url.replace('https://', '')+':thumb'" :src="`https://tmv2media.bangdream.fun/api/v2/media/`+media.cover.thumb_img_url.replace('https://', '')+':thumb'" lazy style="width: 100px; height: 100px" fit="cover" :preview-src-list="[`https://tmv2media.bangdream.fun/api/v2/media/`+media.cover.thumb_img_url.replace('https://', '')+':orig']">
+                                                    <el-image  v-for="(media, s) in tweet.media" :key="`https://tmapi.nest.moe/media/proxy/`+media.cover.thumb_img_url.replace('https://', '')+':thumb'" :src="`https://tmapi.nest.moe/media/proxy/`+media.cover.thumb_img_url.replace('https://', '')+':thumb'" lazy style="width: 100px; height: 100px" fit="cover" :preview-src-list="[`https://tmapi.nest.moe/media/proxy/`+media.cover.thumb_img_url.replace('https://', '')+':orig']">
                                                         <div slot="error" class="image-slot">
                                                             <i class="el-icon-picture-outline"></i>
                                                         </div>
@@ -318,10 +318,10 @@
                                 <div id="largePictureControls" class="carousel slide" data-ride="carousel" v-else-if="(tweets.length && tweets[largePicture[1]].media.length)">
                                     <div class="carousel-inner">
                                         <div :class="`carousel-item`+(s == largePicture[0] ? ` active` : '')" v-for="(media, s) in tweets[largePicture[1]].media" v-if="tweets[largePicture[1]].media[largePicture[0]].origin.origin_type === 'photo'">
-                                            <img v-lazy="`https://tmv2media.bangdream.fun/api/v2/media/`+media.cover.thumb_img_url.replace('https://', '')+`:orig`" class="d-block w-100">
+                                            <img v-lazy="`https://tmapi.nest.moe/media/proxy/`+media.cover.thumb_img_url.replace('https://', '')+`:orig`" class="d-block w-100">
                                         </div>
                                         <div v-if="tweets[largePicture[1]].media[largePicture[0]].origin.origin_type == 'video' || tweets[largePicture[1]].media[largePicture[0]].origin.origin_type == 'animated_gif'">
-                                            <video :src="`https://tmv2media.bangdream.fun/api/v2/media/`+tweets[largePicture[1]].media[largePicture[0]].origin.url.replace('https://', '')" :poster="`https://tmv2media.bangdream.fun/api/v2/media/`+tweets[largePicture[1]].media[largePicture[0]].cover.thumb_img_url.replace('https://', '')+`:medium`" :type="tweets[largePicture[1]].media[largePicture[0]].origin.content_type" preload="none" controls muted playsinline loop width="100%" id="videoPlayer"></video>
+                                            <video :src="`https://tmapi.nest.moe/media/proxy/`+tweets[largePicture[1]].media[largePicture[0]].origin.url.replace('https://', '')" :poster="`https://tmapi.nest.moe/media/proxy/`+tweets[largePicture[1]].media[largePicture[0]].cover.thumb_img_url.replace('https://', '')+`:medium`" :type="tweets[largePicture[1]].media[largePicture[0]].origin.content_type" preload="none" controls muted playsinline loop width="100%" id="videoPlayer"></video>
                                         </div>
                                     </div>
                                     <a class="carousel-control-prev" href="#largePictureControls" role="button" data-slide="prev" v-if="tweets[largePicture[1]].media[largePicture[0]].origin.origin_type === 'photo' && tweets[largePicture[1]].media.length > 1">
