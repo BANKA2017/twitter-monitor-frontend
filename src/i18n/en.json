@@ -40,6 +40,7 @@
             "origin": "Original",
             "retweet": "Retweets",
             "media": "Media",
+            "album": "Album",
             "no_image": "No image"
         },
         "side_tags": {

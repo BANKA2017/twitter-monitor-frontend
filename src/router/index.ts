@@ -71,7 +71,15 @@ export default createRouter({
         { path: '/api', component: Api, name: 'api'},
         { path: '/i/stats', component: Stats, name: 'stats'},
         { path: '/i/status', component: Status, name: 'status'},
-        { path: '/i/trends', component: Trends, name: 'trends'},
+        {
+            path: '/i/trends',
+            component: Trends,
+            name: 'trends',
+            children: [
+                {path: '', component: Trends, name: 'trends'},
+                {path: ':name', component: Trends, name: 'trends-name'}
+            ]
+        },
         {
             path: '/i/online',
             redirect: () => ({ path: '/i/tools/media'})

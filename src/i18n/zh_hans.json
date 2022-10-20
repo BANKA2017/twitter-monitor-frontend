@@ -40,6 +40,7 @@
             "origin": "原创",
             "retweet": "转推",
             "media": "媒体",
+            "album": "图库",
             "no_image": "无图"
         },
         "side_tags": {

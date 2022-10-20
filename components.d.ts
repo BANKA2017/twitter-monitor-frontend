@@ -47,6 +47,7 @@ declare module '@vue/runtime-core' {
     TO_FIX_Tmv2Chart: typeof import('./src/components/Charts/TO_FIX_Tmv2Chart.vue')['default']
     Translate: typeof import('./src/components/Translate.vue')['default']
     TwCard: typeof import('./src/components/TwCard.vue')['default']
+    TweetAlbumItem: typeof import('./src/components/TweetAlbumItem.vue')['default']
     TweetImages: typeof import('./src/components/TweetImages.vue')['default']
     TweetItem: typeof import('./src/components/TweetItem.vue')['default']
     Tweets: typeof import('./src/components/Tweets.vue')['default']
