@@ -48,7 +48,7 @@
                   <span class="badge bg-primary rounded-pill ms-1">{{ mediaInfo.origin_info_height + 'x' +mediaInfo.origin_info_width }}</span>
                 </div>
               </a>
-              <a v-else :href="createRealMediaPath(realMediaPath, samePath,'tweets')" class="text-muted text-decoration-none list-group-item list-group-item-action d-flex justify-content-between align-items-center" target="_blank" v-for="(video, order) in ((state.rawData.video_info.filter(x => RegExp(mediaInfo.media_key.split('_')[1]).test(x.variants[0].url))[0]||[])?.variants||[]).sort((a, b) => (b.bitrate || 0) - (a.bitrate || 0))" :key="order">
+              <a v-else :href="createRealMediaPath(realMediaPath, samePath,'tweets') + video.url.replace('https://', '')" class="text-muted text-decoration-none list-group-item list-group-item-action d-flex justify-content-between align-items-center" target="_blank" v-for="(video, order) in ((state.rawData.video_info.filter(x => RegExp(mediaInfo.media_key.split('_')[1]).test(x.variants[0].url))[0]||[])?.variants||[]).sort((a, b) => (b.bitrate || 0) - (a.bitrate || 0))" :key="order">
                 {{ video.url.replace(/.*\/(.*)\.(?:mp4|m3u8).*/, `$1`)}}
                 <div>
                   <span class="badge bg-success rounded-pill">{{ mediaOrder+1 }}</span>
