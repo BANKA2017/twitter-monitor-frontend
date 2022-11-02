@@ -199,7 +199,6 @@ export default {
             ]
           }
         },
-
       ]
     }
   }),
@@ -224,7 +223,7 @@ export default {
         tmpOptions.dataZoom = [
           {
             type: 'slider',
-            start: 80,
+            start: Math.floor((1 - (90 / tmpOptions.xAxis.data.length)) * 100),
             end: 100,
             xAxisIndex: [0],
           },

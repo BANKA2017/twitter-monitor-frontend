@@ -1,6 +1,6 @@
 export interface AccountList {
   [p: string]: {
-    [q: string]: {name: string; display_name: string; projects: string[][]}[]
+    [q: string]: {name: string; display_name: string; nsfw: boolean; organization: boolean; projects: string[][]}[]
   }
 }
 
@@ -59,6 +59,7 @@ export interface Tweet {
   quote_count?: number
   rtl?: boolean
   display_text_range?: number[]
+  vibe?: Vibe
   entities: Entity[]
   pollObject: PollItem[]
   cardObject?: Card
@@ -66,6 +67,12 @@ export interface Tweet {
   mediaObject: Media[]
   user_info?: UserInfo
   retweet_user_info?: UserInfo
+}
+
+export interface Vibe {
+  text: string
+  imgDescription: string
+  discoveryQueryText: string
 }
 
 export interface Translate {
@@ -131,7 +138,7 @@ export interface OnlineMediaList {
       content_type: string
       url: string
     }[]
-  }
+  }[]
 }
 
 export type MediaSize = 'large' | 'medium' | 'small' | 'thumb' | 'tiny' | 'orig'

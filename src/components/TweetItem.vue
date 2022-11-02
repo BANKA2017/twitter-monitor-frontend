@@ -28,6 +28,7 @@
           </a>
         </div>
         <div class="row">
+          <!--avatar-->
           <div class="col-1 ps-1 pe-0" v-if="settings.onlineMode" @click="(e) => {e.stopPropagation()}">
             <router-link :to="'/' + (tweet.retweet_from_name ? tweet.retweet_user_info.name : tweet.user_info.name) + '/all'">
               <el-image class="rounded-circle " :src="createRealMediaPath(realMediaPath, samePath, 'userinfo')+ (tweet.retweet_from_name ? tweet.retweet_user_info.header : tweet.user_info.header).replace(/([\w]+)\.([\w]+)$/gm, `$1_reasonably_small.$2`)" alt="Avatar" />
@@ -43,6 +44,7 @@
               </a>
               <verified v-if="settings.onlineMode && (tweet.retweet_from_name ? tweet.retweet_user_info.verified : tweet.user_info.verified)" height="1em" status="text-primary" width="2em" class="d-inline"/>
               <span style="font-size: 0.75em" class="d-block">@{{ tweet.retweet_from ? tweet.retweet_from_name : tweet.name }}</span>
+              <router-link :to="`/search/?q=${tweet.vibe.discoveryQueryText}`" style="font-size: 0.55em; background: #EFF3F4;" class="badge text-black rounded-pill" v-if="settings.onlineMode && tweet.vibe"><full-text :entities="[]" :inline="true" :full_text_origin="`${tweet.vibe.imgDescription}${tweet.vibe.text}`" /></router-link>
             </div>
           </div>
         </div>

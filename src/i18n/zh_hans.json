@@ -161,7 +161,7 @@
         },
         "interactive": {
             "retweet": "转推 | 转推",
-            "quote": "引用推文 | 引用推文",
+            "quote": "引用 | 引用",
             "favorite": "喜欢 | 喜欢"
         }
     },
