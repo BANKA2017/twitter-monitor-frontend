@@ -1,7 +1,7 @@
 <template>
   <div id="twCard" @click="(e) => {e.stopPropagation()}">
     <div class="card mb-3 background-second" style="border-radius: 14px 14px 14px 14px">
-      <a v-if="object?.url && (object.secondly_type === 'media_with_details_horizontal' || object.type !== 'unified_card')" :href="(object.type === 'audiospace' ? 'https://twitter.com/i/spaces/' : '') + object.url" class="stretched-link text-decoration-none" target="_blank"></a>
+      <a v-if="object?.url && (object.secondly_type === 'media_with_details_horizontal' || object.type !== 'unified_card') && object.type !== 'audiospace'" :href="object.url" class="stretched-link text-decoration-none" target="_blank"></a>
       <template v-if="object.type === 'summary' || object.type === 'audio' || object.type === 'app' || object.type === 'moment' || object.secondly_type === 'media_with_details_horizontal'">
         <div class="row no-gutters">
           <div class="col-4 col-md-3 border-right">
@@ -21,7 +21,7 @@
       <template v-else-if="object.type === 'audiospace'">
         <div style="border-radius: 14px 14px 14px 14px; background-image: linear-gradient(61.63deg, rgb(45, 66, 255) -15.05%, rgb(156, 99, 250) 104.96%);">
           <div class="card-body">
-            <div >
+            <a :href="'https://twitter.com/i/spaces/' + object.url" class="text-decoration-none d-block" target="_blank">
               <el-image v-if="settings.onlineMode && state.audioSpaceObject.avatar" class="rounded-circle me-1" :src="createRealMediaPath(realMediaPath, samePath, 'userinfo')+state.audioSpaceObject.avatar.replace('https://', '')" alt="Avatar" style="height: 1em; width: 1em" />
               <p class="text-white d-inline-block"><full-text :full_text_origin="state.audioSpaceObject.display_name ? state.audioSpaceObject.display_name : userName" :entities="[]" />
                 <template v-if="state.audioSpaceObject.verified">
@@ -32,8 +32,13 @@
                 </template>
                 <box-arrow-up-right height="1em" width="1em"/>
               </p>
+            </a>
+            <div class="align-middle" v-if="state.updateAudioSpaceFlag"><span class="spinner-border text-white" role="status" aria-hidden="true"></span></div>
+            <div v-else>
+              <full-text style="font-size: 1.2rem" class="text-white fw-semibold mb-2" :full_text_origin="state.audioSpaceObject.title ? state.audioSpaceObject.title : (object.description ? object.description : t('tw_card.text.someone_s_space', {someone: userName}))" :entities="[]" />
+              <div class="text-white btn d-block rounded-pill border-white audio-space-play-button" style="cursor: pointer;" v-if="state.audioSpaceObject.is_space_available_for_replay" @click="updateSpacesPlayerMeta">{{state.audioSpaceObject.id === spacesPlayer.id ? '...' : 'Play'}}</div>
+              <!--<tw-space v-if="state.audioSpaceStatus.playback && state.audioSpaceObject.playback" :playback="state.audioSpaceObject.playback||''" :id="state.audioSpaceObject.id||''"/>-->
             </div>
-            <full-text style="font-size: 1.2rem" class="text-white fw-semibold mb-2" :full_text_origin="state.audioSpaceObject.title ? state.audioSpaceObject.title : (object.description ? object.description : t('tw_card.text.someone_s_space', {someone: userName}))" :entities="[]" />
           </div>
         </div>
       </template>
@@ -119,6 +124,7 @@ import {useI18n} from "vue-i18n";
 import FullText from "@/components/FullText.vue";
 import {request} from "@/share/Fetch";
 import {ApiAudioSpace} from "@/type/Api";
+import TwSpace from "@/components/TwSpace.vue";
 
 const props = defineProps({
   object: {
@@ -155,6 +161,7 @@ const state = reactive<{
   multiDestCarouselOrder: Ref<number>
   updateAudioSpaceFlag: boolean
   audioSpaceObject: Ref<AudioSpace>
+  audioSpaceStatus: {playback: boolean}
 }>({
   load: ref(false),
   multiDestCarouselOrder: ref(0),
@@ -164,21 +171,27 @@ const state = reactive<{
     avatar: '',
     name: '',
     display_name: '',
-    start: 0,
-    end: 0,
+    start: '0',
+    end: '0',
+    media_key: '',
     title: '',
     total: 0,
     verified: false,
     admins: [],
     listeners: [],
     speakers: [],
-  })
+    is_space_available_for_replay: false
+  }),
+  audioSpaceStatus: {playback: false}
 })
 const {t} = useI18n()
 const store = useStore()
+const now = computed(() => store.state.now)
 const settings = computed(() => store.state.settings)
 const realMediaPath = computed(() => store.state.realMediaPath)
 const samePath = computed(() => store.state.samePath)
+const onlinePath = computed(() => store.state.onlinePath)
+const spacesPlayer = computed(() => store.state.spacesPlayer)
 const latestMedia = computed((): Media | {} => {
   if (props.media && props.media.length) {
     return props.media[props.media.length - 1]
@@ -249,18 +262,31 @@ const changeMultiDestCarouselOrder = (callback: number) => {
   state.multiDestCarouselOrder = callback
 }
 
-if (props.object?.type === 'audiospace' && settings.value.onlineMode) {
+if (props.object?.type === 'audiospace') {
   state.updateAudioSpaceFlag = true
-  request<ApiAudioSpace>(settings.value.basePath + '/api/v3/data/audiospace/?id=' + props.object.url).then(response => {
+  request<ApiAudioSpace>(onlinePath.value + '/api/v3/data/audiospace/?id=' + props.object.url).then(response => {
     if (response.code === 200) {
       state.audioSpaceObject = response.data
     } else {
       Notice(response.message, "error")
     }
+    state.updateAudioSpaceFlag = false
   }).catch(e => {
+    state.updateAudioSpaceFlag = false
     Notice(String(e), "error")
   })
 }
+
+const updateSpacesPlayerMeta = () => {
+  if (state.audioSpaceObject.id !== spacesPlayer.value.id) {
+    store.dispatch('updateSpacesPlayerItem', {key: 'id', value: state.audioSpaceObject.id})
+    store.dispatch('updateSpacesPlayerItem', {key: 'link', value: state.audioSpaceObject.playback})
+    store.dispatch('updateSpacesPlayerItem', {key: 'displayName', value: state.audioSpaceObject.display_name})
+    store.dispatch('updateSpacesPlayerItem', {key: 'title', value: state.audioSpaceObject.title})
+    store.dispatch('updateSpacesPlayerItem', {key: 'display', value: true})
+  }
+}
+
 onMounted(() => {
   if (props.media.some(file => file.extension === 'mp4')) {
     if (props.object.type === 'unified_card' && (props.object.secondly_type === 'video_website' || props.object.secondly_type === 'video_app')) {
@@ -287,6 +313,12 @@ onMounted(() => {
 //}
 </script>
 
-<style scoped>
-
+<style scoped lang="scss">
+.audio-space-play-button {
+  background: transparent;
+  transition-duration: 150ms;
+  &:hover {
+    background: rgba(0,0,0,0.2);
+  }
+}
 </style>

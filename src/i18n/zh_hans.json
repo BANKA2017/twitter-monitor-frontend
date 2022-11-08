@@ -41,6 +41,7 @@
             "retweet": "转推",
             "media": "媒体",
             "album": "图库",
+            "spaces": "空间",
             "no_image": "无图"
         },
         "side_tags": {

@@ -41,6 +41,7 @@
             "retweet": "Retweets",
             "media": "Media",
             "album": "Album",
+            "spaces": "Spaces",
             "no_image": "No image"
         },
         "side_tags": {

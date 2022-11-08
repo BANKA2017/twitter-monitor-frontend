@@ -61,4 +61,11 @@ export interface State {
   twemojiBasePath: string
   onlinePath: string
   translatorMode: boolean
+  spacesPlayer: {
+    display: boolean
+    link: string
+    id: string
+    displayName: string
+    title: string
+  }
 }

@@ -63,7 +63,14 @@ export const store = createStore<State>({
     realMediaPath: '',
     twemojiBasePath,
     onlinePath,
-    translatorMode: false
+    translatorMode: false,
+    spacesPlayer: {
+      display: false,
+      link: '',
+      id: '',
+      displayName: '',
+      title: '',
+    }
   },
   getters: {
     getBasePath: (state): string => state.settings.basePath,
@@ -94,6 +101,11 @@ export const store = createStore<State>({
     setCoreValue: <K extends keyof State>(state: State, payload: {key: K; value: State[K]}) => state[payload.key] = payload.value,
     //pushCoreValue: (state, payload) => state[payload.key] = state[payload.key].concat(payload.value),
     updateTweetsTranslate: (state, payload) => state.translate[payload.tweet_id] = payload.translate,
+    updateSpacesPlayerItem: (state: State, payload: {key: keyof State["spacesPlayer"]; value: string & boolean}) => {
+      if (state.spacesPlayer[payload.key] !== payload.value) {
+        state.spacesPlayer[payload.key] = payload.value
+      }
+    },
   },
   actions: {
     setLanguage: function (context, payload: {lang: string}) {
@@ -158,6 +170,7 @@ export const store = createStore<State>({
     pushCoreValue: (context: any, payload) => context.commit({type: 'setCoreValue', key: payload.key, value: context.state[payload.key].concat(payload.value)}),
     //TODO fix all any type
     updateTweetsTranslate: (context, payload) => context.commit("updateTweetsTranslate", {tweet_id: payload.tweet_id, translate: payload.translate}),
+    updateSpacesPlayerItem: (context: ActionContext<State, State>, payload: {key: keyof State["spacesPlayer"]; value: string & boolean}) => context.commit('updateSpacesPlayerItem', {key: payload.key, value: payload.value}),
   }
 })
 

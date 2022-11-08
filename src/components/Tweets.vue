@@ -14,42 +14,45 @@
     <el-divider v-if="route.name !== 'main' || !translatorMode" class="my-4" />
     <div class="text-center" element-loading-background="rgba(255, 255, 0, 0)" style="height: 60px" v-if="state.loadingTop" v-loading="state.loadingTop"></div>
 
-    <el-skeleton :loading="state.loadingTimeline" :rows="5" animated class="mb-2">
-      <div class="text-center" v-if="state.reload">
-        <el-button round @click="update()"><arrow-clockwise height="1em" status="" width="1em" />{{ t("public.retry") }}
-        </el-button>
-      </div>
-      <div v-if="!state.reload && tweets.length">
-        <template v-if="tweetTypeValue !== 'album'">
-          <div v-for="(tweet, order) in tweets" :key="`tweet_${tweet.tweet_id_str}`">
-            <tweet-item :tweet="tweet"/>
-            <template v-if="!translatorMode">
-              <el-divider v-if="order < tweets.length - 1 && tweet.conversation_id_str === tweets[order + 1].conversation_id_str">
-                <svg class="icon" width="1rem" height="1rem" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" data-v-4194ce60=""><path fill="currentColor" d="M192 384l320 384 320-384z"></path></svg>
-              </el-divider>
-              <el-divider v-else />
-            </template>
-          </div>
-        </template>
-        <template v-else>
-          <tweet-album-item :tweets="tweets" />
-        </template>
-
-        <div class="d-grid gap-2" v-if="state.moreTweets && !state.loadingBottom && !settings.autoLoadTweets">
-          <button class="btn btn-primary btn-lg mb-3" type="button" @click="loading(false)">
-            <span>{{ t("timeline.message.load_more") }}</span>
-          </button>
+    <div class="mb-3">
+      <el-skeleton :loading="state.loadingTimeline" :rows="5" animated style="width: 100%;"/>
+      <div v-if="!state.loadingTimeline" style="width: 100%;">
+        <div class="text-center" v-if="state.reload">
+          <el-button round @click="update()"><arrow-clockwise height="1em" status="" width="1em" />{{ t("public.retry") }}
+          </el-button>
         </div>
+        <div v-if="!state.reload && tweets.length">
+          <template v-if="tweetTypeValue !== 'album'">
+            <div v-for="(tweet, order) in tweets" :key="`tweet_${tweet.tweet_id_str}`">
+              <tweet-item :tweet="tweet"/>
+              <template v-if="!translatorMode">
+                <el-divider v-if="order < tweets.length - 1 && tweet.conversation_id_str === tweets[order + 1].conversation_id_str">
+                  <svg class="icon" width="1rem" height="1rem" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" data-v-4194ce60=""><path fill="currentColor" d="M192 384l320 384 320-384z"></path></svg>
+                </el-divider>
+                <el-divider v-else />
+              </template>
+            </div>
+          </template>
+          <template v-else>
+            <tweet-album-item :tweets="tweets" />
+          </template>
 
-        <el-skeleton v-else-if="state.moreTweets && (state.loadingBottom || settings.autoLoadTweets)" :rows="1" animated class="mb-2"/>
-        <div v-else-if="!(tweetModeValue === 'status')">
+          <div class="d-grid gap-2" v-if="state.moreTweets && !state.loadingBottom && !settings.autoLoadTweets">
+            <button class="btn btn-primary btn-lg mb-3" type="button" @click="loading(false)">
+              <span>{{ t("timeline.message.load_more") }}</span>
+            </button>
+          </div>
+
+          <el-skeleton v-else-if="state.moreTweets && (state.loadingBottom || settings.autoLoadTweets)" :rows="1" animated class="mb-2"/>
+          <div v-else-if="!(tweetModeValue === 'status')">
+            <h5 class="text-center">{{ t("timeline.message.no_more") }}</h5>
+          </div>
+        </div>
+        <div v-else-if="!state.reload">
           <h5 class="text-center">{{ t("timeline.message.no_more") }}</h5>
         </div>
       </div>
-      <div v-else-if="!state.reload">
-        <h5 class="text-center">{{ t("timeline.message.no_more") }}</h5>
-      </div>
-    </el-skeleton>
+    </div>
   </div>
   <transition name="el-fade-in" v-if="route.name !== 'name-status'">
     <!--TODO style for no media-->
@@ -102,7 +105,8 @@ const displayMode = [
   [t("timeline.nav_bar.origin"), 'self', 0],
   [t("timeline.nav_bar.retweet"), 'retweet', 0],
   [t("timeline.nav_bar.media"), 'media', 0],
-  [t("timeline.nav_bar.album"), 'album', 0]
+  [t("timeline.nav_bar.album"), 'album', 0],
+  [t("timeline.nav_bar.spaces"), 'space', 0]
 ]
 const swapDisplayPictureStatus = () => {
   store.dispatch('swapDisplayPictureStatus')
@@ -155,9 +159,9 @@ const setTweetMode = (tweetModeValue: TweetMode) => {
 const routeCase = (to: RouteLocationNormalized) => {
   store.dispatch({type: 'setCoreValue', key: 'home', value: false})
   //status 不需要
-  let displayIndex = ["all", "self", "retweet", "media", "album"].indexOf(<string>NullSafeParams(to.params.display, ''))
+  let displayIndex = ["all", "self", "retweet", "media", "album", "space"].indexOf(<string>NullSafeParams(to.params.display, ''))
   if (displayIndex !== -1 && (to.name !== 'name-status' && to.name !== 'no-name-status')) {
-    setTweetType(["all", "self", "retweet", "media", "album"][displayIndex])
+    setTweetType(["all", "self", "retweet", "media", "album", "space"][displayIndex])
   } else if (to.name === 'name-status' || to.name === 'no-name-status' || to.name === 'translator-name-status') {
     setTweetType('status')
   } else {
@@ -187,7 +191,7 @@ const routeCase = (to: RouteLocationNormalized) => {
         queryStringObject.set('user_and_mode', Equal(VerifyQueryString(to.query.user_and_mode, '0') !== '0'))
         queryStringObject.set('user_not_mode', Equal(VerifyQueryString(to.query.user_not_mode, '0') !== '0'))
         const tmpTweetType = Number(VerifyQueryString(to.query.tweet_type, 0))
-        queryStringObject.set('tweet_type', (tmpTweetType && tmpTweetType > -1 && tmpTweetType < 4) ? String(tmpTweetType) : '0')//0-> all, 1-> origin, 2-> retweet, 3 -> album
+        queryStringObject.set('tweet_type', (tmpTweetType && tmpTweetType > -1 && tmpTweetType < 5) ? String(tmpTweetType) : '0')//0-> all, 1-> origin, 2-> retweet, 3 -> album, 4 -> space
         queryStringObject.set('tweet_media', Equal(VerifyQueryString(to.query.tweet_media, '0') !== '0'))//media
         queryStringObject.set('start', (!to.query.start ? -1 : Date.parse(to.query.start + ' GMT' + userTimeZone.value) / 1000).toString())
         queryStringObject.set('end', (!to.query.end ? -1 : Date.parse(to.query.end + ' GMT' + userTimeZone.value) / 1000).toString())

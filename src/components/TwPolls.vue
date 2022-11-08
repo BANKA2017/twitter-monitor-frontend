@@ -12,7 +12,7 @@
           <el-progress class="mb-1" :percentage="Math.ceil(((settings.onlineMode ? state.polls[index] : poll.count)/pollCount)*100)" v-for="(poll, index) in polls" :format="() => poll.choice_label+' (' + Math.ceil(((settings.onlineMode ? state.polls[index] : poll.count)/pollCount)*100) + '%)'" :key="poll.poll_order"></el-progress>
         </div>
         <template v-else>
-          <el-button round class="btn-block mx-auto mb-1" v-for="poll in polls" :key="poll.poll_order">{{ poll.choice_label }}</el-button>
+          <el-button @click="e => {e.stopPropagation()}" round class="btn-block mx-auto mb-1" v-for="poll in polls" :key="poll.poll_order">{{ poll.choice_label }}</el-button>
         </template>
         <div class="col-12 my-4" ><small class="text-muted">{{ eta }}</small></div>
       </div>

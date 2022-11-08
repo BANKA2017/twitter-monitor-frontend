@@ -52,6 +52,7 @@ declare module '@vue/runtime-core' {
     TweetItem: typeof import('./src/components/TweetItem.vue')['default']
     Tweets: typeof import('./src/components/Tweets.vue')['default']
     TwPolls: typeof import('./src/components/TwPolls.vue')['default']
+    TwSpace: typeof import('./src/components/TwSpace.vue')['default']
     UserInfo: typeof import('./src/components/UserInfo.vue')['default']
     WordCloudChart: typeof import('./src/components/Charts/WordCloudChart.vue')['default']
   }

@@ -8,7 +8,9 @@
     </transition>
     <pwa />
     <router-view/>
-
+    <transition name="el-fade-in" style="z-index: 1;">
+      <tw-space />
+    </transition>
     <div v-if="devmode" class="bg-dark text-white" style="left: 0; bottom: 0; position: fixed; z-index: 9999; padding: 5px">
       <span style="align-content: end">{{width + 'x' + viewportHeight}}</span>
     </div>
@@ -26,10 +28,11 @@
   import {ScrollTo} from "@/share/Tools";
   import {CaretTop} from "@element-plus/icons-vue";
   import Pwa from "@/pwa.vue";
+  import TwSpace from "@/components/TwSpace.vue";
 
   export default {
     name: 'App',
-    components: {Pwa, CaretTop},
+    components: {TwSpace, Pwa, CaretTop},
     setup() {
       const {locale} = useI18n()
       const store = useStore()

@@ -168,14 +168,17 @@ export interface AudioSpace {
   avatar: string
   name: string
   display_name: string
-  start: number
-  end: number
+  start: string
+  end: string
+  media_key: string
+  playback?: string
   title: string
   total: number
   verified: boolean
   admins: AudioUsersItem[]
   listeners: AudioUsersItem[]
   speakers: AudioUsersItem[]
+  is_space_available_for_replay: boolean
 }
 
 export interface AudioUsersItem {

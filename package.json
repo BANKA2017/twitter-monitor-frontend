@@ -19,6 +19,7 @@
     "echarts-wordcloud": "^2.0.0",
     "element-plus": "^2.2.18",
     "highlight.js": "^11.6.0",
+    "hls.js": "^1.2.5",
     "html2canvas": "^1.4.1",
     "lodash-es": "^4.17.21",
     "plyr": "^3.7.2",

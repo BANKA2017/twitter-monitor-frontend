@@ -48,18 +48,18 @@
             </div>
           </div>
         </div>
-        <div class="row my-4">
+        <div class="row my-1">
           <div :class="{'offset-md-1': settings.onlineMode, 'col-md-11': settings.onlineMode, 'col-12': true}">
             <!--<div v-html="`<p class='card-text'>`+tweet.full_text+`</p>`"></div>-->
             <!--excited!-->
             <div :dir="tweet.rtl ? 'rtl' : 'ltr'"><full-text class="card-text" :entities="tweet.entities" :full_text_origin="tweet.full_text_origin" :display-range="(settings.onlineMode && (route.name === 'name-status' || route.name === 'no-name-status' || translatorMode)) ? tweet.display_text_range : [0, 0]"/></div>
             <translate v-if="translatorMode || (!settings.onlineMode && tweet.full_text_origin)" :id="tweet.tweet_id_str" :to="settings.language" type="0"/>
             <!--media-->
-            <div class="mt-4" v-if="tweet.media === 1&&!settings.displayPicture && tweet.mediaObject.filter(x => x.source === 'tweets').length">
+            <div class="mt-2" v-if="tweet.media === 1&&!settings.displayPicture && tweet.mediaObject.filter(x => x.source === 'tweets').length">
               <image-list :is_video="tweet.video" :list="tweet.mediaObject.filter(x => x.source === 'tweets')" :unlimited="tweetModeValue === 'status'"/>
             </div>
             <!--quote-->
-            <div class="mt-4" v-if="tweet.quote_status !== 0 && Object.keys(tweet.quoteObject).length !== 0">
+            <div class="mt-2" v-if="tweet.quote_status !== 0 && Object.keys(tweet.quoteObject).length !== 0">
               <quote-card :quote-media="tweet.mediaObject.filter(x => x.source === 'quote_status')" :quote-object="tweet.quoteObject"/>
             </div>
             <!--polls-->
@@ -67,7 +67,7 @@
               <tw-polls :media="tweet.mediaObject.filter(x => x.source === 'cards')" :polls="tweet.pollObject" :tweet-id="tweet.tweet_id_str"/>
             </template>
             <!--card-->
-            <div class="mt-4" v-else-if="tweet.card !== '' && Object.keys(tweet.cardObject).length">
+            <div class="mt-2" v-else-if="tweet.card !== '' && Object.keys(tweet.cardObject).length">
               <tw-card :media="tweet.mediaObject.filter(x => x.source === 'cards')" :mediaState="!settings.displayPicture" :object="tweet.cardObject" :tweet-text="tweet.full_text_origin.split(`\n`)[0]" :user-name="tweet.retweet_from ? tweet.retweet_from : tweet.display_name"></tw-card>
             </div>
             <!--time && source-->
