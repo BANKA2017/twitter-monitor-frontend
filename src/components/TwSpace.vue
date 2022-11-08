@@ -6,7 +6,7 @@
           <p class="text-truncate px-2 my-0" ><span class="fw-bold">{{spacesPlayer.displayName}}</span> · <span class="small">{{spacesPlayer.title}}</span></p>
           <btn class="btn btn-sm btn-outline-danger border-0 rounded-pill px-2 py-0" @click="close"><x-lg status="" width="1em" height="1em" /></btn>
         </div>
-        <audio controls autoplay id="spaces-player" ref="audiospace"></audio>
+        <audio controls autoplay id="spaces-player" ></audio>
       </div>
     </div>
   </div>
@@ -14,8 +14,8 @@
 
 <script setup lang="ts">
 import Plyr from 'plyr'
-import Hls from "hls.js";
-import {computed, onMounted, Ref, ref, watch, watchEffect} from "vue";
+import Hls from "hls.js/dist/hls.light.min.js";
+import {computed, onMounted, watch} from "vue";
 import {useStore} from "@/store";
 import {createRealMediaPath, Notice} from "@/share/Tools";
 import XLg from "@/icons/XLg.vue";
