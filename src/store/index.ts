@@ -70,6 +70,8 @@ export const store = createStore<State>({
       id: '',
       displayName: '',
       title: '',
+      start: '0',
+      end: '0'
     }
   },
   getters: {

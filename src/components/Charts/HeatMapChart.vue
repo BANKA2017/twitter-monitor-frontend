@@ -73,11 +73,14 @@ const state = reactive<{
 
 const computedOptions = computed(() => {
   let tmpOption = state.option
-  let tmpMax = 0, tmpMin = 10000
-  props.data.map(singleData => {
-    tmpMax = singleData[1] > tmpMax ? singleData[1] : tmpMax
-    tmpMin = singleData[1] < tmpMin ? singleData[1] : tmpMin
-  })
+  //let tmpMax = 0, tmpMin = 10000
+  const tmpSingleData = props.data?.length === 0 ? [0, 10000] : props.data?.map(singleData => singleData[1])
+  const tmpMax = Math.max.apply(null, tmpSingleData)
+  const tmpMin = Math.min.apply(null, tmpSingleData)
+  //props.data.map(singleData => {
+  //  tmpMax = singleData[1] > tmpMax ? singleData[1] : tmpMax
+  //  tmpMin = singleData[1] < tmpMin ? singleData[1] : tmpMin
+  //})
   tmpOption.visualMap.max = tmpMax + 10 - tmpMax % 10
   tmpOption.visualMap.min = tmpMin - tmpMin % 10
   tmpOption.calendar.range = props.year.toString()

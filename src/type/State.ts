@@ -67,5 +67,7 @@ export interface State {
     id: string
     displayName: string
     title: string
+    start: string
+    end: string
   }
 }

@@ -30,13 +30,16 @@
                 <template v-else>
                   · <span >audiospace</span> ·
                 </template>
-                <box-arrow-up-right height="1em" width="1em"/>
+                {{ now < new Date(Number(state.audioSpaceObject.start)) ? 'Wait' : ((now > new Date(Number(state.audioSpaceObject.end)) && state.audioSpaceObject.end !== '0') ? 'Ended' : 'Live') }}
               </p>
             </a>
             <div class="align-middle" v-if="state.updateAudioSpaceFlag"><span class="spinner-border text-white" role="status" aria-hidden="true"></span></div>
             <div v-else>
               <full-text style="font-size: 1.2rem" class="text-white fw-semibold mb-2" :full_text_origin="state.audioSpaceObject.title ? state.audioSpaceObject.title : (object.description ? object.description : t('tw_card.text.someone_s_space', {someone: userName}))" :entities="[]" />
-              <div class="text-white btn d-block rounded-pill border-white audio-space-play-button" style="cursor: pointer;" v-if="state.audioSpaceObject.is_space_available_for_replay" @click="updateSpacesPlayerMeta">{{state.audioSpaceObject.id === spacesPlayer.id ? '...' : 'Play'}}</div>
+              <div class="text-white btn d-block rounded-pill border-white audio-space-play-button" style="cursor: pointer;" v-if="state.audioSpaceObject.is_space_available_for_replay" @click="updateSpacesPlayerMeta">
+                <span v-if="state.audioSpaceObject.id !== spacesPlayer.id">Play</span>
+                <span v-else>. . .</span>
+              </div>
               <!--<tw-space v-if="state.audioSpaceStatus.playback && state.audioSpaceObject.playback" :playback="state.audioSpaceObject.playback||''" :id="state.audioSpaceObject.id||''"/>-->
             </div>
           </div>

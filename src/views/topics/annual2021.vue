@@ -322,16 +322,16 @@ export default {
     }
 
     const tmpDataTemplateGenerator = <U, V>(defaultU: U, defaultV: V): Annual2021Template<U, V> => ({
-      tweets: defaultU,
-      retweet: defaultU,
+      tweets: cloneDeep(defaultU),
+      retweet: cloneDeep(defaultU),
       hourCount: new Array(24).fill(0),
       mediaCount: new Array(24).fill(0),
       renameDepartment: {},
       trendsData: {
         label: {date: '日期'},
         color: [],
-        followers: defaultV,
-        statuses_count: defaultV,
+        followers: cloneDeep(defaultV),
+        statuses_count: cloneDeep(defaultV),
       }
     })
 
@@ -483,12 +483,20 @@ export default {
               tmpGroupData = tmpGroupCache
             }
             //合并数据
-            Object.keys(tmpPersonData.tweets).forEach(date => {
-              tmpGroupData.tweets[date] ? tmpGroupData.tweets[date] += tmpPersonData.tweets[date] : tmpGroupData.tweets[date] = tmpPersonData.tweets[date]
-            })
-            Object.keys(tmpPersonData.retweet).forEach(date => {
-              tmpGroupData.retweet[date] ? tmpGroupData.retweet[date] += tmpPersonData.retweet[date] : tmpGroupData.retweet[date] = tmpPersonData.retweet[date]
-            })
+            for (const date in tmpPersonData.tweets) {
+              if (tmpGroupData.tweets[date]) {
+                tmpGroupData.tweets[date] += tmpPersonData.tweets[date]
+              } else {
+                tmpGroupData.tweets[date] = tmpPersonData.tweets[date]
+              }
+            }
+            for (const date in tmpPersonData.retweet) {
+              if (tmpGroupData.retweet[date]) {
+                tmpGroupData.retweet[date] += tmpPersonData.retweet[date]
+              } else {
+                tmpGroupData.retweet[date] = tmpPersonData.retweet[date]
+              }
+            }
             for (let time in tmpPersonData.hourCount) {
               tmpGroupData.hourCount[time] += tmpPersonData.hourCount[time]
             }
