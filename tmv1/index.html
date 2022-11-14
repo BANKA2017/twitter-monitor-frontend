@@ -78,12 +78,12 @@
                     <div v-else-if="!hash && info!=null">
                         <div v-if="!init || $route.params.name == info.name">
                             <div class="card">
-                                <img v-if="info.banner!=0" class="card-img-top" :src="`https://tmapi.nest.moe/media/proxy/pbs.twimg.com/profile_banners/`+info.uid+`/`+info.banner+`.banner.jpg`" alt="Banner">
+                                <img v-if="info.banner!=0" class="card-img-top" :src="`https://tmapi.nest.moe/media/proxy/pbs.twimg.com/profile_banners/`+info.uid+`/`+info.banner+`/banner.jpg`" alt="Banner">
                                 <div class="card-body">
                                     <div class="container">
                                         <div class="row">
                                             <div class="col-4" style="max-height:100px;max-width:100px;">
-                                                <img v-if="info.header" class="rounded-circle img-fluid" :src="`https://tmapi.nest.moe/media/proxy/pbs.twimg.com/profile_images/`+info.header" alt="Header">
+                                                <img v-if="info.header" class="rounded-circle img-fluid" :src="`https://tmapi.nest.moe/media/proxy/`+info.header" alt="Header">
                                                 <div class="my-4"></div>
                                             </div>
                                             <div class="col-8">
@@ -418,6 +418,8 @@
 <script src="https://tmv2api2.bangdream.fun/static/js/index.min.js"></script>
 <script>
     'use strict';
+    const baseLink = 'https://tmapi.nest.moe';
+    const basePath = baseLink + '/api/v1';
     Vue.use(VueLazyload, {
         error: 'data:image/svg+xml;base64, PHN2ZyB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHByZXNlcnZlQXNwZWN0UmF0aW89InhNaWRZTWlkIHNsaWNlIiBmb2N1c2FibGU9ImZhbHNlIiByb2xlPSJpbWciPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9IiM4NjhlOTYiPjwvcmVjdD48L3N2Zz4=',
         loading: 'data:image/svg+xml;base64, PHN2ZyB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHByZXNlcnZlQXNwZWN0UmF0aW89InhNaWRZTWlkIHNsaWNlIiBmb2N1c2FibGU9ImZhbHNlIiByb2xlPSJpbWciPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9IiM4NjhlOTYiPjwvcmVjdD48L3N2Zz4=',
@@ -495,20 +497,20 @@
                 {
                     path: '/project/:project',
                     children: [
-                        {path: ''},
-                        {path: ':name/:display'},
-                        {path: ':name/status/:status'}
+                        {path: '', name: 'project'},
+                        {path: ':name/:display', name: 'project_name'},
+                        {path: ':name/status/:status', name: 'project_name_status'}
                     ]
                 },{
-                    path: '/tag/:hash',
+                    path: '/tag/:hash', name: 'tag'
                 },{
-                    path: '/search/:search',
+                    path: '/search/:search', name: 'search'
                 },{
                     path: '/:name',
                     children: [
-                        {path: ''},
-                        {path: ':display'},
-                        {path: 'status/:status'}
+                        {path: '', name: 'name'},
+                        {path: ':display', name: 'name_display'},
+                        {path: 'status/:status', name: 'name_status'}
                     ]
                 }
             ]
@@ -518,9 +520,9 @@
                 console.log(this.$route.params);
                 if(!this.$route.params.search){
                     window.stop();//cancel all requests
-                    this.search = '',
-                        this.hash = '',
-                        this.update();
+                    this.search = ''
+                    this.hash = ''
+                    this.update();
                     this.scrollToTop();
                 }else{
                     this.update();
@@ -530,7 +532,7 @@
             "search": function() {
                 if(this.search){
                     this.scrollToTop();
-                    if(this.search_type == 'date'){
+                    if(this.search_type === 'date'){
                         this.update();
                     }
                 }else{
@@ -569,7 +571,7 @@
         mounted: function() {
             //this.localrun();
             let startTime = Date.now();
-            axios.get('/static/db/account_info_t_tmv1.json').then(response => {
+            axios.get(baseLink + '/static/db/account_info_t_tmv1.json').then(response => {
                 this.names = response.data.account_info;
                 this.projects = response.data.projects;
                 this.nsfwList = response.data.nsfwList;
@@ -583,7 +585,7 @@
                     this.settings.data.displayPicture = true;
                     this.noty('当前网速较慢，已关闭图片显示', 'information');
                 }
-                axios.get('/static/db/language_t_tmv1.json').then(response => {
+                axios.get(baseLink + '/static/db/language_t_tmv1.json').then(response => {
                     this.language = response.data;
                 }).catch(error => {
                     this.noty('加载失败，将无法选择语言 #' + error, 'error');
@@ -594,29 +596,29 @@
         },
         methods: {
             loading: function(tweet_id = 0, type = 'load', mute = false) {
-                if(type != 'load' && !mute){
+                if(type !== 'load' && !mute){
                     this.refresh = true;
                 }else{
                     this.load = true;
                 }
                 let url;
                 let url_add = '';
-                if(type != 'load'){
+                if(type !== 'load'){
                     url_add = "&type=refresh";
                 }else if(this.search && this.search_type === 'date'){
                     url_add = "&date=" + (Date.parse(this.search+' UTC+8') / 1000);
                 }
-                if(!this.hash){
+                if(this.$router.name === 'search'){
                     if(this.search && this.search_type === 'text'){
-                        url = 'api/v1/?m=search&q=' + this.search.toString() + '&tweet_id=' + this.tweet_id;// + '&project=' + $route.path === '/' ? '' : this.project;
+                        url = '/search/?q=' + this.search.toString() + '&tweet_id=' + this.tweet_id;// + '&project=' + $route.path === '/' ? '' : this.project;
                     }else{
-                        url = 'api/v1/?m=tweets&name=' + this.name + '&tweet_id=' + tweet_id + '&display=' + this.display + url_add;
+                        url = '/tweets/?name=' + this.name + '&tweet_id=' + tweet_id + '&display=' + this.display + url_add;
                     }
                 }else{
-                    url = 'api/v1/?m=tag&hash=' + this.hash + '&tweet_id=' + this.tweet_id;// + '&project=' + this.project;
+                    url = '/tag/?hash=' + this.hash + '&tweet_id=' + this.tweet_id;// + '&project=' + this.project;
                 }
-                axios.get('https://tmv2api2.bangdream.fun/tmv1/' + url).then(response => {
-                    if(type != 'load'){
+                axios.get(basePath + url).then(response => {
+                    if(type !== 'load'){
                         if(!mute){
                             this.tweets = response.data.data.data.concat(this.tweets);
                             let dataLength = response.data.data.data.length;
@@ -640,13 +642,13 @@
             update: function() {
                 this.init = true;
                 this.hasmore = true;
-                if(this.$route.params.name && this.$route.params.name != this.name){
+                if(this.$route.params.name && this.$route.params.name !== this.name){
                     this.chart.chartData.rows = [];
                     this.chart.chartSettings.legendName = [];
                 }
                 this.tweets = [];
                 this.largePicture = [0, 0];
-                if(this.$route.params.project && !this.$route.params.status || this.$route.path == '/'+this.name){
+                if(this.$route.params.project && !this.$route.params.status || this.$route.path === '/'+this.name){
                     if(this.$route.params.project && this.$route.params.name){
                         this.project = this.$route.params.project;
                         this.$router.replace({ path: '/' + this.$route.params.name + '/all' });
@@ -664,7 +666,7 @@
                     url_add = "&date=" + (Date.parse(this.search+' UTC'+(new Date().getTimezoneOffset()/60)) / 1000);
                 }
                 if(!this.$route.params.hash && !this.$route.params.search){
-                    if((this.$route.params.name && this.$route.params.name != this.name) && !this.search){
+                    if((this.$route.params.name && this.$route.params.name !== this.name) && !this.search){
                         this.hash = '';
                         if(this.$route.params.project){
                             if(this.$route.params.project && this.findProject(this.$route.params.project)){
@@ -684,7 +686,7 @@
                                 this.name = findUserInfo[0].name;
                             }
                         }
-                        axios.get('https://tmv2api2.bangdream.fun/tmv1/api/v1/?m=info&name=' + this.name).then(response => {
+                        axios.get(baseLink + '/online/api/v3/data/userinfo/?name=' + this.name).then(response => {
                             this.info = response.data.data;
                             this.chart.chartSettings.legendName = {'关注者': '关注者 ' + this.info.followers, '正在关注': '正在关注 ' + this.info.following, '总推文数': '总推文数 ' + this.info.statuses_count};
                             this.createChart();
@@ -700,16 +702,16 @@
                     //if(!this.chart.chartData.rows.length && this.info.uid){
                     //    this.createChart();
                     //}
-                    url = 'api/v1/?m=tweets&name=' + this.name + '&display=' + this.display + url_add;
+                    url = '/tweets/?name=' + this.name + '&display=' + this.display + url_add;
                 }else if(!this.$route.params.hash && this.$route.params.search && this.search_type === 'text'){
                     this.search = this.$route.params.search.toString();
-                    url = 'api/v1/?m=search&q=' + this.search;// + '&project=' + this.project;
+                    url = '/search/?q=' + this.search;// + '&project=' + this.project;
                 }else{
                     this.hash = this.$route.params.hash;
-                    url = 'api/v1/?m=tag&hash=' + this.hash;// + '&project=' + this.project;
+                    url = '/tag/?hash=' + this.hash;// + '&project=' + this.project;
 
                 }
-                axios.get('https://tmv2api2.bangdream.fun/tmv1/' + url).then(response => {
+                axios.get(basePath + url).then(response => {
                     this.hasmore = response.data.data.hasmore;
                     this.tweets = this.tweets.concat(response.data.data.data);
                     this.tweet_id = response.data.data.tweet_id;
@@ -731,19 +733,19 @@
 
             },
             translate: function(data_id, ids, type = 'tweets') {
-                let url = 'api/v1/?m=translate';
+                let url = '/translate/?';
                 switch(type){
                     case 'tweets':
                         this.tweets[ids].translate = 'pending';
-                        url = url + '&type=tweets&tweet_id=' + data_id.toString();
+                        url = url + 'type=tweets&tweet_id=' + data_id.toString();
                         break;
                     case 'profile':
                         this.info.translate = 'pending';
-                        url = url + '&type=profile&user_id=' + data_id.toString();
+                        url = url + 'type=profile&user_id=' + data_id.toString();
                         break;
                 }
                 url = url + '&to=' + this.settings.data.language;
-                axios.get('https://tmv2api2.bangdream.fun/tmv1/' + url).then(response => {
+                axios.get(basePath + url).then(response => {
                     switch(type){
                         case 'tweets':
                             this.tweets[ids].translate = response.data.data.translate;
@@ -866,7 +868,7 @@
                 return 'data:image/svg+xml;base64,' + btoa(newSVG);
             },
             createChart: function(){
-                axios.get('https://tmv2api2.bangdream.fun/tmv1/api/v1/?m=data&uid=' + this.info.uid).then(response => {
+                axios.get(basePath + '/data/?uid=' + this.info.uid).then(response => {
                     this.chart.chartData.rows = response.data.data;
                 }).catch(error => {
                     this.noty('加载失败，请稍后再试 #' + error, 'error');
