@@ -400,7 +400,10 @@
             </div>
         </dev>
     </template>
-    <button type="button" class="btn btn-primary fixed-button" style="opacity: 0.8;position: fixed;bottom: 0;right: 0" @click="scrollToTop()" v-if="clientHeight > 500">
+    <button type="button" class="btn btn-primary fixed-button" style="opacity: 0.8;position: fixed;bottom: 55px; right: 5px" @click="() =>{loading(tweets[tweets[0].top ? 1 : 0].tweet_id, 'refresh'); scrollToTop()}">
+        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-arrow-clockwise" viewBox="0 0 16 16" data-v-9f2ac494=""><path fill-rule="evenodd" d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2v1z"></path><path d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466z"></path></svg>
+    </button>
+    <button type="button" class="btn btn-primary fixed-button" style="opacity: 0.8;position: fixed;bottom: 5px;right: 5px" @click="scrollToTop()" v-if="clientHeight > 500">
         <svg class="bi bi-chevron-up" width="25" height="25" viewBox="0 0 20 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
             <path fill-rule="evenodd" d="M9.646 6.646a.5.5 0 01.708 0l6 6a.5.5 0 01-.708.708L10 7.707l-5.646 5.647a.5.5 0 01-.708-.708l6-6z" clip-rule="evenodd"/>
         </svg>
@@ -517,7 +520,6 @@
         }),
         watch: {
             "$route": function() {
-                console.log(this.$route.params);
                 if(!this.$route.params.search){
                     window.stop();//cancel all requests
                     this.search = ''
@@ -608,14 +610,16 @@
                 }else if(this.search && this.search_type === 'date'){
                     url_add = "&date=" + (Date.parse(this.search+' UTC+8') / 1000);
                 }
-                if(this.$router.name === 'search'){
+                if(this.$route.name === 'search'){
                     if(this.search && this.search_type === 'text'){
                         url = '/search/?q=' + this.search.toString() + '&tweet_id=' + this.tweet_id;// + '&project=' + $route.path === '/' ? '' : this.project;
                     }else{
                         url = '/tweets/?name=' + this.name + '&tweet_id=' + tweet_id + '&display=' + this.display + url_add;
                     }
-                }else{
+                }else if (this.$route.name === 'tag'){
                     url = '/tag/?hash=' + this.hash + '&tweet_id=' + this.tweet_id;// + '&project=' + this.project;
+                }else {
+                    url = '/tweets/?name=' + this.name + '&tweet_id=' + tweet_id + '&display=' + this.display + url_add;
                 }
                 axios.get(basePath + url).then(response => {
                     if(type !== 'load'){
