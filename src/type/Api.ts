@@ -6,7 +6,7 @@ import {
   Stats,
   Status,
   Tweet,
-  UserInfo, AudioSpace,
+  UserInfo, AudioSpace, LiveVideoContent,
 } from "@/type/Content";
 
 export interface Api<T> {
@@ -66,6 +66,7 @@ export interface ApiTrends extends Api<{
 export interface ApiOnlineMedia extends Api<OnlineMediaList | {}> {}
 
 export interface ApiAudioSpace extends Api<AudioSpace> {}
+export interface ApiBroadcast extends Api<LiveVideoContent> {}
 export interface ApiPolls extends Api<number[]> {}
 
 export interface ApiHashtagList extends Api<{

@@ -1,7 +1,7 @@
 <template>
   <div id="twCard" @click="(e) => {e.stopPropagation()}">
     <div class="card mb-3 background-second" style="border-radius: 14px 14px 14px 14px">
-      <a v-if="object?.url && (object.secondly_type === 'media_with_details_horizontal' || object.type !== 'unified_card') && object.type !== 'audiospace'" :href="object.url" class="stretched-link text-decoration-none" target="_blank"></a>
+      <a v-if="object?.url && (object.secondly_type === 'media_with_details_horizontal' || object.type !== 'unified_card') && object.type !== 'audiospace' && object.type !== 'broadcast'" :href="object.url" class="stretched-link text-decoration-none" target="_blank"></a>
       <template v-if="object.type === 'summary' || object.type === 'audio' || object.type === 'app' || object.type === 'moment' || object.secondly_type === 'media_with_details_horizontal'">
         <div class="row no-gutters">
           <div class="col-4 col-md-3 border-right">
@@ -36,7 +36,7 @@
             <div class="align-middle" v-if="state.updateAudioSpaceFlag"><span class="spinner-border text-white" role="status" aria-hidden="true"></span></div>
             <div v-else>
               <full-text style="font-size: 1.2rem" class="text-white fw-semibold mb-2" :full_text_origin="state.audioSpaceObject.title ? state.audioSpaceObject.title : (object.description ? object.description : t('tw_card.text.someone_s_space', {someone: userName}))" :entities="[]" />
-              <div class="text-white btn d-block rounded-pill border-white audio-space-play-button" style="cursor: pointer;" v-if="state.audioSpaceObject.is_space_available_for_replay" @click="updateSpacesPlayerMeta">
+              <div class="text-white btn d-block rounded-pill border-white audio-space-play-button" style="cursor: pointer;" v-if="state.audioSpaceObject.is_available_for_replay || (now >= new Date(Number(state.audioSpaceObject.start)) || state.audioSpaceObject.end === '0')" @click="updateSpacesPlayerMeta">
                 <span v-if="state.audioSpaceObject.id !== spacesPlayer.id">Play</span>
                 <span v-else>. . .</span>
               </div>
@@ -98,6 +98,7 @@
           <small v-else-if="object?.vanity_url" class="text-muted"><link45deg height="1em" status="" width="1em" />{{ object.vanity_url }}</small>
         </div>
       </template>
+      <tw-broadcast v-else-if="object.type === 'broadcast'" :tweet_id="object.tweet_id" :cover="latestMedia.cover" :url="object.url" :title="object.title"/>
       <template v-else>
         <div v-if="object.media === 1 && mediaState" class="border-bottom">
           <div :style="{width: '100%', height: 0, 'padding-bottom': paddingBottom( latestMedia.cover, latestMedia.origin_info_height, latestMedia.origin_info_width) + '%', 'border-radius': '14px 14px 0 0'}" class="no-gutters">
@@ -128,6 +129,7 @@ import FullText from "@/components/FullText.vue";
 import {request} from "@/share/Fetch";
 import {ApiAudioSpace} from "@/type/Api";
 import TwSpace from "@/components/TwSpace.vue";
+import TwBroadcast from "@/components/TwBroadcast.vue";
 
 const props = defineProps({
   object: {
@@ -183,7 +185,7 @@ const state = reactive<{
     admins: [],
     listeners: [],
     speakers: [],
-    is_space_available_for_replay: false
+    is_available_for_replay: false
   }),
   audioSpaceStatus: {playback: false}
 })

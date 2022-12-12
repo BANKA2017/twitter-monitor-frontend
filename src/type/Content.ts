@@ -163,22 +163,26 @@ export interface PollItem {
   checked: boolean
 }
 
-export interface AudioSpace {
+export interface LiveVideoContent {
   id: string
   avatar: string
   name: string
   display_name: string
+  state: string
   start: string
   end: string
   media_key: string
   playback?: string
   title: string
   total: number
+  is_available_for_replay: boolean
+}
+
+export interface AudioSpace extends LiveVideoContent {
   verified: boolean
   admins: AudioUsersItem[]
   listeners: AudioUsersItem[]
   speakers: AudioUsersItem[]
-  is_space_available_for_replay: boolean
 }
 
 export interface AudioUsersItem {
