@@ -42,7 +42,7 @@
               <a v-else :href="`//twitter.com/` + tweet.retweet_from_name" class="card-title text-dark fw-bold" target="_blank" :style="{'max-width': '' + (tweet.media ? 65 : 70) + '%'}">
                 <full-text :entities="[]" :full_text_origin="tweet.retweet_from" :inline="true" />
               </a>
-              <verified v-if="settings.onlineMode && (tweet.retweet_from_name ? tweet.retweet_user_info.verified : tweet.user_info.verified)" height="1em" status="text-primary" width="2em" class="d-inline"/>
+              <verified v-if="settings.onlineMode && verifiedStatus.verified" height="1em" :status="verifiedStatus.verified_type === 'business' ? 'text-gold' : 'text-primary'" width="2em" class="d-inline"/>
               <span style="font-size: 0.75em" class="d-block">@{{ tweet.retweet_from ? tweet.retweet_from_name : tweet.name }}</span>
               <router-link :to="`/search/?q=${tweet.vibe.discoveryQueryText}`" style="font-size: 0.55em; background: #EFF3F4;" class="badge text-black rounded-pill" v-if="settings.onlineMode && tweet.vibe"><full-text :entities="[]" :inline="true" :full_text_origin="`${tweet.vibe.imgDescription}${tweet.vibe.text}`" /></router-link>
             </div>
@@ -114,7 +114,7 @@ import {Tweet} from "@/type/Content";
 import {useRoute, useRouter} from "vue-router";
 import {request} from "@/share/Fetch";
 import {ApiUserInfo} from "@/type/Api";
-import {Notice} from "@/share/Tools";
+import {Notice, VerifiedStatus} from "@/share/Tools";
 import {createRealMediaPath} from "@/share/Tools";
 import Pinned from "@/icons/Pinned.vue";
 import Verified from "@/icons/Verified.vue";
@@ -170,6 +170,8 @@ const clickEvent = (e: Event) => {
 }
 
 const tweetItem = ref<HTMLElement>()
+const verifiedStatus = computed(() => VerifiedStatus(settings.value.onlineMode ? (props.tweet.retweet_from_name ? props.tweet?.retweet_user_info?.verified||0 : props.tweet?.user_info?.verified||0) : 0))
+
 
 onMounted(() => {
   if (route.name === 'no-name-status' && route.params.status === props.tweet.tweet_id_str) {

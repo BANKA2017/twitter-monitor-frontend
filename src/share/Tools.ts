@@ -66,4 +66,15 @@ const Download = (url: string, fileName: string) => {
   document.body.removeChild(element);
 }
 
-export {ScrollTo, Notice, createRealMediaPath, NullSafeParams, Equal, VerifyQueryString, autoStopVideo, Download}
+const VerifiedStatus = (verifiedInt: number = 0) => {
+  const verifiedTypeList = [
+    "business"
+  ]
+  if (verifiedInt > 255 || verifiedInt <= 0) {
+    return {verified: false, blue_verified: false, verified_type: undefined}
+  } else {
+    return {verified: !!(verifiedInt & 128), blue_verified: !!(verifiedInt & 64), verified_type: verifiedTypeList[(verifiedInt & 63) - 1]}
+  }
+}
+
+export {ScrollTo, Notice, createRealMediaPath, NullSafeParams, Equal, VerifyQueryString, autoStopVideo, Download, VerifiedStatus}

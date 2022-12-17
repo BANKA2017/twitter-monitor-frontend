@@ -29,7 +29,7 @@
       <span :style="{margin: '0.25px', padding: '1px 5px', color: 'white', 'border-radius': '0 0.375rem 0.375rem 0', 'background-color': 'black'}">{{ state.broadcastData.total }}</span>
       <locked v-if="!state.broadcastData.playback && etaSeconds < 0 && ['running', 'ended'].includes(state.broadcastData.state)" height="1.5em" width="1.5em" status="text-danger" />
     </small>
-    <p class="card-title" style="color: black">{{ title }}</p>
+    <p class="card-title" style="color: black">{{ title || state.broadcastData.title || 'Empty' }}</p>
   </div>
 </template>
 

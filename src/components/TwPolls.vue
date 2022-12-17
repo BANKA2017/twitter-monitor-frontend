@@ -1,20 +1,27 @@
 <template>
-  <div id="twPolls">
-    <div class="my-4"></div>
-    <div class="container text-decoration-none">
-      <div class="row no-gutters">
+  <div id="twPolls" class="my-2">
+    <div class="container no-gutters text-decoration-none">
+      <div class="row">
         <div class="card mx-auto my-3" v-if="media.length">
-          <div class="row no-gutters">
+          <div class="row">
             <el-image alt="pollImage" :preview-src-list="[createRealMediaPath(realMediaPath, samePath, 'tweets')+media[0].url+'']" :src="createRealMediaPath(realMediaPath, samePath, 'tweets')+media[0].url+''" class="col-12 card-img-top" fit="cover" lazy style="height: 300px"></el-image>
           </div>
         </div>
-        <div v-if="etaSeconds <= 0 && ((!settings.onlineMode && polls[0].checked) || (settings.onlineMode && state.updateFlag && state.polls.length))" class="col-12">
-          <el-progress class="mb-1" :percentage="Math.ceil(((settings.onlineMode ? state.polls[index] : poll.count)/pollCount)*100)" v-for="(poll, index) in polls" :format="() => poll.choice_label+' (' + Math.ceil(((settings.onlineMode ? state.polls[index] : poll.count)/pollCount)*100) + '%)'" :key="poll.poll_order"></el-progress>
+        <div v-if="etaSeconds <= 0 && ((!settings.onlineMode && polls[0].checked) || (settings.onlineMode && state.updateFlag && state.polls.length)) && pollCount > 0" class="col-12">
+          <div class="progress" v-for="(poll, index) in polls" :key="poll.poll_order">
+            <div :style="{'background-color': maxPollIndex === index ? '#7CC5F6' : '#CFD9DE',  width: Math.ceil(((settings.onlineMode ? state.polls[index] : poll.count)/pollCount)*100) + '%'}" class="progress-bar"></div>
+            <div class="progress-data">
+              <span :class="{'fw-bold': maxPollIndex === index, 'fw-normal': maxPollIndex !== index}">{{ poll.choice_label }}</span>
+              <span :class="{'fw-bold': maxPollIndex === index, 'fw-normal': maxPollIndex !== index}">{{ Math.ceil(((settings.onlineMode ? state.polls[index] : poll.count)/pollCount)*100) + '%' }}</span>
+            </div>
+          </div>
         </div>
         <template v-else>
           <el-button @click="e => {e.stopPropagation()}" round class="btn-block mx-auto mb-1" v-for="poll in polls" :key="poll.poll_order">{{ poll.choice_label }}</el-button>
         </template>
-        <div class="col-12 my-4" ><small class="text-muted">{{ eta }}</small></div>
+        <div class="col-12 my-1" >
+          <small class="text-muted me-1">{{ eta }}</small>
+        </div>
       </div>
     </div>
   </div>
@@ -105,8 +112,42 @@ const eta = computed(() => {
   }
 })
 
+const maxPollIndex = computed(() => {
+  let tmpMaxIndex = -1
+  let tmpPolls = state.polls
+  if (!settings.value.onlineMode) {
+    tmpPolls = props.polls.map(poll => poll.count)
+  }
+  tmpPolls.forEach((count, index) => {
+    if (tmpMaxIndex === -1 || tmpPolls[tmpMaxIndex] < count) {
+      tmpMaxIndex = index
+    }
+  })
+  return tmpMaxIndex
+})
+
 </script>
 
-<style scoped>
-
+<style scoped lang="scss">
+  .progress {
+    height: 2em;
+    font-size: 1em;
+    border-radius: 0.375em;
+    position: relative;
+    width: 100%;
+    margin-bottom: 0.375em;
+    &>.progress-data {
+      position: absolute;
+      padding: 0.35em 0.75em;
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      height: 100%;
+    }
+    &>.progress-bar {
+      position: absolute;
+      height: 100%;
+      border-radius: 0.375em;
+    }
+  }
 </style>

@@ -12,7 +12,7 @@
             <el-image class="rounded-circle" :src="createRealMediaPath(realMediaPath, samePath, 'userinfo')+state.userInfo.header.replace(/([\w]+)\.([\w]+)$/gm, `$1_reasonably_small.$2`)" :preview-src-list="[createRealMediaPath(realMediaPath, samePath, 'userinfo')+state.userInfo.header]" alt="Avatar" preview-teleported hide-on-click-modal/>
           </div>
           <div :class="{ 'col-8': ((width > 768 && height > 50) || state.userInfo.banner === 0), 'col-12': !((width > 768 && height > 50) || state.userInfo.banner === 0), 'my-4': (height > 50 || state.userInfo.banner === 0), 'mt-5': ((height <= 50 || width <= 768) && state.userInfo.banner !== 0), }" style=" justify-content: center;">
-            <h5 class="card-title mb-1 align-middle fw-bold"><full-text :entities="[]" :full_text_origin="state.userInfo.display_name" :inline="true"/><verified v-if="state.userInfo.verified" height="1em" status="text-primary" width="1.2em" class="ms-1 d-inline"/></h5>
+            <h5 class="card-title mb-1 align-middle fw-bold"><full-text :entities="[]" :full_text_origin="state.userInfo.display_name" :inline="true"/><verified v-if="verifiedStatus.verified" height="1em" :status="verifiedStatus.verified_type === 'business' ? 'text-gold' : 'text-primary'" width="1.2em" class="ms-1 d-inline"/></h5>
             <small style="display: block"><a :href="`//twitter.com/`+state.userInfo.name" class="text-dark" target="_blank">@{{ state.userInfo.name }}</a></small>
           </div>
           <el-collapse-transition>
@@ -43,7 +43,7 @@ import FullText from '@/components/FullText.vue'
 import Translate from "@/components/Translate.vue";
 import {Controller, request} from "@/share/Fetch";
 import {ApiChartLegacy, ApiUserInfo} from "@/type/Api";
-import {Notice, createRealMediaPath} from "@/share/Tools";
+import {Notice, createRealMediaPath, VerifiedStatus} from "@/share/Tools";
 import {LegacyChart, UserInfo} from "@/type/Content";
 import {useI18n} from "vue-i18n";
 import {onBeforeRouteLeave, onBeforeRouteUpdate, RouteLocationNormalized, useRoute, useRouter} from "vue-router";
@@ -172,6 +172,8 @@ const createChart = (time: number = 0, refresh: boolean = false) => {
     }
   })
 }
+
+const verifiedStatus = computed(() => VerifiedStatus(state.userInfo.verified))
 
 watch(updatedCharts, () => {
   if (!updatedCharts.value) {
