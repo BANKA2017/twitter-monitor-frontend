@@ -78,6 +78,7 @@ export interface Vibe {
 export interface Translate {
   text: string
   translate_source: string
+  entities: Entity[]
 }
 
 export interface Entity {

@@ -31,11 +31,11 @@
         <div class="mb-4"><search display-type="timeline" :name="($route.params.name && userExists) ? $route.params.name : ''" /></div>
         <tweets />
       </div>
-      <div id="links" class="col-sm-12 col-md-2" v-if="!settings.onlineMode || (width >= 768)">
+      <div id="links" class="col-sm-12 col-md-2">
         <div :style="{'position': 'sticky', 'top': '1.5rem'}">
           <project-list v-if="!settings.onlineMode"/>
           <div class="mb-1 col-10 col-md-12"><local-router style="padding-left: 0;" /></div>
-          <el-divider class="my-4" />
+          <el-divider class="my-2" />
           <link-list v-if="!settings.onlineMode"/>
           <div v-else class="mb-2 text-muted"><small>NEST.MOE</small></div>
         </div>

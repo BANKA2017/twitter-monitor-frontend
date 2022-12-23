@@ -6,7 +6,7 @@ import {
   Stats,
   Status,
   Tweet,
-  UserInfo, AudioSpace, LiveVideoContent,
+  UserInfo, AudioSpace, LiveVideoContent, Entity,
 } from "@/type/Content";
 
 export interface Api<T> {
@@ -41,6 +41,7 @@ export interface ApiTranslate extends Api<{
   target: string
   translate: string
   translate_source: string
+  entities: Entity[]
 }> {}
 
 //TODO new api

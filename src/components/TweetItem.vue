@@ -31,7 +31,7 @@
           <!--avatar-->
           <div class="col-1 ps-1 pe-0" v-if="settings.onlineMode" @click="(e) => {e.stopPropagation()}">
             <router-link :to="'/' + (tweet.retweet_from_name ? tweet.retweet_user_info.name : tweet.user_info.name) + '/all'">
-              <el-image class="rounded-circle " :src="createRealMediaPath(realMediaPath, samePath, 'userinfo')+ (tweet.retweet_from_name ? tweet.retweet_user_info.header : tweet.user_info.header).replace(/([\w]+)\.([\w]+)$/gm, `$1_reasonably_small.$2`)" alt="Avatar" />
+              <el-image :class="verifiedStatus.verified_type === 'business' ? 'rounded-3' : 'rounded-circle' " :src="createRealMediaPath(realMediaPath, samePath, 'userinfo')+ (tweet.retweet_from_name ? tweet.retweet_user_info.header : tweet.user_info.header).replace(/([\w]+)\.([\w]+)$/gm, `$1_reasonably_small.$2`)" alt="Avatar" />
             </router-link>
           </div>
           <div :class="{'col-11': settings.onlineMode}" :dir="tweet.rtl ? 'rtl' : 'ltr'" @click="(e) => {e.stopPropagation()}">
@@ -78,9 +78,9 @@
               <hr class="my-2" />
               <div class="d-flex justify-content-between">
                 <div class="d-inline-block">
-                  <small class="me-2 text-muted" v-if="tweet.retweet_count > 0"><span class="fw-bold">{{tweet.retweet_count}}</span> {{t("tweet.interactive.retweet", tweet.retweet_count > 1 ? 2 : 1)}}</small>
-                  <small class="me-2 text-muted" v-if="tweet.quote_count > 0"><span class="fw-bold">{{tweet.quote_count}}</span> {{t("tweet.interactive.quote", tweet.quote_count > 1 ? 2 : 1)}}</small>
-                  <small class="me-2 text-muted" v-if="tweet.favorite_count > 0"><span class="fw-bold">{{tweet.favorite_count}}</span> {{t("tweet.interactive.favorite", tweet.favorite_count > 1 ? 2 : 1)}}</small>
+                  <small class="me-4 text-muted fw-bold" v-if="tweet.retweet_count > 0"><retweet height="1.1rem" width="1.1rem" status="text-success me-1"/><span >{{tweet.retweet_count}}</span></small>
+                  <small class="me-4 text-muted fw-bold" v-if="tweet.quote_count > 0"><reply height="1.1rem" width="1.1rem" status="text-primary me-1"/><span >{{tweet.quote_count}}</span></small>
+                  <small class="text-muted fw-bold" v-if="tweet.favorite_count > 0"><like height="1.1rem" width="1.1rem"  status="text-danger me-1"/><span >{{tweet.favorite_count}}</span></small>
                 </div>
                 <!--<div class="d-inline-block" >-->
                   <!--save for image-->
@@ -118,6 +118,8 @@ import {Notice, VerifiedStatus} from "@/share/Tools";
 import {createRealMediaPath} from "@/share/Tools";
 import Pinned from "@/icons/Pinned.vue";
 import Verified from "@/icons/Verified.vue";
+import Reply from "@/icons/Reply.vue";
+import Like from "@/icons/Like.vue";
 
 const props = defineProps({
   tweet: {

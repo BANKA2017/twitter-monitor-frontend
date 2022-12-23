@@ -3,15 +3,15 @@
     <el-skeleton :loading="state.loading" animated>
       <div class="card mb-4">
         <el-collapse-transition v-if="state.userInfo.banner !== 0">
-          <div class="transition-height" :style="{height: (isMobileRatio ? '100%' : 0), 'position': 'relative', 'aspect-ratio': !settings.displayPicture ? '3 / 1' : ''}">
+          <div class="transition-height" v-show="isMobileRatio" :style="{'position': 'relative', 'aspect-ratio': !settings.displayPicture ? '3 / 1' : ''}">
             <el-image v-if="!settings.displayPicture" :src="createRealMediaPath(realMediaPath, samePath, 'userinfo')+`pbs.twimg.com/profile_banners/`+state.userInfo.uid_str+`/`+state.userInfo.banner+`/banner.jpg`" :preview-src-list="[createRealMediaPath(realMediaPath, samePath, 'userinfo')+`pbs.twimg.com/profile_banners/`+state.userInfo.uid_str+`/`+state.userInfo.banner+`/banner.jpg`]" alt="Banner" style="position: absolute; max-height: 100%;  " class="col-12 card-img-top banner" fit="cover" lazy preview-teleported hide-on-click-modal/>
           </div>
         </el-collapse-transition>
         <div class="row mx-2">
           <div :class="{'col-4': ((width > 768 && height > 50) || state.userInfo.banner === 0),}" v-if="!settings.displayPicture" style="width: calc(100% / 3); max-width: 110px; aspect-ratio: 1; align-items: center; display: flex; justify-content: center; margin: -50% 0">
-            <el-image class="rounded-circle" :src="createRealMediaPath(realMediaPath, samePath, 'userinfo')+state.userInfo.header.replace(/([\w]+)\.([\w]+)$/gm, `$1_reasonably_small.$2`)" :preview-src-list="[createRealMediaPath(realMediaPath, samePath, 'userinfo')+state.userInfo.header]" alt="Avatar" preview-teleported hide-on-click-modal/>
+            <el-image :class="verifiedStatus.verified_type === 'business' ? 'rounded-3 border border-2' : 'rounded-circle'" :src="createRealMediaPath(realMediaPath, samePath, 'userinfo')+state.userInfo.header.replace(/([\w]+)\.([\w]+)$/gm, `$1_reasonably_small.$2`)" :preview-src-list="[createRealMediaPath(realMediaPath, samePath, 'userinfo')+state.userInfo.header]" alt="Avatar" preview-teleported hide-on-click-modal/>
           </div>
-          <div :class="{ 'col-8': ((width > 768 && height > 50) || state.userInfo.banner === 0), 'col-12': !((width > 768 && height > 50) || state.userInfo.banner === 0), 'my-4': (height > 50 || state.userInfo.banner === 0), 'mt-5': ((height <= 50 || width <= 768) && state.userInfo.banner !== 0), }" style=" justify-content: center;">
+          <div :class="{ 'col-8': ((width > 768 && height > 50) || state.userInfo.banner === 0), 'col-12': !((width > 768 && height > 50) || state.userInfo.banner === 0), 'my-4': (width > 768 && (height > 50 || state.userInfo.banner === 0)), 'mt-5': ((height <= 50 || width <= 768) && state.userInfo.banner !== 0), }" style=" justify-content: center;">
             <h5 class="card-title mb-1 align-middle fw-bold"><full-text :entities="[]" :full_text_origin="state.userInfo.display_name" :inline="true"/><verified v-if="verifiedStatus.verified" height="1em" :status="verifiedStatus.verified_type === 'business' ? 'text-gold' : 'text-primary'" width="1.2em" class="ms-1 d-inline"/></h5>
             <small style="display: block"><a :href="`//twitter.com/`+state.userInfo.name" class="text-dark" target="_blank">@{{ state.userInfo.name }}</a></small>
           </div>
@@ -79,7 +79,7 @@ const state = reactive<{
   chartExisted: true,
   title: ref('Twitter Monitor'),
   userInfo: ref({
-    uid: 0,
+    uid: '0',
     uid_str: "",
     name: "",
     display_name: "",

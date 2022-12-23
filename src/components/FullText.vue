@@ -11,7 +11,7 @@
       <template v-for="(text, ord) in x = spreadText(obj.text)">
         <template v-for="(textData, textOrder) in textObject(text, emojiObject(text))">
           <span v-if="textData.text" :key="'span'+ord+order+textOrder+text" class="mb-1">{{ textData.text }}</span>
-          <img v-if="textData.tag_text" :src="textData.url" style="height: 1em; width: 1em;" :alt="textData.tag_text" :key="'img'+ord+order+textOrder+text" class="margin-for-inner-text-svg">
+          <img v-if="textData.tag_text && textData.url" :src="textData.url" style="height: 1em; width: 1em;" :alt="textData.tag_text" :key="'img'+ord+order+textOrder+text" class="margin-for-inner-text-svg">
         </template>
         <br v-if="ord !== x.length - 1">
       </template>

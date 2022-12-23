@@ -10,7 +10,7 @@
     <div v-else>
       <el-divider class="my-4" />
       <p class='card-text'><small class="text-muted">{{ t("translate.message.translate_by", [state.translate_source]) }}</small></p>
-      <full-text class="card-text" :entities="[]" :full_text_origin="state.text" />
+      <full-text class="card-text" :entities="state.entities" :full_text_origin="state.text" />
       <div class="text-decoration-none" role="button" @click="e => {e.stopPropagation()}"><small style="font-size: 0.8rem" class="text-primary clickable-text" @click="state.status = 0">{{ t("translate.message.hide_translated") }}</small></div>
     </div>
   </div>
@@ -24,6 +24,7 @@ import {Controller, request} from "@/share/Fetch";
 import {ApiTranslate} from "@/type/Api";
 import {useI18n} from "vue-i18n";
 import FullText from "@/components/FullText.vue";
+import {Entity} from "@/type/Content";
 const props = defineProps({
   type: {
     type: String,
@@ -58,10 +59,12 @@ const state = reactive<{
   status: 0 | 1 | 2;
   text: string;
   translate_source: string
+  entities: Entity[]
 }>({
   status: 0,
   text: "",
   translate_source: "",
+  entities: []
 })
 
 watch(translate, () => {
@@ -69,10 +72,12 @@ watch(translate, () => {
     if (translate.value[props.id]!==undefined) {
       state.text = translate.value[props.id].text
       state.translate_source = translate.value[props.id].translate_source
+      state.entities = translate.value[props.id].entities
       state.status = 2
     } else {
       state.text = ''
       state.translate_source = ''
+      state.entities = []
       state.status = 0
     }
   }
@@ -83,9 +88,10 @@ const runTranslate = (id: string = '0') => {
   state.status = 1;
   if (String(props.type) === '0') {
     request<ApiTranslate>(settings.value.basePath + '/api/v3/data/translate/?tr_type=tweets&tweet_id=' + id + '&to=' + toLanguage.value, new Controller()).then(response => {
-      store.dispatch({type: "updateTweetsTranslate", tweet_id: props.id, translate: {text: response.data.translate, translate_source: response.data.translate_source}})
+      store.dispatch({type: "updateTweetsTranslate", tweet_id: props.id, translate: {text: response.data.translate, translate_source: response.data.translate_source, entities: response.data.entities}})
       state.text = response.data.translate
       state.translate_source = response.data.translate_source
+      state.entities = response.data.entities
       state.status = 2
     }).catch(e => {
       state.status = 0
@@ -95,6 +101,7 @@ const runTranslate = (id: string = '0') => {
     request<ApiTranslate>(settings.value.basePath + '/api/v3/data/translate/?tr_type=profile&uid=' + id + '&to=' + toLanguage.value, new Controller()).then(response => {
       state.text = response.data.translate
       state.translate_source = response.data.translate_source
+      state.entities = response.data.entities
       state.status = 2
     }).catch(e => {
       state.status = 0
