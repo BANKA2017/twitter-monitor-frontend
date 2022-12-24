@@ -2,7 +2,7 @@
   <div id="app">
     <div style="position: absolute"></div>
     <transition name="el-fade-in" v-show="height > 200">
-      <div class="el-backtop" style="right: 40px; bottom: 40px; z-index: 1500" @click="ScrollTo">
+      <div class="el-backtop" style="right: 40px; bottom: 40px; z-index: 1500" @click="ScrollTo(0)">
         <el-icon size="1em"><caret-top /></el-icon>
       </div>
     </transition>

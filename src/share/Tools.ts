@@ -1,12 +1,16 @@
 import {ElNotification} from "element-plus";
 import html2canvas from "html2canvas";
 
-const ScrollTo = (top: number = 0): void => {
-  window.scrollTo({
-    top: top,
-    behavior: "smooth"
-  });
-};
+const ScrollTo = (top: number | Element | null = 0): void => {
+  if (typeof top === 'number') {
+    window.scrollTo({
+      top,
+      behavior: "smooth"
+    })
+  } else if (top !== null) {
+    top.scrollIntoView({behavior: 'smooth'})
+  }
+}
 
 const Notice = (text: string = "", status: 'success' | 'warning' | 'info' | 'error' | undefined = 'success', duration: number = 1500, useHTML: boolean = false) => {
   ElNotification({
@@ -68,7 +72,8 @@ const Download = (url: string, fileName: string) => {
 
 const VerifiedStatus = (verifiedInt: number = 0) => {
   const verifiedTypeList = [
-    "business"
+    "business",
+    'government'
   ]
   if (verifiedInt > 255 || verifiedInt <= 0) {
     return {verified: false, blue_verified: false, verified_type: undefined}

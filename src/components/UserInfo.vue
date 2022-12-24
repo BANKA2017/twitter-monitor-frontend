@@ -4,24 +4,25 @@
       <div class="card mb-4">
         <el-collapse-transition v-if="state.userInfo.banner !== 0">
           <div class="transition-height" v-show="isMobileRatio" :style="{'position': 'relative', 'aspect-ratio': !settings.displayPicture ? '3 / 1' : ''}">
-            <el-image v-if="!settings.displayPicture" :src="createRealMediaPath(realMediaPath, samePath, 'userinfo')+`pbs.twimg.com/profile_banners/`+state.userInfo.uid_str+`/`+state.userInfo.banner+`/banner.jpg`" :preview-src-list="[createRealMediaPath(realMediaPath, samePath, 'userinfo')+`pbs.twimg.com/profile_banners/`+state.userInfo.uid_str+`/`+state.userInfo.banner+`/banner.jpg`]" alt="Banner" style="position: absolute; max-height: 100%;  " class="col-12 card-img-top banner" fit="cover" lazy preview-teleported hide-on-click-modal/>
+            <el-image v-if="!settings.displayPicture" :src="createRealMediaPath(realMediaPath, samePath, 'userinfo')+`pbs.twimg.com/profile_banners/`+state.userInfo.uid_str+`/`+state.userInfo.banner+`/banner.jpg`" :preview-src-list="[createRealMediaPath(realMediaPath, samePath, 'userinfo')+`pbs.twimg.com/profile_banners/`+state.userInfo.uid_str+`/`+state.userInfo.banner+`/banner.jpg`]" alt="Banner" style="position: absolute; max-height: 100%;  " class="card-img-top banner" fit="cover" lazy preview-teleported hide-on-click-modal/>
           </div>
         </el-collapse-transition>
-        <div class="row mx-2">
-          <div :class="{'col-4': ((width > 768 && height > 50) || state.userInfo.banner === 0),}" v-if="!settings.displayPicture" style="width: calc(100% / 3); max-width: 110px; aspect-ratio: 1; align-items: center; display: flex; justify-content: center; margin: -50% 0">
-            <el-image :class="verifiedStatus.verified_type === 'business' ? 'rounded-3 border border-2' : 'rounded-circle'" :src="createRealMediaPath(realMediaPath, samePath, 'userinfo')+state.userInfo.header.replace(/([\w]+)\.([\w]+)$/gm, `$1_reasonably_small.$2`)" :preview-src-list="[createRealMediaPath(realMediaPath, samePath, 'userinfo')+state.userInfo.header]" alt="Avatar" preview-teleported hide-on-click-modal/>
+        <div style="display: flex; align-content: center; margin: 0 0.5em;">
+          <div class="" style="width: calc(100% / 3); max-width: 110px; aspect-ratio: 1; display: inline-block; padding: 0.5em;" v-if="!settings.displayPicture">
+            <el-image :class="verifiedStatus.verified_type === 'business' ? 'rounded-3' : 'rounded-circle'" :src="createRealMediaPath(realMediaPath, samePath, 'userinfo')+state.userInfo.header.replace(/([\w]+)\.([\w]+)$/gm, `$1_reasonably_small.$2`)" :preview-src-list="[createRealMediaPath(realMediaPath, samePath, 'userinfo')+state.userInfo.header]" alt="Avatar" preview-teleported hide-on-click-modal/>
           </div>
-          <div :class="{ 'col-8': ((width > 768 && height > 50) || state.userInfo.banner === 0), 'col-12': !((width > 768 && height > 50) || state.userInfo.banner === 0), 'my-4': (width > 768 && (height > 50 || state.userInfo.banner === 0)), 'mt-5': ((height <= 50 || width <= 768) && state.userInfo.banner !== 0), }" style=" justify-content: center;">
-            <h5 class="card-title mb-1 align-middle fw-bold"><full-text :entities="[]" :full_text_origin="state.userInfo.display_name" :inline="true"/><verified v-if="verifiedStatus.verified" height="1em" :status="verifiedStatus.verified_type === 'business' ? 'text-gold' : 'text-primary'" width="1.2em" class="ms-1 d-inline"/></h5>
+          <!--<div :class="{ 'col-8': ((width > 768 && height > 50) || state.userInfo.banner === 0), 'col-12': !((width > 768 && height > 50) || state.userInfo.banner === 0), 'my-4': (width > 768 && (height > 50 || state.userInfo.banner === 0)), 'mt-5': ((height <= 50 || width <= 768) && state.userInfo.banner !== 0), }" style=" justify-content: center;">-->
+          <div class="" style="padding: 0.5em 1em; display: inline-block; align-self: center">
+            <h5 class="card-title mb-1 fw-bold" style="display: flex; justify-content: space-between"><full-text :entities="[]" :full_text_origin="state.userInfo.display_name" :inline="true"/><verified v-if="verifiedStatus.verified" height="24px" :status="verifiedStatus.verified_type ? {business: 'text-gold', government: 'text-secondary'}[verifiedStatus.verified_type] : 'text-primary'" width="24px" class="mx-1 d-inline"/></h5>
             <small style="display: block"><a :href="`//twitter.com/`+state.userInfo.name" class="text-dark" target="_blank">@{{ state.userInfo.name }}</a></small>
           </div>
-          <el-collapse-transition>
-            <div v-show="!isHideDescription" class="margin-3">
-              <full-text :entities="state.userInfo.description_entities" :full_text_origin="state.userInfo.description_origin" class="card-text transition-box"></full-text>
-              <translate v-if="!settings.onlineMode" :id="state.userInfo.uid_str" :to="settings.language" type="1" class="transition-box"/>
-            </div>
-          </el-collapse-transition>
         </div>
+        <el-collapse-transition>
+        <div v-show="!isHideDescription && state.userInfo.description_origin" style="padding: 0.5em 1em;">
+          <full-text :entities="state.userInfo.description_entities" :full_text_origin="state.userInfo.description_origin" class="card-text transition-box"></full-text>
+          <translate v-if="!settings.onlineMode" :id="state.userInfo.uid_str" :to="settings.language" type="1" class="transition-box"/>
+        </div>
+      </el-collapse-transition>
       </div>
     </el-skeleton>
     <el-skeleton :loading="!state.chartData.length" :rows="4" anmiated v-if="state.chartData && state.chartExisted">
@@ -197,27 +198,24 @@ onBeforeRouteLeave((to, from) => {
 })
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .banner {
   width: 100%;
   position: absolute;
   top: 0;
   object-fit: cover;
 }
-.header {
-  top: 0;
-  width: calc(100% / 4);
-}
-.header-father {
-  position: absolute;
-  transform: translateY(-50%) translateX(3%);
-}
-.margin-3 {
-  margin: 3%;
-}
 .transition-height {
   transition-property: height;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   transition-duration: 150ms;
+}
+
+@mixin avatar-base {
+  width: calc(100% / 3);
+  max-width: 110px;
+  aspect-ratio: 1;
+  display: inline-block;
+  padding: .5em;
 }
 </style>

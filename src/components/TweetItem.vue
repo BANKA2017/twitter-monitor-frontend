@@ -42,7 +42,7 @@
               <a v-else :href="`//twitter.com/` + tweet.retweet_from_name" class="card-title text-dark fw-bold" target="_blank" :style="{'max-width': '' + (tweet.media ? 65 : 70) + '%'}">
                 <full-text :entities="[]" :full_text_origin="tweet.retweet_from" :inline="true" />
               </a>
-              <verified v-if="settings.onlineMode && verifiedStatus.verified" height="1em" :status="verifiedStatus.verified_type === 'business' ? 'text-gold' : 'text-primary'" width="2em" class="d-inline"/>
+              <verified v-if="settings.onlineMode && verifiedStatus.verified" height="1em" :status="verifiedStatus.verified_type ? {business: 'text-gold', government: 'text-secondary'}[verifiedStatus.verified_type] : 'text-primary'" width="2em" class="d-inline"/>
               <span style="font-size: 0.75em" class="d-block">@{{ tweet.retweet_from ? tweet.retweet_from_name : tweet.name }}</span>
               <router-link :to="`/search/?q=${tweet.vibe.discoveryQueryText}`" style="font-size: 0.55em; background: #EFF3F4;" class="badge text-black rounded-pill" v-if="settings.onlineMode && tweet.vibe"><full-text :entities="[]" :inline="true" :full_text_origin="`${tweet.vibe.imgDescription}${tweet.vibe.text}`" /></router-link>
             </div>

@@ -1,5 +1,6 @@
 <template>
   <div id="tweets">
+    <div id="divForUpdate" ref="divForUpdate"></div>
     <nav v-if="(route.name !== 'main' || !translatorMode) && route.name === 'name-display'" :style="{'position': 'sticky', 'top': '1.5rem', 'z-index': 1, 'background-color': 'rgba(255, 255, 255, 0.9)', 'border-radius': '0.25rem'}" class="nav nav-pills nav-fill border">
       <!--v-if="tweetStatus.displayType === 'timeline' && !load.leftCard"-->
       <li v-for="(value, s) in displayMode.filter(x => settings.onlineMode ? (x[1] !== 'self') : true)" :key="s" class="nav-item">
@@ -61,7 +62,7 @@
     </div>
   </transition>
   <transition name="el-fade-in" v-if="route.name !== 'name-status'">
-    <div class="el-backtop" style="right: 40px; bottom: 90px; z-index: 1500" @click="() => {ScrollTo(); loading(true)}">
+    <div class="el-backtop" style="right: 40px; bottom: 90px; z-index: 1500" @click="() => {ScrollTo(divForUpdate); loading(true)}">
       <arrow-clockwise height="1em" status="" width="1em" />
     </div>
   </transition>
@@ -80,7 +81,6 @@ import {ApiTweets} from "@/type/Api";
 import TweetItem from "@/components/TweetItem.vue";
 import ArrowClockwise from "@/icons/ArrowClockwise.vue";
 import {RouterNameList} from "@/share/Content";
-import {CaretBottom} from "@element-plus/icons-vue";
 import {Tweet} from "@/type/Content";
 import TweetAlbumItem from "@/components/TweetAlbumItem.vue";
 import ImageIcon from "@/icons/ImageIcon.vue";
@@ -139,6 +139,8 @@ const state = reactive<{
   bottomTweetId: '0',
   refreshFlag: new Date()
 })
+
+const divForUpdate = ref<HTMLElement>()
 
 watch(height, () => {
   if (route.name !== 'name-status' && route.name !== 'no-name-status' && siteHeight.value - height.value - viewportHeight.value < 150 && settings.value.autoLoadTweets && !state.loadingBottom && state.moreTweets) {
