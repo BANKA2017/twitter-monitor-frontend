@@ -64,6 +64,11 @@ export default defineComponent({
       description: "这是以周为更新周期自动生成的报告，报告仅供参考，Twitter monitor 不对其内容负责",
       update_time: "2022-08-15",
       link: "/i/topics/bangdream_trends/"
+    },{
+      title: "2022年度统计",
+      description: "Twitter monitor 2022年度报告",
+      update_time: "2022-12-31",
+      link: "/i/topics/2022/"
     }].reverse()
     return {topics}
   }

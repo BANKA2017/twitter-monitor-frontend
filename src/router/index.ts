@@ -12,6 +12,7 @@ const Topic = () => import("@/views/topics/index.vue")
 const Annual2019 = () => import("@/views/topics/annual2019.vue")
 const Annual2020 = () => import("@/views/topics/annual2020.vue")
 const Annual2021 = () => import("@/views/topics/annual2021.vue")
+const Annual2022 = () => import("@/views/topics/annual2022.vue")
 const loveliveTrends = () => import("@/views/topics/loveliveTrends.vue")
 const bangdreamTrends = () => import("@/views/topics/bangDreamTrends.vue")
 const staffCandleStickPage = () => import("@/views/topics/staffCandleStickPage.vue")
@@ -36,6 +37,7 @@ export default createRouter({
                 {path: '2019', component: Annual2019, name: '2019'},
                 {path: '2020', component: Annual2020, name: '2020'},
                 {path: '2021', component: Annual2021, name: '2021'},
+                {path: '2022', component: Annual2022, name: '2022'},
                 {path: 'lovelive_trends/:name?', component: loveliveTrends, name: 'lovelive_trends'},
                 {path: 'bangdream_trends/:name?', component: bangdreamTrends, name: 'bangdream_trends'},
                 {path: 'staff_data_page', component: staffCandleStickPage, name: 'staff_data_page'}
