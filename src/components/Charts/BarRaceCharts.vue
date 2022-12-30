@@ -162,7 +162,7 @@ const computedOptions = computed(() => {
   tmpOption.baseOption.title.text = props.title
   tmpOption.baseOption.timeline.data = state.dateList
   //console.log(Object.keys(props.data[0]).filter(x => x !== 'date'))
-  tmpOption.baseOption.yAxis[0].data = Object.keys(props.data[0]).filter(x => x !== 'date').map(name => props.labelMap[name] ? props.labelMap[name] : '')//去除 date
+  tmpOption.baseOption.yAxis[0].data = Object.keys(props.data[props.data?.length - 1]).filter(x => x !== 'date').map(name => props.labelMap[name] ? props.labelMap[name] : '')//去除 date
   tmpOption.options = tmpSeries
   //tmpOption.series.data = this.data
   state.option = tmpOption

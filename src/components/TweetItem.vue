@@ -29,12 +29,12 @@
         </div>
         <div class="row">
           <!--avatar-->
-          <div class="col-1 ps-1 pe-0" v-if="settings.onlineMode" @click="(e) => {e.stopPropagation()}">
+          <div class="col-1 ps-1 pe-0" v-if="settings.onlineMode || tweet.user_info" @click="(e) => {e.stopPropagation()}">
             <router-link :to="'/' + (tweet.retweet_from_name ? tweet.retweet_user_info.name : tweet.user_info.name) + '/all'">
               <el-image :class="verifiedStatus.verified_type === 'business' ? 'rounded-3' : 'rounded-circle' " :src="createRealMediaPath(realMediaPath, samePath, 'userinfo')+ (tweet.retweet_from_name ? tweet.retweet_user_info.header : tweet.user_info.header).replace(/([\w]+)\.([\w]+)$/gm, `$1_reasonably_small.$2`)" alt="Avatar" />
             </router-link>
           </div>
-          <div :class="{'col-11': settings.onlineMode}" :dir="tweet.rtl ? 'rtl' : 'ltr'" @click="(e) => {e.stopPropagation()}">
+          <div :class="{'col-11': settings.onlineMode || tweet.user_info}" :dir="tweet.rtl ? 'rtl' : 'ltr'" @click="(e) => {e.stopPropagation()}">
             <div class="d-block text-truncate" :style="{'max-width': '' + (tweet.media ? 69 : 74) + '%'}">
               <router-link v-if="settings.onlineMode || !tweet.retweet_from_name || (tweet.retweet_from_name && userList.map(x => x.name).includes(tweet.retweet_from_name))" :to="`/`+ (tweet.retweet_from ? tweet.retweet_from_name : tweet.name) + '/all'" class="card-title text-dark fw-bold" :style="{'max-width': '' + (tweet.media ? 65 : 70) + '%'}">
                 <full-text :entities="[]" :full_text_origin="tweet.retweet_from ? tweet.retweet_from : tweet.display_name" :inline="true" />
@@ -74,7 +74,7 @@
             <div id="foot">
               <small class="text-muted">{{ timeGap(tweet.time, now, settings.language) }} · <span class="text-primary">{{ tweet.source }}</span></small>
             </div>
-            <div class="mt-2" v-if="settings.onlineMode && (tweet.retweet_count + tweet.quote_count + tweet.favorite_count) > 0">
+            <div class="mt-2" v-if="(settings.onlineMode && (tweet.retweet_count + tweet.quote_count + tweet.favorite_count) > 0) || (tweet.retweet_count !== undefined && tweet.quote_count !== undefined && tweet.favorite_count !== undefined)">
               <hr class="my-2" />
               <div class="d-flex justify-content-between">
                 <div class="d-inline-block">

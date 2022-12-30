@@ -138,7 +138,7 @@
                 <heat-map-chart title="转推热力图" :data="accountComputedData.bangdream.retweet" year="2021" class="mb-2"/>
                 <div class="row" >
                   <bar-stack-chart-for-annual2021 title="时间段" :data="{tweet: accountComputedData.bangdream.hourCount, media: accountComputedData.bangdream.mediaCount}" class="col-12 col-lg-6 mb-2"/>
-                  <pie-chart title="发推时间段" :data="accountComputedData.bangdream.hourCount" class="col-12 col-lg-6 mb-2"/>
+                  <pie-chart title="发推时间段" :chart-data="accountComputedData.bangdream.hourCount" class="col-12 col-lg-6 mb-2"/>
                 </div>
                 <sun-burst-chart-for-annual2021 class="mb-2" title="改名部" subtitle="让我看看是谁在改名" :data="accountComputedData.bangdream.renameDepartment" />
 
@@ -161,7 +161,7 @@
                 <heat-map-chart title="转推热力图" :data="accountComputedData.lovelive.retweet" year="2021" class="mb-2"/>
                 <div class="row" >
                   <bar-stack-chart-for-annual2021 title="时间段" :data="{tweet: accountComputedData.lovelive.hourCount, media: accountComputedData.lovelive.mediaCount}" class="col-12 col-lg-6 mb-2"/>
-                  <pie-chart title="发推时间段" :data="accountComputedData.lovelive.hourCount" class="col-12 col-lg-6 mb-2"/>
+                  <pie-chart title="发推时间段" :chart-data="accountComputedData.lovelive.hourCount" class="col-12 col-lg-6 mb-2"/>
                 </div>
                 <sun-burst-chart-for-annual2021 class="mb-2" title="改名部" subtitle="让我看看是谁在改名" :data="accountComputedData.lovelive.renameDepartment" />
 
@@ -189,7 +189,7 @@
                 <heat-map-chart title="转推热力图" :data="accountComputedData.official.retweet" year="2021" class="mb-2"/>
                 <div class="row" >
                   <bar-stack-chart-for-annual2021 title="时间段" :data="{tweet: accountComputedData.official.hourCount, media: accountComputedData.official.mediaCount}" class="col-12 col-lg-6 mb-2"/>
-                  <pie-chart title="发推时间段" :data="accountComputedData.official.hourCount" class="col-12 col-lg-6 mb-2"/>
+                  <pie-chart title="发推时间段" :chart-data="accountComputedData.official.hourCount" class="col-12 col-lg-6 mb-2"/>
                 </div>
                 <sun-burst-chart-for-annual2021 class="mb-2" title="改名部" subtitle="让我看看是谁在改名" :data="accountComputedData.official.renameDepartment" />
                 <tmv2-chart class="mb-2" :chart-rows="accountComputedData.official.trendsData.followers" :label-map="accountComputedData.official.trendsData.label"

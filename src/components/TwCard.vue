@@ -1,7 +1,7 @@
 <template>
   <div id="twCard" @click="(e) => {e.stopPropagation()}">
     <div class="card mb-3 background-second" style="border-radius: 14px 14px 14px 14px">
-      <a v-if="object?.url && (object.secondly_type === 'media_with_details_horizontal' || object.type !== 'unified_card') && object.type !== 'audiospace' && object.type !== 'broadcast'" :href="object.url" class="stretched-link text-decoration-none" target="_blank"></a>
+      <a v-if="object?.url && (object.secondly_type === 'media_with_details_horizontal' || object.secondly_type === 'twitter_article' || object.type !== 'unified_card') && object.type !== 'audiospace' && object.type !== 'broadcast'" :href="object.url" class="stretched-link text-decoration-none" target="_blank"></a>
       <template v-if="object.type === 'summary' || object.type === 'audio' || object.type === 'app' || object.type === 'moment' || object.secondly_type === 'media_with_details_horizontal'">
         <div class="row no-gutters">
           <div class="col-4 col-md-3 border-right">
@@ -45,7 +45,8 @@
           </div>
         </div>
       </template>
-      <template v-else-if="object.type === 'unified_card'">
+      <tw-broadcast v-else-if="object.type === 'broadcast'" :tweet_id="object.tweet_id" :cover="latestMedia.cover" :url="object.url" :title="object.title"/>
+      <template v-else-if="object.type === 'unified_card' && object.secondly_type !== 'twitter_article'">
         <div v-if="mediaState && object.secondly_type === 'image_website' || object.secondly_type === 'image_app' || object.secondly_type === 'twitter_list_details'" :style="{width: '100%', height: 0, 'padding-bottom': paddingBottom( latestMedia.cover, latestMedia.origin_info_height, latestMedia.origin_info_width) + '%', 'border-radius': '14px 14px 0 0'}" class="no-gutters">
           <el-image :preview-src-list="[createRealMediaPath(realMediaPath, samePath)+latestMedia.cover]" :src="createRealMediaPath(realMediaPath, samePath)+latestMedia.cover" :style="{width: '100%', position: 'absolute', 'border-radius': '14px 14px 0 0'}" alt="cardImage" class="card-img-top" fit="cover" lazy @load="state.load = true" preview-teleported hide-on-click-modal></el-image>
         </div>
@@ -63,7 +64,7 @@
             </el-carousel-item>
           </el-carousel>
         </div>
-        <span v-else class="text-center">{{ t("tw_card.text.not_supported_type") }}</span>
+        <span v-else class="text-center">{{ t("tw_card.text.unsupported_type") }}</span>
         <div v-if="object.secondly_type === 'image_multi_dest_carousel_website' || object.secondly_type === 'video_multi_dest_carousel_website' || object.secondly_type === 'mixed_media_multi_dest_carousel_website'" class="card-body position-relative">
           <a v-if="multiDestCarouselData && !object.app" :href="multiDestCarouselData[state.multiDestCarouselOrder].url" class="stretched-link text-decoration-none" target="_blank"></a>
           <template v-if="multiDestCarouselData[state.multiDestCarouselOrder].description !== ''"><small class="text-muted">{{ multiDestCarouselData[state.multiDestCarouselOrder].description }}</small><br></template>
@@ -98,7 +99,6 @@
           <small v-else-if="object?.vanity_url" class="text-muted"><link45deg height="1em" status="" width="1em" />{{ object.vanity_url }}</small>
         </div>
       </template>
-      <tw-broadcast v-else-if="object.type === 'broadcast'" :tweet_id="object.tweet_id" :cover="latestMedia.cover" :url="object.url" :title="object.title"/>
       <template v-else>
         <div v-if="object.media === 1 && mediaState" class="border-bottom">
           <div :style="{width: '100%', height: 0, 'padding-bottom': paddingBottom( latestMedia.cover, latestMedia.origin_info_height, latestMedia.origin_info_width) + '%', 'border-radius': '14px 14px 0 0'}" class="no-gutters">

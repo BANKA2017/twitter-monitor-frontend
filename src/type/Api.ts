@@ -184,3 +184,57 @@ export interface ApiAnnual2021 {
     range: {start: number; end: number}
   }[]
 }
+
+export interface ApiAnnual2022 {
+  range: {start: number; end: number}
+  user_add_list: {name: string; display_name: string; uid: string}[]
+  user_rename_list: {name: string; old_name: string; display_name: string; uid: string}[]
+  user_unban_list: {name: string; display_name: string; uid: string}[]
+  hashtag_rank: {count: number; text: string}[]
+  user_data: { uid: number; name: string; display_name: string; followers: number; statuses_count: number; time: number; followers_add: number; statuses_count_add: number; group: string[] }[]
+  server_status_meta: { date: string; total_tweets: number; success_rate: number; online_rate: number; total_time_cost: number; max_time_cost: number; min_time_cost: number; avg_time_cost: number; avg_tweets: number; tweets_count: number; }[]
+  account_color: {[p in string]: {[q in string]: string}}
+  single_project_hashtag: {[p in string]: {value: number; name: string}[]}
+  display_name_list: {[p in string]: string}
+  account_data: {
+    name: string
+    display_name_list: string[]
+    organization: boolean
+    uid: string
+    projects: string[][]
+    daily_data: {[p in string]: {
+      followers: number
+      following: number
+      statuses_count: number
+      origin: number
+      hour_count: number[]
+      media: number[]
+    }}
+    range: {start: number; end: number}
+  }[]
+  single_project_list: {
+    [p in string]: {
+      most_retweet: singleProjectItem[]
+      most_quote: singleProjectItem[]
+      most_reply: singleProjectItem[]
+      most_like: singleProjectItem[]
+      like: {more_than_10k: number; less_than_10k: number}
+      count: number
+      retweet_count: number
+      deleted_count: number
+    }
+  }
+  single_project_tweets: Tweet[]
+}
+
+export interface singleProjectItem {
+  tweet_id: string
+  uid: string
+  name: string
+  retweets: number
+  quotes: number
+  replies: number
+  likes: number
+  isRetweet: boolean
+  deletedStatus: boolean
+}

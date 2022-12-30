@@ -26,9 +26,9 @@ export default {
     VChart
   },
   props: {
-    data: {
+    chartData: {
       type: Array,
-      default: () => ([])
+      default: []
     },
     title: {
       type: String,
@@ -38,13 +38,17 @@ export default {
       type: [String, Number],
       default: "300px"
     },
+    nameWrapper: {
+      type: Function,
+      default: (x) => x
+    }
   },
   data: () => ({
     option: {
       title: {top: 10, left: 'left', text: ''},
       tooltip: {},
       series: [
-        {name: '', type: 'pie', radius: [0, 120], center: ['50%', '50%'], data: []}
+        {name: '', type: 'pie', radius: [0, 120], center: ['50%', '50%'], data: [], label: {formatter: '{b} ({d}%)'}}
       ]
     }
   }),
@@ -53,7 +57,7 @@ export default {
       let tmpOption = this.option
       tmpOption.title.text = this.title
       tmpOption.series[0].name = this.title
-      tmpOption.series[0].data = this.data.map((count, time) => ({name: time + '时', value: count}))
+      tmpOption.series[0].data = Object.keys(this.chartData).map(time => ({name: this.nameWrapper(time), value: this.chartData[time]}))
       return tmpOption
     }
   }

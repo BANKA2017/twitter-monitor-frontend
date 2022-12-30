@@ -46,11 +46,11 @@ export default {
         keepAspect: false,
         left: 'center',
         top: 'center',
-        width: '90%',
-        height: '90%',
+        width: '100%',
+        height: '85%',
         right: null,
         bottom: null,
-        sizeRange: [12, 60],
+        sizeRange: [10, 150],
         rotationRange: [-90, 90],
         rotationStep: 45,
         gridSize: 8,
@@ -63,9 +63,9 @@ export default {
           color: function () {
             // Random color
             return 'rgb(' + [
-              Math.round(Math.random() * 160),
-              Math.round(Math.random() * 160),
-              Math.round(Math.random() * 160)
+              Math.round(Math.random() * 200),
+              Math.round(Math.random() * 200),
+              Math.round(Math.random() * 200)
             ].join(',') + ')';
           }
         },

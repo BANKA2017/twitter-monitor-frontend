@@ -32,7 +32,7 @@ const props = defineProps({
   },
   height: {
     type: [String, Number],
-    default: "820px"
+    default: "900px"
   },
   levels: {
     type: Array as PropType<SunburstSeriesOption["levels"]>,
