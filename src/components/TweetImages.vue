@@ -6,8 +6,8 @@
           <source :src="createRealMediaPath(realMediaPath, samePath,'tweets') +realList[0].url">
         </video>
       </div>
-      <div v-else :style="`width: 100%;` + (((ratio) => ratio > 100 ? ' aspect-ratio: 1; ' : ` padding-bottom: ${ratio}%; `)(realList[0].origin_info_height / realList[0].origin_info_width * 100)) + `height: 100%; border-radius: 14px 14px 14px 14px`" class="no-gutters card">
-        <el-image :alt="realList[0].description || realList[0].uid+'_'+realList[0].tweet_id+'_'+0" :initial-index="0" :preview-src-list="previewList" :src="createRealMediaPath(realMediaPath, samePath,'tweets') +realList[0].url+(realList[0].source !== 'tweets' ? '' : ':small')" class="border border-white" :fit="(realList[0].origin_info_height / realList[0].origin_info_width <= 1) ? 'fill' : 'scale-down'" lazy style="width: 100%; height: 100%; position: absolute; border-radius: 14px 14px 14px 14px" preview-teleported hide-on-click-modal>
+      <div v-else :style="`width: 100%;` + (((ratio) => ratio > 100 ? ' aspect-ratio: 1; ' : ` padding-bottom: ${ratio}%; `)(realList[0].origin_info_height / realList[0].origin_info_width * 100)) + `height: 100%; border-radius: 14px 14px 14px 14px;`" class="no-gutters card">
+        <el-image :alt="realList[0].description || realList[0].uid+'_'+realList[0].tweet_id+'_'+0" :initial-index="0" :preview-src-list="previewList" :src="createRealMediaPath(realMediaPath, samePath,'tweets') +realList[0].url+(realList[0].source !== 'tweets' ? '' : ':small')" :fit="(realList[0].origin_info_height / realList[0].origin_info_width <= 1) ? 'fill' : 'scale-down'" lazy style="width: 100%; height: 100%; position: absolute; border-radius: 14px 14px 14px 14px; padding: 1px;" preview-teleported hide-on-click-modal>
           <template #placeholder>
             <blur-hash-canvas v-if="realList[0].blurhash && realList[0].blurhash !== 'deleted'" :hash-text="realList[0].blurhash" class="full"/>
           </template>
@@ -20,10 +20,10 @@
     <div v-else-if="realList.length >= 2 && realList.length <= 6">
       <div class="card no-gutters" :style="{'width': '100%', 'padding-bottom': '56.25%', 'height': '100%', 'border-radius': '14px 14px 14px 14px'}">
         <template v-for="(mixMedia, order) in realList" :key="order">
-          <video v-if="isVideo(mixMedia)" :style="listStyle[realList.length-2][order] + ' object-fit: cover;'" class="border border-white" :id="'video_' + mixMedia.tweet_id + '_' + order" controls playsinline crossorigin :poster="createRealMediaPath(realMediaPath, samePath,'tweets') + mixMedia.cover" :preload="preload">
+          <video v-if="isVideo(mixMedia)" :style="listStyle[realList.length-2][order] + ' object-fit: cover;'" :id="'video_' + mixMedia.tweet_id + '_' + order" controls playsinline crossorigin :poster="createRealMediaPath(realMediaPath, samePath,'tweets') + mixMedia.cover" :preload="preload">
             <source :src="createRealMediaPath(realMediaPath, samePath,'tweets') +mixMedia.url">
           </video>
-          <el-image v-else :alt="mixMedia.description || mixMedia.uid+'_'+mixMedia.tweet_id+'_'+0" :initial-index="order" :preview-src-list="previewList" :src="createRealMediaPath(realMediaPath, samePath,'tweets') +mixMedia.url+(realList[0].source !== 'tweets' ? '' : ':small')" :style="listStyle[realList.length-2][order]" class="border border-white" fit="cover" lazy preview-teleported hide-on-click-modal>
+          <el-image v-else style="padding: 1px;" :alt="mixMedia.description || mixMedia.uid+'_'+mixMedia.tweet_id+'_'+0" :initial-index="order" :preview-src-list="previewList" :src="createRealMediaPath(realMediaPath, samePath,'tweets') +mixMedia.url+(realList[0].source !== 'tweets' ? '' : ':small')" :style="listStyle[realList.length-2][order]" fit="cover" lazy preview-teleported hide-on-click-modal>
             <template #placeholder>
               <blur-hash-canvas class="full" :hash-text="mixMedia.blurhash" v-if="mixMedia.blurhash && mixMedia.blurhash !== 'deleted'"/>
             </template>

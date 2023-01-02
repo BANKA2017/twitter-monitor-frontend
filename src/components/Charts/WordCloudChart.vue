@@ -35,6 +35,10 @@ export default {
       type: [String, Number],
       default: "750px"
     },
+    sizeRange: {
+      type: Array,
+      default: [10, 150]
+    }
   },
   data: () => ({
     option: {
@@ -50,7 +54,7 @@ export default {
         height: '85%',
         right: null,
         bottom: null,
-        sizeRange: [10, 150],
+        sizeRange: [10, 120],
         rotationRange: [-90, 90],
         rotationStep: 45,
         gridSize: 8,
@@ -87,6 +91,7 @@ export default {
       tmpOption.title.text = this.title
       tmpOption.title.subtext = this.subtitle
       tmpOption.series[0].data = this.data
+      tmpOption.series[0].sizeRange = this.sizeRange
       return tmpOption
     }
   }

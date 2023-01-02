@@ -74,6 +74,10 @@ const props = defineProps({
     type: Array as PropType<number[]>,
     default: () => ([])
   },
+  legendType: {
+    type: String,
+    default: 'scroll'
+  },
   colors: {
     type: Array as PropType<string[]>,
     default: () => (['#19d4ae', '#5ab1ef', '#fa6e86', '#ffb980', '#c4b4e4', '#0067a6', '#5ab1ef', '#d87a80'])
@@ -255,6 +259,7 @@ const computedOptions = computed(() => {
   }
   tmpOptions.legend.data = legendName.value
   tmpOptions.legend.selected = legendSelected.value
+  tmpOptions.legend.type = props.legendType
   tmpOptions.xAxis.data = axisData.value[0]
   tmpOptions.yAxis = props.yAxis
   tmpOptions.series = generateSeries.value

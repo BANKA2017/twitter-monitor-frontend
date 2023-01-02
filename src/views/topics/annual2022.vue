@@ -67,17 +67,21 @@
               <h3 class="sticky-title">服务质量</h3>
               <p class="text-muted">例行公事，今年SLA那叫一个崩啊</p>
               <p>使用NodeJS重写的整套服务效率确实提高了很多，但为稳定性也下降了；同时由Twitter被收购以及后续的各种操作导致本身稳定性下降，我们的服务质量也被动下降</p>
+              <ul>
+                <li><code>10/14 ~ 10/15</code> 这两天爬虫完全挂了然而我们没有发现，导致直接缺了那两天的数据</li>
+                <li><code>8/21 ~ 8/22</code> 这两天由于 Twitter 返回了部分损坏了的数据，虽然我们已经察觉到了问题但无法阻止 <router-link to="/tomori_kusunoki/all">tomori_kusunoki</router-link> 和 <router-link to="/t_chiemi1006/all">t_chiemi1006</router-link> 的记录出现损坏的数据，具体情况可以在 <router-link to="/i/topics/lovelive_trends">LoveLive! Trends</router-link> 页面检查当周导出的数据</li>
+              </ul>
               <tmv2-chart-without-data-set :chart-rows="state.serverStatusChartMeta.serverStatusTotalTweets"
                           :colors="serverStatusColor.serverStatusTotalTweets" :label-map="serverStatusLabel.totalTweets"
-                          chart-type="line"></tmv2-chart-without-data-set>
+                          chart-type="line" />
               <tmv2-chart-without-data-set :chart-rows="state.serverStatusChartMeta.serverStatusTotalTime"
                           :colors="serverStatusColor.serverStatusTotalTime" :label-map="serverStatusLabel.totalTime"
-                          :y-axis="{type: 'log', name: '秒', scale: true}" chart-type="line"></tmv2-chart-without-data-set>
+                          :y-axis="{type: 'log', name: '秒', scale: true}" chart-type="line" />
               <tmv2-chart-without-data-set :chart-rows="state.serverStatusChartMeta.serverStatusTotalSuccessRate"
                           :colors="serverStatusColor.serverStatusTotalSuccessRate"
-                          :label-map="serverStatusLabel.successRate" chart-type="line"></tmv2-chart-without-data-set>
+                          :label-map="serverStatusLabel.successRate" chart-type="line" />
               <tmv2-chart-without-data-set :chart-rows="state.serverStatusChartMeta.serverStatusTotalOnline"
-                          :label-map="serverStatusLabel.onlineRate" chart-type="line" :y-axis-index="[0, 1]" :y-axis="[{type: 'value', scale: true, minInterval: 1, min: 0, max: 1}, {type: 'value', scale: true, minInterval: 1, name: 'minutes', min: 0, max: 1440}]"></tmv2-chart-without-data-set>
+                          :label-map="serverStatusLabel.onlineRate" chart-type="line" :y-axis-index="[0, 1]" :y-axis="[{type: 'value', scale: true, minInterval: 1, min: 0, max: 1}, {type: 'value', scale: true, minInterval: 1, name: 'minutes', min: 0, max: 1440}]" />
               <el-divider class="my-4" />
               <h3 class="sticky-title">独立数据</h3>
               <div id="annual2022bangdream" class="mb-4" v-if="state.accountComputedData.bangdream">
@@ -98,21 +102,20 @@
 
                 <bar-race-charts v-if="state.accountComputedData.bangdream.trendsData.followers.length" :data="state.accountComputedData.bangdream.trendsData.followers" :colors="state.accountColor.member" title="关注增量排序" :label-map="state.accountComputedData.bangdream.trendsData.label" />
 
+                <h5 class="fw-bold">关注增量</h5>
                 <tmv2-chart-without-data-set class="mb-2" :chart-rows="state.accountComputedData.bangdream.trendsData.followers" :label-map="state.accountComputedData.bangdream.trendsData.label"
-                            chart-type="line" chart-height="98vh" :colors="state.accountComputedData.bangdream.trendsData.color" :set-option="{notMerge: true}" :grid="{}" title="关注增量"></tmv2-chart-without-data-set>
+                            chart-type="line" chart-height="90vh" :colors="state.accountComputedData.bangdream.trendsData.color" :set-option="{notMerge: true}" :grid="{}" legend-type="" />
+                <h5 class="fw-bold">推文增量</h5>
                 <tmv2-chart-without-data-set class="mb-2" :chart-rows="state.accountComputedData.bangdream.trendsData.statuses_count" :label-map="state.accountComputedData.bangdream.trendsData.label"
-                            chart-type="line" chart-height="98vh" :colors="state.accountComputedData.bangdream.trendsData.color" :set-option="{notMerge: true}" :grid="{}" title="推文增量"></tmv2-chart-without-data-set>
+                            chart-type="line" chart-height="90vh" :colors="state.accountComputedData.bangdream.trendsData.color" :set-option="{notMerge: true}" :grid="{}" legend-type="" />
                 <div class="row">
                   <pie-chart title="点赞超1万" :chart-data="{'超过1万': state.singleProjectList.bangdream.like.more_than_10k, '不足1万': state.singleProjectList.bangdream.like.less_than_10k}" class="mb-2 col-md-4"/>
                   <pie-chart title="转推率" :chart-data="{'原创': state.singleProjectList.bangdream.count - state.singleProjectList.bangdream.retweet_count, '转推': state.singleProjectList.bangdream.retweet_count}" class="mb-2 col-md-4"/>
                   <pie-chart title="留存率" :chart-data="{'保留': state.singleProjectList.bangdream.count - state.singleProjectList.bangdream.deleted_count, '删除': state.singleProjectList.bangdream.deleted_count}" class="mb-2 col-md-4"/>
-                  <div class="col-md-4">
-                    <p class="fw-bold">最多转推</p>
-                    <tweet-item :tweet="state.singleProjectTweets.filter(x => x.tweet_id === state.singleProjectList.bangdream.most_retweet[0].tweet_id)[0]" />
-                  </div>
-                  <div class="col-md-4">
-                    <p class="fw-bold">最多引用/回复/点赞</p>
-                    <tweet-item :tweet="state.singleProjectTweets.filter(x => x.tweet_id === state.singleProjectList.bangdream.most_like[0].tweet_id)[0]" />
+                  <div class="col-md-3" v-for="mostType in ['most_retweet', 'most_like', 'most_reply', 'most_quote']" :key="mostType">
+                    <p class="fw-bold">{{ mostI18n[mostType] }}</p>
+                    <!--<tweet-item :tweet="state.singleProjectTweets.filter(x => x.tweet_id === state.singleProjectList.bangdream.most_retweet[0].tweet_id)[0]" />-->
+                    <online-tweet-item :tweet_id="tweetData.tweet_id" class="mb-3" v-for="tweetData in state.singleProjectList.bangdream[mostType]" :key="tweetData.tweet_id" />
                   </div>
                 </div>
               </div>
@@ -134,31 +137,27 @@
 
                 <bar-race-charts v-if="state.accountComputedData.lovelive.trendsData.followers.length" :data="state.accountComputedData.lovelive.trendsData.followers" :colors="state.accountColor.member" title="关注增量排序" :label-map="state.accountComputedData.lovelive.trendsData.label" />
 
+                <h5 class="fw-bold">关注增量</h5>
                 <tmv2-chart-without-data-set class="mb-2" :chart-rows="state.accountComputedData.lovelive.trendsData.followers" :label-map="state.accountComputedData.lovelive.trendsData.label"
-                                             chart-type="line" chart-height="98vh" :colors="state.accountComputedData.lovelive.trendsData.color" :set-option="{notMerge: true}" :grid="{}" title="关注增量"></tmv2-chart-without-data-set>
+                                             chart-type="line" chart-height="90vh" :colors="state.accountComputedData.lovelive.trendsData.color" :set-option="{notMerge: true}" :grid="{}" legend-type="" />
+                <h5 class="fw-bold">推文增量</h5>
                 <tmv2-chart-without-data-set class="mb-2" :chart-rows="state.accountComputedData.lovelive.trendsData.statuses_count" :label-map="state.accountComputedData.lovelive.trendsData.label"
-                                             chart-type="line" chart-height="98vh" :colors="state.accountComputedData.lovelive.trendsData.color" :set-option="{notMerge: true}" :grid="{}" title="推文增量"></tmv2-chart-without-data-set>
+                                             chart-type="line" chart-height="90vh" :colors="state.accountComputedData.lovelive.trendsData.color" :set-option="{notMerge: true}" :grid="{}" legend-type="" />
                 <div class="row">
                   <pie-chart title="点赞超1万" :chart-data="{'超过1万': state.singleProjectList.lovelive.like.more_than_10k, '不足1万': state.singleProjectList.lovelive.like.less_than_10k}" class="mb-2 col-md-4"/>
                   <pie-chart title="转推率" :chart-data="{'原创': state.singleProjectList.lovelive.count - state.singleProjectList.lovelive.retweet_count, '转推': state.singleProjectList.lovelive.retweet_count}" class="mb-2 col-md-4"/>
                   <pie-chart title="留存率" :chart-data="{'保留': state.singleProjectList.lovelive.count - state.singleProjectList.lovelive.deleted_count, '删除': state.singleProjectList.lovelive.deleted_count}" class="mb-2 col-md-4"/>
-                  <div class="col-md-3">
-                    <p class="fw-bold">最多转推</p>
-                    <tweet-item :tweet="state.singleProjectTweets.filter(x => x.tweet_id === state.singleProjectList.lovelive.most_retweet[0].tweet_id)[0]" />
-                  </div>
-                  <div class="col-md-3">
-                    <p class="fw-bold">最多引用</p>
-                    <tweet-item :tweet="state.singleProjectTweets.filter(x => x.tweet_id === state.singleProjectList.lovelive.most_quote[0].tweet_id)[0]" />
-                  </div>
-                  <div class="col-md-3">
-                    <p class="fw-bold">最多回复</p>
-                    <tweet-item :tweet="state.singleProjectTweets.filter(x => x.tweet_id === state.singleProjectList.lovelive.most_reply[0].tweet_id)[0]" />
-                  </div>
-                  <div class="col-md-3">
-                    <p class="fw-bold">最多点赞</p>
-                    <tweet-item :tweet="state.singleProjectTweets.filter(x => x.tweet_id === state.singleProjectList.lovelive.most_like[0].tweet_id)[0]" />
+                  <div class="col-md-3" v-for="mostType in ['most_retweet', 'most_like', 'most_reply', 'most_quote']" :key="mostType">
+                    <p class="fw-bold">{{ mostI18n[mostType] }}</p>
+                    <!--<tweet-item :tweet="state.singleProjectTweets.filter(x => x.tweet_id === state.singleProjectList.lovelive.most_retweet[0].tweet_id)[0]" />-->
+                    <online-tweet-item :tweet_id="tweetData.tweet_id" class="mb-3" v-for="tweetData in state.singleProjectList.lovelive[mostType]" :key="tweetData.tweet_id" />
                   </div>
                 </div>
+                <h5>备注</h5>
+                <ul>
+                  <li>与2021年度总结不一样，2022年把本年新增的人员也加进来了，虽然默认是0关注0发推起步，但跟实际情况还是有点出入的</li>
+                  <li>由于A-RISE的成员基本都远离本企划了，所以多数图表都不统计此团体（2022年中疑似有一位成员新开了一个帐号但在几天后迅速锁推删号，我们虽然爬取了部分数据但不考虑放出数据）</li>
+                </ul>
               </div>
               <div id="annual2022official" class="mb-4" >
                 <h4>官推</h4>
@@ -173,23 +172,28 @@
                   <pie-chart title="发推时间段" :chart-data="state.accountComputedData.official.hourCount" class="col-12 col-lg-6 mb-2" :name-wrapper="(x) => x + '时'"/>
                 </div>
                 <sun-burst-chart class="mb-2" title="改名部" subtitle="让我看看是谁在改名" :data="state.accountComputedData.official.renameDepartment" />
+                <h5 class="fw-bold">关注增量</h5>
                 <tmv2-chart-without-data-set class="mb-2" :chart-rows="state.accountComputedData.official.trendsData.followers" :label-map="state.accountComputedData.official.trendsData.label"
-                            chart-type="line" chart-height="600px" :set-option="{notMerge: true}" title="关注增量"></tmv2-chart-without-data-set>
+                            chart-type="line" chart-height="600px" :set-option="{notMerge: true}" legend-type="" />
+                <h5 class="fw-bold">推文增量</h5>
                 <tmv2-chart-without-data-set class="mb-2" :chart-rows="state.accountComputedData.official.trendsData.statuses_count" :label-map="state.accountComputedData.official.trendsData.label"
-                            chart-type="line" chart-height="600px" :set-option="{notMerge: true}" title="推文增量"></tmv2-chart-without-data-set>
+                            chart-type="line" chart-height="600px" :set-option="{notMerge: true}" legend-type="" />
               </div>
               <h3 class="sticky-title">一些别的话</h3>
-              <p class="text-muted">我来作为一个长...</p>
-              <p>
-                提前一个月开始写并没有什么用，最后还是临近结束才搞出个雏形<br>
-                总之，希望明年还能继续在这里见面<br>
-                为什么不分开做每个企划的表格？因为我懒，不想重复造<br>
-                官号的图表也有<router-link to="/i/topics/staff_data_page/">更详细的版本</router-link>，这里只是顺手做的
-              </p>
+              <p class="text-muted">前面说了一大堆，这里是我的吐槽</p>
+              <ul>
+                <li>摆烂摸鱼导致最后一天才开始处理数据，还好今年的页面基本沿用了去年的套路所以不需要写什么东西（结果还是漏爬了一部分的推文，不过懒得管了）</li>
+                <li>总之，希望明年还能继续在这里见面，如果2023年我们还能坚持下去年度总结将会增加 22/7 以及 D4DJ 的版块</li>
+                <li>一年过去了哔哩哔哩专栏还是一点原创内容就会标禁止转载，为什么原创就必须禁止转载？</li>
+                <li>今年启发我做每周数据追踪的up主消失了，我们也不好随便猜测对方为什么不继续，但我始终认为 Twitter Monitor 这种自动导出数据的做法还是挺无聊的，毕竟缺少对过去发生的事情的解说</li>
+                <li>为什么不分开做每个企划的表格？因为有更详细的每周报告：<router-link to="/i/topics/bangdream_trends/">BanGDream!</router-link> 和 <router-link to="/i/topics/lovelive_trends/">LoveLive!</router-link></li>
+                <li>官号的图表也有<router-link to="/i/topics/staff_data_page/">更详细的版本</router-link>，这里只是顺手做的</li>
+              </ul>
               <h3>数据</h3>
-              <p>本页内容及下列数据在 <a href="https://creativecommons.org/licenses/by-sa/4.0/legalcode.zh-Hans" target="_blank">署名—相同方式共享 4.0 协议国际版</a> 之条款下提供</p>
+              <p>本页内容，下列数据以及我们发布在哔哩哔哩专栏的内容均在 <a href="https://creativecommons.org/licenses/by-sa/4.0/legalcode.zh-Hans" target="_blank">署名—相同方式共享 4.0 协议国际版</a> 之条款下提供</p>
               <ul>
                 <li><a :href="store.getters.getBasePath + '/static/db/annual2022.json'" target="_blank">本页数据</a></li>
+                <li><a :href="store.getters.getBasePath + '/static/db/2022_tweets_meta.json'" target="_blank">2022年推文数据</a></li>
               </ul>
             </div>
           </div>
@@ -216,7 +220,7 @@ import SunBurstChart from "@/components/Charts/SunBurstChart.vue";
 import BarRaceCharts from "@/components/Charts/BarRaceCharts.vue";
 import {useStore} from "@/store";
 import {Notice, ScrollTo} from "@/share/Tools";
-import TweetItem from "@/components/TweetItem.vue";
+import OnlineTweetItem from "@/components/OnlineTweetItem.vue";
 
 useHead({
   title: '2022统计',
@@ -225,6 +229,13 @@ useHead({
     content: "#1da1f2"
   }]
 })
+
+const mostI18n = {
+  most_retweet: '最多转推',
+  most_like: '最多点赞',
+  most_quote: '最多引用',
+  most_reply: '最多回复',
+}
 
 const projects = [{"text": "BanGDream!", "value": "BanGDream!"}, {"text": "ARGONAVIS", "value": "ARGONAVIS"}, {"text": "LoveLive!", "value": "LoveLive!"}, {"text": "D4DJ", "value": "D4DJ"}, {"text": "227", "value": "227"}, {"text": "其他", "value": "其他"}]
 

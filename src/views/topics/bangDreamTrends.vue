@@ -83,7 +83,7 @@
               <tmv2-chart :chart-rows="userData.data" :colors="userData.color" :label-map="userData.label" chart-type="line" chartHeight="500px" title="关注数变动" :set-option="{notMerge: true}"/>
               <tmv2-chart :chart-rows="userData.count_data" :colors="userData.color" :label-map="userData.label" chart-type="line" chartHeight="500px" title="关注数" :set-option="{notMerge: true}"/>
               <sun-burst-chart class="mb-2" title="涨粉占比" height="500px" :data="accountDataForSunBurst" :levels="sunBurstLevels" />
-              <word-cloud-chart class="mb-2" title="Tags" :data="wordCloud" height="470px" />
+              <word-cloud-chart class="mb-2" title="Tags" :data="wordCloud" height="470px" :size-range="[10, 70]" />
               <el-table class="mb-2" ref="accountData" v-loading="!state.trendsData.data.length" :data="tableData" :default-sort="{prop: 'followers_add', order: 'descending'}" style="cursor: pointer; width: 100%" @row-click="(row) => {ScrollTo();$router.push('/i/topics/bangdream_trends/' + row.name)}">
                 <el-table-column label="名称">
                   <template #default="scope">
