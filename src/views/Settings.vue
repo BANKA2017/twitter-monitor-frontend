@@ -22,6 +22,13 @@
               </option>
             </select>
           </div>
+          <div class="input-group mb-3">
+            <label class="input-group-text" for="select-platform">{{ t("settings.translator_platform") }}</label>
+            <select id="select-platform" v-model="translatorPlatform" class="form-select">
+              <option v-for="translateMeta in [['google', 'Google Translate'], ['microsoft', 'Microsoft Translator']]" :key="translateMeta[0]" :selected="translatorPlatform === translateMeta[0]" :value="translateMeta[0]">{{ translateMeta[1] }}
+              </option>
+            </select>
+          </div>
           <!--<div class="form-check mb-3">
             <input type="checkbox" class="form-check-input" id="auto-refresh" v-model="autoRefresh">
             <label class="custom-control-label" for="auto-refresh">{{ t("settings.auto_refresh") }}</label>
@@ -53,6 +60,7 @@ import ArrowLeft from "@/icons/ArrowLeft.vue"
 import {computed, defineComponent, watch} from "vue"
 import {useStore} from "@/store"
 import {useI18n} from "vue-i18n";
+import {State} from "@/type/State";
 
 const { t } = useI18n()
 const defaultBasePath = process.env.NODE_ENV !== "development" ? import.meta.env.VITE_PRO_BASE_PATH : import.meta.env.VITE_DEV_BASE_PATH
@@ -99,6 +107,11 @@ const onlineMode = computed({
     store.dispatch('updateSettingsItem', {key: 'basePath', value: value ? defaultOnlinePath : defaultBasePath})
     store.dispatch("updateSettingsItem", {key: "onlineMode", value})
   }
+})
+
+const translatorPlatform = computed({
+  get () {return store.state.settings.translatorPlatform},
+  set (value: State["settings"]["translatorPlatform"]) {store.dispatch("updateSettingsItem", {key: "translatorPlatform", value})}
 })
 
 </script>

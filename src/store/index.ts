@@ -49,6 +49,7 @@ export const store = createStore<State>({
       loadConversation: false,
       basePath,
       mediaPath,
+      translatorPlatform: 'google'
     },
     adminMode: false,
     image: {

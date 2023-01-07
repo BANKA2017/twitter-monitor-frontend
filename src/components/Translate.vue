@@ -87,7 +87,7 @@ const runTranslate = (id: string = '0') => {
   //type为0即推文, 为1即用户信息
   state.status = 1;
   if (String(props.type) === '0') {
-    request<ApiTranslate>(settings.value.basePath + '/api/v3/data/translate/?tr_type=tweets&tweet_id=' + id + '&to=' + toLanguage.value, new Controller()).then(response => {
+    request<ApiTranslate>(settings.value.basePath + '/api/v3/data/translate/?tr_type=tweets&tweet_id=' + id + '&to=' + toLanguage.value + '&platform=' + settings.value.translatorPlatform, new Controller()).then(response => {
       store.dispatch({type: "updateTweetsTranslate", tweet_id: props.id, translate: {text: response.data.translate, translate_source: response.data.translate_source, entities: response.data.entities}})
       state.text = response.data.translate
       state.translate_source = response.data.translate_source
@@ -98,7 +98,7 @@ const runTranslate = (id: string = '0') => {
       Notice(String(e), 'error')
     })
   } else if (String(props.type) === '1') {
-    request<ApiTranslate>(settings.value.basePath + '/api/v3/data/translate/?tr_type=profile&uid=' + id + '&to=' + toLanguage.value, new Controller()).then(response => {
+    request<ApiTranslate>(settings.value.basePath + '/api/v3/data/translate/?tr_type=profile&uid=' + id + '&to=' + toLanguage.value + '&platform=' + settings.value.translatorPlatform, new Controller()).then(response => {
       state.text = response.data.translate
       state.translate_source = response.data.translate_source
       state.entities = response.data.entities

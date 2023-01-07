@@ -185,7 +185,8 @@
         "auto_refresh": "Auto refresh timeline",
         "auto_load_tweets": "Auto load more tweets on bottom",
         "load_conversation": "Load conversation in tweet status",
-        "online_mode": "Use online api"
+        "online_mode": "Use online api",
+        "translator_platform": "Translator"
     },
     "pwa": {
         "need_refresh": "New content available, refresh this page to reload"

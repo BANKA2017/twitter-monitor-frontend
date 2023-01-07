@@ -185,7 +185,8 @@
         "auto_refresh": "自动刷新时间线",
         "auto_load_tweets": "到达底部加载更多",
         "load_conversation": "在状态中加载对话",
-        "online_mode": "使用在线 Api"
+        "online_mode": "使用在线 Api",
+        "translator_platform": "翻译"
     },
     "pwa": {
         "need_refresh": "已加载新内容，请刷新或重新打开页面"

@@ -185,7 +185,8 @@
         "auto_refresh": "自動刷新時間線",
         "auto_load_tweets": "到達底部自動加載更多",
         "load_conversation": "在狀態中加載對話",
-        "online_mode": "使用在綫 Api"
+        "online_mode": "使用在綫 Api",
+        "translator_platform": "翻譯"
     },
     "pwa": {
         "need_refresh": "已加載新内容，請刷新或重新打開頁面"
