@@ -14,6 +14,7 @@
         </div>
         <div class="my-4"></div>
         <full-text :full_text_origin="quoteObject.full_text" :entities="quoteObject.entities" />
+        <translate v-if="quoteObject.full_text" :id="quoteObject.id_str" :to="settings.language" :text="quoteObject.full_text" type="0"/>
         <div id="quotefoot">
           <small class="text-muted">{{ timeGap(quoteObject.time, now, settings.language) }}</small>
         </div>
@@ -34,6 +35,7 @@
   import {Media, Quote} from "@/type/Content";
   import {useI18n} from "vue-i18n";
   import FullText from "@/components/FullText.vue";
+  import Translate from "@/components/Translate.vue";
 
   const props = defineProps({
     quoteObject: {

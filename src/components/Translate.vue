@@ -25,6 +25,9 @@ import {ApiTranslate} from "@/type/Api";
 import {useI18n} from "vue-i18n";
 import FullText from "@/components/FullText.vue";
 import {Entity} from "@/type/Content";
+
+const defaultBasePath = process.env.NODE_ENV !== "development" ? import.meta.env.VITE_PRO_BASE_PATH : import.meta.env.VITE_DEV_BASE_PATH
+
 const props = defineProps({
   type: {
     type: String,
@@ -39,9 +42,13 @@ const props = defineProps({
   to: {
     type: String,
     validator(value: string): boolean {
-      return ['zh-cn', 'zh-tw', 'zh-hans', 'zh-hant', 'en', 'ja', 'ko'].includes(value)
+      return ['zh-cn', 'zh-tw', 'zh-hans', 'zh-hant', 'zh-chs', 'zh-cht', 'en', 'ja', 'ko'].includes(value.toLowerCase())
     }
   },
+  text: {
+    type: String,
+    default: ''
+  }
 })
 
 const { t } = useI18n()
@@ -87,7 +94,15 @@ const runTranslate = (id: string = '0') => {
   //type为0即推文, 为1即用户信息
   state.status = 1;
   if (String(props.type) === '0') {
-    request<ApiTranslate>(settings.value.basePath + '/api/v3/data/translate/?tr_type=tweets&tweet_id=' + id + '&to=' + toLanguage.value + '&platform=' + settings.value.translatorPlatform, new Controller()).then(response => {
+    let url = '', method: "GET" | "POST" = 'GET', body = ''
+    if (settings.value.onlineMode) {
+      url = defaultBasePath + '/translate/online/?' + (new URLSearchParams({to: toLanguage.value, platform: settings.value.translatorPlatform})).toString()
+      method = 'POST'
+      body = (new URLSearchParams({text: props.text})).toString()
+    } else {
+      url = defaultBasePath + '/translate/local/?tr_type=tweets&tweet_id=' + id + '&to=' + toLanguage.value + '&platform=' + settings.value.translatorPlatform
+    }
+    request<ApiTranslate>(url, new Controller(), method, body).then(response => {
       store.dispatch({type: "updateTweetsTranslate", tweet_id: props.id, translate: {text: response.data.translate, translate_source: response.data.translate_source, entities: response.data.entities}})
       state.text = response.data.translate
       state.translate_source = response.data.translate_source
@@ -98,7 +113,15 @@ const runTranslate = (id: string = '0') => {
       Notice(String(e), 'error')
     })
   } else if (String(props.type) === '1') {
-    request<ApiTranslate>(settings.value.basePath + '/api/v3/data/translate/?tr_type=profile&uid=' + id + '&to=' + toLanguage.value + '&platform=' + settings.value.translatorPlatform, new Controller()).then(response => {
+    let url = '', method: "GET" | "POST" = 'GET', body = ''
+    if (settings.value.onlineMode) {
+      url = defaultBasePath + '/translate/online/?' + (new URLSearchParams({to: toLanguage.value, platform: settings.value.translatorPlatform})).toString()
+      method = 'POST'
+      body = (new URLSearchParams({text: props.text})).toString()
+    } else {
+      url = defaultBasePath + '/translate/local/?tr_type=profile&uid=' + id + '&to=' + toLanguage.value + '&platform=' + settings.value.translatorPlatform
+    }
+    request<ApiTranslate>(url, new Controller(), method, body).then(response => {
       state.text = response.data.translate
       state.translate_source = response.data.translate_source
       state.entities = response.data.entities

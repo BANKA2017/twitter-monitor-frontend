@@ -20,7 +20,7 @@
         <el-collapse-transition>
         <div v-show="!isHideDescription && state.userInfo.description_origin" style="padding: 0.5em 1em;">
           <full-text :entities="state.userInfo.description_entities" :full_text_origin="state.userInfo.description_origin" class="card-text transition-box"></full-text>
-          <translate v-if="!settings.onlineMode" :id="state.userInfo.uid_str" :to="settings.language" type="1" class="transition-box"/>
+          <translate :id="state.userInfo.uid_str" :to="settings.language" type="1" :text="state.userInfo.description" class="transition-box"/>
         </div>
       </el-collapse-transition>
       </div>

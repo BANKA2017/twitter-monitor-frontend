@@ -53,7 +53,7 @@
             <!--<div v-html="`<p class='card-text'>`+tweet.full_text+`</p>`"></div>-->
             <!--excited!-->
             <div :dir="tweet.rtl ? 'rtl' : 'ltr'"><full-text class="card-text" :entities="tweet.entities" :full_text_origin="tweet.full_text_origin" :display-range="(settings.onlineMode && (route.name === 'name-status' || route.name === 'no-name-status' || translatorMode)) ? tweet.display_text_range : [0, 0]"/></div>
-            <translate v-if="translatorMode || (!settings.onlineMode && tweet.full_text_origin)" :id="tweet.tweet_id_str" :to="settings.language" type="0"/>
+            <translate v-if="translatorMode || tweet.full_text_origin" :id="tweet.tweet_id_str" :to="settings.language" :text="tweet.full_text" type="0"/>
             <!--media-->
             <div class="mt-2" v-if="tweet.media === 1&&!settings.displayPicture && tweet.mediaObject.filter(x => x.source === 'tweets').length">
               <image-list :is_video="tweet.video" :list="tweet.mediaObject.filter(x => x.source === 'tweets')" :unlimited="tweetModeValue === 'status'"/>
@@ -74,7 +74,7 @@
             <div id="foot">
               <small class="text-muted">{{ timeGap(tweet.time, now, settings.language) }} · <span class="text-primary">{{ tweet.source }}</span></small>
             </div>
-            <div class="mt-2" v-if="(settings.onlineMode && (tweet.retweet_count + tweet.quote_count + tweet.favorite_count) > 0) || (tweet.retweet_count !== undefined && tweet.quote_count !== undefined && tweet.favorite_count !== undefined)">
+            <div class="mt-2" v-if="((tweet.retweet_count + tweet.quote_count + tweet.favorite_count) > 0)">
               <hr class="my-2" />
               <div class="d-flex justify-content-between">
                 <div class="d-inline-block">

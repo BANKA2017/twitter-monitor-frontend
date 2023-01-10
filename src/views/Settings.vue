@@ -25,7 +25,7 @@
           <div class="input-group mb-3">
             <label class="input-group-text" for="select-platform">{{ t("settings.translator_platform") }}</label>
             <select id="select-platform" v-model="translatorPlatform" class="form-select">
-              <option v-for="translateMeta in [['google', 'Google Translate'], ['microsoft', 'Microsoft Translator']]" :key="translateMeta[0]" :selected="translatorPlatform === translateMeta[0]" :value="translateMeta[0]">{{ translateMeta[1] }}
+              <option v-for="translateMeta in [['google', 'Google Translate'], ['microsoft', 'Microsoft Translator'], ['sogou', '搜狗翻译'], ['yandex', 'Yandex Translator']]" :key="translateMeta[0]" :selected="translatorPlatform === translateMeta[0]" :value="translateMeta[0]">{{ translateMeta[1] }}
               </option>
             </select>
           </div>
