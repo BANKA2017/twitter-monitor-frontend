@@ -45,7 +45,7 @@ export interface State {
     loadConversation: boolean
     basePath: string
     mediaPath: string
-    translatorPlatform: 'google' | 'microsoft' | 'sogou' | 'yandex'
+    translatorPlatform: 'google' | 'microsoft' | 'sogou' | 'yandex' | 'baidu'
   }
 
   adminMode: boolean
