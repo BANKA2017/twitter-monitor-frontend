@@ -23,7 +23,7 @@
                 <li>点击 「下载数据」 按钮可以下载当前所展示的图表所用到的原始数据，原始数据的细节远比现在图表化的部分要多</li>
                 <li>点击侧边或顶上组合名称可以进行数据筛选，目前仍然非常粗糙……至少能用</li>
                 <li>本页非常粗糙的另一个原因是我没有头绪，不知道应该展示些什么，如果您有更多的想法，请告诉我；如果本站的任何账号有错误，请指正</li>
-                <li>本页仅提供 LoveLive! 企划中的 Aqours、虹ヶ咲学園 以及 Liella! 相关人士的数据，不包含 μ's</li>
+                <li>本页仅提供 LoveLive! 企划中的 Aqours、虹ヶ咲学園、Liella! 以及 蓮ノ空女学院 相关人士的数据，不包含 μ's</li>
                 <li>更新时间为东京时间的每周日零点零一分 (Sunday 0:01 GMT+9)，可能会有几分钟的延迟</li>
                 <li>原始想法来自<a href="https://www.bilibili.com/read/readlist/rl360153" target="_blank">Oricanon-2021</a>，感谢专栏作者提供了灵感</li>
               </ul>
@@ -160,9 +160,9 @@ useHead({
 })
 
 const overview = ref<HTMLElement>()
-const color: {[p: string]: string} = {"Aqours": "#1AB1F6", "虹ヶ咲学園": "#F8B657", "Liella!": "#DA57D8",}
-const teams = [{"text": "Aqours", "value": "Aqours"},{"text": "虹ヶ咲学園", "value": "虹ヶ咲学園"},{"text": "Liella!", "value": "Liella!"},]
-const selectedTeams = ref(new Set(["Aqours", "虹ヶ咲学園", "Liella!"]))
+const color: {[p: string]: string} = {"Aqours": "#1AB1F6", "虹ヶ咲学園": "#F8B657", "Liella!": "#DA57D8", "蓮ノ空女学院": "#FB8A9B"}
+const teams = [{"text": "Aqours", "value": "Aqours"},{"text": "虹ヶ咲学園", "value": "虹ヶ咲学園"},{"text": "Liella!", "value": "Liella!"},{"text": "蓮ノ空女学院", "value": "蓮ノ空女学院"},]
+const selectedTeams = ref(new Set(["Aqours", "虹ヶ咲学園", "Liella!", "蓮ノ空女学院"]))
 const sunBurstLevels = [
   {},
   {
@@ -234,7 +234,7 @@ const tableData = computed((): {
       followers_growth_rate: string
       tweets_count: number
       origin_ratio: string
-      team: "Aqours"  | "虹ヶ咲学園" | "Liella!"
+      team: "Aqours"  | "虹ヶ咲学園" | "Liella!" | "蓮ノ空女学院"
     }[] => state.trendsData.data.filter(y => selectedTeams.value.has(y.team)).map((x, order) => ({
     order,
     name: x.name,
@@ -249,7 +249,7 @@ const tableData = computed((): {
 )
 
 const accountDataForSunBurst = computed(() => {
-  let tmpSunBurstData: { [p: string]: sunBurstType } = {"Aqours": {}, "虹ヶ咲学園": {}, "Liella!": {},}
+  let tmpSunBurstData: { [p: string]: sunBurstType } = {"Aqours": {}, "虹ヶ咲学園": {}, "Liella!": {}, "蓮ノ空女学院": {}}
   for (const key in tableData.value) {
     const accountData = tableData.value[key]
     if (Object.keys(tmpSunBurstData[accountData.team]).length === 0) {
