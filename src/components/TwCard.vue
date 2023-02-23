@@ -30,13 +30,13 @@
                 <template v-else>
                   · <span >audiospace</span> ·
                 </template>
-                {{ now < new Date(Number(state.audioSpaceObject.start)) ? 'Wait' : ((now > new Date(Number(state.audioSpaceObject.end)) && state.audioSpaceObject.end !== '0') ? 'Ended' : 'Live') }}
+                {{ now < new Date(Number(state.audioSpaceObject.start)) ? 'Wait' : ((now > new Date(Number(state.audioSpaceObject.end)) && state.audioSpaceObject.end !== '0') ? 'Ended' : (state.audioSpaceObject.state !== 'Invalid' ? 'Live' : 'Invalid')) }}
               </p>
             </a>
             <div class="align-middle" v-if="state.updateAudioSpaceFlag"><span class="spinner-border text-white" role="status" aria-hidden="true"></span></div>
             <div v-else>
               <full-text style="font-size: 1.2rem" class="text-white fw-semibold mb-2" :full_text_origin="state.audioSpaceObject.title ? state.audioSpaceObject.title : (object.description ? object.description : t('tw_card.text.someone_s_space', {someone: userName}))" :entities="[]" />
-              <div class="text-white btn d-block rounded-pill border-white audio-space-play-button" style="cursor: pointer;" v-if="state.audioSpaceObject.is_available_for_replay || (now >= new Date(Number(state.audioSpaceObject.start)) || state.audioSpaceObject.end === '0')" @click="updateSpacesPlayerMeta">
+              <div class="text-white btn d-block rounded-pill border-white audio-space-play-button" style="cursor: pointer;" v-if="state.audioSpaceObject.state !== 'Invalid' && (state.audioSpaceObject.is_available_for_replay || (now >= new Date(Number(state.audioSpaceObject.start)) || state.audioSpaceObject.end === '0') )" @click="updateSpacesPlayerMeta">
                 <span v-if="state.audioSpaceObject.id !== spacesPlayer.id">Play</span>
                 <span v-else>. . .</span>
               </div>
@@ -55,17 +55,17 @@
             <video :id="`videoPlayer_${media[0].tweet_id}`" :poster="createRealMediaPath(realMediaPath, samePath) +media[0].cover" :src="createRealMediaPath(realMediaPath, samePath) +media[0].url" :type="media[0].content_type" class="border" controls loop playsinline preload="none" style="width: 100%; height: 100%; border-radius: 14px 14px 0 0; background-color: black"></video>
           </div>
         </template>
-        <div v-else-if="object.secondly_type === 'image_carousel_website' || object.secondly_type === 'image_carousel_app' || object.secondly_type === 'image_multi_dest_carousel_website' || object.secondly_type === 'mixed_media_multi_dest_carousel_website' || object.secondly_type === 'video_carousel_website' || object.secondly_type === 'video_carousel_app' || object.secondly_type === 'video_multi_dest_carousel_website' || object.secondly_type === 'mixed_media_single_dest_carousel_website' || object.secondly_type === 'mixed_media_single_dest_carousel_app'" :style="{width: '100%', height: '100%', 'border-radius': '14px 14px 0 0'}">
+        <div v-else-if="object.secondly_type === 'image_carousel_website' || object.secondly_type === 'image_carousel_app' || object.secondly_type === 'image_multi_dest_carousel_website' || object.secondly_type === 'mixed_media_multi_dest_carousel_website' || object.secondly_type === 'video_carousel_website' || object.secondly_type === 'video_carousel_app' || object.secondly_type === 'video_multi_dest_carousel_website' || object.secondly_type === 'mixed_media_single_dest_carousel_website' || object.secondly_type === 'mixed_media_single_dest_carousel_app' || object.secondly_type === 'image_collection_website'" :style="{width: '100%', height: '100%', 'border-radius': '14px 14px 0 0'}">
           <el-carousel v-if="mediaState" style="border-radius: 14px 14px 0 0" indicator-position="outside" trigger="click" :autoplay="false" @change="changeMultiDestCarouselOrder">
             <el-carousel-item v-for="(mediaInfo, key) in media" :key="key" :name="key.toString()">
               <video v-if="mediaInfo.extension === 'mp4'" :id="`carouselVideoPlayer_${mediaInfo.tweet_id}_${key}`" :poster="createRealMediaPath(realMediaPath, samePath) +mediaInfo.cover" :src="createRealMediaPath(realMediaPath, samePath) +mediaInfo.url" :type="mediaInfo.content_type" class="border" controls loop playsinline preload="none" style="width: 100%; height: 100%; border-radius: 14px 14px 0 0; background-color: black"></video>
-              <el-image v-else :id="mediaInfo.filename" :preview-src-list="[createRealMediaPath(realMediaPath, samePath)+mediaInfo.cover]" :src="createRealMediaPath(realMediaPath, samePath)+mediaInfo.url" alt="cardImage" class="card-img-top" fit="cover" lazy preview-teleported hide-on-click-modal>
+              <el-image v-else :id="mediaInfo.filename" :preview-src-list="[createRealMediaPath(realMediaPath, samePath)+mediaInfo.cover]" :src="createRealMediaPath(realMediaPath, samePath)+mediaInfo.url" alt="cardImage" class="card-img-top" fit="cover" preview-teleported hide-on-click-modal>
               </el-image>
             </el-carousel-item>
           </el-carousel>
         </div>
         <span v-else class="text-center">{{ t("tw_card.text.unsupported_type") }}</span>
-        <div v-if="object.secondly_type === 'image_multi_dest_carousel_website' || object.secondly_type === 'video_multi_dest_carousel_website' || object.secondly_type === 'mixed_media_multi_dest_carousel_website'" class="card-body position-relative">
+        <div v-if="object.secondly_type === 'image_multi_dest_carousel_website' || object.secondly_type === 'video_multi_dest_carousel_website' || object.secondly_type === 'mixed_media_multi_dest_carousel_website' || object.secondly_type === 'image_collection_website'" class="card-body position-relative">
           <a v-if="multiDestCarouselData && !object.app" :href="multiDestCarouselData[state.multiDestCarouselOrder].url" class="stretched-link text-decoration-none" target="_blank"></a>
           <template v-if="multiDestCarouselData[state.multiDestCarouselOrder].description !== ''"><small class="text-muted">{{ multiDestCarouselData[state.multiDestCarouselOrder].description }}</small><br></template>
           <!--<div v-if="object.app" class="mx-auto mt-2" >
@@ -207,7 +207,7 @@ const latestMedia = computed((): Media | {} => {
 
 const ratio = computed(() => props.media[0].origin_info_width / props.media[0].origin_info_height)
 const multiDestCarouselData = computed(() => {
-  if (props.object?.secondly_type === 'image_multi_dest_carousel_website' || props.object?.secondly_type === 'video_multi_dest_carousel_website' || props.object?.secondly_type === 'mixed_media_multi_dest_carousel_website') {
+  if (props.object?.secondly_type === 'image_multi_dest_carousel_website' || props.object?.secondly_type === 'video_multi_dest_carousel_website' || props.object?.secondly_type === 'mixed_media_multi_dest_carousel_website' || props.object?.secondly_type === 'image_collection_website') {
     let tmpData = []
     let tmpDescription = props.object.description.split("\t")
     let tmpVanityUrl = props.object.vanity_url.split("\t")
