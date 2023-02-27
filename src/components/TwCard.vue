@@ -1,6 +1,6 @@
 <template>
   <div id="twCard" @click="(e) => {e.stopPropagation()}">
-    <div class="card mb-3 background-second" style="border-radius: 14px 14px 14px 14px">
+    <div :class="{card: object.secondly_type !== 'image_collection_website', 'mb-3': true, 'background-second': !(object.type === 'unified_card' && object.secondly_type === 'image_collection_website'), }" style="border-radius: 14px 14px 14px 14px">
       <a v-if="object?.url && (object.secondly_type === 'media_with_details_horizontal' || object.secondly_type === 'twitter_article' || object.type !== 'unified_card') && object.type !== 'audiospace' && object.type !== 'broadcast'" :href="object.url" class="stretched-link text-decoration-none" target="_blank"></a>
       <template v-if="object.type === 'summary' || object.type === 'audio' || object.type === 'app' || object.type === 'moment' || object.secondly_type === 'media_with_details_horizontal'">
         <div class="row no-gutters">
@@ -46,6 +46,7 @@
         </div>
       </template>
       <tw-broadcast v-else-if="object.type === 'broadcast'" :tweet_id="object.tweet_id" :cover="latestMedia.cover" :url="object.url" :title="object.title"/>
+      <tw-collection v-else-if="object.type === 'unified_card' && object.secondly_type === 'image_collection_website'" :media="media" :multi-dest-carousel-data="multiDestCarouselData"/>
       <template v-else-if="object.type === 'unified_card' && object.secondly_type !== 'twitter_article'">
         <div v-if="mediaState && object.secondly_type === 'image_website' || object.secondly_type === 'image_app' || object.secondly_type === 'twitter_list_details'" :style="{width: '100%', height: 0, 'padding-bottom': paddingBottom( latestMedia.cover, latestMedia.origin_info_height, latestMedia.origin_info_width) + '%', 'border-radius': '14px 14px 0 0'}" class="no-gutters">
           <el-image :preview-src-list="[createRealMediaPath(realMediaPath, samePath)+latestMedia.cover]" :src="createRealMediaPath(realMediaPath, samePath)+latestMedia.cover" :style="{width: '100%', position: 'absolute', 'border-radius': '14px 14px 0 0'}" alt="cardImage" class="card-img-top" fit="cover" lazy @load="state.load = true" preview-teleported hide-on-click-modal></el-image>
@@ -55,7 +56,7 @@
             <video :id="`videoPlayer_${media[0].tweet_id}`" :poster="createRealMediaPath(realMediaPath, samePath) +media[0].cover" :src="createRealMediaPath(realMediaPath, samePath) +media[0].url" :type="media[0].content_type" class="border" controls loop playsinline preload="none" style="width: 100%; height: 100%; border-radius: 14px 14px 0 0; background-color: black"></video>
           </div>
         </template>
-        <div v-else-if="object.secondly_type === 'image_carousel_website' || object.secondly_type === 'image_carousel_app' || object.secondly_type === 'image_multi_dest_carousel_website' || object.secondly_type === 'mixed_media_multi_dest_carousel_website' || object.secondly_type === 'video_carousel_website' || object.secondly_type === 'video_carousel_app' || object.secondly_type === 'video_multi_dest_carousel_website' || object.secondly_type === 'mixed_media_single_dest_carousel_website' || object.secondly_type === 'mixed_media_single_dest_carousel_app' || object.secondly_type === 'image_collection_website'" :style="{width: '100%', height: '100%', 'border-radius': '14px 14px 0 0'}">
+        <div v-else-if="object.secondly_type === 'image_carousel_website' || object.secondly_type === 'image_carousel_app' || object.secondly_type === 'image_multi_dest_carousel_website' || object.secondly_type === 'mixed_media_multi_dest_carousel_website' || object.secondly_type === 'video_carousel_website' || object.secondly_type === 'video_carousel_app' || object.secondly_type === 'video_multi_dest_carousel_website' || object.secondly_type === 'mixed_media_single_dest_carousel_website' || object.secondly_type === 'mixed_media_single_dest_carousel_app'" :style="{width: '100%', height: '100%', 'border-radius': '14px 14px 0 0'}">
           <el-carousel v-if="mediaState" style="border-radius: 14px 14px 0 0" indicator-position="outside" trigger="click" :autoplay="false" @change="changeMultiDestCarouselOrder">
             <el-carousel-item v-for="(mediaInfo, key) in media" :key="key" :name="key.toString()">
               <video v-if="mediaInfo.extension === 'mp4'" :id="`carouselVideoPlayer_${mediaInfo.tweet_id}_${key}`" :poster="createRealMediaPath(realMediaPath, samePath) +mediaInfo.cover" :src="createRealMediaPath(realMediaPath, samePath) +mediaInfo.url" :type="mediaInfo.content_type" class="border" controls loop playsinline preload="none" style="width: 100%; height: 100%; border-radius: 14px 14px 0 0; background-color: black"></video>
@@ -65,7 +66,7 @@
           </el-carousel>
         </div>
         <span v-else class="text-center">{{ t("tw_card.text.unsupported_type") }}</span>
-        <div v-if="object.secondly_type === 'image_multi_dest_carousel_website' || object.secondly_type === 'video_multi_dest_carousel_website' || object.secondly_type === 'mixed_media_multi_dest_carousel_website' || object.secondly_type === 'image_collection_website'" class="card-body position-relative">
+        <div v-if="object.secondly_type === 'image_multi_dest_carousel_website' || object.secondly_type === 'video_multi_dest_carousel_website' || object.secondly_type === 'mixed_media_multi_dest_carousel_website'" class="card-body position-relative">
           <a v-if="multiDestCarouselData && !object.app" :href="multiDestCarouselData[state.multiDestCarouselOrder].url" class="stretched-link text-decoration-none" target="_blank"></a>
           <template v-if="multiDestCarouselData[state.multiDestCarouselOrder].description !== ''"><small class="text-muted">{{ multiDestCarouselData[state.multiDestCarouselOrder].description }}</small><br></template>
           <!--<div v-if="object.app" class="mx-auto mt-2" >
@@ -130,6 +131,7 @@ import {request} from "@/share/Fetch";
 import {ApiAudioSpace} from "@/type/Api";
 import TwSpace from "@/components/TwSpace.vue";
 import TwBroadcast from "@/components/TwBroadcast.vue";
+import TwCollection from "@/components/TwCollection.vue";
 
 const props = defineProps({
   object: {

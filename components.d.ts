@@ -48,6 +48,7 @@ declare module '@vue/runtime-core' {
     Translate: typeof import('./src/components/Translate.vue')['default']
     TwBroadcast: typeof import('./src/components/TwBroadcast.vue')['default']
     TwCard: typeof import('./src/components/TwCard.vue')['default']
+    TwCollection: typeof import('./src/components/TwCollection.vue')['default']
     TweetAlbumItem: typeof import('./src/components/TweetAlbumItem.vue')['default']
     TweetImages: typeof import('./src/components/TweetImages.vue')['default']
     TweetItem: typeof import('./src/components/TweetItem.vue')['default']
