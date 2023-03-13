@@ -5,7 +5,7 @@
       <template v-if="object.type === 'summary' || object.type === 'audio' || object.type === 'app' || object.type === 'moment' || object.secondly_type === 'media_with_details_horizontal'">
         <div class="row no-gutters">
           <div class="col-4 col-md-3 border-right">
-            <el-image v-if="object.media === 1 && mediaState" :preview-src-list="[createRealMediaPath(realMediaPath, samePath)+latestMedia.cover]" :src="createRealMediaPath(realMediaPath, samePath)+latestMedia.cover" alt="cardImage" fit="cover" lazy style="border-radius: 14px 0 0 14px; height: 100%;" class="ratio ratio-1x1" preview-teleported hide-on-click-modal></el-image>
+            <el-image v-if="object.media === 1 && mediaState" :preview-src-list="[createRealMediaPath(realMediaPath, samePath)+predictiveMedia.cover]" :src="createRealMediaPath(realMediaPath, samePath)+predictiveMedia.cover" alt="cardImage" fit="cover" lazy style="border-radius: 14px 0 0 14px; height: 100%;" class="ratio ratio-1x1" preview-teleported hide-on-click-modal></el-image>
           </div>
           <div class="col-8 col-md-9">
             <div style="height: 100%; " class="d-flex align-items-center">
@@ -45,11 +45,11 @@
           </div>
         </div>
       </template>
-      <tw-broadcast v-else-if="object.type === 'broadcast'" :tweet_id="object.tweet_id" :cover="latestMedia.cover" :url="object.url" :title="object.title"/>
+      <tw-broadcast v-else-if="object.type === 'broadcast'" :tweet_id="object.tweet_id" :cover="predictiveMedia.cover" :url="object.url" :title="object.title"/>
       <tw-collection v-else-if="object.type === 'unified_card' && object.secondly_type === 'image_collection_website'" :media="media" :multi-dest-carousel-data="multiDestCarouselData"/>
       <template v-else-if="object.type === 'unified_card' && object.secondly_type !== 'twitter_article'">
-        <div v-if="mediaState && object.secondly_type === 'image_website' || object.secondly_type === 'image_app' || object.secondly_type === 'twitter_list_details'" :style="{width: '100%', height: 0, 'padding-bottom': paddingBottom( latestMedia.cover, latestMedia.origin_info_height, latestMedia.origin_info_width) + '%', 'border-radius': '14px 14px 0 0'}" class="no-gutters">
-          <el-image :preview-src-list="[createRealMediaPath(realMediaPath, samePath)+latestMedia.cover]" :src="createRealMediaPath(realMediaPath, samePath)+latestMedia.cover" :style="{width: '100%', position: 'absolute', 'border-radius': '14px 14px 0 0'}" alt="cardImage" class="card-img-top" fit="cover" lazy @load="state.load = true" preview-teleported hide-on-click-modal></el-image>
+        <div v-if="mediaState && object.secondly_type === 'image_website' || object.secondly_type === 'image_app' || object.secondly_type === 'twitter_list_details'" :style="{width: '100%', height: 0, 'padding-bottom': paddingBottom( predictiveMedia.cover, predictiveMedia.origin_info_height, predictiveMedia.origin_info_width) + '%', 'border-radius': '14px 14px 0 0'}" class="no-gutters">
+          <el-image :preview-src-list="[createRealMediaPath(realMediaPath, samePath)+predictiveMedia.cover]" :src="createRealMediaPath(realMediaPath, samePath)+predictiveMedia.cover" :style="{width: '100%', position: 'absolute', 'border-radius': '14px 14px 0 0'}" alt="cardImage" class="card-img-top" fit="cover" lazy @load="state.load = true" preview-teleported hide-on-click-modal></el-image>
         </div>
         <template v-else-if="object.secondly_type === 'video_website' || object.secondly_type === 'video_app'" >
           <div v-if="mediaState" :class="`no-gutters ratio ratio-` + (ratio < 16 / 9 ? (ratio < 4 / 3 ? '1x1' : '4x3') :ratio > 16 / 9 ? '21x9' : '16x9')">
@@ -102,8 +102,9 @@
       </template>
       <template v-else>
         <div v-if="object.media === 1 && mediaState" class="border-bottom">
-          <div :style="{width: '100%', height: 0, 'padding-bottom': paddingBottom( latestMedia.cover, latestMedia.origin_info_height, latestMedia.origin_info_width) + '%', 'border-radius': '14px 14px 0 0'}" class="no-gutters">
-            <el-image :preview-src-list="[createRealMediaPath(realMediaPath, samePath)+latestMedia.cover]" :src="createRealMediaPath(realMediaPath, samePath)+latestMedia.cover" :style="{width: '100%', position: 'absolute', 'border-radius': '14px 14px 0 0'}" class="card-img-top" fit="cover" lazy alt="cardImage" @load="state.load = true" preview-teleported hide-on-click-modal></el-image>
+          <div :style="{width: '100%', height: 0, 'padding-bottom': paddingBottom( predictiveMedia.cover, predictiveMedia.origin_info_height, predictiveMedia.origin_info_width) + '%', 'border-radius': '14px 14px 0 0'}" class="no-gutters">
+            <video v-if="predictiveMedia.extension === 'mp4'" :id="`videoPlayer_${predictiveMedia.tweet_id}`" :poster="createRealMediaPath(realMediaPath, samePath) + predictiveMedia.cover" :src="createRealMediaPath(realMediaPath, samePath) + predictiveMedia.url" :type="predictiveMedia.content_type" class="border" controls loop playsinline preload="none" style="width: 100%; position: absolute; border-radius: 14px 14px 0 0; background-color: black"></video>
+            <el-image v-else :preview-src-list="[createRealMediaPath(realMediaPath, samePath)+predictiveMedia.cover]" :src="createRealMediaPath(realMediaPath, samePath)+predictiveMedia.cover" style="width: 100%; position: absolute; border-radius: 14px 14px 0 0;" class="card-img-top" fit="cover" lazy alt="cardImage" @load="state.load = true" preview-teleported hide-on-click-modal></el-image>
           </div>
         </div>
         <div class="card-body position-static">
@@ -199,8 +200,10 @@ const realMediaPath = computed(() => store.state.realMediaPath)
 const samePath = computed(() => store.state.samePath)
 const onlinePath = computed(() => store.state.onlinePath)
 const spacesPlayer = computed(() => store.state.spacesPlayer)
-const latestMedia = computed((): Media | {} => {
-  if (props.media && props.media.length) {
+const predictiveMedia = computed((): Media | {} => {
+  if (props.media && props.media.some(x => x.extension === 'mp4')) {
+    return props.media.filter(x => x.extension === 'mp4')[0]
+  } else if (props.media && props.media.length) {
     return props.media[props.media.length - 1]
   } else {
     return {}
