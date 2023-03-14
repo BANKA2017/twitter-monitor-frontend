@@ -282,6 +282,7 @@ export interface BookMark {
   name: string
   display_name: string
   text?: string
+  entities: Entity[]
   media: BookMarkMedia[]
   timestamp: string
   add_timestamp: string

@@ -30,12 +30,12 @@
         </div>
         <div class="row">
           <!--avatar-->
-          <div class="col-1 ps-1 pe-0" v-if="settings.onlineMode || tweet.user_info?.header" @click="(e) => {e.stopPropagation()}">
+          <div class="col-1 ps-1 pe-0" v-if="tweet?.user_info?.header" @click="(e) => {e.stopPropagation()}">
             <router-link :to="'/' + (tweet.retweet_from_name ? tweet.retweet_user_info.name : tweet.user_info.name) + '/all'">
               <el-image :class="verifiedStatus.verified_type === 'business' ? 'rounded-3' : 'rounded-circle' " :src="createRealMediaPath(realMediaPath, samePath, 'userinfo')+ (tweet.retweet_from_name ? tweet.retweet_user_info.header : tweet.user_info.header).replace(/([\w]+)\.([\w]+)$/gm, `$1_reasonably_small.$2`)" alt="Avatar" />
             </router-link>
           </div>
-          <div :class="{'col-11': settings.onlineMode || tweet.user_info}" :dir="tweet.rtl ? 'rtl' : 'ltr'" @click="(e) => {e.stopPropagation()}">
+          <div :class="{'col-11': tweet?.user_info?.header}" :dir="tweet.rtl ? 'rtl' : 'ltr'" @click="(e) => {e.stopPropagation()}">
             <div class="d-block text-truncate" :style="{'max-width': '' + (tweet.media ? 69 : 74) + '%'}">
               <router-link v-if="settings.onlineMode || !tweet.retweet_from_name || (tweet.retweet_from_name && userList.map(x => x.name).includes(tweet.retweet_from_name))" :to="`/`+ (tweet.retweet_from ? tweet.retweet_from_name : tweet.name) + '/all'" class="card-title text-dark fw-bold" :style="{'max-width': '' + (tweet.media ? 65 : 70) + '%'}">
                 <full-text :entities="[]" :full_text_origin="tweet.retweet_from ? tweet.retweet_from : tweet.display_name" :inline="true" />
@@ -50,7 +50,7 @@
           </div>
         </div>
         <div class="row my-1">
-          <div :class="{'offset-md-1': settings.onlineMode, 'col-md-11': settings.onlineMode, 'col-12': true}">
+          <div :class="{'offset-md-1': tweet?.user_info?.header, 'col-md-11': tweet?.user_info?.header, 'col-12': true}">
             <!--<div v-html="`<p class='card-text'>`+tweet.full_text+`</p>`"></div>-->
             <!--excited!-->
             <div :dir="tweet.rtl ? 'rtl' : 'ltr'"><full-text class="card-text" :entities="tweet.entities" :full_text_origin="tweet.full_text_origin" :display-range="(settings.onlineMode && (route.name === 'name-status' || route.name === 'no-name-status' || translatorMode)) ? tweet.display_text_range : [0, 0]"/></div>
@@ -158,7 +158,8 @@ const updateBookMarks = (type: 'media' | 'tweet' = 'tweet') => {
       uid: props.tweet?.uid_str || '0',
       name: props.tweet?.name || '',
       display_name: props.tweet?.display_name || '',
-      text: (props.tweet?.full_text || '').replaceAll(/(?:|\n)(?:<br>|<br \/>)(?:|\n)/gm, "\n").replaceAll(/<a.+?href="([^"]+)"[^>]+>([^<]+)<\/a>/gm, "[$2]($1)"),
+      text: props.tweet?.full_text_origin || '',
+      entities: props.tweet?.entities,
       media: props.tweet?.mediaObject?.map(media => ({
         is_video: media.extension === 'mp4',
         url: media.url,

@@ -8,7 +8,7 @@
         </video>
       </div>
       <div v-else :style="`width: 100%;` + (((ratio) => ratio > 100 ? ' aspect-ratio: 1; ' : ` padding-bottom: ${ratio}%; `)(realList[0].origin_info_height / realList[0].origin_info_width * 100)) + `height: 100%; border-radius: 14px;`" class="no-gutters card">
-        <el-image :alt="realList[0].description || realList[0].uid+'_'+realList[0].tweet_id+'_'+0" :initial-index="0" :preview-src-list="previewList" :src="createRealMediaPath(realMediaPath, samePath,'tweets') +realList[0].url+(realList[0].source !== 'tweets' ? '' : ':small')" :fit="(realList[0].origin_info_height / realList[0].origin_info_width <= 1) ? 'fill' : 'scale-down'" lazy style="width: 100%; height: 100%; position: absolute; border-radius: 14px; padding: 1px;" preview-teleported hide-on-click-modal>
+        <el-image :alt="realList[0].description || realList[0].uid+'_'+realList[0].tweet_id+'_'+0" :initial-index="0" :preview-src-list="previewList" :src="createRealMediaPath(realMediaPath, samePath,'tweets') +realList[0].url+((parseURL(realList[0].url).search) ? '' : ':small')" :fit="(realList[0].origin_info_height / realList[0].origin_info_width <= 1) ? 'fill' : 'scale-down'" lazy style="width: 100%; height: 100%; position: absolute; border-radius: 14px; padding: 1px;" preview-teleported hide-on-click-modal>
           <template #placeholder>
             <blur-hash-canvas v-if="realList[0].blurhash && realList[0].blurhash !== 'deleted'" :hash-text="realList[0].blurhash" class="full"/>
           </template>
@@ -24,7 +24,7 @@
           <video v-if="isVideo(mixMedia)" :style="listStyle[realList.length-2][order] + ' object-fit: cover;'" :id="'video_' + mixMedia.tweet_id + '_' + order" controls playsinline crossorigin :poster="createRealMediaPath(realMediaPath, samePath,'tweets') + mixMedia.cover" :preload="preload">
             <source :src="createRealMediaPath(realMediaPath, samePath,'tweets') +mixMedia.url">
           </video>
-          <el-image v-else style="padding: 1px;" :alt="mixMedia.description || mixMedia.uid+'_'+mixMedia.tweet_id+'_'+0" :initial-index="order" :preview-src-list="previewList" :src="createRealMediaPath(realMediaPath, samePath,'tweets') +mixMedia.url+(realList[0].source !== 'tweets' ? '' : ':small')" :style="listStyle[realList.length-2][order]" fit="cover" lazy preview-teleported hide-on-click-modal>
+          <el-image v-else style="padding: 1px;" :alt="mixMedia.description || mixMedia.uid+'_'+mixMedia.tweet_id+'_'+0" :initial-index="order" :preview-src-list="previewList" :src="createRealMediaPath(realMediaPath, samePath,'tweets') +mixMedia.url+((parseURL(mixMedia.url).search) ? '' : ':small')" :style="listStyle[realList.length-2][order]" fit="cover" lazy preview-teleported hide-on-click-modal>
             <template #placeholder>
               <blur-hash-canvas class="full" :hash-text="mixMedia.blurhash" v-if="mixMedia.blurhash && mixMedia.blurhash !== 'deleted'"/>
             </template>
@@ -38,7 +38,7 @@
     <div v-else class="row justify-content-around" :style="{filter: isHidden ? 'blur(10px)' : false, 'background-color': isHidden ? 'rgba(0, 0, 0, 0.5)' : false}">
       <!--应该没那么多视频...吧-->
       <div class="mx-1 mb-4 rounded-3" style="width: calc(100% / 3 - 15px); aspect-ratio: 1" v-for="(image, order) in realList" :key="order">
-        <el-image class="rounded-3" style="height: 100%; width: 100%" :alt="image.uid+'_'+image.tweet_id+'_'+0" :initial-index="order" :preview-src-list="previewList" :src="createRealMediaPath(realMediaPath, samePath,'tweets') +image.url+(realList[0].source !== 'tweets' ? '' : ':small')" fit="cover" lazy preview-teleported hide-on-click-modal>
+        <el-image class="rounded-3" style="height: 100%; width: 100%" :alt="image.uid+'_'+image.tweet_id+'_'+0" :initial-index="order" :preview-src-list="previewList" :src="createRealMediaPath(realMediaPath, samePath,'tweets') +image.url+((parseURL(image.url).search) ? '' : ':small')" fit="cover" lazy preview-teleported hide-on-click-modal>
           <template #placeholder>
             <blur-hash-canvas class="full" :hash-text="image.blurhash" v-if="image.blurhash && image.blurhash !== 'deleted'"/>
           </template>
@@ -166,9 +166,10 @@ const ratio = computed(() => {
   return 0
 })
 
-const previewList = computed(() => realList.value.map(s => createRealMediaPath(realMediaPath.value, samePath.value,"tweets") + s.url + (s.source !== 'tweets' ? '' : (':' + props.size))))
+const previewList = computed(() => realList.value.map(s => createRealMediaPath(realMediaPath.value, samePath.value,"tweets") + s.url + ((parseURL(s.url).search) ? '' : (':' + props.size))))
 const isHidden = computed(() => realList.value.some(item => item.sensitive_media_warning) && state.hidden)
 const isVideo = (media: Media | OnlineMedia) => media.content_type === 'video/mp4'
+const parseURL = (urlString: string) => (new URL(urlString.startsWith('http') ? urlString : `https://${urlString}`))
 
 onMounted(() => {
   const VideoHook: {video: HTMLElement; handle: IntersectionObserver}[] = []
