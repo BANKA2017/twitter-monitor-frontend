@@ -37,6 +37,7 @@ export const store = createStore<State>({
     siteHeight: 0,
     viewportHeight: 0,
     altitudeDifference: 0,
+    scrollBarWidth: 0,
     hasBeenSyncFromLocalStorage: false,
     devmode,
     settings: {
@@ -73,7 +74,8 @@ export const store = createStore<State>({
       title: '',
       start: '0',
       end: '0'
-    }
+    },
+    bookmarks: []
   },
   getters: {
     getBasePath: (state): string => state.settings.basePath,
@@ -93,6 +95,7 @@ export const store = createStore<State>({
       state.siteHeight = payload.siteHeight
       state.altitudeDifference = payload.altitudeDifference
       state.viewportHeight = payload.viewportHeight
+      state.scrollBarWidth = payload.scrollBarWidth
     },
     //settings
     swapDisplayPictureStatus: (state) => state.settings.displayPicture = !state.settings.displayPicture,
@@ -109,6 +112,17 @@ export const store = createStore<State>({
         state.spacesPlayer[payload.key] = payload.value
       }
     },
+    updateBookMarks: (state, payload) => {
+      if (payload?.cleanAll) {
+        state.bookmarks = []
+      } else if (payload?.import) {
+        state.bookmarks = payload.tweet
+      } else if (state.bookmarks.filter(bookmark => bookmark.type === payload.tweet.type && bookmark.tweet_id === payload.tweet.tweet_id && bookmark.uid === payload.tweet.uid).length === 0) {
+        state.bookmarks.push(payload.tweet)
+      } else {
+        state.bookmarks = state.bookmarks.filter(bookmark => bookmark.type !== payload.tweet.type || bookmark.tweet_id !== payload.tweet.tweet_id || bookmark.uid !== payload.tweet.uid)
+      }
+    }
   },
   actions: {
     setLanguage: function (context, payload: {lang: string}) {
@@ -160,6 +174,7 @@ export const store = createStore<State>({
         siteHeight: payload.siteHeight,
         altitudeDifference: payload.altitudeDifference,
         viewportHeight: payload.viewportHeight,
+        scrollBarWidth: payload.scrollBarWidth,
       })
     },
     //settings
@@ -174,6 +189,7 @@ export const store = createStore<State>({
     //TODO fix all any type
     updateTweetsTranslate: (context, payload) => context.commit("updateTweetsTranslate", {tweet_id: payload.tweet_id, translate: payload.translate}),
     updateSpacesPlayerItem: (context: ActionContext<State, State>, payload: {key: keyof State["spacesPlayer"]; value: string & boolean}) => context.commit('updateSpacesPlayerItem', {key: payload.key, value: payload.value}),
+    updateBookMarks: (context, payload) => context.commit("updateBookMarks", payload),
   }
 })
 

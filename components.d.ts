@@ -31,6 +31,7 @@ declare module '@vue/runtime-core' {
     LinkList: typeof import('./src/components/LinkList.vue')['default']
     LocalRouter: typeof import('./src/components/LocalRouter.vue')['default']
     Navigation: typeof import('./src/components/Navigation.vue')['default']
+    OnlineTrends: typeof import('./src/components/OnlineTrends.vue')['default']
     OnlineTweetItem: typeof import('./src/components/OnlineTweetItem.vue')['default']
     PieChart: typeof import('./src/components/modules/pieChart.vue')['default']
     ProjectList: typeof import('./src/components/ProjectList.vue')['default']

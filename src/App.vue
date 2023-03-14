@@ -45,6 +45,8 @@
       const width = computed(() => store.state.width)
       const title = computed(() => store.state.title)
       const onlinePath = computed(() => store.state.onlinePath)
+      const adminMode = computed(() => store.state.adminMode)
+      const bookMarks = computed(() => store.state.bookmarks)
       useHead({
         title,
         meta: [
@@ -76,14 +78,16 @@
 
       const updateHeight = () => {
         if (state.updateHeightFlag) {return}
-        let tmpDocument = document
+        const tmpDocument = document
+        const tmpWindow = window
         store.dispatch({
           type: 'updateBrowserSize',
           altitudeDifference: height.value - tmpDocument.documentElement.scrollTop,
           height: tmpDocument.documentElement.scrollTop,
-          width: window.innerWidth,
+          width: tmpWindow.innerWidth,
           siteHeight: tmpDocument.body.scrollHeight,
-          viewportHeight: window.innerHeight,
+          viewportHeight: tmpWindow.innerHeight,
+          scrollBarWidth: tmpWindow.innerWidth - tmpDocument.body.scrollWidth,
         })
         state.updateHeightFlag = true
       }
@@ -96,16 +100,21 @@
       const konamiCode = () => {
         if ( window.addEventListener ) {
           let tmpKeys: string[] = []
-          const konamiCode = "ArrowUp,ArrowUp,ArrowDown,ArrowDown,ArrowLeft,ArrowRight,ArrowLeft,ArrowRight,KeyB,KeyA";
+          const konamiCode = ["ArrowUp","ArrowUp","ArrowDown","ArrowDown","ArrowLeft","ArrowRight","ArrowLeft","ArrowRight","KeyB","KeyA"];
           window.addEventListener("keydown", (e) => {
-            tmpKeys.push( e.code );
-            if ( tmpKeys.toString() === konamiCode ) {
-              store.dispatch({
-                type: 'setCoreValue',
-                key: 'adminMode',
-                value: true
-              })
-              tmpKeys = [];
+            if (!adminMode.value) {
+              if (e.code === konamiCode[tmpKeys.length]) {
+                tmpKeys.push( e.code );
+              } else {
+                tmpKeys = []
+              }
+              if (tmpKeys.toString() === konamiCode.toString()) {
+                store.dispatch({
+                  type: 'setCoreValue',
+                  key: 'adminMode',
+                  value: true
+                })
+              }
             }
           }, true);
         }
@@ -117,7 +126,7 @@
         localStorage.setItem('tm_settings', JSON.stringify(settings.value))//提前写入
         setLanguage()
       } else {
-        //TODO supported third-party interface
+        //TODO support third-party interface
         let tmpSettings = JSON.parse(tm_settings)
         if (tmpSettings.basePath) {
           delete tmpSettings.basePath
@@ -144,6 +153,21 @@
       store.dispatch('setUserTimeZone')
       store.dispatch('checkSamePath')
       store.dispatch('updateRealMediaPath')
+
+      //bookmarks
+      let localstorage_bookmarks = localStorage.getItem('tm_bookmarks')
+      if (!localstorage_bookmarks) {
+        localStorage.setItem('tm_bookmarks', JSON.stringify(bookMarks.value))//提前写入
+      } else {
+        store.dispatch({
+          type: 'setCoreValue',
+          key: 'bookmarks',
+          value: JSON.parse(localstorage_bookmarks)
+        })
+      }
+      watch(bookMarks, () => {
+        localStorage.setItem('tm_bookmarks', JSON.stringify(bookMarks.value))
+      }, {deep: true})
       onMounted(() => {
         //time
         updateNow()

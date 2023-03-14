@@ -3,9 +3,9 @@
     <div id="divForUpdate" ref="divForUpdate"></div>
     <nav v-if="(route.name !== 'main' || !translatorMode) && route.name === 'name-display'" :style="{'position': 'sticky', 'top': '1.5rem', 'z-index': 1, 'background-color': 'rgba(255, 255, 255, 0.9)', 'border-radius': '0.25rem'}" class="nav nav-pills nav-fill border">
       <!--v-if="tweetStatus.displayType === 'timeline' && !load.leftCard"-->
-      <li v-for="(value, s) in displayMode.filter(x => settings.onlineMode ? (x[1] !== 'self') : true)" :key="s" class="nav-item">
+      <li v-for="(value, s) in displayMode.filter(x => settings.onlineMode ? (x[1] !== 'self') : true)" :key="s" class="nav-item" style="user-select: none;">
         <!--tweetStatus.display-->
-        <div v-if="value[1] === tweetTypeValue" class="nav-link active" role="button" @click="loading(true)">{{ value[0] }}</div>
+        <div v-if="value[1] === tweetTypeValue" class="nav-link active" role="button" @dblclick="loading(true)">{{ value[0] }}</div>
         <router-link v-else :to="`./`+value[1]" class="nav-link">{{ value[0] }}</router-link>
       </li>
       <!--<li class="nav-item" style="z-index: 1500">
@@ -72,7 +72,7 @@
 import {useStore} from "@/store";
 import {computed, reactive, ref, Ref, watch, onMounted} from "vue";
 import {useI18n} from "vue-i18n";
-import {onBeforeRouteLeave, onBeforeRouteUpdate, RouteLocationNormalized, useRoute, useRouter} from "vue-router";
+import {RouteLocationNormalized, useRoute, useRouter} from "vue-router";
 import {TweetType} from "@/type/State";
 import {TweetMode} from "@/type/State";
 import {Equal, Notice, NullSafeParams, ScrollTo, VerifyQueryString} from "@/share/Tools";
@@ -361,20 +361,10 @@ const AutoRefresh = () => {
   setTimeout(() => AutoRefresh(), 1000)
 }
 //first entry
-onMounted(()  => {
-  routeRun(route, {name: 'everywhere'})
-  //AutoRefresh()
-})
+routeRun(route, {name: 'everywhere'})
 //update
-//无法监听跨路由
-onBeforeRouteUpdate((to, from, next) => {
+router.afterEach((to, from) => {
   routeRun(to, from)
-  next()
-})
-//leave
-onBeforeRouteLeave((to, from, next) => {
-  routeRun(to, from)
-  next()
 })
 
 </script>

@@ -64,6 +64,13 @@ export interface ApiTrends extends Api<{
   statuses: {name: string; display_name: string; header: string; count: number}[]
 }> {}
 
+export interface ApiOnlineTrends extends Api<{
+  name: string
+  domainContext: string
+  metaDescription?: string
+  displayedRelatedVariants?: string[]
+}[]> {}
+
 export interface ApiOnlineMedia extends Api<OnlineMediaList | {}> {}
 
 export interface ApiAudioSpace extends Api<AudioSpace> {}

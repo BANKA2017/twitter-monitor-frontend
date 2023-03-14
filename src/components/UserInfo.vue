@@ -28,11 +28,12 @@
     <el-skeleton :loading="!state.chartData.length" :rows="4" anmiated v-if="state.chartData && state.chartExisted">
       <tmv2-chart chart-height="250px" :chart-rows="state.chartData" :grid="{left: '18%', right: '18%'}" :label-map="state.labelMap" :legend-not-selected="[1]" :y-axis="[{type: 'value', scale: true, minInterval: 1}, {type: 'value', scale: true, minInterval: 1}]" :y-axis-index="[0, 0, 1]" chart-type="line"></tmv2-chart>
     </el-skeleton>
-    <el-table v-else :data="[{followers: state.userInfo.followers, following: state.userInfo.following, statuses_count: state.userInfo.statuses_count}]" style="width: 100%">
-      <el-table-column :label="t('public.followers')" prop="followers"></el-table-column>
-      <el-table-column :label="t('public.following')" prop="following"></el-table-column>
-      <el-table-column :label="t('public.statuses_count')" prop="statuses_count"></el-table-column>
-    </el-table>
+    <div v-else class="w-100">
+      <div class="d-inline me-4" v-for="type in ['followers', 'following']" :key="type">
+        <span class="fw-bolder fs-6 me-1">{{ state.userInfo[type] }}</span>
+        <span>{{ t('public.' + type) }}</span>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -65,8 +66,8 @@ const samePath = computed(() => store.state.samePath)
 const updatedCharts = computed(() => store.state.updatedCharts)
 const altitudeDifference = computed(() => store.state.altitudeDifference)
 
-const isMobileRatio = computed(() => width.value <= 768 || height.value <= 50 || altitudeDifference.value > 0)
-const isHideDescription = computed(() => width.value > 768 && height.value > 50)
+const isMobileRatio = computed(() => width.value <= 992 || height.value <= 50 || altitudeDifference.value > 0)
+const isHideDescription = computed(() => width.value > 992 && height.value > 50)
 
 const state = reactive<{
   loading: boolean;

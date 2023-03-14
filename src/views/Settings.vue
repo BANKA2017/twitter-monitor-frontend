@@ -1,11 +1,18 @@
 <template>
   <div class="settings">
-    <navigation />
-    <div class="my-4"></div>
-    <main class="container" id="main" role="main">
+    <div class="container" id="main" role="main">
       <div class="row">
-        <div class="col-md-8 offset-md-2">
-          <div class="input-group mb-3">
+        <div class="col-lg-3">
+          <div style="position: sticky; top: 2rem;" >
+            <div class="fs-2 fw-bold w-100 text-start">Twitter Monitor</div>
+            <div class="mb-3" style="padding-left: 5px"><local-router /></div>
+            <el-divider class="my-2" />
+            <link-list v-if="!settings.onlineMode"/>
+            <div v-else class="mb-2 text-muted"><small>NEST.MOE</small></div>
+          </div>
+        </div>
+        <div class="col-lg-9">
+          <div class="input-group" style="top: 2em;">
             <span class="input-group-text" id="api_path">{{ t("settings.api_path") }}</span>
             <input v-model="settings.basePath" aria-describedby="api_path" aria-label="Sizing example input" class="form-control" type="text" disabled>
           </div>
@@ -25,7 +32,7 @@
           <div class="input-group mb-3">
             <label class="input-group-text" for="select-platform">{{ t("settings.translator_platform") }}</label>
             <select id="select-platform" v-model="translatorPlatform" class="form-select">
-              <option v-for="translateMeta in [['google', 'Google Translate'], ['microsoft', 'Microsoft Translator'], ['sogou', '搜狗翻译'], ['yandex', 'Yandex Translator'], ['baidu', '百度翻译']]" :key="translateMeta[0]" :selected="translatorPlatform === translateMeta[0]" :value="translateMeta[0]">{{ translateMeta[1] }}
+              <option v-for="translateMeta in [['google', 'Google Translate'], ['microsoft', 'Microsoft Translator'], ['sogou', '搜狗翻译'], ['yandex', 'Yandex Translator'], ['baidu', '百度翻译'], ['deepl', 'DeepL']]" :key="translateMeta[0]" :selected="translatorPlatform === translateMeta[0]" :value="translateMeta[0]">{{ translateMeta[1] }}
               </option>
             </select>
           </div>
@@ -45,22 +52,19 @@
             <input type="checkbox" class="form-check-input" id="online-mode" v-model="onlineMode">
             <label class="custom-control-label form-label" for="online-mode">{{ t("settings.online_mode") }}</label>
           </div>
-          <div class="text-center my-4">
-            <el-button circle @click="$router.go(-1)"><arrow-left height="1em" status="" width="1em"/></el-button>
-          </div>
         </div>
       </div>
-    </main>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import Navigation from "@/components/Navigation.vue"
-import ArrowLeft from "@/icons/ArrowLeft.vue"
-import {computed, defineComponent, watch} from "vue"
+import {computed} from "vue"
 import {useStore} from "@/store"
 import {useI18n} from "vue-i18n";
 import {State} from "@/type/State";
+import LocalRouter from "@/components/LocalRouter.vue";
+import LinkList from "@/components/LinkList.vue";
 
 const { t } = useI18n()
 const defaultBasePath = process.env.NODE_ENV !== "development" ? import.meta.env.VITE_PRO_BASE_PATH : import.meta.env.VITE_DEV_BASE_PATH

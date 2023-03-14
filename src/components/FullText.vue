@@ -7,20 +7,20 @@
         <router-link :to="'/' + name.replace('@', '') +'/all'" class="text-primary">{{name}}</router-link>
       </template>
     </div>
-    <template v-for="(obj, order) in textObject(full_text_origin, entities, true)" :key="order">
-      <template v-for="(text, ord) in x = spreadText(obj.text)">
-        <template v-for="(textData, textOrder) in textObject(text, emojiObject(text))">
-          <span v-if="textData.text" :key="'span'+ord+order+textOrder+text" class="mb-1">{{ textData.text }}</span>
-          <img v-if="textData.tag_text && textData.url" :src="textData.url" style="height: 1em; width: 1em;" :alt="textData.tag_text" :key="'img'+ord+order+textOrder+text" class="margin-for-inner-text-svg">
+    <template v-for="(obj, order) in textObject" :key="order">
+      <template v-for="(text, ord) in obj.sub_content">
+        <template v-for="(textData, textOrder) in text" :key="'template_'+ord+order+textOrder+text">
+          <span v-if="textData.text" class="mb-1">{{ textData.text }}</span>
+          <img v-if="textData.tag_text && textData.url" :src="textData.url" style="height: 1em; width: 1em;" :alt="textData.tag_text" class="margin-for-inner-text-svg">
         </template>
-        <br v-if="ord !== x.length - 1">
+        <br v-if="ord !== obj.sub_content.length - 1">
       </template>
-      <router-link @click="e => {e.stopPropagation()}" v-if="obj.type === 'hashtag' || obj.type === 'symbol'" :to="(obj.type === 'hashtag' ? `/hashtag/` : `/cashtag/`) + obj.tag_text">{{(obj.type === 'hashtag' ? '#' : '$') + obj.tag_text }}</router-link>
+      <router-link @click="e => {e.stopPropagation()}" v-if="obj.content.type === 'hashtag' || obj.content.type === 'symbol'" :to="(obj.content.type === 'hashtag' ? `/hashtag/` : `/cashtag/`) + obj.content.tag_text">{{(obj.content.type === 'hashtag' ? '#' : '$') + obj.content.tag_text }}</router-link>
       <router-link @click="e => {e.stopPropagation()}"
-        v-else-if="(obj.type === 'user_mention' && (settings.onlineMode || userList.map(x => x.name).includes(obj.tag_text.substring(1))))"
-        :to="`/`+obj.tag_text.substring(1)+`/all`">{{ obj.tag_text }}
+        v-else-if="(obj.content.type === 'user_mention' && (settings.onlineMode || userList.map(x => x.name).includes(obj.content.tag_text.substring(1))))"
+        :to="`/`+obj.content.tag_text.substring(1)+`/all`">{{ obj.content.tag_text }}
       </router-link>
-      <a v-else @click="e => {e.stopPropagation()}" id="url" :href="obj.url" target="_blank">{{ obj.tag_text }}</a>
+      <a v-else @click="e => {e.stopPropagation()}" id="url" :href="obj.content.url" target="_blank">{{ obj.content.tag_text }}</a>
     </template>
   </div>
 </template>
@@ -72,7 +72,8 @@ const emojiObject = (text: string = ''): Entity[] => parse(text, {buildUrl: buil
   type: "emoji"
 })).sort((a, b) => a.indices_start - b.indices_start)
 const spreadText = (text: string): string[] => text.split("\n")
-const textObject = (text: string = "", entities: Entity[] = [], arrayMode: boolean = false) => {
+const removeHTMLEntities = (text: string): string => text.replaceAll('&gt;', '>').replaceAll('&lt;', '<').replaceAll("&amp;", "&").replaceAll("&quot;", '"').replaceAll('&apos;', "'")
+const contentObjectBuilder = (text: string = "", entities: Entity[] = [], arrayMode: boolean = false) => {
   let lastEnd = 0;
   let tmpText: {text: string; type: Entity["type"]; tag_text: string; url: string}[] = [];
   if (arrayMode) {
@@ -86,7 +87,7 @@ const textObject = (text: string = "", entities: Entity[] = [], arrayMode: boole
           state.replyNameList.push(entity.text)
         }
       } else {
-        tmpText.push({text: full_text_origin_array.slice(lastEnd, entity.indices_start).join('').replaceAll('&gt;', '>').replaceAll('&lt;', '<').replaceAll("&amp;", "&"), type: entity.type, tag_text: entity.text, url: entity.expanded_url,});
+        tmpText.push({text: removeHTMLEntities(full_text_origin_array.slice(lastEnd, entity.indices_start).join('')), type: entity.type, tag_text: entity.text, url: entity.expanded_url,});
       }
       lastEnd = entity.indices_end;
     })
@@ -97,15 +98,23 @@ const textObject = (text: string = "", entities: Entity[] = [], arrayMode: boole
     }
   } else {
     entities.forEach(entity => {
-      tmpText.push({text: text.substring(lastEnd, entity.indices_start), type: entity.type, tag_text: entity.text, url: entity.expanded_url,});
+      tmpText.push({text: removeHTMLEntities(text.substring(lastEnd, entity.indices_start)), type: entity.type, tag_text: entity.text, url: entity.expanded_url,});
       lastEnd = entity.indices_end;
     })
     //处理最后一段
-    let tmpLastText = text.substring(lastEnd);
+    let tmpLastText = removeHTMLEntities(text.substring(lastEnd))
     if (tmpLastText.length) {
       tmpText.push({text: tmpLastText, type: "", tag_text: "", url: "",});
     }
   }
   return tmpText;
 }
+const textObject = computed(() => contentObjectBuilder(props.full_text_origin, props.entities, true).map(content => {
+    const tmpText = spreadText(content.text)
+    return {
+      content,
+      sub_content: tmpText.map(text => contentObjectBuilder(text, emojiObject(text)))
+    }
+  })
+)
 </script>

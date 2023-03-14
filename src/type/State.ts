@@ -1,4 +1,4 @@
-import {AccountList, Translate, Tweet} from "@/type/Content";
+import {AccountList, BookMark, Translate, Tweet} from "@/type/Content";
 
 //TODO fix type
 export type TweetMode = string//'timeline' | 'tag' | 'search' | 'status'
@@ -34,6 +34,7 @@ export interface State {
   siteHeight: number
   viewportHeight: number
   altitudeDifference: number
+  scrollBarWidth: number
 
   settings: {
     language: string
@@ -45,7 +46,7 @@ export interface State {
     loadConversation: boolean
     basePath: string
     mediaPath: string
-    translatorPlatform: 'google' | 'microsoft' | 'sogou' | 'yandex' | 'baidu'
+    translatorPlatform: 'google' | 'microsoft' | 'sogou' | 'yandex' | 'baidu' | 'deepl'
   }
 
   adminMode: boolean
@@ -71,4 +72,5 @@ export interface State {
     start: string
     end: string
   }
+  bookmarks: BookMark[]
 }

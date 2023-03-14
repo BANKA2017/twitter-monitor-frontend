@@ -1,13 +1,14 @@
 <template>
-  <div id="imageList" class="mb-2" @click="e => {e.stopPropagation()}">
-    <div v-if="realList.length === 1" :style="{'height': '100%', 'aspect-ratio': isVideo(realList[0]) ? (realList[0].origin_info_width > realList[0].origin_info_height ? realList[0].origin_info_width / realList[0].origin_info_height : 1) : aspect_ratio}">
+  <div id="imageList" class="mb-2 position-relative" @click="e => {e.stopPropagation()}">
+    <!--<div style="position: absolute; top: 10%; z-index: 1;">Nudity、violence or sensitive content</div>-->
+    <div v-if="realList.length === 1" :style="{'height': '100%', 'aspect-ratio': isVideo(realList[0]) ? (realList[0].origin_info_width > realList[0].origin_info_height ? realList[0].origin_info_width / realList[0].origin_info_height : 1) : aspect_ratio, filter: isHidden ? 'blur(10px)' : false, 'background-color': isHidden ? 'rgba(0, 0, 0, 0.5)' : false}">
       <div v-if="isVideo(realList[0])" style="height: 100%; ">
         <video :id="'video_' + realList[0].tweet_id + '_0'" controls playsinline crossorigin :poster="createRealMediaPath(realMediaPath, samePath,'tweets') + realList[0].cover" :preload="preload" :style="{'aspect-ratio': (realList[0].origin_info_width > realList[0].origin_info_height ? realList[0].origin_info_width / realList[0].origin_info_height : 1)}">
           <source :src="createRealMediaPath(realMediaPath, samePath,'tweets') +realList[0].url">
         </video>
       </div>
-      <div v-else :style="`width: 100%;` + (((ratio) => ratio > 100 ? ' aspect-ratio: 1; ' : ` padding-bottom: ${ratio}%; `)(realList[0].origin_info_height / realList[0].origin_info_width * 100)) + `height: 100%; border-radius: 14px 14px 14px 14px;`" class="no-gutters card">
-        <el-image :alt="realList[0].description || realList[0].uid+'_'+realList[0].tweet_id+'_'+0" :initial-index="0" :preview-src-list="previewList" :src="createRealMediaPath(realMediaPath, samePath,'tweets') +realList[0].url+(realList[0].source !== 'tweets' ? '' : ':small')" :fit="(realList[0].origin_info_height / realList[0].origin_info_width <= 1) ? 'fill' : 'scale-down'" lazy style="width: 100%; height: 100%; position: absolute; border-radius: 14px 14px 14px 14px; padding: 1px;" preview-teleported hide-on-click-modal>
+      <div v-else :style="`width: 100%;` + (((ratio) => ratio > 100 ? ' aspect-ratio: 1; ' : ` padding-bottom: ${ratio}%; `)(realList[0].origin_info_height / realList[0].origin_info_width * 100)) + `height: 100%; border-radius: 14px;`" class="no-gutters card">
+        <el-image :alt="realList[0].description || realList[0].uid+'_'+realList[0].tweet_id+'_'+0" :initial-index="0" :preview-src-list="previewList" :src="createRealMediaPath(realMediaPath, samePath,'tweets') +realList[0].url+(realList[0].source !== 'tweets' ? '' : ':small')" :fit="(realList[0].origin_info_height / realList[0].origin_info_width <= 1) ? 'fill' : 'scale-down'" lazy style="width: 100%; height: 100%; position: absolute; border-radius: 14px; padding: 1px;" preview-teleported hide-on-click-modal>
           <template #placeholder>
             <blur-hash-canvas v-if="realList[0].blurhash && realList[0].blurhash !== 'deleted'" :hash-text="realList[0].blurhash" class="full"/>
           </template>
@@ -17,8 +18,8 @@
         </el-image>
       </div>
     </div>
-    <div v-else-if="realList.length >= 2 && realList.length <= 6">
-      <div class="card no-gutters" :style="{'width': '100%', 'padding-bottom': '56.25%', 'height': '100%', 'border-radius': '14px 14px 14px 14px'}">
+    <div :style="{filter: isHidden ? 'blur(10px)' : false, 'background-color': isHidden ? 'rgba(0, 0, 0, 0.5)' : false}" v-else-if="realList.length >= 2 && realList.length <= 6">
+      <div class="card no-gutters" :style="{'width': '100%', 'padding-bottom': '56.25%', 'height': '100%', 'border-radius': '14px'}">
         <template v-for="(mixMedia, order) in realList" :key="order">
           <video v-if="isVideo(mixMedia)" :style="listStyle[realList.length-2][order] + ' object-fit: cover;'" :id="'video_' + mixMedia.tweet_id + '_' + order" controls playsinline crossorigin :poster="createRealMediaPath(realMediaPath, samePath,'tweets') + mixMedia.cover" :preload="preload">
             <source :src="createRealMediaPath(realMediaPath, samePath,'tweets') +mixMedia.url">
@@ -34,7 +35,7 @@
         </template>
       </div>
     </div>
-    <div v-else class="row justify-content-around">
+    <div v-else class="row justify-content-around" :style="{filter: isHidden ? 'blur(10px)' : false, 'background-color': isHidden ? 'rgba(0, 0, 0, 0.5)' : false}">
       <!--应该没那么多视频...吧-->
       <div class="mx-1 mb-4 rounded-3" style="width: calc(100% / 3 - 15px); aspect-ratio: 1" v-for="(image, order) in realList" :key="order">
         <el-image class="rounded-3" style="height: 100%; width: 100%" :alt="image.uid+'_'+image.tweet_id+'_'+0" :initial-index="order" :preview-src-list="previewList" :src="createRealMediaPath(realMediaPath, samePath,'tweets') +image.url+(realList[0].source !== 'tweets' ? '' : ':small')" fit="cover" lazy preview-teleported hide-on-click-modal>
@@ -57,7 +58,7 @@
 </template>
 
 <script setup lang="ts">
-import {computed, onMounted, PropType, ref} from "vue";
+import {computed, onMounted, PropType, reactive} from "vue";
 import {Media, MediaSize, OnlineMedia} from "@/type/Content";
 import {useStore} from "@/store";
 import {createRealMediaPath} from "@/share/Tools";
@@ -140,6 +141,12 @@ const settings = computed(() => store.state.settings)
 const realMediaPath = computed(() => store.state.realMediaPath)
 const samePath = computed(() => store.state.samePath)
 
+const state = reactive<{
+  hidden: boolean
+}>({
+  hidden: false
+})
+
 const realList = computed(() => {
   let tmpNameList: string[] = []
   let tmpList: (Media | OnlineMedia)[] = []
@@ -160,7 +167,7 @@ const ratio = computed(() => {
 })
 
 const previewList = computed(() => realList.value.map(s => createRealMediaPath(realMediaPath.value, samePath.value,"tweets") + s.url + (s.source !== 'tweets' ? '' : (':' + props.size))))
-
+const isHidden = computed(() => realList.value.some(item => item.sensitive_media_warning) && state.hidden)
 const isVideo = (media: Media | OnlineMedia) => media.content_type === 'video/mp4'
 
 onMounted(() => {

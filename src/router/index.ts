@@ -4,6 +4,7 @@ const About = () => import("@/views/About.vue")
 const Api = () => import("@/views/Api.vue")
 const Stats = () => import("@/views/Stats.vue")
 const Status = () => import("@/views/Status.vue")
+const BookMarks = () => import("@/views/BookMarks.vue")
 const TimeLine = () => import("@/views/TimeLine.vue")
 const Main = () => import('@/views/Main.vue')
 const Trends = () => import("@/views/Trends.vue")
@@ -63,9 +64,9 @@ export default createRouter({
                     component: Translator,
                     name: 'translator',
                     children:[
-                      {path: '', component: Translator, name: 'translator-empty'},
-                      {path: ':name', component: Translator, name: 'translator-name'},
-                      {path: 'status/:status(\\d+)', component: Translator, name: 'translator-name-status'}
+                        {path: '', component: Translator, name: 'translator-empty'},
+                        {path: ':name', component: Translator, name: 'translator-name'},
+                        {path: 'status/:status(\\d+)', component: Translator, name: 'translator-name-status'}
                     ]
                 }
             ]
@@ -73,6 +74,7 @@ export default createRouter({
         { path: '/api', component: Api, name: 'api'},
         { path: '/i/stats', component: Stats, name: 'stats'},
         { path: '/i/status', component: Status, name: 'status'},
+        { path: '/i/bookmarks', component: BookMarks, name: 'bookmarks'},
         {
             path: '/i/trends',
             component: Trends,

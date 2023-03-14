@@ -45,10 +45,12 @@
             "no_image": "無圖"
         },
         "side_tags": {
+            "home": "主頁",
             "trends": "趨勢",
             "search": "搜索",
             "settings": "設定",
             "about": "關於",
+            "bookmarks": "書籤",
             "stats": "統計",
             "status": "狀態",
             "api": "API",

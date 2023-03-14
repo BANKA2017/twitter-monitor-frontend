@@ -45,10 +45,12 @@
             "no_image": "No image"
         },
         "side_tags": {
+            "home": "Home",
             "trends": "Trends",
             "search": "Search",
             "settings": "Settings",
             "about": "About",
+            "bookmarks": "Bookmarks",
             "stats": "Stats",
             "status": "Status",
             "api": "API",

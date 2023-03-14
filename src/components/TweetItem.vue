@@ -18,18 +18,19 @@
           </span>
         </div>
         <div @click="(e) => {e.stopPropagation()}" class="position-absolute" style="right: 1em" v-if="!translatorMode">
+          <!--bookmark-->
+          <book-mark class="text-danger mx-1" v-if="bookMarks.map(x => x.tweet_id).includes(tweet.tweet_id_str)" height="1.5rem" width="1.5rem" @click="updateBookMarks('tweet')"/>
+          <book-mark-outline class="text-danger mx-1" v-else height="1.5rem" width="1.5rem" @click="updateBookMarks('tweet')"/>
           <!--media-->
-          <span v-if="tweet.media === 1" class="ms-1" style="cursor:pointer" @click="swapDisplayPictureStatus">
-              <image-icon height="2em" status="text-success" width="2em"/>
-            </span>
-          <camera-video-icon v-if="tweet.video === 1" height="2em" status="text-danger" width="2em"/>
+          <image-icon height="2em" status="text-success" width="2em" v-if="tweet.media === 1" class="ms-1" style="cursor:pointer" @click="swapDisplayPictureStatus"/>
+          <!--<camera-video-icon v-if="tweet.video === 1" height="2em" status="text-danger" width="2em"/>-->
           <a :href="`//twitter.com/i/status/`+tweet.tweet_id_str" target="_blank">
             <box-arrow-up-right height="2em" status="text-primary" width="2em"/>
           </a>
         </div>
         <div class="row">
           <!--avatar-->
-          <div class="col-1 ps-1 pe-0" v-if="settings.onlineMode || tweet.user_info" @click="(e) => {e.stopPropagation()}">
+          <div class="col-1 ps-1 pe-0" v-if="settings.onlineMode || tweet.user_info?.header" @click="(e) => {e.stopPropagation()}">
             <router-link :to="'/' + (tweet.retweet_from_name ? tweet.retweet_user_info.name : tweet.user_info.name) + '/all'">
               <el-image :class="verifiedStatus.verified_type === 'business' ? 'rounded-3' : 'rounded-circle' " :src="createRealMediaPath(realMediaPath, samePath, 'userinfo')+ (tweet.retweet_from_name ? tweet.retweet_user_info.header : tweet.user_info.header).replace(/([\w]+)\.([\w]+)$/gm, `$1_reasonably_small.$2`)" alt="Avatar" />
             </router-link>
@@ -70,6 +71,7 @@
             <div class="mt-2" v-else-if="tweet.card !== '' && Object.keys(tweet.cardObject).length">
               <tw-card :media="tweet.mediaObject.filter(x => x.source === 'cards')" :mediaState="!settings.displayPicture" :object="tweet.cardObject" :tweet-text="tweet.full_text_origin.split(`\n`)[0]" :user-name="tweet.retweet_from ? tweet.retweet_from : tweet.display_name"></tw-card>
             </div>
+            <!--place-->
             <!--time && source-->
             <div id="foot">
               <small class="text-muted">{{ timeGap(tweet.time, now, settings.language) }} · <span class="text-primary">{{ tweet.source }}</span></small>
@@ -79,8 +81,8 @@
               <div class="d-flex justify-content-between">
                 <div class="d-inline-block">
                   <small class="me-4 text-muted fw-bold" v-if="tweet.retweet_count > 0"><retweet height="1.1rem" width="1.1rem" status="text-success me-1"/><span >{{tweet.retweet_count}}</span></small>
-                  <small class="me-4 text-muted fw-bold" v-if="tweet.quote_count > 0"><reply height="1.1rem" width="1.1rem" status="text-primary me-1"/><span >{{tweet.quote_count}}</span></small>
-                  <small class="text-muted fw-bold" v-if="tweet.favorite_count > 0"><like height="1.1rem" width="1.1rem"  status="text-danger me-1"/><span >{{tweet.favorite_count}}</span></small>
+                  <small class="me-4 text-muted fw-bold" v-if="tweet.reply_count > 0"><reply height="1.1rem" width="1.1rem" status="text-primary me-1"/><span >{{tweet.reply_count}}</span></small>
+                  <small class="me-4 text-muted fw-bold" v-if="tweet.favorite_count > 0"><like height="1.1rem" width="1.1rem"  status="text-danger me-1"/><span >{{tweet.favorite_count}}</span></small>
                 </div>
                 <!--<div class="d-inline-block" >-->
                   <!--save for image-->
@@ -103,14 +105,11 @@ import QuoteCard from "./QuoteCard.vue";
 import TwPolls from "./TwPolls.vue";
 import TwCard from "./TwCard.vue";
 import Retweet from "@/icons/Retweet.vue";
-import ImageIcon from "@/icons/ImageIcon.vue";
-import CameraVideoIcon from "@/icons/CameraVideoIcon.vue";
-import BoxArrowUpRight from "@/icons/BoxArrowUpRight.vue";
 import ExclamationCircle from "@/icons/ExclamationCircle.vue";
 import {useStore} from "@/store";
 import {computed, onMounted, PropType, ref} from "vue";
 import {useI18n} from "vue-i18n";
-import {Tweet} from "@/type/Content";
+import {BookMarkMedia, Tweet} from "@/type/Content";
 import {useRoute, useRouter} from "vue-router";
 import {request} from "@/share/Fetch";
 import {ApiUserInfo} from "@/type/Api";
@@ -120,7 +119,11 @@ import Pinned from "@/icons/Pinned.vue";
 import Verified from "@/icons/Verified.vue";
 import Reply from "@/icons/Reply.vue";
 import Like from "@/icons/Like.vue";
-
+import BookMark from "@/icons/BookMark.vue";
+import BookMarkOutline from "@/icons/BookMarkOutline.vue";
+import ImageIcon from "@/icons/ImageIcon.vue";
+import CameraVideoIcon from "@/icons/CameraVideoIcon.vue";
+import BoxArrowUpRight from "@/icons/BoxArrowUpRight.vue";
 const props = defineProps({
   tweet: {
     type: Object as PropType<Tweet>,
@@ -144,6 +147,29 @@ const tweetModeValue = computed(() => store.state.tweetMode)
 const tweetTypeValue = computed(() => store.state.tweetType)
 
 const translatorMode = computed(() => store.state.translatorMode)
+const bookMarks = computed(() => store.state.bookmarks)
+
+const updateBookMarks = (type: 'media' | 'tweet' = 'tweet') => {
+  store.dispatch('updateBookMarks', {
+    cleanAll: false,
+    tweet: {
+      type,
+      tweet_id: props.tweet?.tweet_id_str || '0',
+      uid: props.tweet?.uid_str || '0',
+      name: props.tweet?.name || '',
+      display_name: props.tweet?.display_name || '',
+      text: (props.tweet?.full_text || '').replaceAll(/(?:|\n)(?:<br>|<br \/>)(?:|\n)/gm, "\n").replaceAll(/<a.+?href="([^"]+)"[^>]+>([^<]+)<\/a>/gm, "[$2]($1)"),
+      media: props.tweet?.mediaObject?.map(media => ({
+        is_video: media.extension === 'mp4',
+        url: media.url,
+        cover: media.cover,
+        size: 1//TODO aspect ratio
+      })) || [],
+      timestamp: props.tweet?.time || 0,
+      add_timestamp: String(Number(new Date())),
+    }
+  })
+}
 
 const swapDisplayPictureStatus = () => {
   store.dispatch('swapDisplayPictureStatus')

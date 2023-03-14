@@ -4,12 +4,12 @@
     <span class="navbar-toggler-icon"></span>
   </button>
   <div class="d-grid gap-2" v-else-if="!onNav && !onMain">
-    <button class="btn btn-outline-primary btn-sm mb-4" @click="state.projectS = !state.projectS">{{t("public.user_list") }}</button>
+    <button class="btn btn-outline-primary btn-sm fw-bold fs-5 text-decoration-none d-md-block my-1" @click="state.projectS = !state.projectS">{{t("public.user_list") }}</button>
   </div>
 
   <div v-if="onMain" >
     <template v-for="(projectName, s) in projects" :key="s">
-      <el-button class="text-decoration-none mx-1 mb-2" round size="small" @click="setProject(project === projectName ? '' : projectName)">{{ projectName }}</el-button>
+      <button :class="{'me-1': true, 'btn': true, 'btn-sm': true, 'btn-primary': project === projectName, 'btn-outline-dark': project !== projectName}"  @click="setProject(project === projectName ? '' : projectName)">{{ projectName }}</button>
     </template>
     <div v-if="project && state.list.length" class="list-group my-2">
       <router-link v-for="(user, s) in state.list" :key="s" :to="`/` + user.name + `/all`" class="list-group-item list-group-item-action" @click="$refs.elDrawer.handleClose()"><b>{{ user.display_name }}</b> |
@@ -21,8 +21,8 @@
   <el-drawer v-else v-model="state.projectS" :title="t('public.user_list')" size="100vw" append-to-body ref="elDrawer">
     <div class="container">
       <div class="col-md-8 offset-md-2">
-        <template v-for="(project, s) in projects" :key="s">
-          <el-button class="text-decoration-none mx-1 mb-2" round size="small" @click="setProject(project)">{{ project }}</el-button>
+        <template v-for="(projectName, s) in projects" :key="project">
+          <button :class="{'me-1': true, 'btn': true, 'btn-sm': true, 'btn-primary': project === projectName, 'btn-outline-dark': project !== projectName}"  @click="setProject(project === projectName ? '' : projectName)">{{ projectName }}</button>
         </template>
         <div v-if="project && state.list.length" class="list-group my-2">
           <router-link v-for="(user, s) in state.list" :key="s" :to="`/` + user.name + `/all`" class="list-group-item list-group-item-action" @click="$refs.elDrawer.handleClose()"><b>{{ user.display_name }}</b> |

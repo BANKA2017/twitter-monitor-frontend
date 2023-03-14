@@ -45,10 +45,12 @@
             "no_image": "无图"
         },
         "side_tags": {
+            "home": "主页",
             "trends": "趋势",
             "search": "搜索",
             "settings": "设置",
             "about": "关于",
+            "bookmarks": "书签",
             "stats": "统计",
             "status": "状态",
             "api": "API",

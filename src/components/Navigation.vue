@@ -1,14 +1,14 @@
 <template>
   <nav id="Navigation" class="navbar navbar-expand-lg navbar-light text-center bg-light">
     <div class="container-fluid">
-      <router-link to="/" class="navbar-brand mb-0 h1 d-inline-block text-truncate text-black" style="max-width: 250px;">
+      <router-link to="/" class="navbar-brand mb-0 ms-5 h1 d-inline-block text-truncate text-black" style="max-width: 250px;">
         {{ displayName }}
       </router-link>
       <div class="btn-group" role="group">
         <button class="btn navbar-toggler" type="button" @click="$router.go(-1)">
           <span><chevron-left height="30" status="text-success" width="30"/></span>
         </button>
-        <project-list v-if="!settings.onlineMode" v-show="width < 992" :on-nav="true" />
+        <project-list v-if="!settings.onlineMode && displayAccountList" v-show="width < 992" :on-nav="true" />
         <!--<button aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation" class="btn navbar-toggler" data-target="#navbarNav" data-toggle="collapse" type="button" v-if="project && projects.length && displayType === 'timeline'">
           <span class="navbar-toggler-icon"></span>
         </button>-->
@@ -40,12 +40,17 @@
     import ChevronLeft from "@/icons/ChevronLeft.vue";
     import ProjectList from "@/components/ProjectList.vue";
 
-    defineProps({
-      //displayName: {
-      //  type: String,
-      //  default: "Twitter Monitor"// + (Vue.prototype.onlinePath ? ' Online': ''),
-      //},
+    const props = defineProps({
       displayType: String,
+      displayName: {
+        type: String,
+        default: ""// + (Vue.prototype.onlinePath ? ' Online': ''),
+      },
+      displayAccountList: {
+        type: Boolean,
+        default: true
+      }
+
     })
     const store = useStore()
     const names = computed(() => store.state.names)
@@ -53,7 +58,7 @@
     const projects = computed(() => store.state.projects)
     const width = computed(() => store.state.width)
     const settings = computed(() => store.state.settings)
-    const displayName = computed(() => "Twitter Monitor" + (settings.value.onlineMode ? " Online" : ""))
+    const displayName = props.displayName ? props.displayName : computed(() => "Twitter Monitor" + (settings.value.onlineMode ? " Online" : ""))
 </script>
 
 <style scoped>

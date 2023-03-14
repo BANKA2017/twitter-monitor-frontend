@@ -57,3 +57,12 @@ a {
   height: 100%;
   width: 100%
 }
+
+.bookmark {
+  color: transparent;
+  transition: color;
+  transition-duration: 150ms;
+  &:hover {
+    color: $danger;
+  }
+}

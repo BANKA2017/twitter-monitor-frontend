@@ -54,6 +54,7 @@ export interface Tweet {
   dispute: number
   time: number
   type: string
+  reply_count?: number
   favorite_count?: number
   retweet_count?: number
   quote_count?: number
@@ -105,6 +106,11 @@ export interface Media {
   title?: string | null
   description?: string | null
   blurhash: string | null
+  sensitive_media_warning?: {
+    adult_content?: boolean
+    graphic_violence?: boolean
+    other?: boolean
+  }
 }
 
 export interface OnlineMedia {
@@ -126,6 +132,11 @@ export interface OnlineMedia {
   id_str?: string
   uid: string
   url: string
+  sensitive_media_warning?: {
+    adult_content?: boolean
+    graphic_violence?: boolean
+    other?: boolean
+  }
 }
 
 export interface OnlineMediaList {
@@ -255,6 +266,25 @@ export interface AdvancedSearchQuery {
   order?: string
   advanced?: string
   hidden?: string
+}
+
+export interface BookMarkMedia {
+  is_video: boolean
+  url: string
+  cover: string
+  size: 1//TODO aspect ratio
+}
+
+export interface BookMark {
+  type: 'media' | 'tweet' | 'profile'
+  tweet_id?: string
+  uid: string
+  name: string
+  display_name: string
+  text?: string
+  media: BookMarkMedia[]
+  timestamp: string
+  add_timestamp: string
 }
 
 export interface sunBurstType {

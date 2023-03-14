@@ -1,7 +1,9 @@
 export class Controller {
-  private readonly controllerHandle: AbortController[];
+  private readonly controllerHandle: AbortController[]
+  private requestStatus: boolean
   constructor() {
     this.controllerHandle = [new AbortController()]
+    this.requestStatus = false
   }
   get () {
     return this.controllerHandle[this.controllerHandle.length - 1]
@@ -15,17 +17,30 @@ export class Controller {
   public get afterAbortSignal () {
     return this.controllerHandle[this.controllerHandle.length - 2].signal
   }
+  public get status () {
+    return this.requestStatus
+  }
   public abort () {
-    this.controllerHandle[this.controllerHandle.length - 1].abort()
+    if (this.requestStatus) {
+      this.controllerHandle[this.controllerHandle.length - 1].abort()
+    }
     this.controllerHandle.push(new AbortController())
+  }
+  public switchStatus (value: boolean | null = null) {
+    if (value === null) {
+      this.requestStatus = !this.requestStatus
+    } else {
+      this.requestStatus = value
+    }
   }
 }
 export const controller = new Controller()
-export const request = <T>(url: string, controller?: Controller, method: 'POST' | 'GET' | 'DELETE' | 'PUT' = 'GET', body: any = ''): Promise<T> => {
+export const request = async <T>(url: string, controller?: Controller, method: 'POST' | 'GET' | 'DELETE' | 'PUT' = 'GET', body: any = ''): Promise<T> => {
   if (!controller) {
     controller = new Controller()
   }
   controller.abort()
+  controller.switchStatus(true)
   const tmpBaseBodyType = typeof body
   let options: {
     method: 'POST' | 'GET' | 'DELETE' | 'PUT';
@@ -42,12 +57,14 @@ export const request = <T>(url: string, controller?: Controller, method: 'POST' 
   if (method === 'POST') {
     options['body'] = ((tmpBaseBodyType === 'object' ? JSON.stringify(body) : body.toString()))
   }
-  return fetch(url, options).then((response: Response) => {
+  try {
+    const response = await fetch(url, options)
+    controller?.switchStatus(false)
     if (!response.ok) {
-      throw new Error(response.statusText)
+      throw new Error(JSON.stringify(response.json()))
     }
-    return response.json()
-  }).catch((e: Error) => {
+    return await response.json()
+  } catch (e) {
     throw e
-  })
+  }
 }

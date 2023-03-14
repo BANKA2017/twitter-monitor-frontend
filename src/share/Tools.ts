@@ -69,6 +69,22 @@ const Download = (url: string, fileName: string) => {
   element.click();
   document.body.removeChild(element);
 }
+const ImportToBrowser = (e: HTMLInputElement, callback: Function) => {
+  if (!e?.files) {
+    console.log('文件不可解析')
+    return
+  }
+  let oFReader = new FileReader();
+  let oFile = e.files[0];
+  oFReader.readAsText(oFile);
+  oFReader.onload = (e) => {
+    try{
+      callback(JSON.parse(String(oFReader.result)))
+    } catch {
+      console.log('文件不可解析')
+    }
+  }
+}
 
 const VerifiedStatus = (verifiedInt: number = 0) => {
   const verifiedTypeList = [
@@ -82,4 +98,4 @@ const VerifiedStatus = (verifiedInt: number = 0) => {
   }
 }
 
-export {ScrollTo, Notice, createRealMediaPath, NullSafeParams, Equal, VerifyQueryString, autoStopVideo, Download, VerifiedStatus}
+export {ScrollTo, Notice, createRealMediaPath, NullSafeParams, Equal, VerifyQueryString, autoStopVideo, Download, ImportToBrowser, VerifiedStatus}

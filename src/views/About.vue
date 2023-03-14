@@ -55,6 +55,7 @@
             <li>我们使用 Cloudflare 作为 后端cdn 以及域名解析用，这里仅作告知</li>
             <li>我们使用 Google Analytics 作为数据分析，如有不适可使用<code>一些广告拦截工具</code>对相关域名进行拦截</li>
             <li>我们使用 Vercel 进行前端的部署，因为使用的是免费版，我们无法从此得到可分析数据</li>
+            <li>Online Mode 状态下的内容仅作为Twitter的镜像，并不保存在本地，如有删除的需要请直接向Twitter提出删除对应推文的要求</li>
             <li class="text-danger">除此以外，我们没有再使用其他任何第三方分析工具，如果您发现有多余的请求或cookie，可能说明您正在遭受中间人攻击</li>
           </ul>
           <el-divider class="my-4" />

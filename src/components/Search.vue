@@ -118,19 +118,19 @@ import SearchTips from "@/components/SearchTips.vue";
 import {useI18n} from "vue-i18n";
 import {computed, reactive, ref, Ref, watch,} from "vue";
 import {useStore} from "@/store";
-import {useRoute, useRouter} from "vue-router";
-import {Equal} from "@/share/Tools";
+import {RouteLocationNormalized, useRoute, useRouter} from "vue-router";
+import {Equal, NullSafeParams, VerifyQueryString} from "@/share/Tools";
 import {AdvancedSearchQuery} from "@/type/Content";
 
 const {t} = useI18n()
 const state = reactive<{
   keywords: Ref<string>
-  mode: Ref<0 | 1 | 2>//0->keywords, 1->date, 2->advanced
+  mode: Ref< 0 | 1 | 2 | 3 | 4>//0->keywords, 1->date, 2->advanced
   advancedSearch: {
     user: { text: string; andMode: boolean; notMode: boolean; },
     keywords: { text: string; orMode: boolean; notMode: boolean; },
     tweetType: {
-      type: 0 | 1 | 2;//0-> all, 1-> origin, 2-> retweet
+      type: 0 | 1 | 2 | 3 | 4;//0-> all, 1-> origin, 2-> retweet
       media: boolean;//media
     },
     start: string;//format 2022-02-10
@@ -166,6 +166,7 @@ const settings = computed(() => store.state.settings)
 const project = computed(() => store.state.project)
 const userList = computed(() => store.state.userList)
 const adminMode = computed(() => store.state.adminMode)
+const userTimeZone = computed(() => store.state.userTimeZone)
 const correctUserList = computed(() => userList.value.filter(x => state.keywords.slice(1).length > 0 && (RegExp(state.keywords.slice(1), 'i').test(x.name) || RegExp(state.keywords.slice(1)).test(x.display_name))))
 
 watch(() => state.mode, () => {
@@ -225,15 +226,41 @@ const queryObject = computed((): AdvancedSearchQuery => {
   }
 })
 
-if (route.name === 'search' && route.query.advanced === '1') {
-  state.mode = 2
+const updateForms = (to: RouteLocationNormalized) => {
+  if (to.name === 'search') {
+    if (to.query.advanced === '1') {
+      state.advancedSearch.keywords.text = decodeURI(to.query.q ? <string>NullSafeParams(to.query.q, '') : <string>NullSafeParams(to.params.search, ''))
+      state.advancedSearch.keywords.orMode = VerifyQueryString(to.query.text_or_mode, '0') !== '0'
+      state.advancedSearch.keywords.notMode = VerifyQueryString(to.query.text_not_mode, '0') !== '0'
+      state.advancedSearch.user.text = <string>NullSafeParams(to.query.user, '')
+      state.advancedSearch.user.andMode = VerifyQueryString(to.query.user_and_mode, '0') !== '0'
+      state.advancedSearch.user.notMode = VerifyQueryString(to.query.user_not_mode, '0') !== '0'
+      const tmpTweetType = Number(VerifyQueryString(to.query.tweet_type, 0))
+      //state.advancedSearch.tweetType.type = (tmpTweetType && tmpTweetType > -1 && tmpTweetType < 5) ? tmpTweetType : 0//0-> all, 1-> origin, 2-> retweet, 3 -> album, 4 -> space
+      state.advancedSearch.tweetType.media = VerifyQueryString(to.query.tweet_media, '0') !== '0'//media
+      state.advancedSearch.start = (!to.query.start ? -1 : Date.parse(to.query.start + ' GMT' + userTimeZone.value) / 1000).toString()
+      state.advancedSearch.end = (!to.query.end ? -1 : Date.parse(to.query.end + ' GMT' + userTimeZone.value) / 1000).toString()
+      state.advancedSearch.order = VerifyQueryString(to.query.order, '0') === '1'
+      state.mode = 2
+      if (adminMode) {
+        state.advancedSearch.hidden = VerifyQueryString(to.query.order, '0') === '1'
+      }
+    } else {
+      state.keywords = decodeURI(to.query.q ? <string>NullSafeParams(to.query.q, '') : <string>NullSafeParams(to.params.search, ''))
+    }
+  }
 }
+updateForms(route)
 router.afterEach((to, from) => {
   if (to.name !== 'search') {
     state.keywords = ''
   }
-  if ((from.name === 'name-display' || from.name === 'name-status') && to.name === 'search') {
+  if ((typeof from.name === 'string' && ['name-display', 'name-status', 'no-name-status'].includes(from.name)) && to.name === 'search') {
     state.name = from.params.name.toString()
+    updateForms(to)
+  } else if (to.name === 'search') {
+    state.name = ""
+    updateForms(to)
   } else {
     state.name = ""
   }
