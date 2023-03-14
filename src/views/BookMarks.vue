@@ -117,7 +117,7 @@ const constructBookMarkItem = computed(() => bookmarks.value.map(x => ({
           }
         }
       }
-      return {...media, source: "tweets", basename, filename, extension, tweet_id: x.tweet_id, uid: x.uid, origin_info_height: 720 * 9 / 16, origin_info_width: 720, content_type: extension === 'mp4' ? "video/mp4" : `image/${extension === 'jpg' ? 'jpeg' : extension}`}
+      return {...media, source: "tweets", basename, filename, extension, tweet_id: x.tweet_id, uid: x.uid, origin_info_height: 720 / (media.size || 1), origin_info_width: 720, content_type: extension === 'mp4' ? "video/mp4" : `image/${extension === 'jpg' ? 'jpeg' : extension}`}
     }),
     media: x.media.length ? 1 : 0,
     video: x.media.some(y => y.is_video),

@@ -164,7 +164,7 @@ const updateBookMarks = (type: 'media' | 'tweet' = 'tweet') => {
         is_video: media.extension === 'mp4',
         url: media.url,
         cover: media.cover,
-        size: 1//TODO aspect ratio
+        size: media.origin_info_width/media.origin_info_height//TODO aspect ratio
       })) || [],
       timestamp: props.tweet?.time || 0,
       add_timestamp: String(Number(new Date())),
