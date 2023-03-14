@@ -24,7 +24,7 @@
             </div>
           </div>
           <div v-if="state.mediaMode" class="mb-2 row">
-            <tweet-images class="col-md-6" :unlimited="true" :list="mediaItems" v-for="mediaItems in constructBookMarkItem.map(media => media.mediaObject)" :key="`${mediaItems.tweet_id}_${mediaItems.uid}`"/>
+            <tweet-images class="col-md-6" :unlimited="true" :list="mediaItems" v-for="mediaItems in constructBookMarkItem.filter(media => media.media).map(media => media.mediaObject)" :key="`${mediaItems.tweet_id}_${mediaItems.uid}`"/>
           </div>
           <div v-else class="mb-2 row" v-for="bookmark in constructBookMarkItem" :key="`${bookmark.type}_${bookmark.tweet_id}_${bookmark.uid}`">
             <div class="col-lg-9 order-1 order-lg-0">
