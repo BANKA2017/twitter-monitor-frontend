@@ -8,7 +8,7 @@
         </video>
       </div>
       <div v-else :style="`width: 100%;` + (((ratio) => ratio > 100 ? ' aspect-ratio: 1; ' : ` padding-bottom: ${ratio}%; `)(realList[0].origin_info_height / realList[0].origin_info_width * 100)) + `height: 100%; border-radius: 14px;`" class="no-gutters card">
-        <el-image :alt="realList[0].description || realList[0].uid+'_'+realList[0].tweet_id+'_'+0" :initial-index="0" :preview-src-list="previewList" :src="createRealMediaPath(realMediaPath, samePath,'tweets') +realList[0].url+((parseURL(realList[0].url).search) ? '' : ':small')" :fit="(realList[0].origin_info_height / realList[0].origin_info_width <= 1) ? 'fill' : 'scale-down'" lazy style="width: 100%; height: 100%; position: absolute; border-radius: 14px; padding: 1px;" preview-teleported hide-on-click-modal>
+        <el-image :alt="realList[0].description || realList[0].uid+'_'+realList[0].tweet_id+'_'+0" :initial-index="0" :preview-src-list="previewList" :src="createRealMediaPath(realMediaPath, samePath,'tweets') +realList[0].url+((parseURL(realList[0].url).search) ? '' : ':small')" :fit="(realList[0].origin_info_height / realList[0].origin_info_width <= 1) && !scaleDown ? 'fill' : 'scale-down'" lazy style="width: 100%; height: 100%; position: absolute; border-radius: 14px; padding: 1px;" preview-teleported hide-on-click-modal>
           <template #placeholder>
             <blur-hash-canvas v-if="realList[0].blurhash && realList[0].blurhash !== 'deleted'" :hash-text="realList[0].blurhash" class="full"/>
           </template>
@@ -104,6 +104,10 @@ const props = defineProps({
   size: {
     type: String as PropType<MediaSize>,
     default: "orig",
+  },
+  scaleDown: {
+    type: Boolean,
+    default: false,
   },
 })
 
