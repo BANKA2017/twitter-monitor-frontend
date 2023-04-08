@@ -84,7 +84,7 @@
               <tmv2-chart :chart-rows="userData.count_data" :colors="userData.color" :label-map="userData.label" chart-type="line" chartHeight="500px" title="关注数" :set-option="{notMerge: true}"/>
               <sun-burst-chart class="mb-2" title="涨粉占比" height="500px" :data="accountDataForSunBurst" :levels="sunBurstLevels" />
               <word-cloud-chart class="mb-2" title="Tags" :data="wordCloud" :size-range="[10, 70]" height="470px" />
-              <el-table class="mb-2" ref="accountData" v-loading="!state.trendsData.data.length" :data="tableData" :default-sort="{prop: 'followers_add', order: 'descending'}" style="cursor: pointer; width: 100%" @row-click="(row) => {ScrollTo();$router.push('/i/topics/lovelive_trends/' + row.name)}">
+              <el-table class="mb-2" ref="accountData" v-loading="!state.trendsData.data.length" :data="tableData.sort((a, b) => b.followers_add - a.followers_add)" :default-sort="{prop: 'followers_add', order: 'descending'}" style="cursor: pointer; width: 100%" @row-click="(row) => {ScrollTo();$router.push('/i/topics/lovelive_trends/' + row.name)}">
                 <el-table-column label="名称">
                   <template #default="scope">
                     <!--<el-button @click="() => {state.status.name = scope.row.name; state.status.value = 'info'}" type="text" size="small">详情</el-button>-->
@@ -234,7 +234,7 @@ const tableData = computed((): {
       followers_growth_rate: string
       tweets_count: number
       origin_ratio: string
-      team: "Aqours"  | "虹ヶ咲学園" | "Liella!" | "蓮ノ空女学院"
+      team: string //"Aqours"  | "虹ヶ咲学園" | "Liella!" | "蓮ノ空女学院"
     }[] => state.trendsData.data.filter(y => selectedTeams.value.has(y.team)).map((x, order) => ({
     order,
     name: x.name,
@@ -252,7 +252,7 @@ const accountDataForSunBurst = computed(() => {
   let tmpSunBurstData: { [p: string]: sunBurstType } = {"Aqours": {}, "虹ヶ咲学園": {}, "Liella!": {}, "蓮ノ空女学院": {}}
   for (const key in tableData.value) {
     const accountData = tableData.value[key]
-    if (Object.keys(tmpSunBurstData[accountData.team]).length === 0) {
+    if (!tmpSunBurstData[accountData.team]?.children) {
       tmpSunBurstData[accountData.team] = {
         name: accountData.team,
         itemStyle: {color: color[accountData.team]},
@@ -282,7 +282,7 @@ const timeCountRows = computed(() => {
   return data
 })
 const userData = computed(() => {
-  let label: {[p: 'day' | string]: string | number} = {day: "日期"}
+  let label: {[p: string]: string, 'day': string} = {day: "日期"}
   let color: string[] = []
   let data: {[p: 'day' | string]: string | number}[] = [{day: "星期日"}, {day: "星期一"}, {day: "星期二"}, {day: "星期三"}, {day: "星期四"}, {day: "星期五"}, {day: "星期六"}]
   let count_data: {[p: 'day' | string]: string | number}[] = [{day: "星期日"}, {day: "星期一"}, {day: "星期二"}, {day: "星期三"}, {day: "星期四"}, {day: "星期五"}, {day: "星期六"}]
