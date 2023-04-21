@@ -1,4 +1,4 @@
-import {AccountList, BookMark, Translate, Tweet} from "@/type/Content";
+import {AccountList, BookMark, Translate, Tweet, UserInfo} from "@/type/Content";
 
 //TODO fix type
 export type TweetMode = string//'timeline' | 'tag' | 'search' | 'status'
@@ -24,6 +24,8 @@ export interface State {
   tweetMode: TweetMode
   tweetType: TweetType
   updatedCharts: boolean
+
+  userInfo: UserInfo
 
   home: boolean
   project: string

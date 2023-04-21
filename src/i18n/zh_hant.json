@@ -42,7 +42,8 @@
             "media": "媒體",
             "album": "圖庫",
             "spaces": "空間",
-            "no_image": "無圖"
+            "no_image": "無圖",
+            "include_reply": "回復"
         },
         "side_tags": {
             "home": "主頁",

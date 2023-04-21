@@ -42,7 +42,8 @@
             "media": "媒体",
             "album": "图库",
             "spaces": "空间",
-            "no_image": "无图"
+            "no_image": "无图",
+            "include_reply": "回复"
         },
         "side_tags": {
             "home": "主页",

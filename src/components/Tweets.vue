@@ -99,15 +99,26 @@ const height = computed(() => store.state.height)
 const siteHeight = computed(() => store.state.siteHeight)
 const viewportHeight = computed(() => store.state.viewportHeight)
 const translatorMode = computed(() => store.state.translatorMode)
+const userInfo = computed(() => store.state.userInfo)
 
 const displayMode = [
   [t("timeline.nav_bar.all"), 'all', 0],
-  [t("timeline.nav_bar.origin"), 'self', 0],
-  [t("timeline.nav_bar.retweet"), 'retweet', 0],
-  [t("timeline.nav_bar.media"), 'media', 0],
-  [t("timeline.nav_bar.album"), 'album', 0],
-  [t("timeline.nav_bar.spaces"), 'space', 0]
 ]
+
+if (!settings.value.onlineMode) {
+  displayMode.push(
+    [t("timeline.nav_bar.origin"), 'self', 0],
+    [t("timeline.nav_bar.retweet"), 'retweet', 0],
+    [t("timeline.nav_bar.media"), 'media', 0],
+    [t("timeline.nav_bar.album"), 'album', 0],
+    [t("timeline.nav_bar.spaces"), 'space', 0]
+  )
+} else {
+  displayMode.push(
+    [t("timeline.nav_bar.include_reply"), 'include_reply', 0],
+  )
+}
+
 const swapDisplayPictureStatus = () => {
   store.dispatch('swapDisplayPictureStatus')
 }
@@ -161,9 +172,9 @@ const setTweetMode = (tweetModeValue: TweetMode) => {
 const routeCase = (to: RouteLocationNormalized) => {
   store.dispatch({type: 'setCoreValue', key: 'home', value: false})
   //status 不需要
-  let displayIndex = ["all", "self", "retweet", "media", "album", "space"].indexOf(<string>NullSafeParams(to.params.display, ''))
+  let displayIndex = ["all", "self", "retweet", "media", "album", "space", "include_reply"].indexOf(<string>NullSafeParams(to.params.display, ''))
   if (displayIndex !== -1 && (to.name !== 'name-status' && to.name !== 'no-name-status')) {
-    setTweetType(["all", "self", "retweet", "media", "album", "space"][displayIndex])
+    setTweetType(["all", "self", "retweet", "media", "album", "space", "include_reply"][displayIndex])
   } else if (to.name === 'name-status' || to.name === 'no-name-status' || to.name === 'translator-name-status') {
     setTweetType('status')
   } else {
@@ -222,6 +233,8 @@ const routeCase = (to: RouteLocationNormalized) => {
     default:
       url += 'tweets/'
       queryStringObject.set('name', <string>NullSafeParams(to.params.name, ''))
+      queryStringObject.set('count', '20')
+      queryStringObject.set('uid', <string>NullSafeParams(userInfo.value.uid_str, '0'))
       queryStringObject.set('display', <string>NullSafeParams(to.params.display, 'all'))
       setTweetMode('timeline')
   }
@@ -328,6 +341,9 @@ const emptyTranslateList = () => {
 //TODO fix unknown to no-name-status
 //TODO fix repeated request
 const routeRun = (to: RouteLocationNormalized, from: RouteLocationNormalized | {name: string}) => {
+  if (settings.value.onlineMode && to.name === 'name-display' && (!userInfo.value.uid_str || userInfo.value.uid_str === '0')) {
+    return
+  }
   if ((from.name === 'no-name-status' && to.name === 'name-status') || (!RouterNameList.timeline.has(typeof to.name === 'string' ? to.name : '') && to.name !== 'main')) {return}
 
   //if ( || (RouterNameList.timeline.has(typeof to.name === 'string' ? to.name : '') && from.name === 'search')) {
@@ -366,7 +382,11 @@ routeRun(route, {name: 'everywhere'})
 router.afterEach((to, from) => {
   routeRun(to, from)
 })
-
+watch(userInfo, () => {
+  if (userInfo.value?.uid_str && userInfo.value?.uid_str !== '0') {
+    routeRun(route, {name: 'everywhere'})
+  }
+})
 </script>
 
 <style scoped lang="scss">

@@ -42,7 +42,8 @@
             "media": "Media",
             "album": "Album",
             "spaces": "Spaces",
-            "no_image": "No image"
+            "no_image": "No image",
+            "include_reply": "Replies"
         },
         "side_tags": {
             "home": "Home",
