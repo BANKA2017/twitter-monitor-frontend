@@ -9,8 +9,8 @@
         <p v-if="tweet.dispute === 1"><small class="text-muted"><exclamation-circle height="1em" status="" width="1em" /> {{ t("tweet.text.this_is_a_dispute_tweet") }}
           <router-link to="/about">{{ t("tweet.text.learn_more") }}</router-link>
         </small></p>
-        <div :dir="tweet.rtl ? 'rtl' : 'ltr'" class="mb-1" @click="(e) => {e.stopPropagation()}">
-          <span style="font-size: 0.75em" class="text-muted" v-if="tweet.retweet_from">
+        <div :dir="tweet.rtl ? 'rtl' : 'ltr'" class="mb-1 ms-4 ms-md-5" @click="(e) => {e.stopPropagation()}">
+          <span style="font-size: 0.75em;" class="text-muted" v-if="tweet.retweet_from">
             <retweet height="1em" status="" width="1em"/>
             <router-link :to="`/`+(settings.onlineMode ? tweet.retweet_from_name : tweet.name) + `/all`" class="text-muted">
               <full-text :entities="[]" :full_text_origin="tweet.display_name" />
@@ -127,7 +127,32 @@ import BoxArrowUpRight from "@/icons/BoxArrowUpRight.vue";
 const props = defineProps({
   tweet: {
     type: Object as PropType<Tweet>,
-    default: () => ({})
+    default: () => ({
+      tweet_id: '0',
+      tweet_id_str: '0',
+      conversation_id_str: '0',
+      uid: '0',
+      uid_str: '0',
+      name: '',
+      display_name: '',
+      media: 0,
+      video: 0,
+      card: '',
+      poll: 0,
+      quote_status: '0',
+      quote_status_str: '0',
+      source: '',
+      full_text: '',
+      full_text_origin: '',
+      retweet_from: '',
+      retweet_from_name: '',
+      dispute: 0,
+      time: 0,
+      type: 'tweet',
+      entities: [],
+      pollObject: [],
+      mediaObject: []
+    })
   }
 })
 

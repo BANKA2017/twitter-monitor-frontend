@@ -271,7 +271,7 @@ const update = () => {
     state.loadingTimeline = false
   }).catch(e => {
     if (controllerList.update.afterAbortSignal.aborted) {
-      Notice(t("public.loading"), "warning")
+      //Notice(t("public.loading"), "warning")
     } else {
       state.loadingTimeline =  false
       Notice(String(e), 'error')
@@ -280,17 +280,29 @@ const update = () => {
 }
 
 const loading = (top: boolean = false, mute: boolean = false) => {
-  if (state.topTweetId && state.bottomTweetId) {
+  if (state.topTweetId || state.bottomTweetId) {
     let tmpQueryObject = state.queryObject
-    if (top) {
+    if (top && state.topTweetId) {
       store.dispatch('setCoreValue', {key: 'updatedCharts', value: false})// update charts
       state.loadingTop = !mute
       tmpQueryObject.set("refresh", '1')
-      tmpQueryObject.set("tweet_id", state.topTweetId)
-    } else {
+      if (route.name === 'no-name-status' || route.name === 'name-status') {
+        tmpQueryObject.set("cursor", state.topTweetId)
+      } else {
+        tmpQueryObject.set("tweet_id", state.topTweetId)
+      }
+    } else if (!top && state.bottomTweetId) {
       state.loadingBottom = !mute
       tmpQueryObject.set("refresh", '0')
-      tmpQueryObject.set("tweet_id", state.bottomTweetId)
+      if (route.name === 'no-name-status' || route.name === 'name-status') {
+        tmpQueryObject.set("cursor", state.bottomTweetId)
+      } else {
+        tmpQueryObject.set("tweet_id", state.bottomTweetId)
+      }
+    } else {
+      console.error(state.topTweetId, state.bottomTweetId)
+      Notice(t("timeline.scripts.message.missing_parameter"), "error")
+      return
     }
     request<ApiTweets>(state.url + '?' + tmpQueryObject.toString(), controllerList.loading).then(response => {
       if (top) {
@@ -323,7 +335,7 @@ const loading = (top: boolean = false, mute: boolean = false) => {
         state.loadingBottom = false
       }
       if (controllerList.loading.afterAbortSignal.aborted) {
-        Notice(t("public.loading"), "warning")
+        //Notice(t("public.loading"), "warning")
       } else {
         Notice(String(e), "error")
       }
@@ -340,7 +352,7 @@ const emptyTranslateList = () => {
 
 //TODO fix unknown to no-name-status
 //TODO fix repeated request
-const routeRun = (to: RouteLocationNormalized, from: RouteLocationNormalized | {name: string}) => {
+const routeRun = (to: RouteLocationNormalized, from: RouteLocationNormalized | {name: string, params: {[p in string]: string | number | boolean}}) => {
   if (settings.value.onlineMode && to.name === 'name-display' && (!userInfo.value.uid_str || userInfo.value.uid_str === '0')) {
     return
   }
@@ -377,14 +389,17 @@ const AutoRefresh = () => {
   setTimeout(() => AutoRefresh(), 1000)
 }
 //first entry
-routeRun(route, {name: 'everywhere'})
+if (!settings.value.onlineMode || route.name !== 'name-display') {
+  routeRun(route, {name: 'everywhere', params: {}})
+}
+
 //update
 router.afterEach((to, from) => {
   routeRun(to, from)
 })
 watch(userInfo, () => {
-  if (userInfo.value?.uid_str && userInfo.value?.uid_str !== '0') {
-    routeRun(route, {name: 'everywhere'})
+  if (userInfo.value?.uid_str && userInfo.value?.uid_str !== '0' && settings.value.onlineMode && route.name === 'name-display') {
+    routeRun(route, {name: 'userPage', params: {}})
   }
 })
 </script>
