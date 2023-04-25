@@ -59,7 +59,7 @@
 </template>
 
 <script setup lang="ts">
-import {computed, inject} from "vue"
+import {computed} from "vue"
 import {useStore} from "../store"
 import {useI18n} from "vue-i18n";
 import {State} from "../types/State";
@@ -75,7 +75,7 @@ const store = useStore()
 const settings = computed(() => store.state.settings)
 const languageList = computed(() => store.state.languageList)
 const adminMode = computed(() => store.state.adminMode)
-const force_online = inject('online_mode')
+const force_online = computed(() => store.state.forceOnline)
 
 //const basePath = computed({
 //  get () {return store.getters.getBasePath},

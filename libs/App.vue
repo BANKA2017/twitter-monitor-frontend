@@ -20,7 +20,7 @@
 <script lang="ts">
   import {useHead} from "@vueuse/head";
   import {store, useStore} from "./store";
-  import {computed, inject, onMounted, reactive, watch} from "vue";
+  import {computed, onMounted, reactive, watch} from "vue";
   import {request} from "./share/Fetch";
   import {ApiAccounts} from "./types/Api";
   import {Notice} from "./share/Tools";
@@ -47,7 +47,7 @@
       const onlinePath = computed(() => store.state.onlinePath)
       const adminMode = computed(() => store.state.adminMode)
       const bookMarks = computed(() => store.state.bookmarks)
-      const force_online = inject('online_mode')
+      const force_online = computed(() => store.state.forceOnline)
       useHead({
         title,
         meta: [

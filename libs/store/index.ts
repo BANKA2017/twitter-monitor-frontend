@@ -10,7 +10,7 @@ const basePath = !devmode ? import.meta.env.VITE_PRO_BASE_PATH : import.meta.env
 const mediaPath = import.meta.env.VITE_MEDIA_PATH ? import.meta.env.VITE_MEDIA_PATH : basePath + '/api/v3/media/'
 const twemojiBasePath = import.meta.env.VITE_TW_EMOJI_PATH//twemoji
 const onlinePath = import.meta.env.VITE_ONLINE_PATH ? import.meta.env.VITE_ONLINE_PATH : ''
-
+const forceOnlineMode = !(import.meta.env.VITE_DEV_BASE_PATH??import.meta.env.VITE_PRO_BASE_PATH??'')
 
 export const key: InjectionKey<Store<State>> = Symbol()
 
@@ -41,6 +41,7 @@ export const store = createStore<State>({
     scrollBarWidth: 0,
     hasBeenSyncFromLocalStorage: false,
     devmode,
+    forceOnline: forceOnlineMode,
     settings: {
       language: "zh-cn",//简体中文
       cookie_accept: false,

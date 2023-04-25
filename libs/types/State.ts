@@ -11,6 +11,7 @@ export interface State {
   userTimeZone: string
   darkMode: boolean
   devmode: boolean
+  forceOnline: boolean
 
   projects: string[]
   links: {url: string; display: string}[]
