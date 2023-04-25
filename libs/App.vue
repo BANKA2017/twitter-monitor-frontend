@@ -124,7 +124,7 @@
       //localStorage
       let tm_settings = localStorage.getItem('tm_settings')
       if (!tm_settings || Object.keys(JSON.parse(tm_settings)).join('') !== Object.keys(settings.value).join('')) {
-        if (force_online) {
+        if (force_online.value) {
           store.dispatch('updateSettingsItem', {key: 'basePath', value: onlinePath.value})
           store.dispatch("updateSettingsItem", {key: "onlineMode", value: true})
         }
@@ -133,7 +133,7 @@
       } else {
         //TODO support third-party interface
         let tmpSettings = JSON.parse(tm_settings)
-        if (force_online) {
+        if (force_online.value) {
           tmpSettings.onlineMode = true
         }
         if (tmpSettings.basePath) {
