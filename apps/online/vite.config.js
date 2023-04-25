@@ -1,7 +1,7 @@
 import {defineConfig} from 'vite'
 const { resolve } = require('path')
 import vue from '@vitejs/plugin-vue'
-import {vueI18n} from "@intlify/vite-plugin-vue-i18n";
+import VueI18nPlugin from '@intlify/unplugin-vue-i18n/vite'
 import AutoImport from 'unplugin-auto-import/vite'
 import Components from 'unplugin-vue-components/vite'
 import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
@@ -27,7 +27,7 @@ export default defineConfig({
     },
     plugins: [
         vue(),
-        vueI18n({include: resolve(__dirname, '../../lib/i18n/*.json')}),
+        VueI18nPlugin({include: resolve(__dirname, '../../lib/i18n/*.json'), runtimeOnly: false,}),
         //visualizer({open: true, gzipSize: true, brotliSize: true, template: 'treemap'}),
         AutoImport({
             resolvers: [ElementPlusResolver()],

@@ -41,7 +41,7 @@
     "workbox-window": "^6.5.4"
   },
   "devDependencies": {
-    "@intlify/vite-plugin-vue-i18n": "^5.0.1",
+    "@intlify/unplugin-vue-i18n": "^0.10.0",
     "@types/echarts": "^4.9.16",
     "@types/html2canvas": "^1.0.0",
     "@types/lodash-es": "^4.17.6",

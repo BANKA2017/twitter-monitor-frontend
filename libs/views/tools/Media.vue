@@ -50,9 +50,9 @@
               <a v-else :href="createRealMediaPath(realMediaPath, samePath,'tweets') + video.url.replace('https://', '')" class="text-muted text-decoration-none list-group-item list-group-item-action d-flex justify-content-between align-items-center" target="_blank" v-for="(video, order) in ((state.rawData.video_info.filter(x => RegExp(mediaInfo.media_key.split('_')[1]).test(x.variants[0].url))[0]||[])?.variants||[]).sort((a, b) => (b.bitrate || 0) - (a.bitrate || 0))" :key="order">
                 {{ video.url.replace(/.*\/(.*)\.(?:mp4|m3u8).*/, `$1`)}}
                 <div>
-                  <span class="badge bg-success rounded-pill">{{ mediaOrder+1 }}</span>
-                  <span class="badge bg-primary rounded-pill ms-1">{{ video.content_type === 'video/mp4' ? video.url.replace(/.*\/([\d]+)\/pu\/(?:vid|pl)\/(([\d]+x[\d]+)|).*/, `$2`) : `m3u8` }}</span>
-                  <span v-if="video.content_type === 'video/mp4'" class="badge bg-primary rounded-pill ms-1">{{ video.bitrate / 1000 + ' kbps'}}</span>
+                  <span class="badge bg-primary rounded-pill">{{ video.content_type === 'video/mp4' ? video.url.replace(/.*\/(\d+x\d+)\/.*/, `$1`) : `m3u8` }}</span>
+                  <span v-if="video.content_type === 'video/mp4'" class="badge bg-primary rounded-pill ms-1 d-none d-md-inline-block">{{ video.bitrate / 1000 + ' kbps'}}</span>
+                    <span class="badge bg-success rounded-pill ms-1">{{ mediaOrder+1 }}</span>
                 </div>
               </a>
             </template>

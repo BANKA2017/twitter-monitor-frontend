@@ -12,7 +12,7 @@
           </div>
         </div>
         <div class="col-lg-9">
-          <div class="input-group" style="top: 2em;">
+          <div class="input-group mt-3" >
             <span class="input-group-text" id="api_path">{{ t("settings.api_path") }}</span>
             <input v-model="settings.basePath" aria-describedby="api_path" aria-label="Sizing example input" class="form-control" type="text" disabled>
           </div>
