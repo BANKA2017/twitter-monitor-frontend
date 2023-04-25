@@ -1,5 +1,0 @@
-User-agent: *
-Disallow: /tmv1/*
-Disallow: /search/*
-Disallow: /hashtag/*
-Disallow: /cashtag/*

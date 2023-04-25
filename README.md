@@ -1,43 +1,74 @@
 # twitter-monitor-frontend v3 (DEV)
 
-⚠ NEXT GENERATION `API` WRITTEN BY `NODEJS` IS NOT YET AN OPEN SOURCE PROJECT, `PHP` VERSION WILL BE UPDATED SOON 
+[ [EN](#Deploy) | [中文](#部署) ]
 
-## How to
+## About
 
-- Create file `.env.local`
-- Edit file `.env.local`
+The [Twitter Monitor Frontend](https://github.com/BANKA2017/twitter-monitor-frontend) is the front-end component designed for the [Twitter Monitor](https://github.com/BANKA2017/twitter-monitor), used to display data collected by the monitor or as a third-party client for browsing Twitter (without direct access to its backend).
 
-  ```dotenv
+All functions include but are not limited to 
+- Browsing user tweets
+- Translating tweets
+- Searching tweets
+- Bookmarking/Exporting tweets
+- Downloading images/videos
+- Listening to Spaces/Broadcasts
+
+More information about Twitter monitor -> <https://github.com/BANKA2017/twitter-monitor>.
+
+## Deploy
+
+### Environment variables
+
+```dotenv
   #deploy https://github.com/BANKA2017/twitter-monitor in local
   VITE_DEV_BASE_PATH="http://192.168.123.101:3000"
-  
   VITE_PRO_BASE_PATH="https://example.com"
+  
+  VITE_ONLINE_PATH="https://example.com/online"
   
   #tw_emoji
   VITE_TW_EMOJI_PATH="https://twemoji.maxcdn.com/v/latest/"
   
+  
   #do not empty
   VITE_MEDIA_PATH="https://example.com/media/"
-  VITE_GA_ID=""//Google analytics
+  
+  #Google analytics
+  VITE_GA_ID=""
 
   ```
 
-- `yarn`
-- `yarn run dev`
+Copy the `.env.example` file located in the `~/app/*/` directory and rename it to `.env`, then edit the environment variables.
+
+将会包含完整的Twitter Monitor页面和模块，打包文件将会更大，您需要补充完整环境变量的每一项
+将只包含Online Mode的页面，打包文件更小，请补充环境变量除了xx与yy以外的每一项。
+由于与完整版共用UserInfo模块，因此会为 Tmv2ChartWithoutDataSet 生成模块，但实际使用时并不会用到。
+
+
+### Full mode
+
+The package will include the complete Twitter Monitor page and modules, resulting in a larger file size. You will need to fill in all environment variables.
+
+Demo: <https://tm.bangdream.fun>
+
+### Only online mode
+
+The package will only contain the Online Mode page, resulting in a smaller file size. Please fill in all environment variables except for `VITE_DEV_BASE_PATH` and `VITE_PRO_BASE_PATH`.
+
+As `UserInfo` module is shared with the full version, `Tmv2ChartWithoutDataSet` module will be generated but not used in practice.
+
+Demo: <https://tm.nest.moe>
 
 ## Translation
 
-check more in `/src/i18n/`, base language is **Chinese simplified（zh-hans）**
+check more in `/libs/i18n/`, base language is **Chinese simplified（zh-hans）**
 
 - 简体中文 (zh-hans)
 - 繁體中文/正體中文 (zh-hant)
 - English (en) (Need help)
 - 日本語 (ja) (Need help)
 - 한국어 (ko) (Need help)
-
-## Backend
-
-[Twitter Monitor](https://github.com/BANKA2017/twitter-monitor)
 
 ## More
 
@@ -51,38 +82,55 @@ check more in `/src/i18n/`, base language is **Chinese simplified（zh-hans）**
 
 ## 中文
 
-⚠ 由`NodeJS`编写的下一代`API`还未开源，近期我将会更新`PHP`版的`API`
-
 ## 部署
 
-- 创建文件 `.env.local` 并编辑
+### 环境变量
 
-  ```dotenv
+```dotenv
   #我将 https://github.com/BANKA2017/twitter-monitor 部署在本地
   VITE_DEV_BASE_PATH="http://192.168.123.101:3000"
-  
   VITE_PRO_BASE_PATH="https://example.com"
+  
+  VITE_ONLINE_PATH="https://example.com/online"
   
   #tw_emoji
   VITE_TW_EMOJI_PATH="https://twemoji.maxcdn.com/v/latest/"
   
+  
   #媒体文件代理请务必不要留空
   VITE_MEDIA_PATH="https://example.com/media/"
-  VITE_GA_ID=""//Google analytics
+  
+  #Google analytics
+  VITE_GA_ID=""
 
   ```
 
-- `yarn`
-- `yarn run dev`
+您可以拷贝位于 `~/app/*/` 目录下的 `.env.example` 并重命名为 `.env`，然后编辑环境变量
+
+### Full mode
+
+将会包含完整的Twitter Monitor页面和模块，打包文件将会更大，您需要补充完整环境变量的每一项
+
+Demo: <https://tm.bangdream.fun>
+
+### Only online mode
+
+将只包含 Online mode 的页面，打包文件更小，请补充环境变量除了 `VITE_DEV_BASE_PATH` 与 `VITE_PRO_BASE_PATH` 以外的每一项。
+
+由于与完整版共用 `UserInfo` 模块，因此会为 `Tmv2ChartWithoutDataSet` 生成模块，但实际使用时并不会用到。
+
+
+Demo: <https://tm.nest.moe>
 
 ## 翻译
 
-检查目录 `/src/i18n/` 了解更多，我只能确保 **简体中文（zh-hans）** 用词的准确性
+检查目录 `/libs/i18n/` 了解更多，我只能确保 **简体中文（zh-hans）** 用词的准确性
+
 - 简体中文 (zh-hans)
 - 繁體中文/正體中文 (zh-hant)
-- English (en) (很烂)
-- 日本語 (ja) (根本没有)
-- 한국어 (ko) (根本没有)
+- English (en) (Need help)
+- 日本語 (ja) (Need help)
+- 한국어 (ko) (Need help)
 
 ## 更多
 

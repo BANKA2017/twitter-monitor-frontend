@@ -16,7 +16,7 @@
     "types": ["vite-plugin-pwa/client", "node"],
     "paths": {
       "@/*": [
-        "src/*"
+        "lib/*"
       ]
     },
     "lib": [
@@ -27,8 +27,10 @@
   },
   "include": [
     "*.js",
-    "src/**/*.ts",
-    "src/**/*.tsx",
-    "src/**/*.vue",
+    "lib/**/*.ts",
+    "lib/**/*.tsx",
+    "lib/**/*.vue",
+    "apps/**/*.ts",
+    "apps/**/*.js"
   ]
 }
