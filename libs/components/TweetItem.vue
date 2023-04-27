@@ -9,7 +9,7 @@
         <p v-if="tweet.dispute === 1"><small class="text-muted"><exclamation-circle height="1em" status="" width="1em" /> {{ t("tweet.text.this_is_a_dispute_tweet") }}
           <router-link to="/about">{{ t("tweet.text.learn_more") }}</router-link>
         </small></p>
-        <div :dir="tweet.rtl ? 'rtl' : 'ltr'" class="mb-1 ms-4 ms-md-5" @click="(e) => {e.stopPropagation()}">
+        <div :dir="tweet.rtl ? 'rtl' : 'ltr'" :class="{'mb-1': true, 'ms-4': settings.onlineMode, 'ms-md-5': settings.onlineMode,}" @click="(e) => {e.stopPropagation()}">
           <span style="font-size: 0.75em;" class="text-muted" v-if="tweet.retweet_from">
             <retweet height="1em" status="" width="1em"/>
             <router-link :to="`/`+(settings.onlineMode ? tweet.retweet_from_name : tweet.name) + `/all`" class="text-muted">
