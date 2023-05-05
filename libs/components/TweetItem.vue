@@ -53,7 +53,7 @@
           <div :class="{'offset-md-1': tweet?.user_info?.header, 'col-md-11': tweet?.user_info?.header, 'col-12': true}">
             <!--<div v-html="`<p class='card-text'>`+tweet.full_text+`</p>`"></div>-->
             <!--excited!-->
-            <div :dir="tweet.rtl ? 'rtl' : 'ltr'"><full-text class="card-text" :entities="tweet.entities" :full_text_origin="tweet.full_text_origin" :display-range="(settings.onlineMode && (route.name === 'name-status' || route.name === 'no-name-status' || translatorMode)) ? tweet.display_text_range : [0, 0]"/></div>
+            <div :dir="tweet.rtl ? 'rtl' : 'ltr'"><full-text class="card-text" :entities="tweet.entities" :full_text_origin="tweet.full_text_origin" :display-range="(settings.onlineMode && (route.name === 'name-status' || route.name === 'no-name-status' || translatorMode)) ? tweet.display_text_range : [0, 0]" :rich_text_tags="tweet?.richtext?.richtext_tags ? tweet.richtext.richtext_tags : []" /></div>
             <translate v-if="translatorMode || tweet.full_text_origin" :id="tweet.tweet_id_str" :to="settings.language" :text="tweet.full_text" type="0"/>
             <!--media-->
             <div class="mt-2" v-if="tweet.media === 1&&!settings.displayPicture && tweet.mediaObject.filter(x => x.source === 'tweets').length">

@@ -77,6 +77,27 @@ export interface ApiAudioSpace extends Api<AudioSpace> {}
 export interface ApiBroadcast extends Api<LiveVideoContent> {}
 export interface ApiPolls extends Api<number[]> {}
 
+export interface ApiListInfo extends Api<{
+  user_info: UserInfo | {}
+  name: string
+  description: string
+  id: string
+  member_count: number
+  created_at: number
+  subscriber_count: number
+  banner: {
+    url: string
+    original_height: number
+    original_width: number
+    media_key: string
+  }
+}> {}
+
+export interface ApiListMember extends Api<{
+  users: UserInfo[]
+  cursor: {top: string; bottom: string}
+}> {}
+
 export interface ApiHashtagList extends Api<{
   list: HashtagList[]
   start: number

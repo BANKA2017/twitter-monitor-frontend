@@ -20,11 +20,14 @@
           <hash-tag-list />
         </div>-->
       </div>
+      <div class="col-md-12 col-lg-3 mb-2 order-0 order-lg-2" v-else-if="$route.name === 'lists'" >
+        <list-info />
+      </div>
       <div id="user-info" class="col-md-12 col-lg-3 mb-2 order-0 order-lg-2" v-else-if="userExists">
         <user-info/>
       </div>
       <div class="col-md-8 order-0 order-lg-2" v-else>
-        <h5 class="text-center mb-4">{{ t("timeline.message.not_exist", [$route.params.name]) }}</h5>
+        <h5 class="text-center mb-4">{{ t("timeline.message.not_exist", [`@${$route.params.name}`]) }}</h5>
       </div>
       <div id="tweets" class="col-md-12 col-lg-6 order-1" v-if="userExists">
         <!--TODO update display-type-->
@@ -58,6 +61,7 @@ import { useRoute } from "vue-router";
 import BoxArrowUpRight from "../icons/BoxArrowUpRight.vue";
 import LocalRouter from "../components/LocalRouter.vue";
 import router from "../router";
+import ListInfo from "../components/ListInfo.vue";
 
 const { t } = useI18n()
 const store = useStore()

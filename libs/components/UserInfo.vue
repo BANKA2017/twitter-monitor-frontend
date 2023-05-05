@@ -182,24 +182,6 @@ onBeforeRouteLeave((to, from) => {
 })
 </script>
 
-<style scoped lang="scss">
-.banner {
-  width: 100%;
-  position: absolute;
-  top: 0;
-  object-fit: cover;
-}
-.transition-height {
-  transition-property: height;
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  transition-duration: 150ms;
-}
+<style lang="scss">
 
-@mixin avatar-base {
-  width: calc(100% / 3);
-  max-width: 110px;
-  aspect-ratio: 1;
-  display: inline-block;
-  padding: .5em;
-}
 </style>

@@ -26,7 +26,7 @@ import {useI18n} from "vue-i18n";
 import FullText from "./FullText.vue";
 import {Entity} from "../types/Content";
 
-const defaultBasePath = (process.env.NODE_ENV !== "development" ? import.meta.env.VITE_PRO_BASE_PATH : import.meta.env.VITE_DEV_BASE_PATH) || import.meta.env.VITE_ONLINE_PATH
+const defaultBasePath = (process.env.NODE_ENV !== "development" ? import.meta.env.VITE_PRO_BASE_PATH : import.meta.env.VITE_DEV_BASE_PATH) || import.meta.env.VITE_ONLINE_PATH.replace('/online', '')
 
 const props = defineProps({
   type: {

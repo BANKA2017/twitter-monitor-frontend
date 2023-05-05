@@ -80,6 +80,7 @@ let routes: RouteRecordRaw[] = [
             redirect: '/'
         }]
     },
+    { path: '/i/lists/:listId(\\d+)', component: TimeLine, name: 'lists'},
     {
         path: '/:name',
         component: TimeLine,

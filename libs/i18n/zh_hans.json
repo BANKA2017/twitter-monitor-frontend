@@ -3,6 +3,7 @@
         "search": "搜索",
         "followers": "关注者",
         "following": "正在关注",
+        "members": "成员",
         "statuses_count": "总推文数",
         "deleted": "删除",
         "protected": "保护",
@@ -29,7 +30,7 @@
     },
     "timeline": {
         "message": {
-            "not_exist": "{'@'}{0} 不存在",
+            "not_exist": "{0} 不存在",
             "no_longer_monitor_deleted": "此账户已删除，我们将不再监控此账户",
             "no_longer_monitor_protected": "此账户已被保护，我们将不再监控此账户",
             "load_more": "加载更多",

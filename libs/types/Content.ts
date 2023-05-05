@@ -62,12 +62,23 @@ export interface Tweet {
   display_text_range?: number[]
   vibe?: Vibe
   entities: Entity[]
+  richtext?: RichText
   pollObject: PollItem[]
   cardObject?: Card
   quoteObject?: Quote
   mediaObject: Media[]
   user_info?: UserInfo
   retweet_user_info?: UserInfo
+}
+
+export interface RichText {
+  richtext_tags: {
+    from_index: number
+    to_index: number
+    richtext_types: string[]
+    content?: Entity[]
+    text?: string
+  }[]
 }
 
 export interface Vibe {
@@ -86,8 +97,10 @@ export interface Entity {
   expanded_url: string
   indices_end: number
   indices_start: number
+  indices_end_backup?: number // for emoji
+  indices_start_backup?: number // for emoji
   text: string
-  type: 'hashtag' | 'symbol' | 'url' | 'user_mention' | "emoji" | '' //emoji and empty('') are for FullTextToHtml
+  type: 'hashtag' | 'symbol' | 'url' | 'user_mention' | "emoji" | 'text' | '' //emoji and empty('') are for FullTextToHtml
 }
 
 export interface Media {

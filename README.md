@@ -2,6 +2,10 @@
 
 [ [EN](#Deploy) | [中文](#部署) ]
 
+## Known issues
+
+- Vue will auto **MERGE** all whitespaces to one, so we couldn't display all whitespace in text with more than 2 whitespaces
+
 ## About
 
 The [Twitter Monitor Frontend](https://github.com/BANKA2017/twitter-monitor-frontend) is the front-end component designed for the [Twitter Monitor](https://github.com/BANKA2017/twitter-monitor), used to display data collected by the monitor or as a third-party client for browsing Twitter (without direct access to its backend).
@@ -40,11 +44,6 @@ More information about Twitter monitor -> <https://github.com/BANKA2017/twitter-
   ```
 
 Copy the `.env.example` file located in the `~/app/*/` directory and rename it to `.env`, then edit the environment variables.
-
-将会包含完整的Twitter Monitor页面和模块，打包文件将会更大，您需要补充完整环境变量的每一项
-将只包含Online Mode的页面，打包文件更小，请补充环境变量除了xx与yy以外的每一项。
-由于与完整版共用UserInfo模块，因此会为 Tmv2ChartWithoutDataSet 生成模块，但实际使用时并不会用到。
-
 
 ### Full mode
 

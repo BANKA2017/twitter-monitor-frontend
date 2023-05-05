@@ -3,6 +3,7 @@
         "search": "Search",
         "followers": "Followers",
         "following": "Following",
+        "members": "Members",
         "statuses_count": "Status count",
         "deleted": "Deleted",
         "protected": "Protected",
@@ -29,7 +30,7 @@
     },
     "timeline": {
         "message": {
-            "not_exist": "{'@'}{0} is not exist",
+            "not_exist": "{0} is not exist",
             "no_longer_monitor_deleted": "This account has been deleted, we will no longer monitor it",
             "no_longer_monitor_protected": "This account has been protected, we will no longer monitor it",
             "load_more": "Load more",
