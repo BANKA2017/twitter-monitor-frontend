@@ -55,7 +55,7 @@ const props = defineProps({
     default: []
   },
   displayRange: {
-    type: Array as PropType<number[]>,
+    type: Array as PropType<[number, number]>,
     default: [0, 0]
   },
   inline: {
@@ -118,7 +118,7 @@ const contentObjectBuilder = () => {
   }
 
   for (const richItem of nextRichText) {
-    const filterEntities = props.entities?.filter(entity => entity.indices_start >= richItem.from_index && entity.indices_end <= richItem.to_index)
+    const filterEntities = props.entities?.filter(entity => (entity.indices_start >= richItem.from_index) && (entity.indices_end <= richItem.to_index))
     if (richItem.from_index < displayRange[0]) {
       state.replyNameList = filterEntities.filter(entity => entity.indices_start < displayRange[0] && entity.type === "user_mention").map(entity => entity.text)
     }

@@ -1,10 +1,11 @@
 <template>
   <div id="search" @keyup.enter="$router.push({path: '/search/', query: queryObject})">
   <div class="mb-2" v-if="!(tweetModeValue === 'search' && state.mode === 2)" id="searchTweets">
-    <el-input v-model="state.keywords" :placeholder="t('search.normal_search.input_text_here')" clearable type="text" size="large"/>
+    <el-input v-model="state.keywords" :placeholder="t('search.normal_search.input_text_here')" clearable type="text" size="large" @focus="state.activeInput = true" @blur="state.activeInput = false"/>
     <template v-if="state.keywords === 'help' || state.keywords === '帮助'">
       <search-tips class="my-4"/>
     </template>
+    <search-typeahead v-if="settings.onlineMode" :query-string="state.keywords" :active="state.activeInput" />
   </div>
   <div class="d-grid gap-2" v-if="tweetModeValue === 'search'" >
     <button :class="{'btn': true, 'btn-sm': true, 'btn-outline-primary': true, 'mb-4': state.mode === 2, 'my-4': state.mode !== 2, 'active': state.mode === 2,}" @click="state.mode = ((state.mode === 2) ? 0 : 2)" role="button">{{ t('search.normal_search.advanced_search') }}</button>
@@ -121,6 +122,7 @@ import {useStore} from "../store";
 import {RouteLocationNormalized, useRoute, useRouter} from "vue-router";
 import {Equal, NullSafeParams, VerifyQueryString} from "../share/Tools";
 import {AdvancedSearchQuery} from "../types/Content";
+import SearchTypeahead from "./SearchTypeahead.vue";
 
 const {t} = useI18n()
 const state = reactive<{
@@ -139,6 +141,7 @@ const state = reactive<{
     hidden: boolean;
   }
   name: string
+  activeInput: boolean
 }>({
   keywords: '',
   mode: 0,//0->keywords, 1->date, 2->advanced
@@ -155,6 +158,7 @@ const state = reactive<{
     hidden: false,
   },
   name: "",
+  activeInput: false
 })
 
 const route = useRoute()

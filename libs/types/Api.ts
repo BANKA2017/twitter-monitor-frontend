@@ -104,6 +104,25 @@ export interface ApiHashtagList extends Api<{
   end: number
 }> {}
 
+export interface ApiTyprahead extends Api<{
+  users: {
+    uid: string
+    name: string
+    display_name: string
+    header: string
+    banner: number
+    created_at: number | null
+    verified: number
+    top: string
+  }[]
+  topics: {
+    topic: string
+    rounded_score: number
+    tokens: any[]
+    inline: boolean
+  }[]
+}> {}
+
 export interface ApiStaffData {
   data: {
     display_name: string

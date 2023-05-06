@@ -322,10 +322,11 @@ const loading = (top: boolean = false, mute: boolean = false) => {
         if (response.data.top_tweet_id !== '0') {
           state.topTweetId = response.data.top_tweet_id;
         }
+        const tmpExistTweetIds = tweets.value.map(tweet => tweet.tweet_id_str)
         store.dispatch({
           type: 'setCoreValue',
           key: 'tweets',
-          value: [...response.data.tweets, ...tweets.value]
+          value: [...response.data.tweets.filter(tweet => !tmpExistTweetIds.includes(tweet.tweet_id_str)), ...tweets.value]
         })
         state.loadingTop = false
       } else {
