@@ -51,7 +51,7 @@ The package will include the complete Twitter Monitor page and modules, resultin
 
 Demo: <https://tm.bangdream.fun>
 
-### Only online mode
+### Online only mode
 
 The package will only contain the Online Mode page, resulting in a smaller file size. Please fill in all environment variables except for `VITE_DEV_BASE_PATH` and `VITE_PRO_BASE_PATH`.
 
@@ -112,7 +112,7 @@ check more in `/libs/i18n/`, base language is **Chinese simplified（zh-hans）*
 
 Demo: <https://tm.bangdream.fun>
 
-### Only online mode
+### Online only mode
 
 将只包含 Online mode 的页面，打包文件更小，请补充环境变量除了 `VITE_DEV_BASE_PATH` 与 `VITE_PRO_BASE_PATH` 以外的每一项。
 

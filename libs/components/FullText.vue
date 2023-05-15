@@ -93,6 +93,7 @@ const contentObjectBuilder = () => {
   const displayRange = props.displayRange?.length ? props.displayRange : [0, 0]
 
   let nextRichText = []
+  const fe0f = String.fromCharCode(parseInt('fe0f', 16))
   let full_text_origin_array = [...props.full_text_origin]
   if (!props.rich_text_tags || props.rich_text_tags.length === 0) {
     nextRichText.push({from_index: 0, to_index: full_text_origin_array.length, richtext_types: [], content: [], text: full_text_origin_array.slice(0, full_text_origin_array.length).join('')})
@@ -125,7 +126,10 @@ const contentObjectBuilder = () => {
     let emojiOffset = 0
     const emojiEntities = emojiObject(richItem.text).map(emoji => {
         const tmpEmojiOffset = emojiOffset
-        emojiOffset += emoji.indices_end - emoji.indices_start -1
+        emojiOffset += emoji.indices_end - emoji.indices_start - 1
+        if (full_text_origin_array[emoji.indices_start - tmpEmojiOffset+1] === fe0f){
+          emojiOffset-=1
+        }
         emoji.indices_start_backup = emoji.indices_start
         emoji.indices_end_backup = emoji.indices_end
         emoji.indices_start = emoji.indices_start + richItem.from_index - tmpEmojiOffset
