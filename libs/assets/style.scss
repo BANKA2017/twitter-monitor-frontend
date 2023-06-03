@@ -49,8 +49,12 @@ a {
     color: darken($primary, 5%);
   }
 }
+svg {
+  display: inline-block;
+}
 .margin-for-inner-text-svg {
   margin: 0 0.125rem 0.25rem 0.125rem;
+  display: inline-block;
 }
 
 .full {

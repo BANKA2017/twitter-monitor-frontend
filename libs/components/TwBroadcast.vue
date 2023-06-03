@@ -197,7 +197,7 @@ const updateQuality = (newQuality) => {
 
 const getBroadCastContent = () => {
   //get id
-  const id = props.url?.replaceAll(/https:\/\/twitter.com\/i\/broadcasts\/([^?]+)(\?.*|$)/gm, '$1')
+  const id = props.url?.replaceAll(/.*\/([^\/\?#]+)(?:$|\?.*|#.*)/gm, '$1')
   request<ApiBroadcast>(onlinePath.value + '/api/v3/data/broadcast/?id=' + id).then(response => {
     if (response.code === 200) {
       state.broadcastData = response.data

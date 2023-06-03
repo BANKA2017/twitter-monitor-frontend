@@ -93,7 +93,7 @@ const contentObjectBuilder = () => {
   const displayRange = props.displayRange?.length ? props.displayRange : [0, 0]
 
   let nextRichText = []
-  const fe0f = String.fromCharCode(parseInt('fe0f', 16))
+  const fe0f = String.fromCharCode(0xfe0f)
   let full_text_origin_array = [...props.full_text_origin]
   if (!props.rich_text_tags || props.rich_text_tags.length === 0) {
     nextRichText.push({from_index: 0, to_index: full_text_origin_array.length, richtext_types: [], content: [], text: full_text_origin_array.slice(0, full_text_origin_array.length).join('')})

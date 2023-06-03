@@ -1,7 +1,7 @@
 <template>
   <div id="twCard" @click="(e) => {e.stopPropagation()}">
     <div :class="{card: object.secondly_type !== 'image_collection_website', 'mb-3': true, 'background-second': !(object.type === 'unified_card' && object.secondly_type === 'image_collection_website'), }" style="border-radius: 14px 14px 14px 14px">
-      <a v-if="object?.url && (object.secondly_type === 'media_with_details_horizontal' || object.secondly_type === 'twitter_article' || object.type !== 'unified_card') && object.type !== 'audiospace' && object.type !== 'broadcast'" :href="object.url" class="stretched-link text-decoration-none" target="_blank"></a>
+      <a v-if="object?.url && (object.secondly_type === 'media_with_details_horizontal' || object.secondly_type === 'twitter_article' || object.type !== 'unified_card') && object.type !== 'audiospace' && object.type !== 'broadcast' && object.type !== 'periscope_broadcast'" :href="object.url" class="stretched-link text-decoration-none" target="_blank"></a>
       <template v-if="object.type === 'summary' || object.type === 'audio' || object.type === 'app' || object.type === 'moment' || object.secondly_type === 'media_with_details_horizontal'">
         <div class="row no-gutters">
           <div class="col-4 col-md-3 border-right">
@@ -45,7 +45,7 @@
           </div>
         </div>
       </template>
-      <tw-broadcast v-else-if="object.type === 'broadcast'" :tweet_id="object.tweet_id" :cover="predictiveMedia.cover" :url="object.url" :title="object.title"/>
+      <tw-broadcast v-else-if="object.type === 'broadcast' || object.type === 'periscope_broadcast'" :tweet_id="object.tweet_id" :cover="predictiveMedia.cover" :url="object.url" :title="object.title"/>
       <tw-collection v-else-if="object.type === 'unified_card' && object.secondly_type === 'image_collection_website'" :media="media" :multi-dest-carousel-data="multiDestCarouselData"/>
       <template v-else-if="object.type === 'unified_card' && object.secondly_type !== 'twitter_article'">
         <div v-if="mediaState && object.secondly_type === 'image_website' || object.secondly_type === 'image_app' || object.secondly_type === 'twitter_list_details'" :style="{width: '100%', height: 0, 'padding-bottom': paddingBottom( predictiveMedia.cover, predictiveMedia.origin_info_height, predictiveMedia.origin_info_width) + '%', 'border-radius': '14px 14px 0 0'}" class="no-gutters">
