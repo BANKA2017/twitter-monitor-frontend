@@ -30,7 +30,6 @@
                 </template>
             </template>
         </span>
-
     </template>
   </div>
 </template>
@@ -94,7 +93,7 @@ const contentObjectBuilder = () => {
 
   let nextRichText = []
   const fe0f = String.fromCharCode(0xfe0f)
-  let full_text_origin_array = [...props.full_text_origin]
+  let full_text_origin_array = [...props.full_text_origin?.replace(/ https:\/\/t.co\/[\w]+$/, '')]
   if (!props.rich_text_tags || props.rich_text_tags.length === 0) {
     nextRichText.push({from_index: 0, to_index: full_text_origin_array.length, richtext_types: [], content: [], text: full_text_origin_array.slice(0, full_text_origin_array.length).join('')})
   } else {
@@ -126,14 +125,14 @@ const contentObjectBuilder = () => {
     let emojiOffset = 0
     const emojiEntities = emojiObject(richItem.text).map(emoji => {
         const tmpEmojiOffset = emojiOffset
-        emojiOffset += emoji.indices_end - emoji.indices_start - 1
+        emojiOffset += emoji.indices_end - emoji.indices_start - Math.ceil(emoji.text.length/2)
         if (full_text_origin_array[emoji.indices_start - tmpEmojiOffset+1] === fe0f){
-          emojiOffset-=1
+            emojiOffset-=1
         }
         emoji.indices_start_backup = emoji.indices_start
         emoji.indices_end_backup = emoji.indices_end
         emoji.indices_start = emoji.indices_start + richItem.from_index - tmpEmojiOffset
-        emoji.indices_end = emoji.indices_start + 1
+        emoji.indices_end = emoji.indices_start + Math.ceil(emoji.text.length/2)
         return emoji
     })
 
@@ -163,7 +162,7 @@ const contentObjectBuilder = () => {
               expanded_url: "",
               indices_end: richItem.to_index,
               indices_start: entity.indices_end,
-              text: removeHTMLEntities(full_text_origin_array.slice(entity.indices_end, richItem.to_index).join('').replace(/ https:\/\/t.co\/[\w]+/, '')),
+              text: removeHTMLEntities(full_text_origin_array.slice(entity.indices_end, richItem.to_index).join('')),
               type: "text",
             })
           }

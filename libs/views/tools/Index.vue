@@ -55,9 +55,13 @@ const linkList = [{
   name: "SnowFlake Tool",
   description: "雪花算法相关的工具"
 },{
-  link: "https://gamealbum.nest.moe/",
-  name: "WebAlbum",
-  description: "通过 Nintendo Switch Share / PlayStation®Network / Xbox 上传的媒体库"
+    link: "https://gamealbum.nest.moe/",
+    name: "WebAlbum",
+    description: "通过 NS / PS / Xbox 上传的媒体库"
+},{
+    link: "https://archive-viewer.nest.moe/",
+    name: "Archive viewer",
+    description: "查看和备份 twitter 内容"
 },]
 //{
 //  link: "/i/tools/translator",
