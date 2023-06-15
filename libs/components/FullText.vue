@@ -18,7 +18,7 @@
                         {{ content.text }}
                     </router-link>
                     <a v-else-if="content.type === 'url'" @click="e => {e.stopPropagation()}" id="url" :href="content.expanded_url" target="_blank">{{ content.text }}</a>
-                    <img v-else-if="content.type === 'emoji' && content.expanded_url" :src="content.expanded_url" style="height: 1em; width: 1em;" :alt="content.text" class="margin-for-inner-text-svg">
+                    <img v-else-if="content.type === 'emoji' && content.expanded_url" :src="content.expanded_url" :alt="content.text" class="emoji">
                     <template v-else>
                         <template v-for="(text, textIndex) in content.text.split(`\n`)" :key="text">
                             <br v-if="content.text.includes(`\n`) && textIndex !== 0" />
@@ -78,7 +78,7 @@ const store = useStore()
 const userList = computed(() => store.state.userList)
 const twemojiBasePath = computed(() => store.state.twemojiBasePath)
 const settings = computed(() => store.state.settings)
-const buildUrl = (codepoints: string, assetType: string): string => twemojiBasePath.value + `72x72/${codepoints}.${assetType}`
+const buildUrl = (codepoints: string, assetType: string): string => twemojiBasePath.value + `72x72/${codepoints}.${assetType}` //`https://abs-0.twimg.com/emoji/v2/svg/${codepoints}.svg`
 const emojiObject = (text: string = ''): Entity[] => parse(text, {buildUrl: buildUrl, assetType: 'png'}).map((x: EmojiEntity): Entity => ({
   expanded_url: x.url,
   indices_end: x.indices[1],
@@ -86,7 +86,6 @@ const emojiObject = (text: string = ''): Entity[] => parse(text, {buildUrl: buil
   text: x.text,
   type: "emoji"
 })).sort((a, b) => a.indices_start - b.indices_start)
-const spreadText = (text: string): string[] => text.split("\n")
 const removeHTMLEntities = (text: string): string => text.replaceAll('&gt;', '>').replaceAll('&lt;', '<').replaceAll("&amp;", "&").replaceAll("&quot;", '"').replaceAll('&apos;', "'")//.replaceAll(' ', "&nbsp;")
 const contentObjectBuilder = () => {
   const displayRange = props.displayRange?.length ? props.displayRange : [0, 0]
@@ -100,7 +99,7 @@ const contentObjectBuilder = () => {
     props.rich_text_tags.forEach((tag, tag_index) => {
       //first content
       if (tag_index === 0 && tag.from_index > 0) {
-        nextRichText.push({from_index: 0, to_index: tag.from_index - 1, richtext_types: [], content: [], text: full_text_origin_array.slice(0, tag.from_index).join('')})
+        nextRichText.push({from_index: 0, to_index: tag.from_index, richtext_types: [], content: [], text: full_text_origin_array.slice(0, tag.from_index).join('')})
       }
       tag.content = []
       tag.text = full_text_origin_array.slice(tag.from_index, tag.to_index).join('')
@@ -143,8 +142,6 @@ const contentObjectBuilder = () => {
     if (tmpEntities.length) {
       for (const entity_index in tmpEntities) {
         const entity = tmpEntities[entity_index]
-        const isEmoji = entity.type === 'emoji'
-
         if (entity_index === '0' && entity.indices_start > richItem.from_index) {
           tmpContent.push({
             expanded_url: "",
@@ -183,7 +180,7 @@ const contentObjectBuilder = () => {
         expanded_url: "",
         indices_end: richItem.to_index,
         indices_start: richItem.from_index,
-        text: removeHTMLEntities(full_text_origin_array.slice(richItem.from_index, richItem.to_index).join('').replace(/ https:\/\/t.co\/[\w]+/, '')),
+        text: removeHTMLEntities(full_text_origin_array.slice(richItem.from_index, richItem.to_index).join('').replace(/ https:\/\/t.co\/\w+/, '')),
         type: "text",
       })
     }
@@ -195,3 +192,12 @@ onMounted(() => {
   state.textObject = contentObjectBuilder()
 })
 </script>
+<style scoped>
+    img.emoji {
+        height: 1em;
+        width: 1em;
+        margin: 0 .05em 0 .1em;
+        vertical-align: -0.1em;
+        display: inline-block;
+    }
+</style>

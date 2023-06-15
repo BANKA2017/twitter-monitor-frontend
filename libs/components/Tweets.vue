@@ -262,7 +262,7 @@ const update = () => {
     store.dispatch({
       type: 'setCoreValue',
       key: 'tweets',
-      value: response.data.tweets
+      value: [...response.data.tweets.filter(x => x.tweet_id_str === userInfo.value.top), ...response.data.tweets.filter(x => x.tweet_id_str !== userInfo.value.top)]
     })// ? response.data.tweets : []//404时无任何数据
     state.moreTweets = response.data.hasmore
     if (response.data.top_tweet_id !== "0") {
@@ -326,7 +326,7 @@ const loading = (top: boolean = false, mute: boolean = false) => {
         store.dispatch({
           type: 'setCoreValue',
           key: 'tweets',
-          value: [...response.data.tweets.filter(tweet => !tmpExistTweetIds.includes(tweet.tweet_id_str)), ...tweets.value]
+          value: (tweets => [...tweets.filter(x => x.tweet_id_str === userInfo.value.top), ...tweets.filter(x => x.tweet_id_str !== userInfo.value.top)])([...response.data.tweets.filter(tweet => !tmpExistTweetIds.includes(tweet.tweet_id_str)), ...tweets.value])
         })
         state.loadingTop = false
       } else {
@@ -337,7 +337,7 @@ const loading = (top: boolean = false, mute: boolean = false) => {
         store.dispatch({
           type: 'pushCoreValue',
           key: 'tweets',
-          value: [...response.data.tweets]
+          value: [...response.data.tweets.filter(tweet => tweet.tweet_id_str !== userInfo.value.top)]
         })
         state.loadingBottom = false
       }
