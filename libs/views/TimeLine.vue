@@ -20,8 +20,11 @@
           <hash-tag-list />
         </div>-->
       </div>
-      <div class="col-md-12 col-lg-3 mb-2 order-0 order-lg-2" v-else-if="$route.name === 'lists'" >
+      <div id="list-info" class="col-md-12 col-lg-3 mb-2 order-0 order-lg-2" v-else-if="$route.name === 'lists'" >
         <list-info />
+      </div>
+      <div id="community-info" class="col-md-12 col-lg-3 mb-2 order-0 order-lg-2" v-else-if="$route.name === 'communities'" >
+          <community-info />
       </div>
       <div id="user-info" class="col-md-12 col-lg-3 mb-2 order-0 order-lg-2" v-else-if="userExists">
         <user-info/>
@@ -62,6 +65,7 @@ import BoxArrowUpRight from "../icons/BoxArrowUpRight.vue";
 import LocalRouter from "../components/LocalRouter.vue";
 import router from "../router";
 import ListInfo from "../components/ListInfo.vue";
+import CommunityInfo from "../components/CommunityInfo.vue";
 
 const { t } = useI18n()
 const store = useStore()

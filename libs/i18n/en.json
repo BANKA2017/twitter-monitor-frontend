@@ -153,8 +153,9 @@
         "text": {
             "unsupported_type": "Not supported type",
             "list": "List",
-            "members_count": "{0} member | {0} members",
-            "someone_s_space": "{someone} 's space"
+            "members_count": "{count} member | {count} members",
+            "someone_s_space": "{someone} 's space",
+            "view_community": "View Community"
         }
     },
     "tweet": {

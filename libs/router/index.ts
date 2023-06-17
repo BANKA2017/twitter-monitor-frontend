@@ -81,6 +81,7 @@ let routes: RouteRecordRaw[] = [
         }]
     },
     { path: '/i/lists/:listId(\\d+)', component: TimeLine, name: 'lists'},
+    { path: '/i/communities/:communityId(\\d+)', component: TimeLine, name: 'communities'},
     {
         path: '/:name',
         component: TimeLine,
@@ -95,7 +96,7 @@ let routes: RouteRecordRaw[] = [
     { path: '/:pathMatch(.*)', name: 'bad-not-found', component: NotFound },
 ]
 
-//online mode
+//full mode
 if (import.meta.env.VITE_DEV_BASE_PATH??import.meta.env.VITE_PRO_BASE_PATH??'') {
     routes[0].component = About
     routes.push(

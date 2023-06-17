@@ -47,7 +47,7 @@
       </template>
       <tw-broadcast v-else-if="object.type === 'broadcast' || object.type === 'periscope_broadcast'" :tweet_id="object.tweet_id" :cover="predictiveMedia.cover" :url="object.url" :title="object.title"/>
       <tw-collection v-else-if="object.type === 'unified_card' && object.secondly_type === 'image_collection_website'" :media="media" :multi-dest-carousel-data="multiDestCarouselData"/>
-      <template v-else-if="object.type === 'unified_card' && object.secondly_type !== 'twitter_article'">
+      <template v-else-if="object.type === 'unified_card' && object.secondly_type !== 'twitter_article' && object.secondly_type !== 'community_details'">
         <div v-if="mediaState && object.secondly_type === 'image_website' || object.secondly_type === 'image_app' || object.secondly_type === 'twitter_list_details'" :style="{width: '100%', height: 0, 'padding-bottom': paddingBottom( predictiveMedia.cover, predictiveMedia.origin_info_height, predictiveMedia.origin_info_width) + '%', 'border-radius': '14px 14px 0 0'}" class="no-gutters">
           <el-image :preview-src-list="[createRealMediaPath(realMediaPath, samePath)+predictiveMedia.cover]" :src="createRealMediaPath(realMediaPath, samePath)+predictiveMedia.cover" :style="{width: '100%', position: 'absolute', 'border-radius': '14px 14px 0 0'}" alt="cardImage" class="card-img-top" fit="cover" lazy @load="state.load = true" preview-teleported hide-on-click-modal></el-image>
         </div>
@@ -79,7 +79,7 @@
         <div v-else-if="object.secondly_type === 'twitter_list_details'">
           <a v-if="userListData.url" :href="userListData.url" class="stretched-link text-decoration-none" target="_blank"></a>
           <div class="card-title text-muted ">
-            <List class="ml-1" height="1em" status="text-dark" width="1em" /> <small>{{ t("tw_card.text.list") }} · {{ t("tw_card.text.members_count", userListData.membersCount > 1 ? 2 : 1, [userListData.membersCount]) }}</small>
+            <List class="ml-1" height="1em" status="text-dark" width="1em" /> <small>{{ t("tw_card.text.list") }} · {{ t("tw_card.text.members_count", userListData.membersCount > 1 ? 2 : 1, {count: userListData.membersCount}) }}</small>
           </div>
           <div class="mb-1">
             <span class="font-weight-bolder ml-1">{{ userListData.content }}</span><br>
@@ -109,8 +109,13 @@
         </div>
         <div class="card-body position-static">
           <p class="card-title" style="color: black">{{ object.title }}</p>
-          <template v-if="object.description !== ''"><small class="text-muted">{{ object.description }}</small><br></template>
-          <small v-if="object?.vanity_url" class="text-muted"><link45deg height="1em" status="" width="1em" />{{ object.vanity_url }}</small>
+          <p v-if="object.secondly_type === 'community_details'" >
+              <small class="text-muted">{{ t("tw_card.text.members_count", {count: object.description}) }}</small>
+          </p>
+          <template v-else-if="object.description !== ''"><small class="text-muted">{{ object.description }}</small><br></template>
+            <a v-if="object.secondly_type === 'community_details' && !settings.onlineMode" :href="object.url" target="_blank" class="btn btn-outline-primary rounded-pill d-block text-decoration-none">{{t('tw_card.text.view_community')}}</a>
+            <router-link v-if="object.secondly_type === 'community_details' && settings.onlineMode" :to="object.url.replaceAll('https://twitter.com', '')" class="btn btn-outline-primary rounded-pill d-block text-decoration-none">{{t('tw_card.text.view_community')}}</router-link>
+          <small v-else-if="object?.vanity_url" class="text-muted"><link45deg height="1em" status="" width="1em" />{{ object.vanity_url }}</small>
         </div>
       </template>
     </div>

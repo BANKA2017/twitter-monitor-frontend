@@ -153,8 +153,9 @@
         "text": {
             "unsupported_type": "不支持的类型",
             "list": "列表",
-            "members_count": "{0} 成员 | {0} 成员",
-            "someone_s_space": "{someone} 的空间"
+            "members_count": "{count} 成员 | {count} 成员",
+            "someone_s_space": "{someone} 的空间",
+            "view_community": "查看社群"
         }
     },
     "tweet": {

@@ -98,6 +98,23 @@ export interface ApiListMember extends Api<{
   cursor: {top: string; bottom: string}
 }> {}
 
+export interface ApiCommunityInfo extends Api<{
+  name: string
+  description: string
+  id: string
+  member_count: number
+  moderator_count: number
+  default_theme: string
+  created_at: number
+  rules: {name: string; description: string}[]
+  banner: {
+    url: string
+    original_height: number
+    original_width: number
+    media_key: string
+  }
+}> {}
+
 export interface ApiHashtagList extends Api<{
   list: HashtagList[]
   start: number

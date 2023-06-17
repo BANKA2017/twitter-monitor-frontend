@@ -238,6 +238,12 @@ const routeCase = (to: RouteLocationNormalized) => {
       queryStringObject.set('count', '20')
       setTweetMode('timeline')
       break
+    case "communities":
+        url += 'tweets/'
+        queryStringObject.set('community_id', <string>NullSafeParams(to.params.communityId, ''))
+        queryStringObject.set('count', '20')
+        setTweetMode('timeline')
+        break
     default:
       url += 'tweets/'
       queryStringObject.set('name', <string>NullSafeParams(to.params.name, ''))
@@ -387,7 +393,7 @@ const routeRun = (to: RouteLocationNormalized, from: RouteLocationNormalized | {
   //status
   routeCase(to)
   emptyTranslateList()
-  if (!(to.name === 'search' && !to.query.q && to.query.advanced !== '1') || to.name === 'lists') {
+  if (!(to.name === 'search' && !to.query.q && to.query.advanced !== '1') || to.name === 'lists' || to.name === 'communities') {
     if (!(to.name === 'main' && settings.value.onlineMode) || translatorMode.value) {
       update()
     }
