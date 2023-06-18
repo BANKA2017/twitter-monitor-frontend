@@ -47,7 +47,7 @@ export default defineConfig({
         display: 'standalone',
         theme_color: "#ffffff",
         icons: [{
-          src: "static/img/icon.png",
+          src: "static/img/icon.svg",
           sizes: "144x144",
           type: "image/png",
         }]

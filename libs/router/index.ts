@@ -1,24 +1,11 @@
 import {createRouter, createWebHistory, createWebHashHistory, RouteRecordRaw} from "vue-router"
 
-const About = () => import("../views/About.vue")
 const OnlineAbout = () => import("../views/OnlineAbout.vue")
 const Api = () => import("../views/Api.vue")
-const Stats = () => import("../views/Stats.vue")
-const Status = () => import("../views/Status.vue")
 const BookMarks = () => import("../views/BookMarks.vue")
 const TimeLine = () => import("../views/TimeLine.vue")
 const Main = () => import('../views/Main.vue')
-const Trends = () => import("../views/trends/index.vue")
-const TrendsMain = () => import("../views/trends/trendsMain.vue")
-const TrendsAccount = () => import("../views/trends/trendsAccount.vue")
 //TODO update to TypeScript
-const Topic = () => import("../views/topics/index.vue")
-const Annual2019 = () => import("../views/topics/annual2019.vue")
-const Annual2020 = () => import("../views/topics/annual2020.vue")
-const Annual2021 = () => import("../views/topics/annual2021.vue")
-const Annual2022 = () => import("../views/topics/annual2022.vue")
-const loveliveTrends = () => import("../views/topics/loveliveTrends.vue")
-const bangdreamTrends = () => import("../views/topics/bangDreamTrends.vue")
 //const staffCandleStickPage = () => import("../views/topics/staffCandleStickPage.vue")
 const NotFound = () => import("../views/NotFound.vue")
 const Settings = () => import("../views/Settings.vue")
@@ -95,43 +82,6 @@ let routes: RouteRecordRaw[] = [
     { path: '/:pathMatch(.*)*', name: 'not-found', component: NotFound },
     { path: '/:pathMatch(.*)', name: 'bad-not-found', component: NotFound },
 ]
-
-//full mode
-if (import.meta.env.VITE_DEV_BASE_PATH??import.meta.env.VITE_PRO_BASE_PATH??'') {
-    routes[0].component = About
-    routes.push(
-        { path: '/i/events/:path?', redirect: to => ({ path: '/i/topics/' + to.params.path}) },//to topics
-        {
-            path: '/i/topics',
-            component: Topic,
-            name: 'mainTopics',
-            children: [
-                {path: '2019', component: Annual2019, name: '2019'},
-                {path: '2020', component: Annual2020, name: '2020'},
-                {path: '2021', component: Annual2021, name: '2021'},
-                {path: '2022', component: Annual2022, name: '2022'},
-                {path: 'lovelive_trends/:name?', component: loveliveTrends, name: 'lovelive_trends'},
-                {path: 'bangdream_trends/:name?', component: bangdreamTrends, name: 'bangdream_trends'},
-                //{path: 'staff_data_page', component: staffCandleStickPage, name: 'staff_data_page'}
-            ]
-        },
-        { path: '/i/stats', component: Stats, name: 'stats'},
-        { path: '/i/status', component: Status, name: 'status'},
-        {
-            path: '/i/trends',
-            component: Trends,
-            name: 'trends',
-            children: [
-                {path: '', component: TrendsMain, name: 'trends'},
-                {path: ':name', component: TrendsAccount, name: 'trends-name'}
-            ]
-        },
-        {
-            path: '/i/online',
-            redirect: () => ({ path: '/i/tools/media'})
-        }
-    )
-}
 
 export default createRouter({
     history: createWebHistory('/'),

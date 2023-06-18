@@ -1,7 +1,7 @@
 //'use strict';
 import {createApp} from 'vue'
 import App from '../../libs/App.vue'
-import router from '../../libs/router'
+import router from '../../libs/router/full'
 import {store, key} from '../../libs/store'
 //import 'bootstrap';
 import 'bootstrap/js/src/util'
@@ -40,6 +40,7 @@ import {
 
 //import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
+import 'element-plus/theme-chalk/dark/css-vars.css'
 
 import VueGtag from "vue-gtag-next";
 import { trackRouter } from 'vue-gtag-next'

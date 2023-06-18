@@ -46,12 +46,15 @@ import Translate from "./Translate.vue";
 import {Controller, request} from "../share/Fetch";
 import {ApiChartLegacy, ApiUserInfo} from "../types/Api";
 import {Notice, createRealMediaPath, VerifiedStatus} from "../share/Tools";
-import {LegacyChart, UserInfo} from "../types/Content";
+import {LegacyChart} from "../types/Content";
 import {useI18n} from "vue-i18n";
 import {onBeforeRouteLeave, onBeforeRouteUpdate, RouteLocationNormalized, useRoute, useRouter} from "vue-router";
 import {useHead} from "@vueuse/head";
 import BlueVerifiedIcon from "../icons/BlueVerifiedIcon.vue";
-const Tmv2Chart = defineAsyncComponent(() => import("./Charts/Tmv2ChartWithoutDataSet.vue"));
+let Tmv2Chart
+if (import.meta.env.VITE_DEV_BASE_PATH??import.meta.env.VITE_PRO_BASE_PATH??'') {
+    Tmv2Chart = defineAsyncComponent(() => import("./Charts/Tmv2ChartWithoutDataSet.vue"));
+}
 
 const { t } = useI18n()
 

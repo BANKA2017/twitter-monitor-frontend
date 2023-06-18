@@ -4,11 +4,11 @@
   "private": true,
   "license": "MIT",
   "scripts": {
-    "dev": "vite -c apps/local/vite.config.js",
+    "dev": "yarn patch-package && vite -c apps/local/vite.config.js",
     "build": "yarn patch-package && vite build -c apps/local/vite.config.js",
     "preview": "vite preview -c apps/local/vite.config.js",
-    "dev:online": "vite -c apps/online/vite.config.js",
-    "build:online": "vite build -c apps/online/vite.config.js",
+    "dev:online": "yarn patch-package && vite -c apps/online/vite.config.js",
+    "build:online": "yarn patch-package && vite build -c apps/online/vite.config.js",
     "preview:online": "vite preview -c apps/online/vite.config.js"
   },
   "dependencies": {
