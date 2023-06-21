@@ -122,18 +122,18 @@ const contentObjectBuilder = () => {
       state.replyNameList = filterEntities.filter(entity => entity.indices_start < displayRange[0] && entity.type === "user_mention").map(entity => entity.text)
     }
     let emojiOffset = 0
-    const emojiEntities = emojiObject(richItem.text).map(emoji => {
-        const tmpEmojiOffset = emojiOffset
-        emojiOffset += emoji.indices_end - emoji.indices_start - Math.ceil(emoji.text.length/2)
-        if (full_text_origin_array[emoji.indices_start - tmpEmojiOffset+1] === fe0f){
-            emojiOffset-=1
-        }
-        emoji.indices_start_backup = emoji.indices_start
-        emoji.indices_end_backup = emoji.indices_end
-        emoji.indices_start = emoji.indices_start + richItem.from_index - tmpEmojiOffset
-        emoji.indices_end = emoji.indices_start + Math.ceil(emoji.text.length/2)
-        return emoji
-    })
+    const emojiEntities = [] // emojiObject(richItem.text).map(emoji => {
+    //    const tmpEmojiOffset = emojiOffset
+    //    emojiOffset += emoji.indices_end - emoji.indices_start - Math.ceil(emoji.text.length/2)
+    //    if (full_text_origin_array[emoji.indices_start - tmpEmojiOffset+1] === fe0f){
+    //        emojiOffset-=1
+    //    }
+    //    emoji.indices_start_backup = emoji.indices_start
+    //    emoji.indices_end_backup = emoji.indices_end
+    //    emoji.indices_start = emoji.indices_start + richItem.from_index - tmpEmojiOffset
+    //    emoji.indices_end = emoji.indices_start + Math.ceil(emoji.text.length/2)
+    //    return emoji
+    //})
 
 
       const tmpEntities = [...emojiEntities, ...filterEntities].sort((a, b) => a.indices_start - b.indices_start)
