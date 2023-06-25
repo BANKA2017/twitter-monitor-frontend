@@ -18,12 +18,14 @@
                         {{ content.text }}
                     </router-link>
                     <a v-else-if="content.type === 'url'" @click="e => {e.stopPropagation()}" id="url" :href="content.expanded_url" target="_blank">{{ content.text }}</a>
-                    <img v-else-if="content.type === 'emoji' && content.expanded_url" :src="content.expanded_url" :alt="content.text" class="emoji">
                     <template v-else>
                         <template v-for="(text, textIndex) in content.text.split(`\n`)" :key="text">
                             <br v-if="content.text.includes(`\n`) && textIndex !== 0" />
                             <span v-if="text">
-                                {{text}}
+                                <template v-for="content2 in twEmojiRender(text).content" :key="content2.text + '2'">
+                                    <img v-if="content2.type === 'emoji' && content2.expanded_url" :src="content2.expanded_url" :alt="content2.text" class="emoji">
+                                    <span v-else>{{content2.text}}</span>
+                                </template>
                             </span>
                         </template>
                     </template>
@@ -87,6 +89,39 @@ const emojiObject = (text: string = ''): Entity[] => parse(text, {buildUrl: buil
   type: "emoji"
 })).sort((a, b) => a.indices_start - b.indices_start)
 const removeHTMLEntities = (text: string): string => text.replaceAll('&gt;', '>').replaceAll('&lt;', '<').replaceAll("&amp;", "&").replaceAll("&quot;", '"').replaceAll('&apos;', "'")//.replaceAll(' ', "&nbsp;")
+const twEmojiRender = (text => {
+    const tmpEmoji = emojiObject(text)
+    let cursor = 0
+    const content: Entity[] = []
+    for (const emoji of tmpEmoji) {
+        if (emoji.indices_start !== 0) {
+            content.push({
+                expanded_url: "",
+                indices_end: emoji.indices_start,
+                indices_start: cursor,
+                text: text.slice(cursor, emoji.indices_start),
+                type: "text",
+            })
+            cursor = emoji.indices_end
+        }
+        content.push(emoji)
+    }
+    if (text.length > cursor) {
+        content.push({
+            expanded_url: "",
+            indices_end: text.length,
+            indices_start: cursor,
+            text: text.slice(cursor),
+            type: "text",
+        })
+    }
+
+    return {
+        content,
+        original_text: text,
+        emoji: tmpEmoji
+    }
+})
 const contentObjectBuilder = () => {
   const displayRange = props.displayRange?.length ? props.displayRange : [0, 0]
 
@@ -121,23 +156,7 @@ const contentObjectBuilder = () => {
     if (richItem.from_index < displayRange[0]) {
       state.replyNameList = filterEntities.filter(entity => entity.indices_start < displayRange[0] && entity.type === "user_mention").map(entity => entity.text)
     }
-    let emojiOffset = 0
-    const emojiEntities = [] // emojiObject(richItem.text).map(emoji => {
-    //    const tmpEmojiOffset = emojiOffset
-    //    emojiOffset += emoji.indices_end - emoji.indices_start - Math.ceil(emoji.text.length/2)
-    //    if (full_text_origin_array[emoji.indices_start - tmpEmojiOffset+1] === fe0f){
-    //        emojiOffset-=1
-    //    }
-    //    emoji.indices_start_backup = emoji.indices_start
-    //    emoji.indices_end_backup = emoji.indices_end
-    //    emoji.indices_start = emoji.indices_start + richItem.from_index - tmpEmojiOffset
-    //    emoji.indices_end = emoji.indices_start + Math.ceil(emoji.text.length/2)
-    //    return emoji
-    //})
-
-
-      const tmpEntities = [...emojiEntities, ...filterEntities].sort((a, b) => a.indices_start - b.indices_start)
-
+      const tmpEntities = filterEntities.sort((a, b) => a.indices_start - b.indices_start)
       const tmpContent = []
     if (tmpEntities.length) {
       for (const entity_index in tmpEntities) {
