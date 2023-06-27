@@ -23,6 +23,23 @@ export interface UserInfo {
   description_entities: Entity[]
 }
 
+export interface CommunityInfo {
+  name: string
+  description: string
+  id: string
+  member_count: number
+  moderator_count: number
+  default_theme: string
+  created_at: number
+  rules: {name: string; description: string}[]
+  join_policy: string
+  banner: {
+    url: string
+    original_height: number
+    original_width: number
+    media_key: string
+  }
+}
 
 export interface LegacyChart {
   timestamp: number | string
@@ -67,8 +84,10 @@ export interface Tweet {
   cardObject?: Card
   quoteObject?: Quote
   mediaObject: Media[]
+  is_top?: boolean
   user_info?: UserInfo
   retweet_user_info?: UserInfo
+  community?: CommunityInfo
 }
 
 export interface RichText {

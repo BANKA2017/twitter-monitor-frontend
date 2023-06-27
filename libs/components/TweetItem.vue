@@ -3,7 +3,10 @@
     <div v-if="false">{{ tweet }}</div>
     <div v-else ref="tweetItem" :id="tweet.tweet_id_str" :class="{'card': true, 'card-border': true, 'border-danger': tweet.dispute === 1, 'border-primary': tweet.tweet_id_str === topTweetId || (settings.loadConversation && $route.name === 'name-status' && $route.params.status === tweet.tweet_id_str), 'tweet-background': ($route.name !== 'name-status' || $route.params.status !== tweet.tweet_id_str)}" @click="clickEvent" :style="translatorMode ? 'border: none' : ''">
       <div class='card-body'>
-        <p v-if="tweetModeValue === 'timeline' && tweet.tweet_id_str === topTweetId"><small class="text-muted">
+        <router-link :to="`/i/communities/` + tweet.community?.id" v-if="tweet.community?.id && tweet.community?.name" class="text-muted d-block"><small>
+            <community height="1em" width="1em" status="text-muted" class="me-1"/> {{tweet.community?.name}}
+        </small></router-link>
+        <p v-if="tweetModeValue === 'timeline' && ((tweet.tweet_id_str === topTweetId) || tweet.is_top)"><small class="text-muted">
           <pinned height="1em" width="1em" status="text-muted" class="me-1" />{{ t("tweet.text.pinned_tweet") }}
         </small></p>
         <p v-if="tweet.dispute === 1"><small class="text-muted"><exclamation-circle height="1em" status="" width="1em" /> {{ t("tweet.text.this_is_a_dispute_tweet") }}
@@ -124,6 +127,7 @@ import BookMarkOutline from "../icons/BookMarkOutline.vue";
 import ImageIcon from "../icons/ImageIcon.vue";
 import CameraVideoIcon from "../icons/CameraVideoIcon.vue";
 import BoxArrowUpRight from "../icons/BoxArrowUpRight.vue";
+import Community from "../icons/Community.vue";
 const props = defineProps({
   tweet: {
     type: Object as PropType<Tweet>,

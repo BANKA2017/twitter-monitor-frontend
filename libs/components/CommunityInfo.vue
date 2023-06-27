@@ -89,7 +89,7 @@ onBeforeRouteUpdate((to, from) => {
                 </small>
             </div>
             <div id="rules">
-                <h3 class="fw-bold">Rules</h3>
+                <el-divider ><h3 class="fw-bold">{{t('community.rules')}}</h3></el-divider>
                 <ol class="list-group list-group-flush">
                     <li class="list-group-item" v-for="rule in state.communityInfo.rules" :key="rule.name"><span class="fw-bold d-block">{{rule.name}}</span> <span v-if="rule.description" class="d-block">{{rule.description}}</span></li>
                 </ol>

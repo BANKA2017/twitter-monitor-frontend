@@ -195,5 +195,8 @@
     },
     "pwa": {
         "need_refresh": "已加載新内容，請刷新或重新打開頁面"
+    },
+    "community": {
+        "rules": "規則"
     }
 }

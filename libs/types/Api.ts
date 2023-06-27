@@ -6,7 +6,7 @@ import {
   Stats,
   Status,
   Tweet,
-  UserInfo, AudioSpace, LiveVideoContent, Entity,
+  UserInfo, AudioSpace, LiveVideoContent, Entity, CommunityInfo,
 } from "./Content";
 
 export interface Api<T> {
@@ -98,22 +98,7 @@ export interface ApiListMember extends Api<{
   cursor: {top: string; bottom: string}
 }> {}
 
-export interface ApiCommunityInfo extends Api<{
-  name: string
-  description: string
-  id: string
-  member_count: number
-  moderator_count: number
-  default_theme: string
-  created_at: number
-  rules: {name: string; description: string}[]
-  banner: {
-    url: string
-    original_height: number
-    original_width: number
-    media_key: string
-  }
-}> {}
+export interface ApiCommunityInfo extends Api<CommunityInfo> {}
 
 export interface ApiHashtagList extends Api<{
   list: HashtagList[]
