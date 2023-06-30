@@ -75,6 +75,16 @@
               <tw-card :media="tweet.mediaObject.filter(x => x.source === 'cards')" :mediaState="!settings.displayPicture" :object="tweet.cardObject" :tweet-text="tweet.full_text_origin.split(`\n`)[0]" :user-name="tweet.retweet_from ? tweet.retweet_from : tweet.display_name"></tw-card>
             </div>
             <!--place-->
+
+              <!--birdwatch-->
+              <a :href="`https://twitter.com/i/birdwatch/n/` + tweet.birdwatch.id" target="_blank" class="mt-2 text-decoration-none" v-if="tweet.birdwatch">
+                  <small class="card ">
+                      <div class="card-body background-second">
+                          <div class="fw-bold"><birdwatch-v1-icon width="1.5em" height="1.5em" status="text-primary" class="me-2" />{{tweet.birdwatch.title}}</div>
+                          <div class="mt-2">{{tweet.birdwatch.text}}</div>
+                      </div>
+                  </small>
+              </a>
             <!--time && source-->
             <div id="foot">
               <small class="text-muted">{{ timeGap(tweet.time, now, settings.language) }} · <span class="text-primary">{{ tweet.source }}</span></small>
@@ -128,6 +138,7 @@ import ImageIcon from "../icons/ImageIcon.vue";
 import CameraVideoIcon from "../icons/CameraVideoIcon.vue";
 import BoxArrowUpRight from "../icons/BoxArrowUpRight.vue";
 import Community from "../icons/Community.vue";
+import BirdwatchV1Icon from "../icons/BirdwatchV1Icon.vue";
 const props = defineProps({
   tweet: {
     type: Object as PropType<Tweet>,

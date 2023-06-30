@@ -41,6 +41,12 @@ export interface CommunityInfo {
   }
 }
 
+export interface Birdwatch {
+  id: string
+  title: string
+  text: string
+}
+
 export interface LegacyChart {
   timestamp: number | string
   followers: number
@@ -88,6 +94,7 @@ export interface Tweet {
   user_info?: UserInfo
   retweet_user_info?: UserInfo
   community?: CommunityInfo
+  birdwatch?: Birdwatch
 }
 
 export interface RichText {
