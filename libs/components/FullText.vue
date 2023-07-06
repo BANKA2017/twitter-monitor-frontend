@@ -102,8 +102,8 @@ const twEmojiRender = (text => {
                 text: text.slice(cursor, emoji.indices_start),
                 type: "text",
             })
-            cursor = emoji.indices_end
         }
+        cursor = emoji.indices_end
         content.push(emoji)
     }
     if (text.length > cursor) {
