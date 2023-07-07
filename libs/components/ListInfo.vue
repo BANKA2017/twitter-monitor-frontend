@@ -25,13 +25,13 @@ const verifiedStatus = computed(() => VerifiedStatus(state.listInfo.user_info?.v
 
 const state = reactive<{
     listInfo: ApiListInfo["data"]
-    memberList: UserInfo[]
+    //memberList: UserInfo[]
     memberCursor: string
     moreMember: boolean
     memberCount: number,
     loading: boolean
-    memberListLoading: boolean
-    memberListBottomLoading: boolean
+    //memberListLoading: boolean
+    //memberListBottomLoading: boolean
 }>({
     listInfo: {
         name: '',
@@ -48,20 +48,20 @@ const state = reactive<{
         id: '',
         user_info: {}
     },
-    memberList: [],
+    //memberList: [],
     memberCursor: '',
     moreMember: true,
     memberCount: 20,
     loading: true,
-    memberListLoading: true,
-    memberListBottomLoading: false
+    //memberListLoading: true,
+    //memberListBottomLoading: false
 })
 
 const updateInfo = () => {
   request<ApiListInfo>(settings.value.basePath + '/api/v3/data/listinfo/?list_id=' + route.params.listId.toString(), fetchController).then(response => {
     state.listInfo = response.data
     state.loading = false
-    getMemberList()
+    //getMemberList()
   }).catch(e => {
     state.loading = false
     if (fetchController.afterAbortSignal.aborted) {
@@ -74,29 +74,29 @@ const updateInfo = () => {
   })
 }
 
-const getMemberList = () => {
-    state.memberListBottomLoading = true
-    //default count is 20
-    request<ApiListMember>(settings.value.basePath + '/api/v3/data/listmember/?list_id=' + route.params.listId.toString() + (state.memberCursor ? `&cursor=${state.memberCursor}` : '') + `&count=${state.memberCount}`, fetchController).then(response => {
-        state.memberList = state.memberList.concat(response.data.users)
-        state.memberCursor = response.data.cursor.bottom
-        state.memberListLoading = false
-        state.memberListBottomLoading = false
-        if (response.data.users.length < state.memberCount) {
-            state.moreMember = false
-        }
-    }).catch(e => {
-        state.memberListLoading = false
-        state.memberListBottomLoading = false
-        if (fetchController.afterAbortSignal.aborted) {
-            //Notice(t("public.loading"), "warning")
-        } else {
-            store.dispatch("setCoreValue", {key: 'userExists', value: false})
-            Notice(t("timeline.message.message.not_exist", [`List member ${route.params.listId.toString()}`]), "error")
-            console.error(e)
-        }
-    })
-}
+//const getMemberList = () => {
+//    state.memberListBottomLoading = true
+//    //default count is 20
+//    request<ApiListMember>(settings.value.basePath + '/api/v3/data/listmember/?list_id=' + route.params.listId.toString() + (state.memberCursor ? `&cursor=${state.memberCursor}` : '') + `&count=${state.memberCount}`, fetchController).then(response => {
+//        state.memberList = state.memberList.concat(response.data.users)
+//        state.memberCursor = response.data.cursor.bottom
+//        state.memberListLoading = false
+//        state.memberListBottomLoading = false
+//        if (response.data.users.length < state.memberCount) {
+//            state.moreMember = false
+//        }
+//    }).catch(e => {
+//        state.memberListLoading = false
+//        state.memberListBottomLoading = false
+//        if (fetchController.afterAbortSignal.aborted) {
+//            //Notice(t("public.loading"), "warning")
+//        } else {
+//            store.dispatch("setCoreValue", {key: 'userExists', value: false})
+//            Notice(t("timeline.message.message.not_exist", [`List member ${route.params.listId.toString()}`]), "error")
+//            console.error(e)
+//        }
+//    })
+//}
 
 const fetchController = new Controller()
 onMounted(() => {
@@ -141,7 +141,7 @@ onBeforeRouteUpdate((to, from) => {
                 </small>
             </div>
         </el-skeleton>
-        <el-skeleton class="d-none d-md-block" :loading="state.memberListLoading" animated>
+        <!--<el-skeleton class="d-none d-md-block" :loading="state.memberListLoading" animated>
             <div class="d-none d-md-block">
                 <div class="list-group">
                     <router-link :to="`/${user.name}/all`" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center" v-for="(user, index) in state.memberList" :key="user.uid_str">
@@ -169,7 +169,7 @@ onBeforeRouteUpdate((to, from) => {
                     <h5 class="text-center">{{ t("timeline.message.no_more") }}</h5>
                 </div>
             </div>
-        </el-skeleton>
+        </el-skeleton>-->
     </div>
 </template>
 
