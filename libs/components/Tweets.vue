@@ -272,10 +272,10 @@ const update = () => {
       value: [...response.data.tweets.filter(x => isTop(x)), ...response.data.tweets.filter(x => !isTop(x))]
     })// ? response.data.tweets : []//404时无任何数据
     state.moreTweets = response.data.hasmore
-    if (response.data.top_tweet_id !== "0") {
+    if (response.data.top_tweet_id && response.data.top_tweet_id !== "0") {
       state.topTweetId = response.data.top_tweet_id;
     }
-    if (response.data.bottom_tweet_id !== "0") {
+    if (response.data.bottom_tweet_id && response.data.bottom_tweet_id !== "0") {
       state.bottomTweetId = response.data.bottom_tweet_id;
     }
     if (![200, 404, 403].includes(response.code)) {
@@ -326,7 +326,7 @@ const loading = (top: boolean = false, mute: boolean = false) => {
     request<ApiTweets>(state.url + '?' + tmpQueryObject.toString(), controllerList.loading).then(response => {
       if (top) {
         Notice(t("timeline.scripts.message.update_tweets", {count: response.data.tweets.length}), "success");//this.getUserInfo();if (response.data.top_tweet_id && response.data.top_tweet_id !== "0") {
-        if (response.data.top_tweet_id !== '0') {
+        if (response.data.top_tweet_id && response.data.top_tweet_id !== '0') {
           state.topTweetId = response.data.top_tweet_id;
         }
         const tmpExistTweetIds = tweets.value.map(tweet => tweet.tweet_id_str)
@@ -338,7 +338,7 @@ const loading = (top: boolean = false, mute: boolean = false) => {
         state.loadingTop = false
       } else {
         state.moreTweets = response.data.hasmore;
-        if (response.data.bottom_tweet_id !== '0') {
+        if (response.data.bottom_tweet_id && response.data.bottom_tweet_id !== '0') {
           state.bottomTweetId = response.data.bottom_tweet_id;
         }
         store.dispatch({
