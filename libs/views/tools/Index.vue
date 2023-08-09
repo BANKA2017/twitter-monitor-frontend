@@ -43,25 +43,25 @@ import LocalRouter from "../../components/LocalRouter.vue";
 import {useHead} from "@vueuse/head";
 
 useHead({
-  title: '工具',
+  title: 'Tools',
 })
 
 const linkList = [{
-  link: "/i/tools/media",
-  name: "媒体下载工具",
-  description: "下载推文的图片或视频"
+  link: "https://twmedia.nest.moe",
+  name: "Twitter Media",
+  description: "Download Image / Videos / Spaces audio"
 },{
   link: "/i/tools/snowflake_tool",
   name: "SnowFlake Tool",
-  description: "雪花算法相关的工具"
+  description: "Tiny tool for twitter snowflake"
 },{
     link: "https://gamealbum.nest.moe/",
-    name: "WebAlbum",
-    description: "通过 NS / PS / Xbox 上传的媒体库"
+    name: "GameAlbum",
+    description: "View and download media send from NS/PS/Xbox"
 },{
     link: "https://archive-viewer.nest.moe/",
     name: "Archive viewer",
-    description: "查看和备份 twitter 内容"
+    description: "Backup and view tweets/following/followers"
 },]
 //{
 //  link: "/i/tools/translator",
