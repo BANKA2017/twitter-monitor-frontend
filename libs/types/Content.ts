@@ -14,7 +14,7 @@ export interface UserInfo {
   following: number
   followers: number
   description: string
-  description_origin: string
+  description_original: string
   statuses_count: number
   top: string
   locked: number
@@ -71,7 +71,7 @@ export interface Tweet {
   quote_status_str: string
   source: string
   full_text: string
-  full_text_origin: string
+  full_text_original: string
   retweet_from: string
   retweet_from_name: string
   dispute: number
@@ -137,11 +137,11 @@ export interface Media {
   url: string
   extension: string
   filename: string
-  origin_type: string
+  original_type: string
   source: string
   content_type: string
-  origin_info_height: number
-  origin_info_width: number
+  original_info_height: number
+  original_info_width: number
   title?: string | null
   description?: string | null
   blurhash: string | null
@@ -161,9 +161,9 @@ export interface OnlineMedia {
   filename: string
   hidden: boolean
   media_key: string
-  origin_info_height: number
-  origin_info_width: number
-  origin_type: string
+  original_info_height: number
+  original_info_width: number
+  original_type: string
   title?: string | null
   description?: string | null
   source: string

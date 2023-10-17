@@ -16,7 +16,7 @@
           <span style="font-size: 0.75em;" class="text-muted" v-if="tweet.retweet_from">
             <retweet height="1em" status="" width="1em"/>
             <router-link :to="`/`+(settings.onlineMode ? tweet.retweet_from_name : tweet.name) + `/all`" class="text-muted">
-              <full-text :entities="[]" :full_text_origin="tweet.display_name" />
+              <full-text :entities="[]" :full_text_original="tweet.display_name" />
             </router-link>
           </span>
         </div>
@@ -41,14 +41,14 @@
           <div :class="{'col-11': tweet?.user_info?.header}" :dir="tweet.rtl ? 'rtl' : 'ltr'" @click="(e) => {e.stopPropagation()}">
             <div class="d-block text-truncate" :style="{'max-width': '' + (tweet.media ? 69 : 74) + '%'}">
               <router-link v-if="settings.onlineMode || !tweet.retweet_from_name || (tweet.retweet_from_name && userList.map(x => x.name).includes(tweet.retweet_from_name))" :to="`/`+ (tweet.retweet_from ? tweet.retweet_from_name : tweet.name) + '/all'" class="card-title text-dark fw-bold" :style="{'max-width': '' + (tweet.media ? 65 : 70) + '%'}">
-                <full-text :entities="[]" :full_text_origin="tweet.retweet_from ? tweet.retweet_from : tweet.display_name" :inline="true" />
+                <full-text :entities="[]" :full_text_original="tweet.retweet_from ? tweet.retweet_from : tweet.display_name" :inline="true" />
               </router-link>
               <a v-else :href="`//twitter.com/` + tweet.retweet_from_name" class="card-title text-dark fw-bold" target="_blank" :style="{'max-width': '' + (tweet.media ? 65 : 70) + '%'}">
-                <full-text :entities="[]" :full_text_origin="tweet.retweet_from" :inline="true" />
+                <full-text :entities="[]" :full_text_original="tweet.retweet_from" :inline="true" />
               </a>
               <verified v-if="settings.onlineMode && verifiedStatus.verified" height="1em" :status="verifiedStatus.verified_type ? {business: 'text-gold', government: 'text-secondary'}[verifiedStatus.verified_type] : 'text-primary'" width="2em" class="d-inline"/>
               <span style="font-size: 0.75em" class="d-block">@{{ tweet.retweet_from ? tweet.retweet_from_name : tweet.name }}</span>
-              <router-link :to="`/search/?q=${tweet.vibe.discoveryQueryText}`" style="font-size: 0.55em; background: #EFF3F4;" class="badge text-black rounded-pill" v-if="settings.onlineMode && tweet.vibe"><full-text :entities="[]" :inline="true" :full_text_origin="`${tweet.vibe.imgDescription}${tweet.vibe.text}`" /></router-link>
+              <router-link :to="`/search/?q=${tweet.vibe.discoveryQueryText}`" style="font-size: 0.55em; background: #EFF3F4;" class="badge text-black rounded-pill" v-if="settings.onlineMode && tweet.vibe"><full-text :entities="[]" :inline="true" :full_text_original="`${tweet.vibe.imgDescription}${tweet.vibe.text}`" /></router-link>
             </div>
           </div>
         </div>
@@ -56,8 +56,8 @@
           <div :class="{'offset-md-1': tweet?.user_info?.header, 'col-md-11': tweet?.user_info?.header, 'col-12': true}">
             <!--<div v-html="`<p class='card-text'>`+tweet.full_text+`</p>`"></div>-->
             <!--excited!-->
-            <div :dir="tweet.rtl ? 'rtl' : 'ltr'"><full-text class="card-text" :entities="tweet.entities" :full_text_origin="tweet.full_text_origin" :display-range="(settings.onlineMode && (route.name === 'name-status' || route.name === 'no-name-status' || translatorMode)) ? tweet.display_text_range : [0, 0]" :rich_text_tags="tweet?.richtext?.richtext_tags ? tweet.richtext.richtext_tags : []" /></div>
-            <translate v-if="translatorMode || tweet.full_text_origin" :id="tweet.tweet_id_str" :to="settings.language" :text="tweet.full_text" type="0"/>
+            <div :dir="tweet.rtl ? 'rtl' : 'ltr'"><full-text class="card-text" :entities="tweet.entities" :full_text_original="tweet.full_text_original" :display-range="(settings.onlineMode && (route.name === 'name-status' || route.name === 'no-name-status' || translatorMode)) ? tweet.display_text_range : [0, 0]" :rich_text_tags="tweet?.richtext?.richtext_tags ? tweet.richtext.richtext_tags : []" /></div>
+            <translate v-if="translatorMode || tweet.full_text_original" :id="tweet.tweet_id_str" :to="settings.language" :text="tweet.full_text" type="0"/>
             <!--media-->
             <div class="mt-2" v-if="tweet.media === 1&&!settings.displayPicture && tweet.mediaObject.filter(x => x.source === 'tweets').length">
               <image-list :is_video="tweet.video" :list="tweet.mediaObject.filter(x => x.source === 'tweets')" :unlimited="tweetModeValue === 'status'"/>
@@ -72,7 +72,7 @@
             </template>
             <!--card-->
             <div class="mt-2" v-else-if="tweet.card !== '' && Object.keys(tweet.cardObject).length">
-              <tw-card :media="tweet.mediaObject.filter(x => x.source === 'cards')" :mediaState="!settings.displayPicture" :object="tweet.cardObject" :tweet-text="tweet.full_text_origin.split(`\n`)[0]" :user-name="tweet.retweet_from ? tweet.retweet_from : tweet.display_name"></tw-card>
+              <tw-card :media="tweet.mediaObject.filter(x => x.source === 'cards')" :mediaState="!settings.displayPicture" :object="tweet.cardObject" :tweet-text="tweet.full_text_original.split(`\n`)[0]" :user-name="tweet.retweet_from ? tweet.retweet_from : tweet.display_name"></tw-card>
             </div>
             <!--place-->
 
@@ -158,7 +158,7 @@ const props = defineProps({
       quote_status_str: '0',
       source: '',
       full_text: '',
-      full_text_origin: '',
+      full_text_original: '',
       retweet_from: '',
       retweet_from_name: '',
       dispute: 0,
@@ -198,13 +198,13 @@ const updateBookMarks = (type: 'media' | 'tweet' = 'tweet') => {
       uid: props.tweet?.uid_str || '0',
       name: props.tweet?.name || '',
       display_name: props.tweet?.display_name || '',
-      text: props.tweet?.full_text_origin || '',
+      text: props.tweet?.full_text_original || '',
       entities: props.tweet?.entities,
       media: props.tweet?.mediaObject?.map(media => ({
         is_video: media.extension === 'mp4',
         url: media.url,
         cover: media.cover,
-        size: media.origin_info_width/media.origin_info_height//TODO aspect ratio
+        size: media.original_info_width/media.original_info_height//TODO aspect ratio
       })) || [],
       timestamp: props.tweet?.time || 0,
       add_timestamp: String(Number(new Date())),

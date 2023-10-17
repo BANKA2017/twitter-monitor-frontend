@@ -117,7 +117,7 @@ const constructBookMarkItem = computed(() => bookmarks.value.map(x => ({
           }
         }
       }
-      return {...media, source: "tweets", basename, filename, extension, tweet_id: x.tweet_id, uid: x.uid, origin_info_height: 720 * 9 / 16, origin_info_width: 720, content_type: extension === 'mp4' ? "video/mp4" : `image/${extension === 'jpg' ? 'jpeg' : extension}`}
+      return {...media, source: "tweets", basename, filename, extension, tweet_id: x.tweet_id, uid: x.uid, original_info_height: 720 * 9 / 16, original_info_width: 720, content_type: extension === 'mp4' ? "video/mp4" : `image/${extension === 'jpg' ? 'jpeg' : extension}`}
     }),
     media: x.media.length ? 1 : 0,
     video: x.media.some(y => y.is_video),
@@ -127,7 +127,7 @@ const constructBookMarkItem = computed(() => bookmarks.value.map(x => ({
     quote_status_str: '0',
     source: t('timeline.side_tags.bookmarks'),
     full_text: x.text,
-    full_text_origin: x.text,
+    full_text_original: x.text,
     retweet_from: x?.retweet_from || '',
     retweet_from_name: x?.retweet_from_name || '',
     dispute: 0,

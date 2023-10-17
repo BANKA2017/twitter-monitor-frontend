@@ -68,13 +68,13 @@ import WordCloudChartForAnnual2021 from "../../components/Charts/WordCloudChart.
 
 const state = reactive<{
   hashTagsRank24: Ref<{text: string; count: number}[]>
-  timeCountOrigin: Ref<number[]>
+  timeCountOriginal: Ref<number[]>
   userData: Ref<{name: string; display_name: string; header: string; count: number}[][]>
   listType: string[][]
   updating: boolean
 }>({
   hashTagsRank24: ref([]),
-  timeCountOrigin: ref([]),
+  timeCountOriginal: ref([]),
   userData: ref([]),
   listType: [['增粉榜', '#fa6e86'], ['掉粉榜', '#19d4ae'], ['发推榜', '#fa6e86']],
   updating: false,
@@ -83,7 +83,7 @@ const state = reactive<{
 const store = useStore()
 const settings = computed(() => store.state.settings)
 //const samePath = computed(() => store.state.samePath)
-const timeCount = computed(() => state.timeCountOrigin.map((count, time) => ({time: time, count: count})))
+const timeCount = computed(() => state.timeCountOriginal.map((count, time) => ({time: time, count: count})))
 const names = computed(() => store.state.names)
 const nameList = computed(() => [...new Set(Object.values(names.value).map(project => Object.values(project)).flat(2))])
 //const createRealMediaPath = (type: string = 'tweets') => {
@@ -94,7 +94,7 @@ const getData = () => {
   state.updating = true
   request<ApiTrends>(settings.value.basePath + '/api/v3/data/trends').then(response => {
     state.hashTagsRank24 = response.data.hashtag_list
-    state.timeCountOrigin = response.data.tweet_time_list
+    state.timeCountOriginal = response.data.tweet_time_list
     response.data.following.push(response.data.statuses)
     state.userData = response.data.following
     state.userData[1] = state.userData[1].reverse()

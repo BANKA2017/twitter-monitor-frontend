@@ -5,7 +5,7 @@
       <template v-else>
         <div class="d-flex justify-content-between">
           <div class="d-inline-block text-truncate" style="max-width: 95%;">
-            <full-text class="text-muted" :entities="[]" :full_text_origin="quoteObject.display_name" /><br>
+            <full-text class="text-muted" :entities="[]" :full_text_original="quoteObject.display_name" /><br>
             <span style="font-size: 0.75em">@{{ quoteObject.name }}</span>
           </div>
           <a :href="`//twitter.com/i/status/`+quoteObject.id_str" target="_blank">
@@ -13,7 +13,7 @@
           </a>
         </div>
         <div class="my-4"></div>
-        <full-text :full_text_origin="quoteObject.full_text" :entities="quoteObject.entities" />
+        <full-text :full_text_original="quoteObject.full_text" :entities="quoteObject.entities" />
         <translate v-if="quoteObject.full_text" :id="quoteObject.id_str" :to="settings.language" :text="quoteObject.full_text" type="0"/>
         <div id="quotefoot">
           <small class="text-muted">{{ timeGap(quoteObject.time, now, settings.language) }}</small>

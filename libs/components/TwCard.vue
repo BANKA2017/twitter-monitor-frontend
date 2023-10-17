@@ -23,7 +23,7 @@
           <div class="card-body">
             <a :href="'https://twitter.com/i/spaces/' + object.url" class="text-decoration-none d-block" target="_blank">
               <el-image v-if="settings.onlineMode && state.audioSpaceObject.avatar" class="rounded-circle me-1" :src="createRealMediaPath(realMediaPath, samePath, 'userinfo')+state.audioSpaceObject.avatar.replace('https://', '')" alt="Avatar" style="height: 1em; width: 1em" />
-              <p class="text-white d-inline-block"><full-text :full_text_origin="state.audioSpaceObject.display_name ? state.audioSpaceObject.display_name : userName" :entities="[]" />
+              <p class="text-white d-inline-block"><full-text :full_text_original="state.audioSpaceObject.display_name ? state.audioSpaceObject.display_name : userName" :entities="[]" />
                 <template v-if="state.audioSpaceObject.verified">
                   <verified height="1em" width="1em" status="text-primary" class="ms-1"/> ·
                 </template>
@@ -35,7 +35,7 @@
             </a>
             <div class="align-middle" v-if="state.updateAudioSpaceFlag"><span class="spinner-border text-white" role="status" aria-hidden="true"></span></div>
             <div v-else>
-              <full-text style="font-size: 1.2rem" class="text-white fw-semibold mb-2" :full_text_origin="state.audioSpaceObject.title ? state.audioSpaceObject.title : (object.description ? object.description : t('tw_card.text.someone_s_space', {someone: userName}))" :entities="[]" />
+              <full-text style="font-size: 1.2rem" class="text-white fw-semibold mb-2" :full_text_original="state.audioSpaceObject.title ? state.audioSpaceObject.title : (object.description ? object.description : t('tw_card.text.someone_s_space', {someone: userName}))" :entities="[]" />
               <div class="text-white btn d-block rounded-pill border-white audio-space-play-button" style="cursor: pointer;" v-if="state.audioSpaceObject.state !== 'Invalid' && (state.audioSpaceObject.is_available_for_replay || (now >= new Date(Number(state.audioSpaceObject.start)) || state.audioSpaceObject.end === '0') )" @click="updateSpacesPlayerMeta">
                 <span v-if="state.audioSpaceObject.id !== spacesPlayer.id">Play</span>
                 <span v-else>. . .</span>
@@ -48,7 +48,7 @@
       <tw-broadcast v-else-if="object.type === 'broadcast' || object.type === 'periscope_broadcast'" :tweet_id="object.tweet_id" :cover="predictiveMedia.cover" :url="object.url" :title="object.title"/>
       <tw-collection v-else-if="object.type === 'unified_card' && object.secondly_type === 'image_collection_website'" :media="media" :multi-dest-carousel-data="multiDestCarouselData"/>
       <template v-else-if="object.type === 'unified_card' && object.secondly_type !== 'twitter_article' && object.secondly_type !== 'community_details'">
-        <div v-if="mediaState && object.secondly_type === 'image_website' || object.secondly_type === 'image_app' || object.secondly_type === 'twitter_list_details'" :style="{width: '100%', height: 0, 'padding-bottom': paddingBottom( predictiveMedia.cover, predictiveMedia.origin_info_height, predictiveMedia.origin_info_width) + '%', 'border-radius': '14px 14px 0 0'}" class="no-gutters">
+        <div v-if="mediaState && object.secondly_type === 'image_website' || object.secondly_type === 'image_app' || object.secondly_type === 'twitter_list_details'" :style="{width: '100%', height: 0, 'padding-bottom': paddingBottom( predictiveMedia.cover, predictiveMedia.original_info_height, predictiveMedia.original_info_width) + '%', 'border-radius': '14px 14px 0 0'}" class="no-gutters">
           <el-image :preview-src-list="[createRealMediaPath(realMediaPath, samePath)+predictiveMedia.cover]" :src="createRealMediaPath(realMediaPath, samePath)+predictiveMedia.cover" :style="{width: '100%', position: 'absolute', 'border-radius': '14px 14px 0 0'}" alt="cardImage" class="card-img-top" fit="cover" lazy @load="state.load = true" preview-teleported hide-on-click-modal></el-image>
         </div>
         <template v-else-if="object.secondly_type === 'video_website' || object.secondly_type === 'video_app'" >
@@ -102,7 +102,7 @@
       </template>
       <template v-else>
         <div v-if="object.media === 1 && mediaState" class="border-bottom">
-          <div :style="{width: '100%', height: 0, 'padding-bottom': paddingBottom( predictiveMedia.cover, predictiveMedia.origin_info_height, predictiveMedia.origin_info_width) + '%', 'border-radius': '14px 14px 0 0'}" class="no-gutters">
+          <div :style="{width: '100%', height: 0, 'padding-bottom': paddingBottom( predictiveMedia.cover, predictiveMedia.original_info_height, predictiveMedia.original_info_width) + '%', 'border-radius': '14px 14px 0 0'}" class="no-gutters">
             <video v-if="predictiveMedia.extension === 'mp4'" :id="`videoPlayer_${predictiveMedia.tweet_id}`" :poster="createRealMediaPath(realMediaPath, samePath) + predictiveMedia.cover" :src="createRealMediaPath(realMediaPath, samePath) + predictiveMedia.url" :type="predictiveMedia.content_type" class="border" controls loop playsinline preload="none" style="width: 100%; position: absolute; border-radius: 14px 14px 0 0; background-color: black"></video>
             <el-image v-else :preview-src-list="[createRealMediaPath(realMediaPath, samePath)+predictiveMedia.cover]" :src="createRealMediaPath(realMediaPath, samePath)+predictiveMedia.cover" style="width: 100%; position: absolute; border-radius: 14px 14px 0 0;" class="card-img-top" fit="cover" lazy alt="cardImage" @load="state.load = true" preview-teleported hide-on-click-modal></el-image>
           </div>
@@ -215,7 +215,7 @@ const predictiveMedia = computed((): Media | {} => {
   }
 })
 
-const ratio = computed(() => props.media[0].origin_info_width / props.media[0].origin_info_height)
+const ratio = computed(() => props.media[0].original_info_width / props.media[0].original_info_height)
 const multiDestCarouselData = computed(() => {
   if (props.object?.secondly_type === 'image_multi_dest_carousel_website' || props.object?.secondly_type === 'video_multi_dest_carousel_website' || props.object?.secondly_type === 'mixed_media_multi_dest_carousel_website' || props.object?.secondly_type === 'image_collection_website') {
     let tmpData = []

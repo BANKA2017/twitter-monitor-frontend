@@ -11,7 +11,7 @@
                       <el-image class="rounded-circle" :src="createRealMediaPath(realMediaPath, samePath, 'userinfo')+user.header.replaceAll('https://', '').replace(/([\w]+)\.([\w]+)$/gm, `$1_reasonably_small.$2`)" :preview-src-list="[createRealMediaPath(realMediaPath, samePath, 'userinfo')+user.header.replaceAll('https://', '')]" alt="Avatar" preview-teleported hide-on-click-modal/>
                   </div>
                   <div style="padding: 0.5em 0.25em; display: inline-block; align-self: center">
-                      <div class="mb-1" style="display: flex; justify-content: space-between; align-self: center;"><router-link :to="`/${user.name}/all`" class="text-dark" ><full-text class=" fw-bold" :entities="[]" :full_text_origin="user.display_name" :inline="true"/></router-link></div>
+                      <div class="mb-1" style="display: flex; justify-content: space-between; align-self: center;"><router-link :to="`/${user.name}/all`" class="text-dark" ><full-text class=" fw-bold" :entities="[]" :full_text_original="user.display_name" :inline="true"/></router-link></div>
                   </div>
               </div>
           </router-link>

@@ -10,7 +10,7 @@
     <div v-else>
       <el-divider class="my-4" />
       <p class='card-text'><small class="text-muted">{{ t("translate.message.translate_by", [state.translate_source]) }}</small></p>
-      <full-text class="card-text" :entities="state.entities" :full_text_origin="state.text" />
+      <full-text class="card-text" :entities="state.entities" :full_text_original="state.text" />
       <div class="text-decoration-none" role="button" @click="e => {e.stopPropagation()}"><small style="font-size: 0.8rem" class="text-primary clickable-text" @click="state.status = 0">{{ t("translate.message.hide_translated") }}</small></div>
     </div>
   </div>

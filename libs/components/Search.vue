@@ -59,7 +59,7 @@
 
     <div class="btn-group" role="group" style="width: 100%">
       <button type="button" :class="{'btn': true, 'btn-outline-primary': true, 'btn-sm': true, 'active': state.advancedSearch.tweetType.type === 0}" @click="state.advancedSearch.tweetType.type = 0">{{ t('search.advanced_search.nav_bar.all') }}</button>
-      <button type="button" v-if="!settings.onlineMode" :class="{'btn': true, 'btn-outline-primary': true, 'btn-sm': true, 'active': state.advancedSearch.tweetType.type === 1}" @click="state.advancedSearch.tweetType.type = 1">{{ t('search.advanced_search.nav_bar.origin') }}</button>
+      <button type="button" v-if="!settings.onlineMode" :class="{'btn': true, 'btn-outline-primary': true, 'btn-sm': true, 'active': state.advancedSearch.tweetType.type === 1}" @click="state.advancedSearch.tweetType.type = 1">{{ t('search.advanced_search.nav_bar.original') }}</button>
       <button type="button" :class="{'btn': true, 'btn-outline-primary': true, 'btn-sm': true, 'active': state.advancedSearch.tweetType.type === 2}" @click="state.advancedSearch.tweetType.type = 2">{{ t('search.advanced_search.nav_bar.retweet') }}</button>
       <button type="button" :class="{'btn': true, 'btn-outline-primary': true, 'btn-sm': true, 'active': state.advancedSearch.tweetType.media}" @click="state.advancedSearch.tweetType.media = !state.advancedSearch.tweetType.media">{{ t('search.advanced_search.nav_bar.media_only') }}</button>
       <button role="button" v-if="!settings.onlineMode" :class="{'btn': true, 'btn-outline-primary': true, 'btn-sm': true, 'active': state.advancedSearch.order}" @click="state.advancedSearch.order = !state.advancedSearch.order" >{{ t('search.advanced_search.nav_bar.reverse') }}</button>
@@ -132,7 +132,7 @@ const state = reactive<{
     user: { text: string; andMode: boolean; notMode: boolean; },
     keywords: { text: string; orMode: boolean; notMode: boolean; },
     tweetType: {
-      type: 0 | 1 | 2 | 3 | 4;//0-> all, 1-> origin, 2-> retweet
+      type: 0 | 1 | 2 | 3 | 4;//0-> all, 1-> original, 2-> retweet
       media: boolean;//media
     },
     start: string;//format 2022-02-10
@@ -149,7 +149,7 @@ const state = reactive<{
     user: {"text": "", "andMode": false, "notMode": false,},
     keywords: {"text": "", "orMode": false, "notMode": false,},
     tweetType: {
-      type: 0,//0-> all, 1-> origin, 2-> retweet//online mode couldn't use mode '1' -> origin
+      type: 0,//0-> all, 1-> original, 2-> retweet//online mode couldn't use mode '1' -> original
       media: false,//media
     },
     start: "",
@@ -240,7 +240,7 @@ const updateForms = (to: RouteLocationNormalized) => {
       state.advancedSearch.user.andMode = VerifyQueryString(to.query.user_and_mode, '0') !== '0'
       state.advancedSearch.user.notMode = VerifyQueryString(to.query.user_not_mode, '0') !== '0'
       const tmpTweetType = Number(VerifyQueryString(to.query.tweet_type, 0))
-      //state.advancedSearch.tweetType.type = (tmpTweetType && tmpTweetType > -1 && tmpTweetType < 5) ? tmpTweetType : 0//0-> all, 1-> origin, 2-> retweet, 3 -> album, 4 -> space
+      //state.advancedSearch.tweetType.type = (tmpTweetType && tmpTweetType > -1 && tmpTweetType < 5) ? tmpTweetType : 0//0-> all, 1-> original, 2-> retweet, 3 -> album, 4 -> space
       state.advancedSearch.tweetType.media = VerifyQueryString(to.query.tweet_media, '0') !== '0'//media
       state.advancedSearch.start = (!to.query.start ? -1 : Date.parse(to.query.start + ' GMT' + userTimeZone.value) / 1000).toString()
       state.advancedSearch.end = (!to.query.end ? -1 : Date.parse(to.query.end + ' GMT' + userTimeZone.value) / 1000).toString()

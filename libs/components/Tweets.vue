@@ -107,7 +107,7 @@ const displayMode = [
 
 if (!settings.value.onlineMode) {
   displayMode.push(
-    [t("timeline.nav_bar.origin"), 'self', 0],
+    [t("timeline.nav_bar.original"), 'self', 0],
     [t("timeline.nav_bar.retweet"), 'retweet', 0],
     [t("timeline.nav_bar.media"), 'media', 0],
     [t("timeline.nav_bar.album"), 'album', 0],
@@ -207,7 +207,7 @@ const routeCase = (to: RouteLocationNormalized) => {
         queryStringObject.set('user_and_mode', Equal(VerifyQueryString(to.query.user_and_mode, '0') !== '0'))
         queryStringObject.set('user_not_mode', Equal(VerifyQueryString(to.query.user_not_mode, '0') !== '0'))
         const tmpTweetType = Number(VerifyQueryString(to.query.tweet_type, 0))
-        queryStringObject.set('tweet_type', (tmpTweetType && tmpTweetType > -1 && tmpTweetType < 5) ? String(tmpTweetType) : '0')//0-> all, 1-> origin, 2-> retweet, 3 -> album, 4 -> space
+        queryStringObject.set('tweet_type', (tmpTweetType && tmpTweetType > -1 && tmpTweetType < 5) ? String(tmpTweetType) : '0')//0-> all, 1-> original, 2-> retweet, 3 -> album, 4 -> space
         queryStringObject.set('tweet_media', Equal(VerifyQueryString(to.query.tweet_media, '0') !== '0'))//media
         queryStringObject.set('start', (!to.query.start ? -1 : Date.parse(to.query.start + ' GMT' + userTimeZone.value) / 1000).toString())
         queryStringObject.set('end', (!to.query.end ? -1 : Date.parse(to.query.end + ' GMT' + userTimeZone.value) / 1000).toString())

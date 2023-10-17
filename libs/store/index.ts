@@ -32,7 +32,7 @@ export const store = createStore<State>({
     tweetMode: 'timeline',
     tweetType: 'all',
     updatedCharts: true,
-    userInfo: {uid: '0', uid_str: "", name: "", display_name: "", header: "", banner: 0, following: 0, followers: 0, description: "", description_origin: "", statuses_count: 0, top: "", locked: 0, deleted: 0, verified: 0, description_entities: [],},
+    userInfo: {uid: '0', uid_str: "", name: "", display_name: "", header: "", banner: 0, following: 0, followers: 0, description: "", description_original: "", statuses_count: 0, top: "", locked: 0, deleted: 0, verified: 0, description_entities: [],},
     height: 0,
     width: 0,
     siteHeight: 0,

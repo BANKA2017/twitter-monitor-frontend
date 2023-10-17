@@ -37,7 +37,7 @@ export interface ApiTweets extends Api<{
 
 export interface ApiTranslate extends Api<{
   cache: boolean
-  full_text_origin: string
+  full_text_original: string
   target: string
   translate: string
   translate_source: string
@@ -139,7 +139,7 @@ export interface ApiStaffData {
       hour_count: number[]
       link: string[]
       media: number
-      origin: number
+      original: number
       quote_status_count: number
       retweet: number
       tag: string[]
@@ -168,7 +168,7 @@ export interface ApiLoveLiveData {
       link: {[p: string]: number}
       tag: {[p: string]: number}
       media: number
-      origin: number
+      original: number
       quote_status_count: number
       retweet: number
       video_count: number
@@ -226,7 +226,7 @@ export interface ApiAnnual2021 {
       followers: number
       following: number
       statuses_count: number
-      origin: number
+      original: number
       hour_count: number[]
       media: number[]
     }}
@@ -255,7 +255,7 @@ export interface ApiAnnual2022 {
       followers: number
       following: number
       statuses_count: number
-      origin: number
+      original: number
       hour_count: number[]
       media: number[]
     }}

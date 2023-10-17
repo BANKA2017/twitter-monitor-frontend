@@ -4,7 +4,7 @@
       NO CONTENT
     </div>
     <div v-else >
-      <el-image :src="createRealMediaPath(realMediaPath, samePath)+media[0].cover" :preview-src-list="[createRealMediaPath(realMediaPath, samePath)+media[0].url]" :style="{width: '100%', 'border-radius': '14px', 'aspect-ratio': media[0].origin_info_width / media[0].origin_info_height, }" alt="cardImage" fit="cover" lazy preview-teleported hide-on-click-modal></el-image>
+      <el-image :src="createRealMediaPath(realMediaPath, samePath)+media[0].cover" :preview-src-list="[createRealMediaPath(realMediaPath, samePath)+media[0].url]" :style="{width: '100%', 'border-radius': '14px', 'aspect-ratio': media[0].original_info_width / media[0].original_info_height, }" alt="cardImage" fit="cover" lazy preview-teleported hide-on-click-modal></el-image>
       <a :href="multiDestCarouselData[0].url" target="_blank" class="text-muted" v-if="multiDestCarouselData.length >= 1">
         <span class="d-block">{{multiDestCarouselData[0].vanity_url}}</span>
         <span class="d-block">{{multiDestCarouselData[0].description}}</span>

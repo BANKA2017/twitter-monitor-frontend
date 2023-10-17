@@ -393,9 +393,9 @@ const generateData = (firstGenerate: boolean = false) => {
   for (let projectName of ['bangdream', 'lovelive', 'official']) {
     if (latestAccountListFilter[projectName]) {
       let tmp = Object.values(latestAccountListFilter[projectName])
-      let tmpOrigin = Object.values(state.accountListFilter[projectName])
+      let tmpOriginal = Object.values(state.accountListFilter[projectName])
       for (let valueIndex in tmp) {
-        if (tmp[valueIndex] !== tmpOrigin[valueIndex]) {
+        if (tmp[valueIndex] !== tmpOriginal[valueIndex]) {
           tmpUpdateList.add(projectName)
           tmpData[projectName] = tmpDataTemplate()
           break
@@ -432,7 +432,7 @@ const generateData = (firstGenerate: boolean = false) => {
       for (let date in account.daily_data) {
         let tmpDate = date.slice(0, 4) + '-' + date.slice(4, 6) + '-' + date.slice(6, 8)
         let tmpDailyTweetCount = account.daily_data[date].hour_count.length === 0 ? 0 : account.daily_data[date].hour_count.reduce((acr, cur) => acr + cur)
-        let tmpRetweetCount = typeof(account.daily_data[date].origin) === 'undefined' ? 0 : tmpDailyTweetCount - (account.daily_data[date].origin)
+        let tmpRetweetCount = typeof(account.daily_data[date].original) === 'undefined' ? 0 : tmpDailyTweetCount - (account.daily_data[date].original)
         tmpPersonData.tweets[tmpDate] ? tmpPersonData.tweets[tmpDate] += tmpDailyTweetCount : tmpPersonData.tweets[tmpDate] = tmpDailyTweetCount
         tmpPersonData.retweet[tmpDate] ? tmpPersonData.retweet[tmpDate] += tmpRetweetCount : tmpPersonData.retweet[tmpDate] = tmpRetweetCount
         account.daily_data[date].hour_count.forEach((count, time) => {

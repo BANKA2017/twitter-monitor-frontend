@@ -13,13 +13,13 @@
           </div>
           <!--<div :class="{ 'col-8': ((width > 768 && height > 50) || userInfo.banner === 0), 'col-12': !((width > 768 && height > 50) || userInfo.banner === 0), 'my-4': (width > 768 && (height > 50 || userInfo.banner === 0)), 'mt-5': ((height <= 50 || width <= 768) && userInfo.banner !== 0), }" style=" justify-content: center;">-->
           <div class="" style="padding: 0.5em 1em; display: inline-block; align-self: center">
-            <h5 class="card-title mb-1 fw-bold" style="display: flex; justify-content: space-between"><full-text :entities="[]" :full_text_origin="userInfo.display_name" :inline="true"/><verified v-if="verifiedStatus.verified" height="24px" :status="verifiedStatus.verified_type ? {business: 'text-gold', government: 'text-secondary'}[verifiedStatus.verified_type] : 'text-primary'" width="24px" class="mx-1 d-inline"/><blue-verified-icon v-if="!verifiedStatus.verified && verifiedStatus.blue_verified" :status="verifiedStatus.verified_type ? {business: 'text-gold', government: 'text-secondary'}[verifiedStatus.verified_type] : 'text-primary'" height="24px" width="24px" class="mx-1 d-inline"/></h5>
+            <h5 class="card-title mb-1 fw-bold" style="display: flex; justify-content: space-between"><full-text :entities="[]" :full_text_original="userInfo.display_name" :inline="true"/><verified v-if="verifiedStatus.verified" height="24px" :status="verifiedStatus.verified_type ? {business: 'text-gold', government: 'text-secondary'}[verifiedStatus.verified_type] : 'text-primary'" width="24px" class="mx-1 d-inline"/><blue-verified-icon v-if="!verifiedStatus.verified && verifiedStatus.blue_verified" :status="verifiedStatus.verified_type ? {business: 'text-gold', government: 'text-secondary'}[verifiedStatus.verified_type] : 'text-primary'" height="24px" width="24px" class="mx-1 d-inline"/></h5>
             <small style="display: block"><a :href="`//twitter.com/`+userInfo.name" class="text-dark" target="_blank">@{{ userInfo.name }}</a></small>
           </div>
         </div>
         <el-collapse-transition>
-        <div v-show="!isHideDescription && userInfo.description_origin" style="padding: 0.5em 1em;">
-          <full-text :entities="userInfo.description_entities" :full_text_origin="userInfo.description_origin" class="card-text transition-box"></full-text>
+        <div v-show="!isHideDescription && userInfo.description_original" style="padding: 0.5em 1em;">
+          <full-text :entities="userInfo.description_entities" :full_text_original="userInfo.description_original" class="card-text transition-box"></full-text>
           <translate :id="userInfo.uid_str" :to="settings.language" type="1" :text="userInfo.description" class="transition-box"/>
         </div>
       </el-collapse-transition>

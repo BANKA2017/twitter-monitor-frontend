@@ -14,7 +14,7 @@
         "translate": "Translate",
         "loading": "Loading",
         "timestamp": "Timestamp",
-        "origin": "Original",
+        "original": "Original",
         "retweet": "Retweets",
         "media": "Media",
         "username": "Username",
@@ -38,7 +38,7 @@
         },
         "nav_bar": {
             "all": "All",
-            "origin": "Original",
+            "original": "Original",
             "retweet": "Retweets",
             "media": "Media",
             "album": "Album",
@@ -116,7 +116,7 @@
             "example_search_time": "Example: 2021-01-01 -> 2021-01-02",
             "nav_bar": {
                 "all": "All",
-                "origin": "Original",
+                "original": "Original",
                 "retweet": "Retweets",
                 "media_only": "Media only",
                 "reverse": "Reverse",

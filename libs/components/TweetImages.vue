@@ -1,14 +1,14 @@
 <template>
   <div id="imageList" class="mb-2 position-relative" @click="e => {e.stopPropagation()}">
     <!--<div style="position: absolute; top: 10%; z-index: 1;">Nudity、violence or sensitive content</div>-->
-    <div v-if="realList.length === 1" :style="{'height': '100%', 'aspect-ratio': isVideo(realList[0]) ? (realList[0].origin_info_width > realList[0].origin_info_height ? realList[0].origin_info_width / realList[0].origin_info_height : 1) : aspect_ratio, filter: isHidden ? 'blur(10px)' : false, 'background-color': isHidden ? 'rgba(0, 0, 0, 0.5)' : false}">
+    <div v-if="realList.length === 1" :style="{'height': '100%', 'aspect-ratio': isVideo(realList[0]) ? (realList[0].original_info_width > realList[0].original_info_height ? realList[0].original_info_width / realList[0].original_info_height : 1) : aspect_ratio, filter: isHidden ? 'blur(10px)' : false, 'background-color': isHidden ? 'rgba(0, 0, 0, 0.5)' : false}">
       <div v-if="isVideo(realList[0])" style="height: 100%; ">
-        <video :id="'video_' + realList[0].tweet_id + '_0'" controls playsinline crossorigin :poster="createRealMediaPath(realMediaPath, samePath,'tweets') + realList[0].cover" :preload="preload" :style="{'aspect-ratio': (realList[0].origin_info_width > realList[0].origin_info_height ? realList[0].origin_info_width / realList[0].origin_info_height : 1)}">
+        <video :id="'video_' + realList[0].tweet_id + '_0'" controls playsinline crossoriginal :poster="createRealMediaPath(realMediaPath, samePath,'tweets') + realList[0].cover" :preload="preload" :style="{'aspect-ratio': (realList[0].original_info_width > realList[0].original_info_height ? realList[0].original_info_width / realList[0].original_info_height : 1)}">
           <source :src="createRealMediaPath(realMediaPath, samePath,'tweets') +realList[0].url">
         </video>
       </div>
-      <div v-else :style="`width: 100%;` + (((ratio) => ratio > 100 ? ' aspect-ratio: 1; ' : ` padding-bottom: ${ratio}%; `)(realList[0].origin_info_height / realList[0].origin_info_width * 100)) + `height: 100%; border-radius: 14px;`" class="no-gutters card">
-        <el-image :alt="realList[0].description || realList[0].uid+'_'+realList[0].tweet_id+'_'+0" :initial-index="0" :preview-src-list="previewList" :src="createRealMediaPath(realMediaPath, samePath,'tweets') +realList[0].url+((parseURL(realList[0].url).search) ? '' : ':small')" :fit="(realList[0].origin_info_height / realList[0].origin_info_width <= 1) && !scaleDown ? 'fill' : 'scale-down'" lazy style="width: 100%; height: 100%; position: absolute; border-radius: 14px; padding: 1px;" preview-teleported hide-on-click-modal>
+      <div v-else :style="`width: 100%;` + (((ratio) => ratio > 100 ? ' aspect-ratio: 1; ' : ` padding-bottom: ${ratio}%; `)(realList[0].original_info_height / realList[0].original_info_width * 100)) + `height: 100%; border-radius: 14px;`" class="no-gutters card">
+        <el-image :alt="realList[0].description || realList[0].uid+'_'+realList[0].tweet_id+'_'+0" :initial-index="0" :preview-src-list="previewList" :src="createRealMediaPath(realMediaPath, samePath,'tweets') +realList[0].url+((parseURL(realList[0].url).search) ? '' : ':small')" :fit="(realList[0].original_info_height / realList[0].original_info_width <= 1) && !scaleDown ? 'fill' : 'scale-down'" lazy style="width: 100%; height: 100%; position: absolute; border-radius: 14px; padding: 1px;" preview-teleported hide-on-click-modal>
           <template #placeholder>
             <blur-hash-canvas v-if="realList[0].blurhash && realList[0].blurhash !== 'deleted'" :hash-text="realList[0].blurhash" class="full"/>
           </template>
@@ -21,7 +21,7 @@
     <div :style="{filter: isHidden ? 'blur(10px)' : false, 'background-color': isHidden ? 'rgba(0, 0, 0, 0.5)' : false}" v-else-if="realList.length >= 2 && realList.length <= 6">
       <div class="card no-gutters" :style="{'width': '100%', 'padding-bottom': '56.25%', 'height': '100%', 'border-radius': '14px', 'overflow': 'hidden'}">
         <template v-for="(mixMedia, order) in realList" :key="order">
-          <video v-if="isVideo(mixMedia)" :style="listStyle[realList.length-2][order] + ' object-fit: cover;'" :id="'video_' + mixMedia.tweet_id + '_' + order" controls playsinline crossorigin :poster="createRealMediaPath(realMediaPath, samePath,'tweets') + mixMedia.cover" :preload="preload">
+          <video v-if="isVideo(mixMedia)" :style="listStyle[realList.length-2][order] + ' object-fit: cover;'" :id="'video_' + mixMedia.tweet_id + '_' + order" controls playsinline crossoriginal :poster="createRealMediaPath(realMediaPath, samePath,'tweets') + mixMedia.cover" :preload="preload">
             <source :src="createRealMediaPath(realMediaPath, samePath,'tweets') +mixMedia.url">
           </video>
           <el-image v-else style="padding: 1px;" :alt="mixMedia.description || mixMedia.uid+'_'+mixMedia.tweet_id+'_'+0" :initial-index="order" :preview-src-list="previewList" :src="createRealMediaPath(realMediaPath, samePath,'tweets') +mixMedia.url+((parseURL(mixMedia.url).search) ? '' : ':small')" :style="listStyle[realList.length-2][order]" fit="cover" lazy preview-teleported hide-on-click-modal>
@@ -51,8 +51,8 @@
     <template v-if="realList.some(item => item.title || item.description)">
       <hr class="my-4">
       <p class="fw-bold my-1" v-if="realList[0].title && realList[0].title === 'ALT'">ALT</p>
-      <full-text v-else-if="realList.some(item => item.title)" class="fw-bold my-1" :entities="[]" :full_text_origin='realList.filter(item => item.title).map(item => item.title).join("\n")' />
-      <full-text v-if="realList.some(item => item.description)" class="my-1" :entities="[]" :full_text_origin='realList.filter(item => item.description).map(item => item.description).join("\n\n")' />
+      <full-text v-else-if="realList.some(item => item.title)" class="fw-bold my-1" :entities="[]" :full_text_original='realList.filter(item => item.title).map(item => item.title).join("\n")' />
+      <full-text v-if="realList.some(item => item.description)" class="my-1" :entities="[]" :full_text_original='realList.filter(item => item.description).map(item => item.description).join("\n\n")' />
     </template>
   </div>
 </template>
@@ -165,7 +165,7 @@ const realList = computed(() => {
 
 const ratio = computed(() => {
   if (realList.value.length > 0) {
-    return realList.value[0].origin_info_width / realList.value[0].origin_info_height
+    return realList.value[0].original_info_width / realList.value[0].original_info_height
   }
   return 0
 })

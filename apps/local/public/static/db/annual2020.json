@@ -125,7 +125,7 @@
   ],
   "pollTopTweet": {
     "tweet_id": 1234312472904925184,
-    "origin_tweet_id": 1234312472904925184,
+    "original_tweet_id": 1234312472904925184,
     "uid": 1158675515193999360,
     "name": "LLAS_STAFF",
     "display_name": "ラブライブ！スクスタ公式",
@@ -136,7 +136,7 @@
     "quote_status": 0,
     "source": "Twitter Web App",
     "full_text": "🎊 <a href=\"#/hashtag/スクスタ\" id=\"hashtag\">#スクスタ</a> ハーフアニバーサリー特別企画🎉<br />\n4週連続　どっちが欲しい！？キャンペーン📣<br />\n投票が多かったアイテムを皆様にプレゼント！<br />\n【第1弾】<br />\n投票期間：3/2（月）12：00～3/3（火）11：59<br />\n配布日：3/5（木）<br />\nあなたの1票でプレゼントが変わる！是非投票してくださいね♪<br />\n<a href=\"#/hashtag/lovelive\" id=\"hashtag\">#lovelive</a>",
-    "full_text_origin": "🎊 #スクスタ ハーフアニバーサリー特別企画🎉\n4週連続　どっちが欲しい！？キャンペーン📣\n投票が多かったアイテムを皆様にプレゼント！\n【第1弾】\n投票期間：3/2（月）12：00～3/3（火）11：59\n配布日：3/5（木）\nあなたの1票でプレゼントが変わる！是非投票してくださいね♪\n#lovelive",
+    "full_text_original": "🎊 #スクスタ ハーフアニバーサリー特別企画🎉\n4週連続　どっちが欲しい！？キャンペーン📣\n投票が多かったアイテムを皆様にプレゼント！\n【第1弾】\n投票期間：3/2（月）12：00～3/3（火）11：59\n配布日：3/5（木）\nあなたの1票でプレゼントが変わる！是非投票してくださいね♪\n#lovelive",
     "retweet_from": "",
     "retweet_from_name": "",
     "dispute": 0,
@@ -178,7 +178,7 @@
     "quoteObject": {},
     "mediaObject": [],
     "tweet_id_str": "1234312472904925184",
-    "origin_tweet_id_str": "1234312472904925184",
+    "original_tweet_id_str": "1234312472904925184",
     "uid_str": "1158675515193999360"
   },
   "userData": [

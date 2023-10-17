@@ -233,7 +233,7 @@ const tableData = computed((): {
       followers_add: number
       followers_growth_rate: string
       tweets_count: number
-      origin_ratio: string
+      original_ratio: string
       team: string //"Aqours"  | "虹ヶ咲学園" | "Liella!" | "蓮ノ空女学院"
     }[] => state.trendsData.data.filter(y => selectedTeams.value.has(y.team)).map((x, order) => ({
     order,
@@ -243,7 +243,7 @@ const tableData = computed((): {
     followers_add: x.followers[6].end - x.followers[0].start,
     followers_growth_rate: Math.floor(((x.followers[6].end - x.followers[0].start) / x.followers[0].start) * 10000) / 100 + '%',
     tweets_count: x.tweets.count,
-    origin_ratio: Math.floor(x.tweets.origin / x.tweets.count * 100) + '%',
+    original_ratio: Math.floor(x.tweets.original / x.tweets.count * 100) + '%',
     team: x.team
   }))
 )

@@ -124,7 +124,7 @@ onBeforeRouteUpdate((to, from) => {
                 </el-collapse-transition>
                 <div style="padding: 0.10em 0.85em;" class="fw-bold fs-5 text-center">{{state.listInfo.name}}</div>
                 <div v-show="state.listInfo.description" style="padding: 0.15em 1em;" class=" text-center">
-                    <full-text :entities="[]" :full_text_origin="state.listInfo.description" class="card-text transition-box"></full-text>
+                    <full-text :entities="[]" :full_text_original="state.listInfo.description" class="card-text transition-box"></full-text>
                 </div>
                 <div style="display: flex; align-content: center; margin: 0 0.5em; justify-content: center;">
                     <div class="" style="width: 45px; aspect-ratio: 1; display: inline-block; padding: 0.5em;" v-if="!settings.displayPicture">
@@ -132,7 +132,7 @@ onBeforeRouteUpdate((to, from) => {
                     </div>
                     <!--<div :class="{ 'col-8': ((width > 768 && height > 50) || state.listInfo.user_info.banner === 0), 'col-12': !((width > 768 && height > 50) || state.listInfo.user_info.banner === 0), 'my-4': (width > 768 && (height > 50 || state.listInfo.user_info.banner === 0)), 'mt-5': ((height <= 50 || width <= 768) && state.listInfo.user_info.banner !== 0), }" style=" justify-content: center;">-->
                     <div style="padding: 0.5em 0.25em; display: inline-block; align-self: center">
-                        <div class="mb-1" style="display: flex; justify-content: space-between; align-self: center;"><a :href="`//twitter.com/`+state.listInfo.user_info.name" class="text-dark" target="_blank"><full-text class=" fw-bold" :entities="[]" :full_text_origin="state.listInfo.user_info.display_name" :inline="true"/></a><verified v-if="verifiedStatus.verified" height="1em" :status="verifiedStatus.verified_type ? {business: 'text-gold', government: 'text-secondary'}[verifiedStatus.verified_type] : 'text-primary'" width="1em" class="m-1 d-inline"/><blue-verified-icon v-if="!verifiedStatus.verified && verifiedStatus.blue_verified" :status="verifiedStatus.verified_type ? {business: 'text-gold', government: 'text-secondary'}[verifiedStatus.verified_type] : 'text-primary'" height="1em" width="1em" class="m-1 d-inline"/></div>
+                        <div class="mb-1" style="display: flex; justify-content: space-between; align-self: center;"><a :href="`//twitter.com/`+state.listInfo.user_info.name" class="text-dark" target="_blank"><full-text class=" fw-bold" :entities="[]" :full_text_original="state.listInfo.user_info.display_name" :inline="true"/></a><verified v-if="verifiedStatus.verified" height="1em" :status="verifiedStatus.verified_type ? {business: 'text-gold', government: 'text-secondary'}[verifiedStatus.verified_type] : 'text-primary'" width="1em" class="m-1 d-inline"/><blue-verified-icon v-if="!verifiedStatus.verified && verifiedStatus.blue_verified" :status="verifiedStatus.verified_type ? {business: 'text-gold', government: 'text-secondary'}[verifiedStatus.verified_type] : 'text-primary'" height="1em" width="1em" class="m-1 d-inline"/></div>
                     </div>
                 </div>
                 <small class="text-center d-block mb-2">
@@ -149,9 +149,9 @@ onBeforeRouteUpdate((to, from) => {
                             <div class="d-flex w-100 align-content-center">
                                 <el-image :src="settings.mediaPath + user.header.replace(/https:\/\/|http:\/\//, '').replace(/([\w]+)\.([\w]+)$/gm, `$1_reasonably_small.$2`)" class="rounded-circle flex-shrink-0" style="height: 15%; width: 15%; aspect-ratio: 1;"></el-image>
                                 <div class="ms-2" style="width: 85%;">
-                                    <full-text class="d-block text-truncate fw-bold" :entities="[]" :full_text_origin="user.display_name" :inline="true" />
+                                    <full-text class="d-block text-truncate fw-bold" :entities="[]" :full_text_original="user.display_name" :inline="true" />
                                     <span class="d-block">@{{ user.name }}</span>
-                                    <full-text :full_text_origin="user.description_origin" :entities="user.description_entities" />
+                                    <full-text :full_text_original="user.description_original" :entities="user.description_entities" />
                                 </div>
                             </div>
                         </div>

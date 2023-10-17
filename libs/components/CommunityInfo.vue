@@ -82,7 +82,7 @@ onBeforeRouteUpdate((to, from) => {
                 </el-collapse-transition>
                 <div style="padding: 0.15em 0.65em;" class="fw-bold fs-3">{{state.communityInfo.name}}</div>
                 <div v-show="state.communityInfo.description" style="padding: 0.15em 1em;" class="">
-                    <full-text :entities="[]" :full_text_origin="state.communityInfo.description" class="card-text transition-box"></full-text>
+                    <full-text :entities="[]" :full_text_original="state.communityInfo.description" class="card-text transition-box"></full-text>
                 </div>
                 <small class="d-block mb-2 " style="margin-left: 0.85em;">
                     <span class="px-1"><span class="fw-bold">{{ state.communityInfo.member_count }}</span> {{ t('public.members') }}</span>

@@ -14,7 +14,7 @@
         "translate": "翻译",
         "loading": "加载中",
         "timestamp": "时间戳",
-        "origin": "原创",
+        "original": "原创",
         "retweet": "转推",
         "media": "媒体",
         "username": "用户名",
@@ -38,7 +38,7 @@
         },
         "nav_bar": {
             "all": "全部",
-            "origin": "原创",
+            "original": "原创",
             "retweet": "转推",
             "media": "媒体",
             "album": "图库",
@@ -116,7 +116,7 @@
             "example_search_time": "例如：2021-01-01 -> 2021-01-02",
             "nav_bar": {
                 "all": "全部",
-                "origin": "原创",
+                "original": "原创",
                 "retweet": "转推",
                 "media_only": "仅媒体",
                 "reverse": "反序",
