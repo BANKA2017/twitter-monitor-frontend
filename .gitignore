@@ -1,6 +1,7 @@
 .DS_Store
 node_modules
-.yarn/
+.yarn/cache
+.yarn/install-state.gz
 apps/archiver_reader/
 apps/*/dist
 
